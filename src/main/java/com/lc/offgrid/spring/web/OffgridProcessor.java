@@ -61,6 +61,20 @@ public class OffgridProcessor extends BaseWebProcessor
 		return viewName;
 	}
 
+	/**
+	 * A checklist page. The name is both the template under templates/hardware/checklists
+	 * and the folder holding its JSON, so one mapping serves every checklist.
+	 */
+	public String processChecklist(Model model, String name)
+	{
+		PageData pageData = readFile("data/hardware/checklists/" + name + "/" + name + ".json", PageData.class);
+
+		processDefault(model, pageData.getName());
+
+		String viewName = "hardware/checklists/" + name;
+		return viewName;
+	}
+
 	public String processPi(Model model)
 	{
 		processDefault(model, "The net");

@@ -19,8 +19,8 @@ runs the jar, while nothing is invested in it.
 
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
-#7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content and
-the images are not.
+#7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
+in for the two checklist pages only; every other page and all the images are not.
 
 #8 Reading the JSON — the classes exist, nothing reads them yet. Settled: content lives in
 the repo; `resources/data/` mirrors `resources/templates/`, a folder per template that needs
@@ -56,3 +56,10 @@ renamed fields to null rather than failing, so the miss is silent.
 #14 `van/maintenance/*` (2 files) carry an `actual` block — dated service records with
 odometer, shop, cost and next-due. No class reads it. Left in place; it is real content, not
 scaffolding.
+
+#15 Page titles are spelled twice — `OffgridProcessor` hardcodes "Useful links" and "Useful
+contacts" while the two JSON files say "Useful Links" and "Useful Contacts". Decide which
+spelling is right and delete the other.
+
+#16 A URL that does not resolve lands on the `exception` view. It survives and it logs,
+which is the requirement; the page itself is not fit to look at yet.

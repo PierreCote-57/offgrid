@@ -383,3 +383,75 @@ A description is a `List<String>` and each entry is one `<p>` with no margin, so
 stack the way they are written. A blank string is therefore a blank line, not a paragraph
 break — the data says where the breaks go, the stylesheet does not guess.
 
+## 2026-08-25 — Checklist pages: one route, a processor for the rows
+
+`/hardware/checklists/{name}` is one `@GetMapping` for the whole folder, not one per page.
+The name is the view name and the mirror folder both, so a new checklist is a template plus
+its data folder and nothing else. Per-page methods were the alternative and buy nothing here
+— the pages differ only in their content. The same shape is expected to hold wherever a
+folder holds interchangeable pages.
+
+The URL carries no `.html`. Every other route on the site is extensionless and the
+suffix would have made checklists the odd ones out; Spring Boot 4 does no suffix matching,
+so an extension would have had to be written into the mapping literally.
+
+**The `<li>` stays bare.** A checklist line is authored `<li>Shut off the engine</li>` and
+nothing else. `ChecklistElementProcessor`, an `IElementModelProcessor` on `<ol>`/`<ul>`,
+wraps each row's content in `<label><input type="checkbox"><span>` as the template renders.
+
+Two alternatives were weighed and dropped:
+
+- **CSS alone cannot do it.** `::before` draws a box, but there is no toggle state to hang
+  `:checked` on without a real `<input>` in the DOM.
+- **One tag per line** — authoring `<li><input type="checkbox"> text</li>` and striking the
+  row with `li:has(input:checked)` — works and needs no Java, but only the box toggles.
+  Clicking the words does nothing, which is most of the target on a phone.
+
+Carrying the markup in the authoring was also rejected: it puts the same three tags on every
+line of every checklist, where the processor states the rule once.
+
+`gl-checklist` and `gl-numcheck` keep their GettingLost names. The `gl-` prefix exists there
+to namespace against the WordPress theme and offgrid has no theme to collide with, so it
+buys nothing on its own — but pages copied across paste in untouched, now and later, and a
+rename would have to be applied to every one on the way in. Revisit when copying stops.
+
+The class on the list is what selects the variant, so it stays on the element and the
+processor reads it: `gl-checklist` is a plain checkbox row, `gl-numcheck` adds the counter
+span. One processor with two looks rather than two processors.
+
+**The processor has to be idempotent, or it recurses until the stack runs out.** Thymeleaf
+hands a model processor's own output straight back to it — `ProcessorTemplateHandler` sets
+`modelAfterProcessable = true` whenever the processor changed anything — and the rewritten
+list still carries `gl-checklist`, so it matches again. The engine stops only when a pass
+leaves the model untouched (`gatheredModel.sameAs(processedModel)`), so the processor skips
+any list whose rows already hold a checkbox. Every checklist is therefore walked twice: once
+to wrap, once to find nothing to do.
+
+An authored `<input>` is not enough to skip on. GettingLost writes write-on blanks as bare
+`<input size=...>`, so the test reads `type="checkbox"` specifically.
+
+Matching a dialect attribute instead would have avoided the second pass — the engine strips
+the matched attribute before handing the model back, so it cannot match twice. It was not
+taken because it puts a second marker on every list next to the class that already says the
+same thing.
+
+Checked state is not stored anywhere. A reload clears every box, which is what a
+one-campsite-at-a-time list wants.
+
+**`photoGallery`, `photoRef` and `backToGallery` render placeholders.** All three are block
+fragments that say they are unavailable and read nothing. Images are deferred with the rest
+of the image question, and the back link has no list page to return to yet.
+
+## 2026-08-25 — A user who edits the URL is on their own
+
+"If you try to write foolproof software, nature will invent a better fool." The site is
+clean and bug free for the URLs it publishes. A URL nobody linked to is not a case to be
+designed for.
+
+What a hand-edited URL owes: **survive, and leave a developer enough to diagnose it.** It
+must not corrupt anything and it must not die silently. It owes the person who typed it
+nothing beyond that — no friendly wording, no guess at what they meant, no recovery path.
+
+The concrete instance: a parameterized route matches any name in its shape, so
+`/about/useful-anything` reaches `readFile`, throws, and is caught into the `exception`
+view. That is the correct outcome, not a hole to plug.

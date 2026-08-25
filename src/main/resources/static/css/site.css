@@ -9,6 +9,7 @@
 	--brand-soft: #e7efe9;
 	--text: #243027;
 	--rule: #d6dfd8;
+	--faded: #8a938c;
 	--warn: #b26a00;
 	--warn-deep: #7a4700;
 	--warn-soft: #fdf0dc;
@@ -238,4 +239,110 @@ main p {
 
 .site-footer a {
 	color: var(--bar-text);
+}
+
+/* A howto or checklist section, spaced off whatever follows it. */
+[data-howto-section] {
+	margin-bottom: 40px;
+}
+
+/* Checklists. The label, checkbox and text span are emitted by
+   ChecklistElementProcessor; authors write bare <li> lines. The class carries the styling
+   and selects the variant, so it stays on the list. */
+.gl-checklist {
+	list-style: none;
+	padding-left: 0;
+	margin: 8px 0 24px;
+}
+
+.gl-checklist li {
+	margin: 7px 0;
+}
+
+.gl-checklist label {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	cursor: pointer;
+	line-height: 1.45;
+}
+
+.gl-checklist input[type="checkbox"] {
+	margin-top: 3px;
+	width: 17px;
+	height: 17px;
+	flex-shrink: 0;
+	accent-color: var(--brand);
+	cursor: pointer;
+}
+
+/* A checked row is struck through and dimmed — a done item, de-emphasized. Nothing is
+   stored, so a reload clears every box. */
+.gl-checklist input[type="checkbox"]:checked + span {
+	text-decoration: line-through;
+	color: var(--faded);
+}
+
+/* gl-numcheck: the same interactive row with an automatic number between the box and the
+   text. The number is a CSS counter, so each list restarts at 1 and the authored lines stay
+   bare; the processor emits the .gl-num span empty and ::before draws the digit. */
+.gl-numcheck {
+	list-style: none;
+	padding-left: 0;
+	margin: 8px 0 24px;
+	counter-reset: gl-numcheck;
+}
+
+.gl-numcheck li {
+	margin: 7px 0;
+	counter-increment: gl-numcheck;
+}
+
+.gl-numcheck label {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	cursor: pointer;
+	line-height: 1.45;
+}
+
+.gl-numcheck input[type="checkbox"] {
+	margin-top: 3px;
+	width: 17px;
+	height: 17px;
+	flex-shrink: 0;
+	accent-color: var(--brand);
+	cursor: pointer;
+}
+
+.gl-numcheck .gl-num {
+	flex-shrink: 0;
+	font-weight: 700;
+}
+
+.gl-numcheck .gl-num::before {
+	content: counter(gl-numcheck) ".";
+}
+
+/* On check, strike and dim the text while the number stays solid. The text span is the one
+   that is not .gl-num. */
+.gl-numcheck input[type="checkbox"]:checked ~ span:not(.gl-num) {
+	text-decoration: line-through;
+	color: var(--faded);
+}
+
+/* Placeholder for a block whose renderer does not exist yet. */
+.block-unavailable {
+	margin: 16px 0;
+	padding: 10px 14px;
+	border: 1px dashed var(--rule);
+	border-radius: 4px;
+	color: var(--faded);
+	font-size: 14px;
+	font-style: italic;
+}
+
+.block-unavailable-inline {
+	color: var(--faded);
+	font-style: italic;
 }

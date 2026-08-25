@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>offgrid</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+	<script defer th:src="@{/js/alpine.min.js}"></script>
+</head>
+<body>
+	<div th:replace="~{fragments/site/header}"></div>
+
+	<main>
+		<h1 th:text="${PageName}">Checklist: Leaving Campsite</h1>
+
+		<section data-howto-section="howto">
+			<p>
+				Work through these before you pull out.
+				The goal is a secured interior, everything disconnected and stowed,
+				tanks handled, and a clean site behind you.
+			</p>
+
+			<details open>
+				<summary><h2 style="display:inline;">Inside</h2></summary>
+				<ol class="gl-checklist">
+					<li>Wash up and stow all loose items &mdash; nothing left on counters</li>
+					<li>Close and latch every cabinet, drawer, the fridge, and the roof vents</li>
+					<li>Secure electronics, and close all windows</li>
+					<li>Switch off the water pump and the Truma Combi water heater</li>
+					<li>Set climate control off (or to its travel setting)</li>
+				</ol>
+			</details>
+
+			<details open>
+				<summary><h2 style="display:inline;">Water &amp; tanks</h2></summary>
+				<ol class="gl-checklist">
+					<li>Disconnect and drain the fresh-water hose, then stow it</li>
+					<li>If connected, dump the gray (and black, if equipped) tank at the dump station, rinse, and stow the sewer hose
+					</li>
+					<li>Close all tank valves</li>
+				</ol>
+			</details>
+
+			<details open>
+				<summary><h2 style="display:inline;">Power</h2></summary>
+				<ol class="gl-checklist">
+					<li>Switch off the pedestal breaker, disconnect the shore-power cable, and stow it</li>
+					<li>Confirm the van is running on house batteries for travel</li>
+				</ol>
+			</details>
+
+			<details open>
+				<summary><h2 style="display:inline;">Outside</h2></summary>
+				<ol class="gl-checklist">
+					<li>Retract the Carefree Eclipse awning (left toggle ON, press Retract) &mdash; watch it close and lock
+						fully
+					</li>
+					<li>Stow chairs, mat, table, and any outdoor gear</li>
+					<li>Remove the wheel chocks and leveling blocks</li>
+				</ol>
+			</details>
+
+			<details open>
+				<summary><h2 style="display:inline;">Final walk-around</h2></summary>
+				<ol class="gl-checklist">
+					<li>Walk the full perimeter: awning locked, step in, nothing left plugged in or hanging</li>
+					<li>Check overhead clearance for branches before pulling out</li>
+					<li>Leave the site clean &mdash; pack out all garbage and make sure any fire is cold to the touch</li>
+					<li>Release the parking brake and go</li>
+				</ol>
+			</details>
+
+		</section>
+
+		<br/>
+		<div th:replace="~{fragments/block/back-to-gallery}"></div>
+	</main>
+
+	<div th:replace="~{fragments/site/footer}"></div>
+</body>
+</html>
