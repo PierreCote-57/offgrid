@@ -20,7 +20,8 @@ runs the jar, while nothing is invested in it.
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
 #7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
-in for the two checklist pages only; every other page and all the images are not.
+in for the two checklists, the van and the Bronco; the six howto pages, the two maintenance
+pages, the destinations, the posts and all the images are not.
 
 #8 Reading the JSON — the classes exist, nothing reads them yet. Settled: content lives in
 the repo; `resources/data/` mirrors `resources/templates/`, a folder per template that needs
@@ -57,9 +58,17 @@ renamed fields to null rather than failing, so the miss is silent.
 odometer, shop, cost and next-due. No class reads it. Left in place; it is real content, not
 scaffolding.
 
-#15 Page titles are spelled twice — `OffgridProcessor` hardcodes "Useful links" and "Useful
-contacts" while the two JSON files say "Useful Links" and "Useful Contacts". Decide which
-spelling is right and delete the other.
-
 #16 A URL that does not resolve lands on the `exception` view. It survives and it logs,
 which is the requirement; the page itself is not fit to look at yet.
+
+#17 A gallery's heading is authored twice — the page writes
+`<h3 class="gl-heading">Listing pictures</h3>` while `photoGalleries.<key>.name` in the JSON
+says the same thing and nothing reads it. Decide which is the source. The fragment renders
+tiles only, so if the JSON wins, something else has to put the heading on the page.
+
+#18 The summary headings copied from GettingLost still carry `style="display:inline;"` —
+checklists, van, bronco. `site.css` does it now, so every one of them is dead weight, and
+each new page copied over brings another.
+
+#19 `back-to-gallery` is a placeholder with nothing to point at — no list page exists yet.
+The Bronco and both checklists call it.

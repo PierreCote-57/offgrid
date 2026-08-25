@@ -71,7 +71,7 @@
 			</ol>
 			</details>
 
-			<div th:replace="~{fragments/block/photo-gallery}"></div>
+			<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
 		</section>
 		<details>
 			<summary><h2 style="display:inline;">The details</h2></summary>
@@ -79,12 +79,12 @@
 				A few things worth checking before you get comfortable.
 			</p>
 			<ul>
-				<li>Remember the <span th:replace="~{fragments/block/photo-ref}"></span></li>
+				<li>Remember the <span th:replace="~{fragments/block/photo-ref :: ref('details/campers-code')}"></span></li>
 				<li>Note your fresh, gray (and black, if equipped) tank levels so nothing surprises you mid-stay</li>
 				<li>On Vancouver Island, store all food and garbage securely &mdash; this is bear country</li>
 				<li>Check for a current fire ban before lighting anything, and note the site's quiet hours</li>
 			</ul>
-			<div th:replace="~{fragments/block/photo-gallery}"></div>
+			<div th:replace="~{fragments/block/photo-gallery :: gallery('details')}"></div>
 		</details>
 		<br/>
 		<div th:replace="~{fragments/block/back-to-gallery}"></div>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>offgrid</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+	<script defer th:src="@{/js/alpine.min.js}"></script>
+</head>
+<body>
+	<div th:replace="~{fragments/site/header}"></div>
+
+	<main>
+		<h1 th:text="${PageName}">Van Overview</h1>
+
+		<div>
+			<div class="gl-photo" style="width:100%;float:left;"
+			 th:insert="~{fragments/block/photo :: photo('beyond_22d_floorplan_5fx5gqbr8e.jpg.webp')}"></div>
+
+			<p style="margin-top:0;">We purchased the van at
+		        <a href="https://www.pedenrv.com" target="_blank" rel="noopener noreferrer">
+		            Peden RV
+		        </a>, in Sydney, BC.
+		    </p>
+		</div>
+
+		<p><a href="https://coachmenrv.com/beyond" target="_blank" rel="noopener noreferrer">
+			Beyond on the Manufacturer site
+		</a></p>
+
+		<h3 class="gl-heading">Our van</h3>
+		<div th:replace="~{fragments/block/photo-gallery :: gallery('our-van')}"></div>
+
+		<details>
+		    <summary><h3 class="gl-heading" style="display:inline;">Listing features</h3></summary>
+		    <table style="width:60%; table-layout:fixed; border-collapse:collapse; margin:0 auto;">
+		        <colgroup>
+		            <col style="width:80%;" />
+		            <col style="width:20%;" />
+		        </colgroup>
+		        <thead>
+		            <tr>
+		                <th style="text-align:left;">Feature</th>
+		                <th style="text-align:center;">Part #</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr><td>NEW 30AMP Smart Plug (LED power light indicator, 20X contact area, weatherproof)</td><td style="text-align:center;"></td></tr>
+		            <tr><td>1 Garmin fixed touch screen controller plus a removable Garmin touch screen tablet</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Group 8D 330 Ah AGM battery</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Shower Miser water saver</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Oxygenics Fury hand held shower head with on/off</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Starlink Prep</td><td style="text-align:center;"></td></tr>
+		            <tr><td>RVQG2800i 2.8KW gasoline generator</td><td style="text-align:center;"></td></tr>
+		            <tr><td>24" LED Smart TV</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Q-Foam in sofas and twin beds</td><td style="text-align:center;"></td></tr>
+		            <tr><td>2,000W Victron Invertor</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Supersprings International Suspension Kit</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Carefree armless motion sensing power awning</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Hardwood cabinetry</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Sure Level Tank Sensors read tank levels at 10% increments</td><td style="text-align:center;"></td></tr>
+		            <tr><td>ABS Insulated Rear Doors</td><td style="text-align:center;"></td></tr>
+		            <tr><td>220W Solar panel with dual charging capabilities</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Rear pull-down screen &amp; rear window covers</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Side screen door</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Truma Combi G Furnace/Hot Water Heater</td><td style="text-align:center;"></td></tr>
+		            <tr><td>MaxxAir Fan with rain sensor and remote</td><td style="text-align:center;"></td></tr>
+		            <tr><td>New Larger Square Sink w/ Pull out Sprayer Faucet</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Front and Rear Swivel Tables</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Induction cooktop</td><td style="text-align:center;"></td></tr>
+		            <tr><td>1-Piece fiberglass shower</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Nova Kool compressor refrigerator</td><td style="text-align:center;"></td></tr>
+		            <tr><td>New Air Fryer/Convection Microwave Combo</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Ginseng décor (Saddle Brown)</td><td style="text-align:center;"></td></tr>
+		            <tr><td>White cabinets</td><td style="text-align:center;"></td></tr>
+		            <tr><td>White Exterior</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Truma Aventa 13.5k BTU 110V A/C</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Driver &amp; passenger upgraded seat re-covers</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Grey tank heaters</td><td style="text-align:center;"></td></tr>
+		            <tr><td>Upgraded front window covers</td><td style="text-align:center;"></td></tr>
+		        </tbody>
+		    </table>
+		</details>
+
+		<details>
+		    <summary><h3 class="gl-heading" style="display:inline;">Manufacturer options</h3></summary>
+			<table style="width:60%; table-layout:fixed; border-collapse:collapse; margin:0 auto;">
+				<colgroup>
+					<col style="width:80%;" />
+					<col style="width:20%;" />
+				</colgroup>
+		        <thead>
+		            <tr>
+		                <th style="text-align:left;">Option</th>
+		                <th style="text-align:center;">Code</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr><td>Electronics Package</td><td style="text-align:center;">225-6690-13</td></tr>
+		            <tr><td>Canadian Compliance</td><td style="text-align:center;">901</td></tr>
+		            <tr><td>CSA Upfit</td><td style="text-align:center;">902</td></tr>
+		            <tr><td>Travel Easy Roadside Assistance</td><td style="text-align:center;">950</td></tr>
+		            <tr><td>Truma Aventa 13.5 110V AC with Soft Start</td><td style="text-align:center;">1302</td></tr>
+		            <tr><td>Tank Heaters Grey Tank</td><td style="text-align:center;">1321-1</td></tr>
+		            <tr><td>Upgraded Front Window Covers</td><td style="text-align:center;">2146</td></tr>
+		            <tr><td>Driver &amp; Passenger Upgraded Seat Covers</td><td style="text-align:center;">2190</td></tr>
+		            <tr><td>Insulated ABS Interior Rear Doors</td><td style="text-align:center;">2627</td></tr>
+		            <tr><td>Cozy Wrap Upgraded Insulation</td><td style="text-align:center;">60133-1</td></tr>
+		            <tr><td>Convenience Package</td><td style="text-align:center;">BYB6081-3</td></tr>
+		            <tr><td>MVSA</td><td style="text-align:center;">MVSA</td></tr>
+		            <tr><td>High Gloss White Interior Wood</td><td style="text-align:center;">HGWHITE</td></tr>
+		        </tbody>
+		    </table>
+		</details>
+
+		<details>
+			<summary><h3 class="gl-heading">Listing pictures</h3></summary>
+			<div th:replace="~{fragments/block/photo-gallery :: gallery('listing-pictures')}"></div>
+		</details>
+
+		<div th:replace="~{fragments/block/note-list}"></div>
+	</main>
+
+	<div th:replace="~{fragments/site/footer}"></div>
+</body>
+</html>

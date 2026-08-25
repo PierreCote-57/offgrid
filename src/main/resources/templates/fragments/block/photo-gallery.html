@@ -1,1 +1,7 @@
-<div class="block-unavailable">Gallery unavailable</div>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="gallery(galleryName)" class="gl-gallery-grid"
+	 th:with="galleryData=${photoGalleries == null ? null : photoGalleries.get(galleryName)}">
+	<figure class="gl-gallery-item" th:each="item : ${galleryData?.itemList}">
+		<div class="block-unavailable" th:text="${item.img}">image unavailable</div>
+		<figcaption th:text="${item.label}">Caption</figcaption>
+	</figure>
+</div>

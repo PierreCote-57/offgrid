@@ -346,3 +346,84 @@ main p {
 	color: var(--faded);
 	font-style: italic;
 }
+
+/* A bordered section heading, the one used on <summary> lines and above a gallery. */
+.gl-heading {
+	margin: 0;
+	padding-bottom: 4px;
+	border-bottom: 1px solid var(--rule);
+	color: var(--brand-deep);
+	font-size: 20px;
+	font-weight: 600;
+}
+
+/* A <details> block: the summary is the clickable line, the marker stays the browser's. */
+details {
+	margin: 16px 0;
+}
+
+details > summary {
+	cursor: pointer;
+}
+
+/* A heading inside a summary stays on the marker's line instead of dropping below it. */
+details > summary > h2,
+details > summary > h3 {
+	display: inline;
+}
+
+/* The click focus ring is dropped, the keyboard one kept. */
+details > summary:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* A single inline photo. The page owns the box — width, float and margin are set on the
+   block element itself — so these are defaults for a page that sets none of them. */
+.gl-photo {
+	width: 25%;
+	float: right;
+	margin: 0 0 16px 16px;
+}
+
+/* A mini-gallery: a grid of captioned thumbnails. Its heading, and whether it sits inside a
+   <details>, are the page's business, not the fragment's. */
+.gl-gallery-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 16px;
+	margin: 12px 0 24px;
+}
+
+.gl-gallery-item {
+	margin: 0;
+}
+
+.gl-gallery-item figcaption {
+	margin-top: 6px;
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+/* Authored tables. The page sets its own width and column widths inline; this is the look
+   they share — ruled rows, a headed top, and room to read. */
+main table {
+	border-collapse: collapse;
+	margin: 12px 0;
+}
+
+main th,
+main td {
+	padding: 6px 10px;
+	border-bottom: 1px solid var(--rule);
+	line-height: 1.45;
+}
+
+main thead th {
+	color: var(--brand-deep);
+	border-bottom: 2px solid var(--rule);
+	font-size: 15px;
+}
+
+main tbody tr:last-child td {
+	border-bottom: 0;
+}

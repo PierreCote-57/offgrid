@@ -65,10 +65,13 @@ Two fragment folders, split on who decides the markup appears:
 The day that boundary blurs is the day the split stops helping, so it is written down here
 rather than left to be inferred from the folder names.
 
-One fragment per file also means the `:: name` selector is unnecessary — a fragment
-expression with no `::` includes the whole template, so `~{fragments/site/header}` is the
-whole include. Fragment files therefore hold only their markup, with no `<html>`/`<body>`
-wrapper.
+Fragment files hold only their markup, with no `<html>`/`<body>` wrapper.
+
+One fragment per file means a fragment that takes nothing needs no `:: name` selector — a
+fragment expression with no `::` includes the whole template, so `~{fragments/site/header}`
+is the whole include. A fragment that takes a parameter has to name itself, because that is
+where the arguments go: `~{fragments/block/photo-gallery :: gallery('our-van')}`. Which of
+the two applies is decided further down, under the block-fragment rule.
 
 ## 2026-08-24 — Palette
 
@@ -359,25 +362,40 @@ Every top-level key in the 52 page files now binds to a class except those two.
 `/about/useful-links` renders `templates/about/useful-links.html`, whose data folder is
 `data/about/useful-links/`. The URL, the view name and the mirror path are the same string,
 so adding a page is a template, a `@GetMapping` and a `process*` method — nothing else to
-keep in step.
+keep in step. Where a parameterized route already covers the shape, it is a template and its
+folder, and there is no Java to write at all.
 
-The three Info pages are the first to use it. They are blank on purpose: a heading, the
-header and the footer, and nothing reading their JSON yet (todo #8).
+The three Info pages are the first to use it. `/about` is a heading, the header and the
+footer, and nothing else; the two Useful pages render their `noteList`.
 
-## 2026-08-25 — A block fragment reads the model, it takes no parameters
+## 2026-08-25 — A block fragment takes a parameter when the page has to say which
 
-`fragments/block/note-list.html` renders `${noteList}` straight off the model. The page puts
-the data there under the part's own name and includes the fragment with a bare
-`th:replace="~{fragments/block/note-list}"` — no `::` selector, no `th:with`, no parameter
-list to keep in step with the markup.
+Two shapes, and what decides between them is whether the part is rendered as a whole or its
+members are placed individually.
 
-Same contract `fragments/site/header.html` already uses for `${UserMessageList}`, so there is
-one rule for both fragment folders rather than two.
+**Rendered as a whole — the fragment reads the model.** A `noteList` is every section, in
+order, in one place; nothing renders a single section on its own. The page puts the data on
+the model under the part's own name and includes the fragment bare —
+`th:replace="~{fragments/block/note-list}"`, no `::` selector, no `th:with`. The attribute
+name is the contract: a page that wants the note-list block sets `noteList`. Same contract
+`fragments/site/header.html` already uses for `${UserMessageList}`.
 
-The attribute name is the contract: a page that wants the note-list block sets `noteList`.
+**Placed individually — the page names which one, and the fragment takes it.** A `googleMap`
+is a list of maps that appear at different points on the page: a campground map at the top
+showing the site against the lake, a map of the road in at the bottom. `photoGalleries` is
+the same — the van page carries `our-van` partway down and `listing-pictures` near the end.
+The name is resolved in the page's HTML, so the page is what says where each one goes.
 
-One fragment for the whole block, not one per section: a `noteList` is rendered as a unit and
-nothing renders a single section on its own. It splits the day something does.
+**The name is always given, even when the collection holds exactly one entry.** There is no
+falling back to "the only one" — a page that later grows a second map would silently change
+meaning without being edited.
+
+This replaces the rule as first written earlier the same day, that a block fragment never
+takes parameters. That was drawn from `noteList`, which was the only block that existed, and
+it does not survive the first part whose members are addressed one at a time.
+
+One fragment for the whole `noteList` block, not one per section. It splits the day
+something renders a section on its own.
 
 A description is a `List<String>` and each entry is one `<p>` with no margin, so the lines
 stack the way they are written. A blank string is therefore a blank line, not a paragraph
@@ -455,3 +473,32 @@ nothing beyond that — no friendly wording, no guess at what they meant, no rec
 The concrete instance: a parameterized route matches any name in its shape, so
 `/about/useful-anything` reaches `readFile`, throws, and is caught into the `exception`
 view. That is the correct outcome, not a hole to plug.
+## 2026-08-25 — The hardware pages, and the photo blocks
+
+`/hardware/{name}` serves the van and the Bronco. Two singleton pages rather than a folder of
+interchangeable ones, but the shape is identical — template plus data folder — so they get
+the parameterized route too. It sits above `/hardware/checklists/{name}`, which is a segment
+deeper and does not collide.
+
+The van page is `van`, not `van-overview`: its data folder came across as `data/hardware/van/`
+and the mirror decides the name.
+
+**`photo` is inserted, not replaced.** The page owns the box — the van sets
+`width:100%;float:left` on the block element itself — so `th:insert` keeps the authored
+element and puts the picture inside it. `th:replace` would drop the geometry the author
+wrote. The defaults for a page that sets nothing live in `.gl-photo` in the stylesheet, not
+in code that inspects what the author already set.
+
+**`photoGallery` takes the gallery name and renders a grid of captioned tiles — nothing
+else.** Whether a gallery has a heading above it, and whether it sits inside a `<details>`,
+is the page's HTML, not the fragment's. A `collapsible` flag was tried first and removed:
+structure is the author's, the same rule the rest of the site runs on, and a fragment that
+emits its own `<details>` leaves the page unable to see the structure it is producing.
+
+The consequence: the heading is authored in the page rather than taken from the gallery's
+`name` in the JSON, so a gallery that has a heading has it written in two places.
+
+**An image slot renders its filename.** Until #9 settles there is no URL to serve an image
+from, so every photo and every thumbnail shows the filename it wanted. That is the diagnostic
+form — it says which file is missing rather than leaving a hole — and it disappears the day
+images have a path.

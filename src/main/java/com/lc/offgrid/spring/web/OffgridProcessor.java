@@ -39,25 +39,36 @@ public class OffgridProcessor extends BaseWebProcessor
 		return viewName;
 	}
 
-	public String processUsefulLinks(Model model)
+	/**
+	 * One of the Useful pages. The name completes the page name, which is the view name and
+	 * the data folder both, so a new one is a template plus its folder.
+	 */
+	public String processUseful(Model model, String name)
 	{
-		processDefault(model, "Useful links");
+		String pageName = "useful-" + name;
 
-		PageData pageData = readFile("data/about/useful-links/useful-links.json", PageData.class);
+		PageData pageData = readFile("data/about/" + pageName + "/" + pageName + ".json", PageData.class);
+
+		processDefault(model, pageData.getName());
 		model.addAttribute("noteList", pageData.getNoteList());
 
-		String viewName = "about/useful-links";
+		String viewName = "about/" + pageName;
 		return viewName;
 	}
 
-	public String processUsefulContacts(Model model)
+	/**
+	 * One of the hardware pages — the van, the Bronco. The name is the view name and the data
+	 * folder both.
+	 */
+	public String processHardware(Model model, String name)
 	{
-		processDefault(model, "Useful contacts");
+		PageData pageData = readFile("data/hardware/" + name + "/" + name + ".json", PageData.class);
 
-		PageData pageData = readFile("data/about/useful-contacts/useful-contacts.json", PageData.class);
+		processDefault(model, pageData.getName());
 		model.addAttribute("noteList", pageData.getNoteList());
+		model.addAttribute("photoGalleries", pageData.getPhotoGalleries());
 
-		String viewName = "about/useful-contacts";
+		String viewName = "hardware/" + name;
 		return viewName;
 	}
 
@@ -70,6 +81,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		PageData pageData = readFile("data/hardware/checklists/" + name + "/" + name + ".json", PageData.class);
 
 		processDefault(model, pageData.getName());
+		model.addAttribute("photoGalleries", pageData.getPhotoGalleries());
 
 		String viewName = "hardware/checklists/" + name;
 		return viewName;
