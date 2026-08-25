@@ -1,0 +1,8 @@
+#
+# Default configuration, for configurations that are profile dependent
+#
+
+BaseWebProcessor:
+  welcomeMessage: "Going offgrid"
+  administratorEmail: "Pierre@LogicielCote.COM"
+  siteVersion: "0.1.0"

@@ -50,7 +50,7 @@ container.
 Two controllers: a Client controller serving pages, and an MCP controller. Thymeleaf for
 server-rendered pages, Alpine for client-side behavior, plus static content.
 
-Package `com.logicielcote.offgrid`, artifact `offgrid`.
+Package `com.lc.offgrid`, artifact `offgrid`.
 
 ## 2026-08-24 — Template layout
 

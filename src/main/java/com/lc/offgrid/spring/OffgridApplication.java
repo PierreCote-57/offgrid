@@ -1,4 +1,4 @@
-package com.logicielcote.offgrid;
+package com.lc.offgrid.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

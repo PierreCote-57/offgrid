@@ -1,0 +1,7 @@
+#
+# Local environment = everything on the local machine
+#
+
+folder:
+  image: "/Users/pierrecote/pictures/offgrid"
+  data: "/Users/pierrecote/src/github/offgrid"

@@ -1,5 +1,10 @@
 <footer xmlns:th="http://www.thymeleaf.org" class="site-footer">
 	<span class="footer-left">&copy; Copyright 2026 LogicielCote.COM</span>
 	<span class="footer-center">Contact: <a href="mailto:Pierre@logicielcote.com">Pierre@LogicielCote.com</a></span>
-	<span class="footer-right">Last modified &mdash; TBD</span>
+	<span class="footer-right">
+		Last modified &mdash; TBD<br />
+		<span class="footer-right"
+			  th:text="'Rendered: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
+		</span>
+	</span>
 </footer>

@@ -15,3 +15,14 @@ runs the jar, while nothing is invested in it.
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
 #7 Content from GettingLost — none migrated yet.
+
+#8 Reading the JSON — design started, not built. Settled: the GettingLost per-page JSON
+schema is the starting point. Still open: where the files live at runtime, whether they are
+loaded at startup or per request, and whether they map to typed records or a generic tree.
+
+#9 Getting content onto the server — the open thread behind #8, and it covers JSON, HTML
+and images alike. Pierre wants minimum friction, ideally a remote drive mounted in Finder
+for drag and drop. Finder mounts SMB/AFP/NFS/WebDAV read-write and FTP read-only, and has
+no SFTP support, so a real mounted volume needs Mountain Duck or Transmit (~$40). The
+alternative is no transfer at all: content in the repo, pushed, rebuilt by FullHost.
+Question to put to FullHost: which path on the container survives a redeploy.
