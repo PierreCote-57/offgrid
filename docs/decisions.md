@@ -20,8 +20,8 @@ stack list was read.
 Non-LTS releases stop getting security patches roughly six months after they ship, which
 rules them out for a server.
 
-Their list looks like it has not been refreshed in a while — confirm 21 when the account
-is opened.
+Their published list looks stale, but Pierre confirmed with FullHost on 2026-08-24 that
+Corretto 21 is available. The pin holds.
 
 ## 2026-08-24 — Spring Boot 4.1.1
 
@@ -84,3 +84,16 @@ outline style: soft fill, brand border, filling in on hover.
 
 GettingLost's brown/Lora/Source Sans look was not carried over; a lighter, happier palette
 was wanted instead.
+
+## 2026-08-24 — Brand wordmark
+
+"Offgrid" in the header is Bradley Hand, italic. It reads as handwriting on a field
+notebook rather than a formal script, and it stays legible when the header shrinks on a
+phone.
+
+Pacifico, Chalkduster and Papyrus were tried and dropped — Papyrus specifically because it
+is the one typeface a general audience recognises and mocks by name.
+
+Bradley Hand is an Apple system font, so it cannot be self-hosted the way Alpine is.
+Non-Apple visitors fall back to generic `cursive`. Accepted for a single seven-letter word;
+it would not be acceptable for anything the site depends on being read.
