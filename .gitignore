@@ -33,3 +33,6 @@ build/
 
 ### macOS ###
 .DS_Store
+
+### Local previews, not part of the site ###
+_preview/
