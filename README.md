@@ -5,21 +5,21 @@ A Spring Boot application serving the offgrid site.
 ## Requirements
 
 - JDK 21 (Amazon Corretto 21)
-- No Gradle install needed — use the `gradlew` wrapper in this repo
+- No Maven install needed — use the `mvnw` wrapper in this repo
 
 ## Build
 
-    ./gradlew bootJar
+    ./mvnw package
 
-Produces `build/libs/offgrid-0.0.1-SNAPSHOT.jar`, a self-contained fat jar.
+Produces `target/offgrid-0.0.1-SNAPSHOT.jar`, a self-contained fat jar.
 
 ## Run
 
-    java -jar build/libs/offgrid-0.0.1-SNAPSHOT.jar
+    java -jar target/offgrid-0.0.1-SNAPSHOT.jar
 
 Serves on http://localhost:8080.
 
-From IntelliJ: open `build.gradle` as a project, then run `OffgridApplication`.
+From IntelliJ: open `pom.xml` as a project, then run `OffgridApplication`.
 
 ## Layout
 
@@ -32,4 +32,7 @@ From IntelliJ: open `build.gradle` as a project, then run `OffgridApplication`.
 
 ## Stack
 
-Spring Boot 4.1.1, Java 21, Thymeleaf, Gradle 9.5.1 (Groovy DSL).
+Spring Boot 4.1.1, Java 21, Thymeleaf, Maven (wrapper pinned in `.mvn/wrapper`).
+
+Built by FullHost from this repo — Maven is what their build node runs, so the build must
+stay Maven-driven.
