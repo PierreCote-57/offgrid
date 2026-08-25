@@ -1,5 +1,6 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -20,15 +21,43 @@ public class OffgridProcessor extends BaseWebProcessor
 
 	public String processHome(Model model)
 	{
-		processDefault(model, "Home");
-
-		model.addAttribute("headline", "Offgrid");
+		processDefault(model, "Offgrid's home page");
 
 		addInfoMessage("Welcome to Offgrid " + new Date());
 		addWarningMessage("Welcome to WARNING " + new Date());
 		addErrorMessage("Welcome to ERROR " + new Date());
 
 		String viewName = "index";
+		return viewName;
+	}
+
+	public String processAbout(Model model)
+	{
+		processDefault(model, "About");
+
+		String viewName = "about/about";
+		return viewName;
+	}
+
+	public String processUsefulLinks(Model model)
+	{
+		processDefault(model, "Useful links");
+
+		PageData pageData = readFile("data/about/useful-links/useful-links.json", PageData.class);
+		model.addAttribute("noteList", pageData.getNoteList());
+
+		String viewName = "about/useful-links";
+		return viewName;
+	}
+
+	public String processUsefulContacts(Model model)
+	{
+		processDefault(model, "Useful contacts");
+
+		PageData pageData = readFile("data/about/useful-contacts/useful-contacts.json", PageData.class);
+		model.addAttribute("noteList", pageData.getNoteList());
+
+		String viewName = "about/useful-contacts";
 		return viewName;
 	}
 

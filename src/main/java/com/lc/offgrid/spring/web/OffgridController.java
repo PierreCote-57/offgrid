@@ -41,6 +41,33 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processHome(model));
 	}
 
+	@GetMapping("/about")
+	public String about(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model)
+	{
+		return processRequest(request, response, model, () -> getService().processAbout(model));
+	}
+
+	@GetMapping("/about/useful-links")
+	public String usefulLinks(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model)
+	{
+		return processRequest(request, response, model, () -> getService().processUsefulLinks(model));
+	}
+
+	@GetMapping("/about/useful-contacts")
+	public String usefulContacts(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model)
+	{
+		return processRequest(request, response, model, () -> getService().processUsefulContacts(model));
+	}
+
 	@GetMapping(value = {"/pi"}, produces = "text/html")
 	public String pi(
 			HttpServletRequest request,

@@ -331,3 +331,55 @@ four, with labels like "Park" and "Trail".
 `Leg.type` is a `String`, not an enum. Only four values appear — potholes, sharp_rock, unpaved,
 dirt — across four files, which is too thin to close the vocabulary. An enum would bind an
 unlisted value to null silently.
+
+## 2026-08-25 — The data pass ran
+
+All 56 JSON files in `resources/data` were converted in one pass, the registry's 190 entries
+included. The rename table is in todo #10; the structural moves were `links` into
+`campgroundData.referenceList`, `location.zoom` onto the googleMap entries that had none of
+their own, `tags: []` deleted from the 8 van files, empty `categories` deleted from the 6
+posts, and four posts' `googleMap` becoming `relatedDestinationList`.
+
+Two rounds, deliberately. The first pass renamed and moved but deleted nothing that had
+content in it, and reported what it had left behind. Pierre then ruled which of those were
+obsolete — the two posts pointing at locationIds with no page, and the four park files still
+carrying `access` and `campgroundData` — and those were removed in a second pass.
+
+**Deleting content is his call, not the migration's.** A pass that renames can run
+unsupervised; a pass that drops a block someone wrote cannot. `actual` in the two van
+maintenance files is still there for that reason (todo #14), as is `wpSettings` in all 52.
+
+One `campground` key survives on purpose: it is the name of a `googleMap` entry in
+`morton-lake-park`, a map of the campground inside the park, not the data block.
+
+Every top-level key in the 52 page files now binds to a class except those two.
+
+## 2026-08-25 — A URL is the view name
+
+`/about/useful-links` renders `templates/about/useful-links.html`, whose data folder is
+`data/about/useful-links/`. The URL, the view name and the mirror path are the same string,
+so adding a page is a template, a `@GetMapping` and a `process*` method — nothing else to
+keep in step.
+
+The three Info pages are the first to use it. They are blank on purpose: a heading, the
+header and the footer, and nothing reading their JSON yet (todo #8).
+
+## 2026-08-25 — A block fragment reads the model, it takes no parameters
+
+`fragments/block/note-list.html` renders `${noteList}` straight off the model. The page puts
+the data there under the part's own name and includes the fragment with a bare
+`th:replace="~{fragments/block/note-list}"` — no `::` selector, no `th:with`, no parameter
+list to keep in step with the markup.
+
+Same contract `fragments/site/header.html` already uses for `${UserMessageList}`, so there is
+one rule for both fragment folders rather than two.
+
+The attribute name is the contract: a page that wants the note-list block sets `noteList`.
+
+One fragment for the whole block, not one per section: a `noteList` is rendered as a unit and
+nothing renders a single section on its own. It splits the day something does.
+
+A description is a `List<String>` and each entry is one `<p>` with no margin, so the lines
+stack the way they are written. A blank string is therefore a blank line, not a paragraph
+break — the data says where the breaks go, the stylesheet does not guess.
+

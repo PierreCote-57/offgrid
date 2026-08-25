@@ -16,9 +16,9 @@
 			<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
 				<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Info</button>
 				<ul class="submenu" x-show="open" x-cloak>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Useful links</a></li>
-					<li><a href="#">Useful contacts</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+					<li><a th:href="@{/about/useful-links}">Useful links</a></li>
+					<li><a th:href="@{/about/useful-contacts}">Useful contacts</a></li>
 				</ul>
 			</li>
 		</ul>

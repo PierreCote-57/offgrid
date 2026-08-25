@@ -6,18 +6,26 @@
 
 package com.lc.offgrid.spring.tools;
 
+import com.google.gson.Gson;
+import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.basics.tools.misc.BasicException;
+import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.basics.tools.time.BasicTimer;
 import com.lc.offgrid.spring.tools.BaseWebController.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseWebProcessor
 {
 	private static final BasicLogger LOGGER					= BasicLogger.getLogger(BaseWebProcessor.class);
+	private static final Gson GSON							= new Gson();
 
 	@Value("${BaseWebProcessor.welcomeMessage}")
 	private String				m_welcomeMessage;
@@ -152,4 +160,19 @@ public abstract class BaseWebProcessor
 		m_model.addAttribute("Title2", title);
 	}
 
+	public static <T> T readFile(String path, Class<T> clazz)
+	{
+		URL url = BaseWebProcessor.class.getClassLoader().getResource(path);
+		try
+		{
+			String text = BasicFileReader.readTextFile(url);
+			T obj = GSON.fromJson(text, clazz);
+			return obj;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Error reading file: " + path, e);
+			throw new BasicRuntimeException("Error reading file: " + path, e);
+		}
+	}
 }

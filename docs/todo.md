@@ -2,13 +2,18 @@
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
-#1 FullHost account — not opened yet. Java 21 is confirmed available there, so nothing
-blocks it but the signup.
+#1 FullHost account — signed up, but locked out. The password reset sends nothing to the
+address that verified the account, and FullHost has no phone support. The way in is a guest
+ticket at https://manage.fullhost.com/submitticket.php or the sales form, both of which work
+without logging in. Worth asking in the ticket whether the account was ever fully
+provisioned — a signup that stalled after email verification would leave no client record to
+reset a password against, which looks exactly like this.
 
 #2 Deploy the skeleton to FullHost — validates that their build node builds this repo and
 runs the jar, while nothing is invested in it.
 
-#4 Menu links go nowhere — every item in the header is `href="#"`. No routes, no pages.
+#4 Menu links go nowhere — Destinations, Blog and the four Hardware items are still
+`href="#"`. The three Info items (About, Useful links, Useful contacts) are wired.
 
 #5 Footer "Last modified" is a placeholder — no source decided for the date.
 
