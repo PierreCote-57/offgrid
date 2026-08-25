@@ -85,6 +85,36 @@ main p {
 	line-height: 1.55;
 }
 
+/* A noteList: titled sections, each holding named entries whose description is carried a
+   line at a time. Lines stack with no gap between them, so a blank line in the data is a
+   blank line on the page rather than a paragraph break. */
+.note-section h2 {
+	margin: 28px 0 4px;
+	padding-bottom: 4px;
+	border-bottom: 1px solid var(--rule);
+	color: var(--brand-deep);
+	font-size: 20px;
+}
+
+.note-item {
+	margin: 14px 0 0;
+}
+
+.note-item h3 {
+	margin: 0 0 2px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.note-item a {
+	color: var(--brand);
+}
+
+.note-item p {
+	margin: 0;
+	line-height: 1.5;
+}
+
 /* Header: brand on the left, menu on the right, on the coloured bar. */
 .site-header {
 	display: flex;

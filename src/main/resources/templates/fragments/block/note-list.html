@@ -1,0 +1,13 @@
+<div xmlns:th="http://www.thymeleaf.org" class="note-list">
+	<section class="note-section" th:each="noteSection : ${noteList}">
+		<h2 th:text="${noteSection.sectionName}">Section name</h2>
+
+		<div class="note-item" th:each="noteItem : ${noteSection.itemList}">
+			<h3>
+				<a th:if="${noteItem.url}" th:href="${noteItem.url}" th:text="${noteItem.name}">Name</a>
+				<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
+			</h3>
+			<p th:each="descriptionLine : ${noteItem.description}" th:text="${descriptionLine}">Description line</p>
+		</div>
+	</section>
+</div>

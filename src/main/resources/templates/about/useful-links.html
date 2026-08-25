@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>offgrid</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+	<script defer th:src="@{/js/alpine.min.js}"></script>
+</head>
+<body>
+	<div th:replace="~{fragments/site/header}"></div>
+
+	<main>
+		<h1 th:text="${PageName}">Useful links</h1>
+
+		<div th:replace="~{fragments/block/note-list}"></div>
+	</main>
+
+	<div th:replace="~{fragments/site/footer}"></div>
+</body>
+</html>
