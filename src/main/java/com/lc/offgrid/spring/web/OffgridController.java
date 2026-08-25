@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class OffgridController extends BaseWebController
 {
 	@Autowired
-	private OffgridProcessor m_service;
+	private OffgridProcessor service;
 
 	@Autowired
-	private BeanFactory m_beanFactory;
+	private BeanFactory beanFactory;
 
 	public BeanFactory getBeanFactory()
 	{
-		return m_beanFactory;
+		return beanFactory;
 	}
 	public OffgridProcessor getService()
 	{
@@ -79,6 +81,18 @@ public class OffgridController extends BaseWebController
 			@PathVariable String name)
 	{
 		return processRequest(request, response, model, () -> getService().processChecklist(model, name));
+	}
+
+	/**
+	 * An image, straight from the image folder. This one answers with bytes rather than a view
+	 * name, so it goes to the processor directly instead of through processRequest.
+	 */
+	@GetMapping("/image/{imageName}")
+	public ResponseEntity<Resource> image(
+			@PathVariable String imageName)
+	{
+		ResponseEntity<Resource> answer = getService().processImage(imageName);
+		return answer;
 	}
 
 	@GetMapping(value = {"/pi"}, produces = "text/html")

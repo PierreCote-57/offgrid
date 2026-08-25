@@ -1,2 +1,2 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="photo(img)" class="block-unavailable"
-	 th:text="'image unavailable: ' + ${img}">image unavailable</div>
+<img xmlns:th="http://www.thymeleaf.org" th:fragment="photo(img)" style="width:100%;display:block;"
+	 th:src="@{/image/{imageName}(imageName=${img})}" th:alt="${img}" src="" alt="">
