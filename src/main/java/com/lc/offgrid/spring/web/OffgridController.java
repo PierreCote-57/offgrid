@@ -44,7 +44,7 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processHome(model));
 	}
 
-	@GetMapping("/about")
+	@GetMapping("/info/about")
 	public String about(
 			HttpServletRequest request,
 			HttpServletResponse response,
@@ -53,7 +53,7 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processAbout(model));
 	}
 
-	@GetMapping("/about/useful-{name}")
+	@GetMapping("/info/useful-{name}")
 	public String useful(
 			HttpServletRequest request,
 			HttpServletResponse response,

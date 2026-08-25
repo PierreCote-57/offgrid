@@ -1,11 +1,17 @@
 <footer xmlns:th="http://www.thymeleaf.org" class="site-footer">
-	<span class="footer-left">&copy; Copyright 2026 LogicielCote.COM</span>
-	<span class="footer-center">Contact: <a href="mailto:Pierre@logicielcote.com">Pierre@LogicielCote.com</a></span>
+	<span class="footer-left">
+		&copy; Copyright 2026 LogicielCote.COM<br />
+		<span  th:text="'Version: ' + ${SiteVersion}"></span>
+	</span>
+	<span class="footer-center">
+		Contact: <a href="mailto:Pierre@logicielcote.com">
+		Pierre@LogicielCote.com</a>
+	</span>
 	<span class="footer-right">
-		Last modified &mdash; TBD<br />
 		<span class="footer-right"
 			  th:text="'Rendered: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
-		</span>
+		</span><br />
+		<span th:text="'Render in: ' + ${Timer.elapsedTime}"></span>
 	</span>
 
 	<span style="font-size: 0pt" th:text="'

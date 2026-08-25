@@ -259,6 +259,15 @@ public final class BasicTimer
 		}
     }
 
+	public String getElapsedTime()
+	{
+		long now = System.nanoTime();
+		long start = m_startTime;
+		long elapsedNS = now - start;
+		String text = TimeUnits.NS.format(elapsedNS);
+		return text;
+	}
+
 	/**
 	 * 	Standard toString() method
 	 */

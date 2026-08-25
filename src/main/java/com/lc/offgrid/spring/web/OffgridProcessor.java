@@ -58,7 +58,7 @@ public class OffgridProcessor extends BaseWebProcessor
 	{
 		processDefault(model, "About");
 
-		String viewName = "about/about";
+		String viewName = "info/about";
 		return viewName;
 	}
 
@@ -70,12 +70,12 @@ public class OffgridProcessor extends BaseWebProcessor
 	{
 		String pageName = "useful-" + name;
 
-		PageData pageData = readFile("data/about/" + pageName + "/" + pageName + ".json", PageData.class);
+		PageData pageData = readFile("data/info/" + pageName + "/" + pageName + ".json", PageData.class);
 
 		processDefault(model, pageData.getName());
 		model.addAttribute("pageData", pageData);
 
-		String viewName = "about/" + pageName;
+		String viewName = "info/" + pageName;
 		return viewName;
 	}
 
@@ -115,8 +115,8 @@ public class OffgridProcessor extends BaseWebProcessor
 	 */
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
-		String	imageFile	= FIXED_IMAGE;
-		Path	imagePath	= Paths.get(getFolderImage() + "/" + imageFile);
+		imageName = FIXED_IMAGE;
+		Path	imagePath	= Paths.get(getFolderImage() + "/" + imageName);
 
 		if (!Files.isReadable(imagePath))
 		{
@@ -127,7 +127,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		}
 
 		FileSystemResource	imageResource	= new FileSystemResource(imagePath);
-		MediaType			mediaType		= mediaTypeOf(imageFile);
+		MediaType			mediaType		= mediaTypeOf(imageName);
 
 		ResponseEntity<Resource> answer = ResponseEntity.ok()
 				.contentType(mediaType)
