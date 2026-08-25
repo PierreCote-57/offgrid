@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.util.Date;
+
 @Component
 @Scope("prototype")
 public class OffgridProcessor extends BaseWebProcessor
@@ -21,7 +23,12 @@ public class OffgridProcessor extends BaseWebProcessor
 		processDefault(model, "Home");
 
 		model.addAttribute("headline", "Offgrid");
-		var viewName = "index";
+
+		addInfoMessage("Welcome to Offgrid " + new Date());
+		addWarningMessage("Welcome to WARNING " + new Date());
+		addErrorMessage("Welcome to ERROR " + new Date());
+
+		String viewName = "index";
 		return viewName;
 	}
 

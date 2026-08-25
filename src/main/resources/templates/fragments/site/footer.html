@@ -7,4 +7,7 @@
 			  th:text="'Rendered: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
 		</span>
 	</span>
+
+	<span style="font-size: 0pt" th:text="'
+' + ${Timer.results}"></span>
 </footer>

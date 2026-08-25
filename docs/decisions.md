@@ -78,9 +78,15 @@ changes in one place.
 
 Header and footer wear the colour, the page between them is white.
 
-**There is no contrasting accent colour.** Every colour on the site is a shade of the bar
-green. An amber accent was tried and rejected — the button jumped off the page. Buttons are
-outline style: soft fill, brand border, filling in on hover.
+**There is no contrasting accent colour.** Every decorative colour on the site is a shade of
+the bar green. An amber accent was tried and rejected — the button jumped off the page.
+Buttons are outline style: soft fill, brand border, filling in on hover.
+
+The exceptions, added 2026-08-25, are the message signal colours: warning orange (`--warn`
+`#b26a00`, `--warn-deep` `#7a4700`, `--warn-soft` `#fdf0dc`) and error red (`--error`
+`#a02a1f`, `--error-deep` `#7a1f16`, `--error-soft` `#fbeae8`). These are not accent
+colours — they are signals, and a failure that reads as another shade of green is a failure
+nobody sees. Nothing outside the message strip may use them.
 
 GettingLost's brown/Lora/Source Sans look was not carried over; a lighter, happier palette
 was wanted instead.
@@ -97,3 +103,231 @@ is the one typeface a general audience recognises and mocks by name.
 Bradley Hand is an Apple system font, so it cannot be self-hosted the way Alpine is.
 Non-Apple visitors fall back to generic `cursive`. Accepted for a single seven-letter word;
 it would not be acceptable for anything the site depends on being read.
+
+## 2026-08-25 — px, not rem
+
+All CSS lengths are px. `rem` is out: Pierre reads px and pt, and a stylesheet he cannot
+read at a glance is a stylesheet he cannot review. The conversion was exact at the default
+16px root, except where a rem value did not land on a whole pixel — those were rounded to
+the nearest px (1.9rem → 30px, 0.95rem → 15px, 0.85rem → 14px, and similar sub-pixel
+paddings).
+
+What this gives up: text no longer scales when a visitor raises their browser's default
+font size. Zoom still works, and that is what people actually use.
+
+## 2026-08-25 — Centred page column, 1024px
+
+`main` carries `max-width: 1024px` and `margin-inline: auto`, so the whole column — heading,
+paragraphs, images — centres as one block. The measure previously sat on `main p`, which
+capped the text but left it hard against the left edge and out of line with the heading.
+
+1024 is wider than prose alone wants: a full-width paragraph runs past 120 characters a
+line, which is where readers start losing their place on the return sweep. It is chosen
+anyway because normal pages carry images interspersed with the text, so no paragraph
+actually spans the full width. If a page ever does run edge-to-edge prose, that page caps
+its own paragraphs.
+
+`box-sizing: border-box` is set on `main` so the max-width is the visible column width
+rather than the width before padding.
+
+## 2026-08-25 — Content lives in the repo
+
+JSON and HTML content ship in the repo and reach the server the way the code does: push,
+FullHost builds, site updates. No mounted volume, no Mountain Duck licence, and the
+question of which container path survives a redeploy stops mattering.
+
+The cost accepted: a typo fix is a push, a Maven build on their node and a restart —
+minutes, and the site blips. Worth it while content changes in batches.
+
+Images are **not** covered by this and are deliberately left undecided; git keeps every
+version of every binary forever, which is the one place the repo stops being free.
+
+## 2026-08-25 — `resources/data/` mirrors `resources/templates/`
+
+The data folder is an exact mirror of the templates folder. `templates/index.html` takes
+its data from `data/index/`; `templates/fragments/site/footer.html` takes its from
+`data/fragments/site/footer/`. Mirror means mirror — a fragment that needs data gets the
+matching folder on the same terms a page does.
+
+A template that needs no data has no matching folder. Absence is the normal case, not an
+omission.
+
+Either side may run ahead of the other, in both directions: data sitting in `data/` that no
+template reads yet, or a template that will get its folder later. Nothing checks the mirror
+and nothing fails on a mismatch — an unmatched data folder is simply not read, and a
+template with no folder renders without it.
+
+The point is that view name → data path is a string transform. No registry, no map, no
+per-page wiring — adding a page is a template plus, if it needs one, its folder.
+
+A folder per template rather than a file per template, so a template that later wants a
+second data file beside its first does not force a migration or an exception to the rule.
+
+Consequence for data used by several pages: it belongs to the fragment that renders it,
+which is the thing that actually has the mirror entry. There is no shared bucket outside
+the mirror.
+
+## 2026-08-25 — Gson, and records for the content POJOs
+
+Gson reads the page JSON. Jackson is already on the classpath through
+`spring-boot-starter-webmvc` and stays there for HTTP message conversion; Gson is a second
+library, added deliberately, not a replacement. Boot manages its version, so the pom carries
+no `<version>`.
+
+Jackson was weighed against it on 2026-08-25 and lost on one concrete behaviour: Gson binds
+`"icon": ""` to `MapIcon.NONE` through `@SerializedName("")`, and Jackson cannot — it will
+not take `@JsonProperty("")` on a constant, so the empty string arrives as null and `NONE`
+is a dead constant. Content that says "no opinion about the marker" stays expressible as a
+value rather than an absence.
+
+The argument for Jackson was that it costs no new dependency, against two lines of mapper
+configuration. That was the closer call and it was made the other way. Everything else was
+a wash: six annotations either way (`@SerializedName` vs `@JsonProperty`), both sets deleted
+by the rename pass in todo #10.
+
+`PageDataJacksonReadTest` is kept as the worked comparison — the same files, the same
+records, read by Jackson — so the choice can be re-examined without reconstructing it.
+
+Boot 4 ships Jackson 3, whose package is `tools.jackson`, not `com.fasterxml.jackson`. Worth
+knowing before reading any Jackson answer written before 2025.
+
+The content POJOs are **classes, not records** — reversed the same day. Records cannot
+extend anything, and the page model is a hierarchy. Records were the first pick because Gson
+binds to **field** names rather than accessors, so a class in the `m_` house style would look
+for a JSON key `"m_name"`; the classes therefore carry plain field names, `lat` and `label`,
+with no prefix and no `FieldNamingStrategy`. Fields are private with public getters, which is
+what Thymeleaf reads.
+
+Classes also allow computed accessors. Note that records permit methods too, so that was not
+the deciding factor; inheritance was.
+
+Gson sets fields directly by reflection and never calls a constructor or a setter. Computed
+**getters** work as written. A computed **setter** would silently never run.
+
+One type per file, which Java requires for public types anyway.
+
+Every field is optional. A page omits what it does not need and the field arrives null —
+`index.json` carries only `name` and exercises exactly that. Gson ignores unknown properties
+with no configuration, which is what makes "either side may run ahead" work.
+
+`wpSettings` has no POJO. It is WordPress publishing state, not page content, and is simply
+not read.
+
+### No key mapping in the POJOs
+
+There is no `@SerializedName` on any field. The JSON keys are spelled exactly as the record
+components are, and the six that were not — `badges`, `types`, `notes`, `list`, `items`,
+`haversine`, plus `location_id` for its snake_case — were renamed in the data on 2026-08-25
+rather than mapped in the code.
+
+The bridge was built first and removed the same day. The argument for keeping it was that
+GettingLost's live consumers (`gettinglost.jst`, `list_browser.jst`, `check_docs.py`,
+`build_booklet_pdf.py`) read the old spellings — but they read GettingLost's own copies, in
+a different repo, so renaming on the way into offgrid leaves them untouched. The annotation
+was buying nothing and costing a permanent disagreement between what a data file says and
+what the Java says.
+
+The cost accepted: while both sites run, an offgrid file no longer diffs cleanly against its
+GettingLost original, so the rename table in todo #10 is what verifies a copy instead.
+
+`MapIcon` still carries `@SerializedName`, on its constants. That maps enum *values*, not
+key names, and is unaffected.
+
+## 2026-08-25 — A location is a place, not a map
+
+```
+Point                      Double lat, lng
+Place extends Point        String label
+                           MapIcon icon
+                           String img
+                           String url
+GoogleMap extends Point    String file, locationId
+                           Integer zoom
+                           List<Place> pinList
+```
+
+`location` is a `Place`. A pin is a `Place`. A `googleMap` is a viewport that points
+somewhere and drops pins. No class carries a field it does not use, and there is no `Pin`
+type — `List<Place> pinList` already says it.
+
+This departs from GettingLost's schema, which unified `location`, `googleMap` and `pin` into
+one shape where a location was *also* a valid map. That model cannot be expressed by
+inheritance at all: a location was the union of two siblings, and Java has no multiple
+inheritance. Every attempt to arrange it as a hierarchy left one branch short.
+
+Cutting `pinList`, `zoom` and the pointer fields off `location` breaks the union and the
+hierarchy falls out in three classes. The check that made it safe: across the 61 GettingLost
+files, **no** `location` carries `pinList`, `img`, `url`, `file` or `location_id`. Locations
+carry only `lat`, `lng`, `icon`, `zoom` and `displayName`, so the only field actually in use
+that moves is `zoom` — 17 of the 26 locations have one.
+
+`lat`, `lng` and `zoom` are boxed. `0.0` is a real coordinate in the Gulf of Guinea, and a
+primitive cannot distinguish it from a pin that omits its coordinates to sit at the map's
+centre — which the renderer treats as a deliberate instruction.
+
+The pointer fields are `file` and `locationId` as two nullable fields rather than one
+`reference`, because that is what the JSON writes, and precedence is `file` → `locationId` →
+`lat`/`lng`.
+
+## 2026-08-25 — Two packages: page and part
+
+`com.lc.offgrid.pojo.page` holds the six page classes; `com.lc.offgrid.pojo.part` holds the
+seventeen blocks they are built from. A page class is something a URL resolves to. A part is
+never a page on its own.
+
+## 2026-08-25 — The page hierarchy
+
+```
+PageData            name, featuredImage, excerpt, tags, noteList,
+                    photoGalleries, relatedDestinationList
+  PostPage          date
+  DestinationPage   location, googleMap
+    AreaPage        —
+      LakePage      fishingReferences
+    CampSitePage    access, campgroundData
+```
+
+Every page class carries the `Page` suffix. `PageData` does not: it is the base, and it is
+also the class a page with nothing special uses.
+
+| real-life page | class | files |
+| --- | --- | --- |
+| lake | `LakePage` | 10 |
+| park | `AreaPage` | 4 |
+| rec-site, camping | `CampSitePage` | 5 |
+| rec-site, day-use | `CampSitePage`, `campgroundData` null | 3 |
+| commercial campground | `CampSitePage` | 2 |
+| blog post | `PostPage` | 6 |
+| howto, checklist, about | `PageData` | 12 |
+
+The boundaries came out of the data, not from taxonomy. All 10 lake files carry
+`fishingReferences` and no `access`; all 8 rec-sites carry `access` alone; all 4 park files
+carry `access` + `campground` + `links`, which is to say a park page was a campground page
+wearing a park tag. That is the thing being corrected.
+
+**An `AreaPage` has extent, not an address.** A lake and a park are arrived at somewhere along
+their edge, so there is no single spot to drive to and no `access` block. A `CampSitePage` is a
+spot: you drive to it and stop.
+
+**`Site` and `CampSitePage` were collapsed into one class.** A day-use rec site and a camping rec
+site are different in real life, but nothing in the data distinguishes them — `tags.types`
+says `rec-site` for all 8, and only the map icon (`tent` vs `picnic`) hints at it. A class
+tree may not encode a distinction the loader cannot see, so a day-use site is a `CampSitePage`
+with `campgroundData` null.
+
+**Posts lose `googleMap`.** A post links to the destination page in its content instead, via
+`relatedDestinationList`. A subject with no page of its own gets no link. `PostPage` therefore
+adds only `date`.
+
+`relatedDestinationList` is `List<String>` of page filenames; the target page supplies its own
+name. No file authors it yet.
+
+`campgroundData` absorbed what was `links`: `{amenityList, operator, siteCount,
+referenceList}`. `Reference` is `{label, ReferenceType type, url}` — the operator's own pages,
+typed HOMEPAGE, MAP or RESERVATION. It stays a list rather than three flat fields: the 6 page
+files each carry exactly one of each, but the registry's 190 entries carry between one and
+four, with labels like "Park" and "Trail".
+
+`Leg.type` is a `String`, not an enum. Only four values appear — potholes, sharp_rock, unpaved,
+dirt — across four files, which is too thin to close the vocabulary. An enum would bind an
+unlisted value to null silently.

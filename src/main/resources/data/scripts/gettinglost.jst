@@ -1,0 +1,1722 @@
+/**
+ * common.jst
+ *
+ * Sitewide helper script for "Getting Lost on VI", loaded on every page
+ * (via the site's Footer template) — unlike lakes.jst (lake pages
+ * only) and gallery.jst (the /gallery/ page only).
+ *
+ * EVERYTHING this script puts on a page goes through ONE path:
+ * [data-block-type]. There is no second, class-driven mechanism —
+ * `.gl-photo`, `.gl-featured` and the checklists used to be enhanced by
+ * their own querySelectorAll loops in init(), and are now ordinary
+ * blocks like all the others. The only thing init() still does besides
+ * initBlocks() is inject the stylesheet, which has no element to hang off.
+ *
+ *   [data-block-type] — generic block-rendering system. Any element
+ *   carrying a data-block-type attribute is handed off to a renderer
+ *   registered on window.GL.blockRenderers[type]. This file registers
+ *   the generic, page-type-agnostic renderers ("photo", "featured",
+ *   "checklist", "campground", "googleMap", "backToGallery", "notes",
+ *   "warning"); page-type-specific renderers (e.g. "fishing",
+ *   "destinations" in lakes.jst, "list_browser" in list_browser.jst)
+ *   register themselves the same way from their own script files.
+ *   Markup:
+ *
+ *     <div data-block-type="campground"></div>
+ *     <div data-block-type="googleMap"></div>
+ *     <div class="gl-dest-back" data-block-type="backToGallery"></div>
+ *     <div data-block-type="notes"></div>
+ *     <div data-block-type="warning" data-text="Required warning text"></div>
+ *     <div data-block-type="photo" data-img="IMG_0512.jpg"
+ *          style="width:25%;float:left;"
+ *          data-lat="49.984331" data-lng="-125.413606"></div>
+ *     <div data-block-type="featured" data-count="3"></div>
+ *     <ol class="gl-numcheck" data-block-type="checklist"><li>…</li></ol>
+ *
+ *   - photo: data-img is just the filename; formatImageUrl builds the
+ *     URL. data-lat/data-lng are decimal degrees (negative = S / W) and
+ *     add a GPS caption. style width defaults to 25%, float to "right"
+ *     ("none" centers it as its own block).
+ *   - featured: data-count random destination cards (default 3),
+ *     re-shuffled every page load, using the shared renderCard().
+ *   - checklist: the gl-checklist / gl-numcheck CLASS carries the styling
+ *     and picks the variant; data-block-type only routes it here.
+ *
+ *   - backToGallery takes no attributes and reads no pageData: it
+ *     points back at the list_browser page the visitor arrived from
+ *     (referrer, filters and all), or at the destinations grid when
+ *     they arrived some other way.
+ *
+ *   - The page's own slug (from window.location.pathname) is used to
+ *     fetch /wp-content/uploads/<slug>.json once; every block on the
+ *     page renders from that same data.
+ *   - If a page has zero [data-block-type] elements, no fetch happens
+ *     at all — this system is fully opt-in per page.
+ *   - A missing renderer (typo, or the type-specific .jst wasn't
+ *     included on this page) logs a console error and that block is
+ *     skipped; other blocks on the page still render normally.
+ *   - A renderer that throws (bad/missing data) is caught per-block,
+ *     logs a console error with the original error, and that block is
+ *     skipped; other blocks on the page still render normally.
+ *   - Blocks may CONTAIN blocks. A renderer is free to emit markup that
+ *     itself carries data-block-type (a photoRef span written into a
+ *     notes description, say); dispatch repeats until nothing is left,
+ *     so those render on a later pass, exactly as they would anywhere
+ *     else on the page. The dispatcher removes data-block-type from each
+ *     element as it processes it — that attribute is dispatcher-private,
+ *     read by nothing else on the site. See renderBlocks.
+ *
+ * Shared card rendering (window.GL) — escapeHtml() and renderCard(),
+ * plus the .gl-gallery-* CSS, live here (not in gallery.jst) so any
+ * page can render destination cards via .gl-featured without needing
+ * to load gallery.jst. gallery.jst calls window.GL.renderCard() for
+ * its own grid instead of keeping a local copy.
+ *
+ * Unknown/extra data attributes are ignored rather than treated as
+ * errors, matching the convention used throughout this file.
+ */
+
+(function () {
+  "use strict";
+
+  // Sitewide constants live in gl-constants.jst, loaded just before this
+  // script in the Footer template. Alias them locally so the code below
+  // reads exactly as before.
+  var GL = (window.GL = window.GL || {});
+  var TAG_COLORS = GL.TAG_COLORS;
+  var TAG_FALLBACK = GL.TAG_FALLBACK;
+  var ROAD_COLORS = GL.ROAD_COLORS;
+  var MAP_CONFIG = GL.MAP_CONFIG;
+
+  // ---------------------------------------------------------------------
+  // Shared card rendering (used by .gl-featured here, and by gallery.jst)
+  // ---------------------------------------------------------------------
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function escapeAttr(str) {
+    return escapeHtml(str);
+  }
+
+  // Turn a bare image filename (e.g. "IMG_0795.jpg") into a Jetpack Photon
+  // (i0.wp.com) URL sized to the display window via ?fit=w,h. `fit` never crops
+  // (contain semantics), matching the gallery's object-fit: contain. w/h default
+  // to 1920 — a long-edge cap — so an arg-less call still returns a valid
+  // full-size URL. location.host keeps this correct across a future custom-domain
+  // move. NOTE: intentionally NOT mirrored in sync.js — that copy stays a plain
+  // /wp-content/uploads/ path because it's a media-map lookup KEY, not a URL.
+  // Empty/missing input is never valid — callers guarantee a real filename —
+  // so it throws rather than manufacturing a broken <img src=""> value.
+  function formatImageUrl(img, w, h) {
+    if (!img) {
+      throw new Error("formatImageUrl: empty/missing image filename — data bug");
+    }
+    w = w || 1920;
+    h = h || 1920;
+    return "https://i0.wp.com/" + location.host + "/wp-content/uploads/" + img + "?fit=" + w + "," + h + "&quality=80";
+  }
+
+  // `wrapperClass` picks the container, not the pill: the cards want the absolutely
+  // positioned corner stack (the default), the destination page's tag row wants a
+  // plain inline group. The pill itself is one class either way, so the two places
+  // cannot drift apart.
+  //
+  // `colors` false renders the plain black-on-white pill — for a vocabulary with no
+  // colour of its own (keywords), where TAG_FALLBACK's grey would read as "unknown
+  // value" rather than "no colour".
+  function renderTags(tags, wrapperClass, colors) {
+    if (!tags || !tags.length) return "";
+    var sorted = tags.slice().sort();
+    var html = '<div class="' + (wrapperClass || "gl-tag-stack") + '">';
+    for (var i = 0; i < sorted.length; i++) {
+      var style = "";
+      var cls = "gl-tag";
+      if (colors === false) {
+        cls += " gl-plain";
+      } else {
+        var c = TAG_COLORS[sorted[i]] || TAG_FALLBACK;
+        style = ' style="background:' + c.bg + ";color:" + c.text + ';"';
+      }
+      html += '<span class="' + cls + '"' + style + ">" + escapeHtml(sorted[i]) + "</span>";
+    }
+    html += "</div>";
+    return html;
+  }
+
+  // The single render-time road-badge derivation, from access.legs. This is
+  // the one copy — renderCard (gallery cards + .gl-featured) and
+  // destinations-overview.jst both call it, so the badge word is computed one
+  // way everywhere. It mirrors sync.js's build-time validation (which now only
+  // validates, no longer emits the badge), kept in step through the shared
+  // vocabulary in gl-constants.jst:
+  //   legs absent           -> null      (not filled in yet: no badge)
+  //   legs []               -> "pavement" (deliberate: paved all the way)
+  //   any non-drive leg     -> "back_country"
+  //   otherwise             -> the hardest drive leg
+  // An unknown leg type, or an unpaved leg with no km (unpaved asserts a
+  // MEASURED tail, so it claims nothing without one), is a data error: log it
+  // and skip the leg — sync.js catches the same cases at build time and names
+  // the offending file.
+  function deriveRoadBadge(access) {
+    var legs = access && access.legs;
+    if (!Array.isArray(legs)) return null;
+    if (legs.length === 0) return "pavement";
+
+    var DRIVE = GL.ROAD_RANK;
+    var NON_DRIVE = GL.NON_DRIVE_LEG_TYPES;
+    var worst = -1;
+    for (var i = 0; i < legs.length; i++) {
+      var leg = legs[i];
+      var type = leg && leg.type;
+      var driveRank = DRIVE.indexOf(type);
+      var isNonDrive = NON_DRIVE.indexOf(type) !== -1;
+      if (driveRank === -1 && !isNonDrive) {
+        console.error(
+          "[gettinglost] deriveRoadBadge: unknown leg type — leg ignored. type='" +
+          type + "' leg='" + JSON.stringify(leg) + "' url='" + window.location.pathname + "'"
+        );
+        continue;
+      }
+      if (type === "unpaved" && !(typeof leg.km === "number" && leg.km > 0)) {
+        console.error(
+          "[gettinglost] deriveRoadBadge: unpaved leg has no km — leg ignored. leg='" +
+          JSON.stringify(leg) + "' url='" + window.location.pathname + "'"
+        );
+        continue;
+      }
+      if (isNonDrive) return "back_country";
+      if (driveRank > worst) worst = driveRank;
+    }
+    return worst < 0 ? null : DRIVE[worst];
+  }
+
+  // Single road-condition badge for the lower-left corner. The value is derived
+  // from access.legs by deriveRoadBadge above; this only has to paint it. Falsy
+  // road (absent, i.e. legs not filled in yet) renders nothing, exactly like an
+  // empty tag list. An unknown value is treated as a data error: render nothing
+  // and log it (sync.js catches the same case at build time and names the file).
+  //
+  // Values are snake_case identifiers; the underscore is an id convention, not
+  // something to show a reader, so it becomes a space on the way to the badge.
+  function renderRoad(road, className) {
+    if (!road) return "";
+    var c = ROAD_COLORS[road];
+    if (!c) {
+      console.error('Unknown road value "' + road + '" — no road badge rendered.');
+      return "";
+    }
+    return (
+      '<span class="' + (className || "gl-road") + '" style="background:' + c.bg + ";color:" + c.text + ';">' +
+      escapeHtml(road.replace(/_/g, " ")) +
+      "</span>"
+    );
+  }
+
+  // How much road there is OF THE BADGE'S TYPE — every leg of it, summed. The
+  // badge names the worst road you will meet; this says how long you are on it,
+  // wherever those legs fall in the drive. Pierre's worked example:
+  //
+  //   legs [potholes 3, dirt 5, potholes 2, dirt 1]  ->  "potholes 5 km"
+  //
+  // Worst type wins the badge, and every leg of that type counts, even though the
+  // last leg is dirt.
+  //
+  // pavement is derived from legs: [] — there is nothing to measure, so it gets no
+  // distance. back_country is derived from the non-drive legs, so its distance is
+  // those summed: how far you are NOT in the van.
+  function roadBadgeKm(access, road) {
+    var legs = (access || {}).legs;
+    if (!road || road === "pavement" || !Array.isArray(legs)) return null;
+
+    var wanted = road === "back_country" ? GL.NON_DRIVE_LEG_TYPES : [road];
+    var total = 0;
+    for (var i = 0; i < legs.length; i++) {
+      var leg = legs[i] || {};
+      if (wanted.indexOf(leg.type) !== -1 && typeof leg.km === "number") total += leg.km;
+    }
+    return total || null;
+  }
+
+  // Slug transforms — mirror sync.js. The github filename is the master; a
+  // slug is only ever DERIVED from it. Must match sync.js's fileToSlug byte
+  // for byte so the hrefs we build equal the slugs WordPress stored.
+  //   fileToSlug("amor-lake.html") -> "amor-lake_html"
+  //   slugToFilename("amor-lake_html") -> "amor-lake.html"
+  function sanitizeSlug(s) {
+    return String(s)
+      .toLowerCase()
+      .replace(/[^a-z0-9 _-]/g, "")
+      .replace(/^\s+|\s+$/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+  }
+  function fileToSlug(filename) {
+    var dot = filename.lastIndexOf(".");
+    var base = dot === -1 ? filename : filename.slice(0, dot);
+    var ext = dot === -1 ? "" : filename.slice(dot + 1);
+    return sanitizeSlug(ext ? base + "_" + ext : base);
+  }
+  function slugToFilename(slug) {
+    var i = slug.lastIndexOf("_");
+    return i === -1 ? slug : slug.slice(0, i) + "." + slug.slice(i + 1);
+  }
+
+  // OnLost convention: a scheme-less "*.html" url is a link to another page ON
+  // this site (e.g. "morton-lake-rec3104.html"), not an external address.
+  // Returns the internal "/slug/" href for such a url, else null (external
+  // "https://…", an absolute "/path", or anything not ending in .html). Shared
+  // by the links, campground, and notes renderers so the rule lives in one place.
+  function onLostHref(url) {
+    if (typeof url !== "string") return null;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return null; // has a scheme -> external
+    if (url.charAt(0) === "/" || url.charAt(0) === "#") return null;
+    if (!/\.html$/i.test(url)) return null;
+    return "/" + fileToSlug(url) + "/";
+  }
+
+  // Is this row a live page on this site? The one definition — a card or a pin
+  // advertises a page a visitor can open, so anything that renders cards filters
+  // on it. list_browser.jst's filterView wraps it with the table's exception;
+  // the featured block calls it straight.
+  function isPublished(entry) {
+    var live = !!(entry.wpSettings && entry.wpSettings.published === true);
+    return live;
+  }
+
+  function renderCard(entry) {
+    var title = escapeHtml(entry.name || "");
+    var image = escapeHtml(formatImageUrl(entry.featuredImage || "under-construction.png", 600, 400));
+    var teaser = escapeHtml(entry.excerpt || "");
+    var href = "/" + escapeAttr(fileToSlug(entry.file || "")) + "/";
+
+    return (
+      '<a class="gl-gallery-card" href="' + href + '">' +
+      '<div class="gl-gallery-card-img-wrap">' +
+      '<img class="gl-gallery-card-img" src="' + image + '" alt="' + title + '" loading="lazy">' +
+      renderTags((entry.tags || {}).badges) +
+      renderRoad(deriveRoadBadge(entry.access)) +
+      "</div>" +
+      '<h3 class="gl-gallery-card-title">' + title + "</h3>" +
+      '<p class="gl-gallery-card-teaser">' + teaser + "</p>" +
+      "</a>"
+    );
+  }
+
+  window.GL = window.GL || {};
+  window.GL.escapeHtml = escapeHtml;
+  window.GL.renderCard = renderCard;
+  window.GL.deriveRoadBadge = deriveRoadBadge; // shared render-time road badge (overview table)
+  window.GL.isPublished = isPublished;
+  window.GL.fileToSlug = fileToSlug; // shared so lakes.jst can derive slugs
+  window.GL.blockRenderers = window.GL.blockRenderers || {};
+
+  // Fetch the external stylesheet as text and inject it into a <style>.
+  // Because the CSS arrives via fetch() (which ignores Content-Type) and is
+  // applied from a <style> tag, the file's served MIME is irrelevant — no
+  // text/css requirement, no strict-mode issue. That's why the file uses the
+  // .cst extension (served as-is) rather than .css.
+  function injectGettingLostCss() {
+    if (document.getElementById("gl-gallery-css")) return;
+    fetch("/wp-content/uploads/gettinglost.cst")
+      .then(function (res) {
+        if (!res.ok) throw new Error("gettinglost.cst: HTTP " + res.status);
+        return res.text();
+      })
+      .then(function (css) {
+        if (document.getElementById("gl-gallery-css")) return;
+        var style = document.createElement("style");
+        style.id = "gl-gallery-css";
+        style.textContent = css;
+        document.head.appendChild(style);
+      })
+      .catch(function (err) {
+        console.error("injectGettingLostCss: failed to load gettinglost.cst", err);
+      });
+  }
+
+  // ---------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------
+
+  function toDMS(decimal, isLat) {
+    var ref = isLat
+      ? (decimal >= 0 ? "N" : "S")
+      : (decimal >= 0 ? "E" : "W");
+    var abs = Math.abs(decimal);
+    var deg = Math.floor(abs);
+    var minFull = (abs - deg) * 60;
+    var min = Math.floor(minFull);
+    var sec = (minFull - min) * 60;
+    return deg + "\u00b0 " + min + "\u2032 " + sec.toFixed(2) + "\u2033 " + ref;
+  }
+
+  function pickRandom(arr, n) {
+    var pool = arr.slice();
+    var result = [];
+    for (var i = 0; i < n && pool.length; i++) {
+      var idx = Math.floor(Math.random() * pool.length);
+      result.push(pool.splice(idx, 1)[0]);
+    }
+    return result;
+  }
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "photo"
+  // ---------------------------------------------------------------------
+  //
+  //   <div data-block-type="photo" data-img="IMG_0795.jpg"
+  //        data-lat="50.12" data-lng="-125.34"></div>
+  //
+  //   - data-img is required; a missing one renders nothing.
+  //   - data-lat/data-lng are optional; together they add a DMS caption
+  //     linking to Google Maps.
+  //   - Reads no pageData. Float/width/margin default only when the author
+  //     has not already set them inline.
+
+  window.GL.blockRenderers.photo = function (el) {
+    var img = el.getAttribute("data-img");
+    var hasLat = el.hasAttribute("data-lat");
+    var hasLng = el.hasAttribute("data-lng");
+    var lat = hasLat ? parseFloat(el.getAttribute("data-lat")) : NaN;
+    var lng = hasLng ? parseFloat(el.getAttribute("data-lng")) : NaN;
+    var hasGps = !isNaN(lat) && !isNaN(lng);
+
+    if (!img) {
+      return;
+    }
+
+    // Defaults — only applied if the author hasn't already set them.
+    if (!el.style.width) {
+      el.style.width = "25%";
+    }
+    if (!el.style.float) {
+      el.style.float = "right";
+    }
+    if (!el.style.margin) {
+      if (el.style.float === "left") {
+        el.style.margin = "0 1.5rem 1rem 0";
+      } else if (el.style.float === "right") {
+        el.style.margin = "0 0 1rem 1.5rem";
+      } else {
+        el.style.float = "none";
+        el.style.display = "block";
+        el.style.margin = "0 auto 1rem";
+      }
+    }
+
+    var displaySrc = formatImageUrl(img, 480, 480);
+    var fullSrc = formatImageUrl(img, 1920, 1920);
+
+    var captionHtml = "";
+    if (hasGps) {
+      var mapsUrl = "https://www.google.com/maps?q=" + lat + "," + lng;
+      var caption = toDMS(lat, true) + ", " + toDMS(lng, false);
+      captionHtml =
+        '<p style="font-size:0.8rem;color:#888;margin:0.3rem 0 0;text-align:center;">' +
+        '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer" style="color:#888;">' +
+        caption +
+        "</a>" +
+        "</p>";
+    }
+
+    el.innerHTML =
+      '<a href="' + fullSrc + '" target="_blank" rel="noopener noreferrer">' +
+      '<img src="' + displaySrc + '" alt="" style="width:100%;height:auto;display:block;border:1px solid #ccc;">' +
+      "</a>" +
+      captionHtml;
+
+    // Open in the shared lightbox instead of a new tab. The href stays
+    // as a no-JS fallback; right-click still gives native open/save.
+    // The first anchor is the image link (the optional GPS caption link
+    // comes after it in the markup above).
+    var imageLink = el.querySelector("a");
+    if (imageLink) {
+      imageLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        lightbox.open([{ src: fullSrc, caption: "" }], 0);
+      });
+    }
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "featured"
+  // ---------------------------------------------------------------------
+  //
+  //   <div data-block-type="featured" data-count="3"></div>
+  //
+  //   - data-count is how many random destinations to show (default 3).
+  //   - Reads no pageData; fetches the hydrated destinations.json itself and
+  //     renders the shared cards.
+  //   - That file is the WHOLE catalog, most of which has no page of its own, so
+  //     it is filtered through the shared isPublished before picking: a card
+  //     advertises a live page. Same predicate filterView uses for the grid.
+
+  window.GL.blockRenderers.featured = function (el) {
+    var count = parseInt(el.getAttribute("data-count"), 10) || 3;
+
+    fetch("/wp-content/uploads/destinations.json")
+      .then(function (res) {
+        if (!res.ok) throw new Error("Failed to load destinations.json: " + res.status);
+        return res.json();
+      })
+      .then(function (longList) {
+        var shortList = longList.filter(isPublished);
+        var picks = pickRandom(shortList, count);
+        var html = '<div class="gl-gallery-grid">';
+        for (var i = 0; i < picks.length; i++) {
+          html += renderCard(picks[i]);
+        }
+        html += "</div>";
+        el.innerHTML = html;
+      })
+      .catch(function (err) {
+        el.innerHTML =
+          '<p style="color:#999;font-style:italic;">Content is temporarily unavailable.</p>';
+        console.error(err);
+      });
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic [data-block-type] system
+  // ---------------------------------------------------------------------
+
+  // Which page are we on? The last path segment IS the WP slug (<base>_<ext>).
+  // The site root has no segment and is the home page, so it answers with home's
+  // slug rather than nothing — otherwise initBlocks cannot load page data and no
+  // block on the home page renders at all.
+  function getSlugFromUrl() {
+    var path = window.location.pathname;
+    var parts = path.split("/").filter(Boolean);
+    var slug = parts.length ? parts[parts.length - 1] : fileToSlug("home.html");
+    return slug;
+  }
+
+  // Fetch the data file belonging to a page filename: <base>.json in the
+  // uploads folder, whatever the page's own extension was.
+  function fetchDataFile(filename) {
+    var url = "/wp-content/uploads/" + filename.replace(/\.[^.]*$/, "") + ".json";
+    var data = fetch(url).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Could not load " + url + " (HTTP " + response.status + ")");
+      }
+      return response.json();
+    });
+    return data;
+  }
+
+  function fetchPageData(slug) {
+    // `slug` is the page's URL slug (<base>_<ext>). Reverse it to the page
+    // filename; the data file follows from there.
+    var data = fetchDataFile(slugToFilename(slug));
+    return data;
+  }
+
+  // Renders every block on the page, repeatedly, until none are left.
+  //
+  // A renderer may itself emit markup containing blocks — a photoRef span
+  // inside a notes description, say. Those elements do not exist when the
+  // first querySelectorAll runs (it returns a static NodeList, a snapshot),
+  // so the block list is re-fetched each pass and the new arrivals render
+  // on the next one.
+  //
+  // The dispatcher REMOVES data-block-type before handing the element to
+  // its renderer. That is what makes the re-query return only unprocessed
+  // blocks: the wrapper element stays in the DOM (renderers fill it, they
+  // do not replace it, and its style/class/data-* inputs stay with it), it
+  // just no longer matches the selector. Removing it BEFORE the call also
+  // means a renderer that throws is not retried on every subsequent pass.
+  // Nothing else on the site reads the attribute — no CSS selector, no
+  // other script — so dropping it costs only the DevTools record of which
+  // renderer produced a given div.
+  var MAX_RENDER_PASSES = 3;
+
+  function renderBlocks(pageData) {
+    for (var pass = 0; pass < MAX_RENDER_PASSES; pass++) {
+      var blocks = document.querySelectorAll("[data-block-type]");
+      if (!blocks.length) {
+        return;
+      }
+
+      blocks.forEach(function (el) {
+        var type = el.getAttribute("data-block-type");
+        el.removeAttribute("data-block-type");
+
+        var renderer = window.GL.blockRenderers[type];
+        if (!renderer) {
+          console.error(
+            '[gettinglost] No renderer registered for block type "' + type +
+            '" — is the matching .jst file included on this page?'
+          );
+          return;
+        }
+
+        try {
+          renderer(el, pageData);
+        } catch (err) {
+          console.error('[gettinglost] Error rendering block type "' + type + '":', err);
+        }
+      });
+    }
+
+    // Still blocks left after the last allowed pass: a renderer is emitting
+    // blocks that emit blocks, without end. Name the types so the culprit
+    // is obvious.
+    var leftover = document.querySelectorAll("[data-block-type]");
+    if (leftover.length) {
+      var types = [];
+      leftover.forEach(function (el) {
+        var t = el.getAttribute("data-block-type");
+        if (types.indexOf(t) === -1) {
+          types.push(t);
+        }
+      });
+      console.error(
+        "[gettinglost] Block rendering did not settle after " + MAX_RENDER_PASSES +
+        " passes; " + leftover.length + " block(s) left unrendered, of type(s): " +
+        types.join(", ") + ". A renderer is emitting blocks on every pass."
+      );
+    }
+  }
+
+  function initBlocks() {
+    var blockEls = document.querySelectorAll("[data-block-type]");
+    if (!blockEls.length) {
+      return; // nothing to do on this page
+    }
+
+    var slug = getSlugFromUrl();
+    if (!slug) {
+      console.error(
+        "[gettinglost] Could not determine page slug; cannot load page data. url='" +
+        window.location.pathname + "'"
+      );
+      return;
+    }
+
+    var pageMapUrl = "/wp-content/uploads/PageMap.json";
+    Promise.all([
+      fetchPageData(slug),
+      fetch(pageMapUrl).then(function (r) {
+        return r.ok ? r.json() : {};
+      }).catch(function () { return {}; })
+    ]).then(function (results) {
+      window.GL.pageMap = results[1];
+      renderBlocks(results[0]);
+    }).catch(function (err) {
+      console.error('[gettinglost] Failed to load page data for "' + slug + '":', err);
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // Google Maps API loader (shared with lakes.jst via window globals,
+  // so the script tag is only ever injected once per page)
+  // ---------------------------------------------------------------------
+
+  function loadGoogleMapsApi(onReady) {
+    if (window.google && window.google.maps) {
+      onReady();
+      return;
+    }
+    if (window.__gettingLostMapsApiLoading) {
+      window.__gettingLostMapsApiCallbacks.push(onReady);
+      return;
+    }
+    window.__gettingLostMapsApiLoading = true;
+    window.__gettingLostMapsApiCallbacks = [onReady];
+    window.__gettingLostMapsApiInit = function () {
+      window.__gettingLostMapsApiCallbacks.forEach(function (callback) {
+        callback();
+      });
+    };
+    var script = document.createElement("script");
+    script.src =
+      "https://maps.googleapis.com/maps/api/js?key=" +
+      MAP_CONFIG.mapApiKey +
+      "&callback=__gettingLostMapsApiInit";
+    script.async = true;
+    document.head.appendChild(script);
+  }
+
+  // ---------------------------------------------------------------------
+  // Shared: the "· "-separated link row (campground + links blocks)
+  // ---------------------------------------------------------------------
+  //
+  // Renders a list of { label, url } as one styled <p> of links joined by
+  // "&nbsp;·&nbsp;". `labelToText` maps a stored label to its shown text
+  // (identity when omitted). Each entry:
+  //   - OnLost url (scheme-less *.html) -> internal "/slug/" link, same tab
+  //   - other url                       -> external link, new tab
+  //   - url null/empty                  -> plain text (informational, e.g. a
+  //                                        reservation status with no booking url)
+  // Empty/absent list -> "".
+  function linkRow(links, labelToText) {
+    if (!Array.isArray(links) || !links.length) return "";
+    var parts = [];
+    for (var i = 0; i < links.length; i++) {
+      var it = links[i] || {};
+      var text = labelToText ? labelToText(it.label) : it.label;
+      var onlost = onLostHref(it.url);
+      if (onlost) {
+        parts.push('<a href="' + escapeAttr(onlost) + '">' + escapeHtml(text) + "</a>");
+      } else if (it.url) {
+        parts.push('<a href="' + escapeAttr(it.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(text) + "</a>");
+      } else {
+        parts.push(escapeHtml(text));
+      }
+    }
+    return (
+      '<p style="font-size:1.1rem;margin-top:0;margin-bottom:1.5rem;">' +
+      parts.join("&nbsp;·&nbsp; ") +
+      "</p>"
+    );
+  }
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "tags"
+  // ---------------------------------------------------------------------
+  //
+  // The destination's own vocabularies, surfaced on its page — the list browser
+  // filters on these, and until now nothing on a page said what they were.
+  //
+  //   badges  LEFT   what you would do there            (closed, coloured)
+  //   road    RIGHT  what it costs you to get there     (closed, coloured, + km)
+  //   keywords BELOW  everything else                   (open, black on white)
+  //
+  // Left and right are two different KINDS of fact, so they read as two things
+  // rather than one long row. Keywords go underneath because they are the open
+  // vocabulary: the most numerous, the least authoritative, and the only one that
+  // will grow without warning.
+  //
+  // `tags.types` is deliberately NOT here. It filters, and the page itself already
+  // says what kind of place it is.
+  //
+  // Renders nothing at all when there is nothing to say — no empty band.
+  window.GL.blockRenderers.tags = function (el, pageData) {
+    var tags = pageData.tags || {};
+    var road = deriveRoadBadge(pageData.access);
+    var km = roadBadgeKm(pageData.access, road);
+
+    var badges = renderTags(tags.badges, "gl-tagrow-group");
+    var keywords = renderTags(tags.keywords, "gl-tagrow-group", false);
+    var roadHtml = renderRoad(road, "gl-tag");
+    if (roadHtml && km !== null) {
+      roadHtml += '<span class="gl-tagrow-km">' + km + " km</span>";
+    }
+
+    if (!badges && !roadHtml && !keywords) return;
+    if (!el.style.marginTop) el.style.marginTop = "0";
+
+    var html = "";
+    if (badges || roadHtml) {
+      html +=
+        '<div class="gl-tagrow">' +
+        (badges || '<div class="gl-tagrow-group"></div>') +
+        '<div class="gl-tagrow-group">' + roadHtml + "</div>" +
+        "</div>";
+    }
+    if (keywords) {
+      html += '<div class="gl-tagrow-keywords">' + keywords + "</div>";
+    }
+    el.innerHTML = html;
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "campground"
+  // ---------------------------------------------------------------------
+  //
+  // The logistics row shown immediately under the title: one "· "-separated line
+  //   Website · <every map> · <every reservation>
+  // selected from pageData.links by `type` (GL.LINK_TYPES). The homepage shows as
+  // "Website"; maps and reservations show their own label, which is the only
+  // thing that distinguishes a "Campground" map from a "Park" one.
+  //
+  // Selecting by type instead of by exact label is what fixed two bugs at once:
+  // a "Park map" or "Trail map" used to be looked up by a name nobody searched
+  // for, so it appeared in the list browser's table and never on the page.
+  //
+  // An untyped link is not in this row — it is a general link for the `links`
+  // block, not part of the logistics line. Reservation status with no booking url
+  // is not a link at all; it lives in a "Reservation notes" notes section.
+
+  function linksByType(list, type) {
+    return (list || []).filter(function (l) { return l && l.type === type; });
+  }
+
+  window.GL.blockRenderers.campground = function (el, pageData) {
+    var data = pageData.campground;
+    if (!data) {
+      throw new Error('No "campground" block found in page JSON.');
+    }
+    if (!el.style.marginTop) el.style.marginTop = "0";
+    var row = [];
+    linksByType(pageData.links, "homepage").forEach(function (home) {
+      row.push({ label: "Website", url: home.url });
+    });
+    row = row.concat(linksByType(pageData.links, "map"), linksByType(pageData.links, "reservation"));
+    el.innerHTML = linkRow(row, null);
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "links"
+  // ---------------------------------------------------------------------
+  //
+  // Reads pageData.links = [ { label, url, type? }, ... ] \u2014 every link the
+  // destination carries, shown in one row. The homepage is the one entry whose
+  // display word is not its label: type "homepage" shows as "Website". Every
+  // other link shows its label verbatim, typed or not.
+  //
+  // A scheme-less *.html url still resolves to an internal link, in linkRow \u2014
+  // that is a URL convention and has nothing to do with `type`.
+
+  window.GL.blockRenderers.links = function (el, pageData) {
+    if (!pageData.links) return;
+    if (!el.style.marginTop) el.style.marginTop = "0";
+    var byLabel = {};
+    (pageData.links || []).forEach(function (l) {
+      if (l && l.type === "homepage") byLabel[l.label] = "Website";
+    });
+    el.innerHTML = linkRow(pageData.links, function (label) {
+      return byLabel[label] || label;
+    });
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "googleMap"
+  // ---------------------------------------------------------------------
+  //
+  // Every block is named. The div's data-map attribute selects one entry
+  // from pageData.googleMap:
+  //
+  //   <div data-block-type="googleMap" data-map="road"></div>
+  //     -> pageData.googleMap.road
+  //
+  // An entry either HOLDS the map or POINTS at a location that does.
+  // One source, resolved in this order:
+  //
+  //   file         a page filename; that page's "location" is the map
+  //   location_id  an id in locations.json; that record's "location" is it
+  //   lat + lng    the map is right here
+  //
+  // A pointer replaces the WHOLE entry — zoom and pinList come from the
+  // target too, never a mix of both. A "location" never points, so
+  // resolution is always one hop and always terminates.
+  //
+  // The three shapes are one shape:
+  //   Point               lat, lng
+  //   googleMap : Point   zoom?, pinList?  (or file? / location_id?)
+  //   pin       : Point   icon?, displayName?, img?, url?
+  //   location  : both    zoom?, pinList?, icon?, displayName?, img?, url?
+  //
+  // After resolution a top-level "icon" becomes a pinList entry at the
+  // centre, so a place that is just "here, with this marker" needs no
+  // pinList of its own.
+  //
+  // The div's box is CSS and CSS only — the renderer never reads or writes
+  // width/height/float/margin. The house style (45% floated right) is the
+  // [data-block-type="googleMap"] rule in gettinglost.cst; an inline style on
+  // the div overrides it the ordinary way.
+
+  // Build a marker icon from a pin type via GL.PIN_ICONS (SVG data-URI).
+  // Unknown/absent type -> null, so the marker uses the default pin.
+  function pinIcon(type) {
+    var svg = GL.PIN_ICONS && GL.PIN_ICONS[type];
+    if (!svg) return null;
+    return {
+      url: "data:image/svg+xml," + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(48, 48),
+      anchor: new google.maps.Point(24, 24)
+    };
+  }
+
+  // Cached loader for the published locations registry (logs/locations.json ->
+  // /wp-content/uploads/locations.json). Resolves once per page load to an
+  // { id: entry } map, shared by every googleMap block that references a
+  // location by location_id.
+  var locationsMapPromise = null;
+  function loadLocationsMap() {
+    if (!locationsMapPromise) {
+      locationsMapPromise = fetch("/wp-content/uploads/locations.json")
+        .then(function (res) {
+          if (!res.ok) throw new Error("Failed to load locations.json: " + res.status);
+          return res.json();
+        })
+        .then(function (list) {
+          var byId = {};
+          (list || []).forEach(function (entry) {
+            if (entry && entry.id) byId[entry.id] = entry;
+          });
+          return byId;
+        });
+    }
+    return locationsMapPromise;
+  }
+
+  // Look up a location_id in the registry and hand back its location block.
+  function readFromLocationId(locationId) {
+    var located = loadLocationsMap().then(function (byId) {
+      var entry = byId[locationId];
+      if (!entry || !entry.location) {
+        throw new Error('location_id "' + locationId + '" not found in locations.json.');
+      }
+      return entry.location;
+    });
+    return located;
+  }
+
+  // Read another page's location block. A page pointing at itself already
+  // holds the answer, so that case never goes to the network.
+  function readFromFile(filename, pageData) {
+    if (filename === slugToFilename(getSlugFromUrl())) {
+      var own = Promise.resolve(pageData.location);
+      return own;
+    }
+    var located = fetchDataFile(filename).then(function (target) {
+      return target.location;
+    });
+    return located;
+  }
+
+  // Resolve a named googleMap entry to the map object to draw: either it
+  // holds the map, or it points at the location that does. A pointer
+  // replaces the entry outright. A top-level icon becomes a pinList entry
+  // at the centre, copied rather than appended, since the self-pointer
+  // path hands back pageData.location by reference. Returns a Promise.
+  function resolveMapObject(namedMap, pageData) {
+    var source;
+    if (null == namedMap) {
+      source = Promise.reject(new Error("not found in page JSON."));
+    } else if (null != namedMap.file) {
+      source = readFromFile(namedMap.file, pageData);
+    } else if (null != namedMap.location_id) {
+      source = readFromLocationId(namedMap.location_id);
+    } else {
+      source = Promise.resolve(namedMap);
+    }
+    var resolved = source.then(function (mapObject) {
+      if (!mapObject || typeof mapObject.lat !== "number" || typeof mapObject.lng !== "number") {
+        throw new Error('resolved to no usable coordinates — needs numeric "lat"/"lng".');
+      }
+      if (null == mapObject.icon) return mapObject;
+      var withCentrePin = Object.assign({}, mapObject);
+      withCentrePin.pinList = (mapObject.pinList || []).concat({ icon: mapObject.icon });
+      return withCentrePin;
+    });
+    return resolved;
+  }
+
+  // Resolve a pin's { img, label } from its optional "img" field:
+  //   "galleryKey/itemId" -> that photoGalleries item (img + its label)
+  //   "file.jpg"          -> a direct image file
+  // label precedence: pin.displayName -> gallery item's label -> the img
+  // string itself -> none.
+  function resolvePinMedia(pin, galleries) {
+    var label = pin.displayName || null;
+    var img = null;
+    if (pin.img) {
+      var slash = pin.img.indexOf("/");
+      if (slash >= 0) {
+        var gKey = pin.img.slice(0, slash);
+        var itemId = pin.img.slice(slash + 1);
+        var items = (galleries[gKey] && galleries[gKey].items) || [];
+        var item = null;
+        items.forEach(function (it) {
+          if (it && it.id === itemId && !item) item = it;
+        });
+        if (item) {
+          img = item.img;
+          if (!label) label = item.label || null;
+        }
+      } else {
+        img = pin.img;
+      }
+      if (!label) label = pin.img;
+    }
+    return { img: img, label: label };
+  }
+
+  // An <a> wrapped around whatever the InfoWindow is showing, so a pin that has
+  // BOTH a photo and a url keeps both: the photo still opens, and it is the link.
+  function pinLink(url, child) {
+    var a = document.createElement("a");
+    a.href = url;
+    a.appendChild(child);
+    return a;
+  }
+
+  // Drop one pin onto the map. pin = { icon?, displayName?, img?, url?, lat?, lng? }.
+  //   lat/lng absent -> the pin sits at the map's centre
+  //   pin.icon       -> custom icon (GL.PIN_ICONS), else the default marker
+  //   img            -> click opens an InfoWindow with the photo
+  //   url            -> the pin is a link. No img: the click navigates. With an
+  //                     img: the InfoWindow's photo and header carry the link,
+  //                     so neither field cancels the other out.
+  //   label-only     -> native hover title; none of it -> plain marker.
+  // url is a READY href, not a reference: whoever builds the pin resolves it
+  // (list_browser runs a row's file through GL.fileToSlug), so a pin can point
+  // just as easily off-site.
+  function renderPin(map, infoWindow, pin, centre, galleries) {
+    var lat = (typeof pin.lat === "number") ? pin.lat : centre.lat;
+    var lng = (typeof pin.lng === "number") ? pin.lng : centre.lng;
+    if (typeof lat !== "number" || typeof lng !== "number") return;
+    var media = resolvePinMedia(pin, galleries);
+    var markerOptions = { position: { lat: lat, lng: lng }, map: map };
+    var icon = pinIcon(pin.icon);
+    if (icon) markerOptions.icon = icon;
+    if (media.img == null && media.label) markerOptions.title = media.label;
+    var marker = new google.maps.Marker(markerOptions);
+    if (media.img != null) {
+      marker.addListener("click", function () {
+        var img = document.createElement("img");
+        img.src = formatImageUrl(media.img, 320, 240);
+        img.alt = media.label || "";
+        img.style.display = "block";
+        img.style.maxWidth = "320px";
+        img.style.maxHeight = "240px";
+        var label = media.label || "";
+        var header = pin.url ? pinLink(pin.url, document.createTextNode(label)) : label;
+        var body = pin.url ? pinLink(pin.url, img) : img;
+        infoWindow.setHeaderContent(header);
+        infoWindow.setContent(body);
+        infoWindow.open(map, marker);
+      });
+    } else if (pin.url) {
+      marker.addListener("click", function () {
+        window.location.href = pin.url;
+      });
+    }
+  }
+
+  // Draw a resolved mapObject into el. THE CALLER OWNS el's BOX — width, height,
+  // float and margin are CSS and are never read or written here. A page block
+  // gets the house style from the [data-block-type="googleMap"] rule; the list
+  // browser sizes its own container. All this adds is the class the shared
+  // layout rule keys on.
+  //
+  // el is the WRAPPER; the map and the caption are both children of it. That
+  // containment is what makes the caption the width of the map instead of the
+  // main column, and the flex column in gettinglost.cst is what splits el's
+  // height between the two. Both children are in place BEFORE the Maps API
+  // answers, so Google sizes the map once, against a box that already allows
+  // for the caption.
+  function drawMap(el, mapObject, galleries) {
+    el.textContent = "";
+    el.classList.add("gl-mapbox");
+
+    var mapEl = document.createElement("div");
+    mapEl.className = "gl-map";
+    el.appendChild(mapEl);
+
+    // Live center/zoom readout under every map, following pan and zoom through
+    // the map's "idle" event so the current values can be read straight off it.
+    // (Public for now — hiding it from real visitors is a later revisit.)
+    var caption = document.createElement("div");
+    caption.className = "gl-map-caption";
+    el.appendChild(caption);
+
+    loadGoogleMapsApi(function () {
+      var map = new google.maps.Map(mapEl, {
+        zoom: (typeof mapObject.zoom === "number") ? mapObject.zoom : MAP_CONFIG.mapZoom,
+        center: { lat: mapObject.lat, lng: mapObject.lng },
+        mapTypeId: MAP_CONFIG.mapTypeId,
+        styles: MAP_CONFIG.mapStyles
+      });
+      var infoWindow = new google.maps.InfoWindow();
+      (mapObject.pinList || []).forEach(function (pin) {
+        renderPin(map, infoWindow, pin, mapObject, galleries || {});
+      });
+      var updateCaption = function () {
+        var c = map.getCenter();
+        caption.textContent = "Center = (" + c.lat().toFixed(6) + ", " +
+          c.lng().toFixed(6) + ")   ·   Zoom = " + map.getZoom();
+      };
+      map.addListener("idle", updateCaption);
+      updateCaption();
+    });
+  }
+
+  // Shared so list_browser.jst's map view IS this map: it builds a mapObject out
+  // of its rows and calls this, rather than standing up a second Google map with
+  // its own pins and no caption.
+  window.GL.drawMap = drawMap;
+
+  window.GL.blockRenderers.googleMap = function (el, pageData) {
+    var mapName = el.getAttribute("data-map");
+    if (!mapName) {
+      console.error('[gettinglost] Error rendering block type "googleMap": ' +
+        'the div has no data-map attribute — every map block is named.');
+      return;
+    }
+    var mapObject = pageData.googleMap && pageData.googleMap[mapName];
+    resolveMapObject(mapObject, pageData).then(function (resolvedMap) {
+      drawMap(el, resolvedMap, pageData.photoGalleries || {});
+    }).catch(function (err) {
+      console.error('[gettinglost] Error rendering block type "googleMap" (map "' +
+        mapName + '"):', err);
+    });
+  };
+
+  // ---------------------------------------------------------------------
+  // Shared helper: buildGlHeading
+  // ---------------------------------------------------------------------
+  //
+  // Builds the standard bordered section heading, <h3 class="gl-heading">.
+  // The style lives in gettinglost.cst (.gl-heading). Exposed on window.GL
+  // so other scripts (lakes.jst) and authored HTML all produce the exact
+  // same heading — one definition, no copies.
+
+  function buildGlHeading(text) {
+    var heading = document.createElement("h3");
+    heading.className = "gl-heading";
+    heading.textContent = text;
+    return heading;
+  }
+  window.GL.buildGlHeading = buildGlHeading;
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "backToGallery"
+  // ---------------------------------------------------------------------
+  //
+  // Renders a "← Back to …" link to the list_browser page.
+  // Takes no attributes and reads no pageData — the link is derived entirely
+  // from where the visitor came from:
+  //
+  //   <div data-block-type="backToGallery"></div>
+  //
+  //   - Arrived from list_browser: the referrer IS the link, verbatim. That
+  //     carries the visitor's whole context back — dataset, view, and every
+  //     filter (badges/access/keywords/search) — with no parsing or
+  //     rebuilding. The referrer's `view` picks the label, so the word
+  //     matches the face of the page being returned to (VIEW_LABELS).
+  //   - Arrived any other way (direct visit, bookmark, search engine, or a
+  //     link from another GL page): there is no context to return to, so the
+  //     link is the site's front door — the destinations grid — and says so.
+  //   - The label is always one of a fixed set of literals picked by a
+  //     whitelist lookup; referrer text is never rendered. The referrer's URL
+  //     reaches the href (escaped), and only after passing the origin and
+  //     path checks in referrerListBrowserUrl().
+
+  // grid = cards, table = rows. Keyed by the list_browser `view` values.
+  var VIEW_LABELS = {
+    grid: "Back to gallery",
+    table: "Back to list view",
+  };
+
+  var FALLBACK_LABEL = "Back to destination gallery";
+
+  // The referrer, but only when it really is this site's list_browser page —
+  // same origin AND same path. Anything else (off-site, another GL page, an
+  // unparseable or absent referrer) returns null, which is what sends the
+  // caller to the fallback. Returns the URL object so the caller can read
+  // both the full href and the `view` param off it.
+  function referrerListBrowserUrl(listSlug) {
+    if (!document.referrer) return null;
+
+    var url;
+    try {
+      url = new URL(document.referrer);
+    } catch (err) {
+      return null;
+    }
+
+    if (url.origin !== window.location.origin) return null;
+    // Trailing slash is optional on the referrer WP hands us.
+    if (url.pathname.replace(/\/+$/, "") !== "/" + listSlug) return null;
+
+    return url;
+  }
+
+  window.GL.blockRenderers.backToGallery = function (el) {
+    if (!el.className) {
+      el.className = "gl-dest-back";
+    }
+
+    // The listing page is list_browser.html — derive its URL slug so we
+    // never hardcode the slug form.
+    var listSlug = fileToSlug("list_browser.html");
+    var from = referrerListBrowserUrl(listSlug);
+
+    var href;
+    var label;
+    if (from) {
+      href = from.href;
+      // An absent or unknown view means list_browser's own default, grid.
+      label = VIEW_LABELS[from.searchParams.get("view")] || VIEW_LABELS.grid;
+    } else {
+      href = "/" + listSlug + "/?dataset=destinations&view=grid";
+      label = FALLBACK_LABEL;
+    }
+
+    el.innerHTML =
+      '<a href="' + escapeAttr(href) + '">\u2190 ' + label + "</a>";
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "warning"
+  // ---------------------------------------------------------------------
+  //
+  // Renders a highlighted callout box for safety/operational warnings.
+  // Fully driven by the element's own attributes (not pageData), so it
+  // can be dropped into any page's markup without touching that page's
+  // JSON file:
+  //
+  //   <div data-block-type="warning"
+  //        data-text="Always keep an eye on the awning during operation."></div>
+  //
+  //   - data-text is required and is the warning's body text. A missing
+  //     data-text throws (caught, skipped) rather than rendering an
+  //     empty box.
+  //   - data-label is optional, defaults to "Warning" — override it for
+  //     a different callout tone, e.g. data-label="Caution" or
+  //     data-label="Note", without changing the visual style.
+  //   - Multiple warnings can appear on one page; each is independent.
+
+  window.GL.blockRenderers.warning = function (el, pageData) {
+    var text = el.getAttribute("data-text");
+    if (!text) {
+      throw new Error('warning: missing required data-text attribute.');
+    }
+    var label = el.getAttribute("data-label") || "Warning";
+
+    if (!el.className) {
+      el.className = "gl-warning";
+    }
+
+    el.innerHTML =
+      '<strong class="gl-warning-label">\u26A0 ' + escapeHtml(label) + ":</strong> " +
+      escapeHtml(text);
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "notes"
+  // ---------------------------------------------------------------------
+  //
+  // Reads pageData.notes = [ { sectionName, list: [ { name, url, description } ] }, ... ]
+  // and renders one heading + two-column table per section:
+  //
+  //   <div data-block-type="notes"></div>
+  //
+  //   - Each section in the array gets its own heading (sectionName) and
+  //     its own table, in array order.
+  //   - Each item in a section's "list" renders as one table row:
+  //       left column (25% width)  — item.name, wrapped in a link to
+  //                                   item.url if url is present (use
+  //                                   null, not "", when there's no link)
+  //       right column             — item.description, an array of
+  //                                   strings joined with "\n" and
+  //                                   displayed as continuous flowing
+  //                                   text (the "\n" is just a soft word
+  //                                   separator, not a line break).
+  //                                   It is HTML, not plain text: the
+  //                                   author writes <b>, <a>, or a block
+  //                                   span (e.g. photoRef) directly in
+  //                                   the JSON string, and it is the
+  //                                   author's job for it to be valid.
+  //                                   Blocks emitted here render on the
+  //                                   dispatcher's next pass — see
+  //                                   renderBlocks.
+  //   - A section with no items still renders its heading with an empty
+  //     table, rather than throwing.
+  //   - If pageData.notes is absent entirely (no "notes" key in the page's
+  //     JSON), the block renders nothing and logs nothing — an absent key
+  //     is treated as an intentional "this page has no notes," not a
+  //     defect.
+
+  window.GL.blockRenderers.notes = function (el, pageData) {
+    var sections = pageData.notes;
+
+    // Key absent entirely: this page intentionally has no notes section(s).
+    // Render nothing, log nothing. (A section that IS present but has an
+    // empty "list" still renders its heading with an empty table below —
+    // see the forEach over `items` further down; that case was already
+    // correct and is unchanged.)
+    if (!sections) {
+      return;
+    }
+
+    el.textContent = "";
+
+    sections.forEach(function (section) {
+      el.appendChild(buildGlHeading(section.sectionName || ""));
+
+      var table = document.createElement("table");
+      table.style.borderCollapse = "collapse";
+      table.style.width = "100%";
+      table.style.marginTop = "0.25rem";
+      table.style.marginBottom = "1rem";
+
+      var tbody = document.createElement("tbody");
+      var items = section.list || [];
+
+      items.forEach(function (item) {
+        var row = document.createElement("tr");
+
+        var nameCell = document.createElement("td");
+        nameCell.style.width = "25%";
+        nameCell.style.padding = "0.3rem 1.5rem 0.3rem 0";
+        nameCell.style.verticalAlign = "top";
+        nameCell.style.fontWeight = "600";
+
+        var onlost = onLostHref(item.url);
+        if (item.file || onlost) {
+          // Internal page link (legacy item.file, or an OnLost scheme-less
+          // *.html url) — derive the slug, same tab.
+          var ilink = document.createElement("a");
+          ilink.href = item.file ? "/" + fileToSlug(item.file) + "/" : onlost;
+          ilink.textContent = item.name || "";
+          nameCell.appendChild(ilink);
+        } else if (item.url) {
+          var link = document.createElement("a");
+          link.href = item.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = item.name || "";
+          nameCell.appendChild(link);
+        } else {
+          nameCell.textContent = item.name || "";
+        }
+
+        var descCell = document.createElement("td");
+        descCell.style.padding = "0.3rem 0";
+        descCell.style.verticalAlign = "top";
+        descCell.innerHTML = (item.description || []).join("\n");
+
+        row.appendChild(nameCell);
+        row.appendChild(descCell);
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      el.appendChild(table);
+    });
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "photoGallery"
+  // ---------------------------------------------------------------------
+  //
+  // Reads pageData.photoGalleries = { "<galleryKey>": { name, items: [ {id, img, label}, ... ] }, ... }
+  // and renders one named mini-gallery as a compact grid of thumbnails —
+  // an alternative to inline .gl-photo images for pages that want to
+  // reference several photos without breaking up the body text. A page
+  // can have any number of mini-galleries (e.g. "howto", "details"),
+  // each shown by its own block:
+  //
+  //   <div data-block-type="photoGallery" data-gallery="details"></div>
+  //
+  //   - data-gallery is required and must match a key in photoGalleries.
+  //     There is no "show everything" fallback — every block names the
+  //     mini-gallery it shows.
+  //   - galleryKey (e.g. "details") is for lookup only — it's what
+  //     data-gallery and the "gallery/id" half of a photoRef point at.
+  //     It is NOT used to derive the heading shown on the page.
+  //   - name is the gallery's required, freely-worded display heading
+  //     (e.g. "Details", "AC vs Heater") — change it any time without
+  //     touching the key, data-gallery, or any photoRef.
+  //   - Within one mini-gallery's items array, id is a stable slug
+  //     (independent of the label) used to build that thumbnail's
+  //     anchor: id="gl-photo-<galleryKey>-<id>". ids only need to be
+  //     unique within their own mini-gallery, not across the whole
+  //     page — the same photo (same img filename) can appear in more
+  //     than one mini-gallery under different ids, with a different
+  //     label tuned to that context. That's the expected way to reuse
+  //     a photo with a different caption, rather than a single shared
+  //     caption.
+  //   - img is just the filename; "/wp-content/uploads/" is prepended,
+  //     matching the convention used by .gl-photo.
+  //   - label is the caption shown under the thumbnail. It can be
+  //     freely renamed without touching id or any inline reference —
+  //     see the "photoRef" renderer below, which pulls this same label
+  //     live so inline text never goes stale.
+  //   - Clicking a thumbnail opens the full-size image in a new tab,
+  //     same behaviour as .gl-photo (no separate lightbox).
+
+  window.GL.blockRenderers.photoGallery = function (el, pageData) {
+    var galleryName = el.getAttribute("data-gallery");
+    if (!galleryName) {
+      throw new Error("photoGallery: missing required data-gallery attribute.");
+    }
+
+    var galleries = pageData.photoGalleries || {};
+    var gallery = galleries[galleryName];
+    if (!gallery || !gallery.items) {
+      throw new Error(
+        'photoGallery: no mini-gallery named "' + galleryName + '" found in page JSON.'
+      );
+    }
+    if (!gallery.name) {
+      throw new Error(
+        'photoGallery: mini-gallery "' + galleryName + '" is missing its required "name" field.'
+      );
+    }
+
+    var items = gallery.items;
+
+    el.textContent = "";
+
+    // data-collapsible="true" wraps the whole mini-gallery in a <details>,
+    // with the gallery name as the <summary> heading. Default (absent or
+    // "false") renders the heading + grid straight into el, as before.
+    var collapsible = el.getAttribute("data-collapsible") === "true";
+    var target;
+    if (collapsible) {
+      var details = document.createElement("details");
+      var summary = document.createElement("summary");
+      var heading = buildGlHeading(gallery.name);
+      heading.style.display = "inline";
+      summary.appendChild(heading);
+      details.appendChild(summary);
+      el.appendChild(details);
+      target = details;
+    } else {
+      el.appendChild(buildGlHeading(gallery.name));
+      target = el;
+    }
+
+    var grid = document.createElement("div");
+    grid.className = "gl-photogallery-grid";
+
+    // Ordered list handed to the shared lightbox; prev/next walks it.
+    var entries = items.map(function (item) {
+      return { src: formatImageUrl(item.img, 1920, 1920), caption: item.label || "" };
+    });
+
+    items.forEach(function (item, idx) {
+      var wrapper = document.createElement("div");
+      wrapper.className = "gl-photogallery-item";
+      wrapper.id = "gl-photo-" + galleryName + "-" + item.id;
+
+      var src = entries[idx].src;
+      var thumbSrc = formatImageUrl(item.img, 360, 220);
+
+      // href stays as a no-JS fallback; the click opens the lightbox.
+      var link = document.createElement("a");
+      link.href = src;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        lightbox.open(entries, idx);
+      });
+
+      var img = document.createElement("img");
+      img.src = thumbSrc;
+      img.alt = item.label || "";
+      img.loading = "lazy";
+      link.appendChild(img);
+
+      var caption = document.createElement("p");
+      caption.className = "gl-photogallery-caption";
+      caption.textContent = item.label || "";
+
+      wrapper.appendChild(link);
+      wrapper.appendChild(caption);
+      grid.appendChild(wrapper);
+    });
+
+    target.appendChild(grid);
+  };
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "photoRef"
+  // ---------------------------------------------------------------------
+  //
+  // Renders an inline link to a specific photoGalleries entry, with the
+  // link text always matching that entry's current label — so renaming
+  // a caption in the page JSON never requires hunting down and editing
+  // inline references in the body text. Markup (inline, inside a
+  // paragraph or list item):
+  //
+  //   <span data-block-type="photoRef" data-id="details/panel"></span>
+  //
+  //   - data-id is "<galleryName>/<id>" — everything before the first
+  //     "/" is the mini-gallery name, everything after it is the id
+  //     within that mini-gallery's array. (ids are plain filename-style
+  //     slugs and are never expected to contain a "/" themselves, so
+  //     splitting on the first one is unambiguous.)
+  //   - Renders as <a href="#gl-photo-<galleryName>-<id>">{label}</a>.
+  //   - A malformed data-id (no "/"), an unknown gallery name, or an id
+  //     not present in that gallery all throw (caught, skipped) rather
+  //     than silently rendering an empty/broken link.
+
+  window.GL.blockRenderers.photoRef = function (el, pageData) {
+    var raw = el.getAttribute("data-id") || "";
+    var slashIndex = raw.indexOf("/");
+    if (slashIndex === -1) {
+      throw new Error(
+        'photoRef: data-id "' + raw + '" must be in "gallery/id" form.'
+      );
+    }
+
+    var galleryName = raw.substring(0, slashIndex);
+    var itemId = raw.substring(slashIndex + 1);
+
+    var galleries = pageData.photoGalleries || {};
+    var gallery = galleries[galleryName];
+    var items = (gallery && gallery.items) || [];
+    var match = null;
+
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id === itemId) {
+        match = items[i];
+        break;
+      }
+    }
+
+    if (!match) {
+      throw new Error(
+        'photoRef: no entry "' + itemId + '" in mini-gallery "' + galleryName + '".'
+      );
+    }
+
+    el.textContent = "";
+    var link = document.createElement("a");
+    link.href = "#gl-photo-" + galleryName + "-" + itemId;
+    link.textContent = match.label || itemId;
+    el.appendChild(link);
+  };
+
+  // Generic block renderer: "pageLink"
+  // ---------------------------------------------------------------------
+  //
+  // Renders an inline link to another page on the site, with the link
+  // text resolved from PageMap.json so it always matches the target
+  // page's current title. Markup (inline):
+  //
+  //   <span data-block-type="pageLink" data-file="howto-power.html">fallback</span>
+  //
+  //   - data-file is the target page's github filename (what the author works
+  //     with) — the URL slug is derived from it via fileToSlug.
+  //   - Renders as <a href="/slug/">title</a>.
+  //   - Falls back to the element's existing text content if the file
+  //     is not found in PageMap.
+
+  window.GL.blockRenderers.pageLink = function (el) {
+    var file = el.getAttribute("data-file") || "";
+    if (!file) {
+      console.error(
+        "[gettinglost] pageLink: missing data-file attribute. text='" +
+        el.textContent + "' url='" + window.location.pathname + "'"
+      );
+      return;
+    }
+
+    var map = window.GL.pageMap || {};
+    var entry = map[file];
+    var title = (entry && entry.name) || el.textContent || file;
+
+    var link = document.createElement("a");
+    link.href = "/" + fileToSlug(file) + "/";
+    link.textContent = title;
+    el.textContent = "";
+    el.appendChild(link);
+  };
+
+  // ---------------------------------------------------------------------
+  // Checklists
+  // ---------------------------------------------------------------------
+
+  // Turns a plain <ol class="gl-checklist" data-block-type="checklist"><li>text</li></ol>
+  // (or <ul>) into an interactive to-do list: each <li>'s content is wrapped in a
+  // <label><input type="checkbox"><span>text</span></label> so the whole row
+  // toggles. Authors only write the bare <li> lines. Idempotent.
+  //
+  // A <ol class="gl-numcheck"> is the same, but with a numbered marker between
+  // the checkbox and the text: <label><input><span class="gl-num"><span>text</span></label>.
+  // The .gl-num span is left empty — its digit is drawn by a CSS counter (see
+  // ol.gl-numcheck in the stylesheet), so the count stays automatic and each
+  // list restarts at 1.
+  //
+  // The class is what CARRIES THE STYLING, so it stays on the element and also
+  // selects the variant; data-block-type only routes the element here. That is
+  // why this is one block type with two looks rather than two block types.
+
+  window.GL.blockRenderers.checklist = function (list) {
+    var isNum = list.classList.contains("gl-numcheck");
+    var items = list.children;
+    for (var i = 0; i < items.length; i++) {
+      var li = items[i];
+      if (li.tagName !== "LI") continue;
+      if (li.querySelector('input[type="checkbox"]')) continue;
+
+      var label = document.createElement("label");
+      var box = document.createElement("input");
+      box.type = "checkbox";
+      label.appendChild(box);
+      if (isNum) {
+        var num = document.createElement("span");
+        num.className = "gl-num";
+        label.appendChild(num);
+      }
+      var span = document.createElement("span");
+      while (li.firstChild) {
+        span.appendChild(li.firstChild);
+      }
+      label.appendChild(span);
+      li.appendChild(label);
+    }
+  };
+
+  // ---------------------------------------------------------------------
+  // Lightbox (shared pop-up viewer)
+  // ---------------------------------------------------------------------
+  //
+  // A single overlay, reused by every photo source on the page. Callers
+  // hand it an ordered list of { src, caption } entries and a start
+  // index; it shows that image centered over a dimmed backdrop, with
+  // prev/next navigation (and Left/Right keys), an "n / total" counter,
+  // and the caption. Close with the X button, a backdrop click, or Esc.
+  //
+  // The underlying <img> is a real full-resolution image, so the
+  // browser's own right-click "Open image in new tab" / "Save image
+  // as" still works — which is why the thumbnails/photos no longer need
+  // to open a new tab of their own.
+  //
+  // Progressive enhancement: the gallery/photo anchors keep their real
+  // href, and the click handlers only call preventDefault() when the
+  // lightbox actually opens. With JS disabled (or if this errors), the
+  // links still open the image directly, exactly as before.
+
+  var lightbox = (function () {
+    var overlay = null;
+    var imgEl, captionEl, counterEl, prevBtn, nextBtn, closeBtn;
+    var entries = [];
+    var index = 0;
+    var lastFocus = null;
+
+    function build() {
+      overlay = document.createElement("div");
+      overlay.className = "gl-lightbox";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-hidden", "true");
+
+      closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.className = "gl-lightbox-close";
+      closeBtn.setAttribute("aria-label", "Close");
+      closeBtn.innerHTML = "&times;";
+
+      prevBtn = document.createElement("button");
+      prevBtn.type = "button";
+      prevBtn.className = "gl-lightbox-nav gl-lightbox-prev";
+      prevBtn.setAttribute("aria-label", "Previous");
+      prevBtn.innerHTML = "&#8249;";
+
+      nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.className = "gl-lightbox-nav gl-lightbox-next";
+      nextBtn.setAttribute("aria-label", "Next");
+      nextBtn.innerHTML = "&#8250;";
+
+      var figure = document.createElement("figure");
+      figure.className = "gl-lightbox-figure";
+
+      imgEl = document.createElement("img");
+      imgEl.className = "gl-lightbox-img";
+      imgEl.alt = "";
+
+      captionEl = document.createElement("figcaption");
+      captionEl.className = "gl-lightbox-caption";
+
+      counterEl = document.createElement("div");
+      counterEl.className = "gl-lightbox-counter";
+
+      figure.appendChild(imgEl);
+      figure.appendChild(captionEl);
+
+      overlay.appendChild(closeBtn);
+      overlay.appendChild(prevBtn);
+      overlay.appendChild(nextBtn);
+      overlay.appendChild(figure);
+      overlay.appendChild(counterEl);
+      document.body.appendChild(overlay);
+
+      closeBtn.addEventListener("click", close);
+      prevBtn.addEventListener("click", function () { step(-1); });
+      nextBtn.addEventListener("click", function () { step(1); });
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) { close(); }
+      });
+      document.addEventListener("keydown", onKey);
+    }
+
+    function isOpen() {
+      return overlay && overlay.getAttribute("aria-hidden") === "false";
+    }
+
+    function onKey(e) {
+      if (!isOpen()) { return; }
+      if (e.key === "Escape") { close(); }
+      else if (e.key === "ArrowLeft") { step(-1); }
+      else if (e.key === "ArrowRight") { step(1); }
+    }
+
+    function render() {
+      var entry = entries[index];
+      imgEl.src = entry.src;
+      imgEl.alt = entry.caption || "";
+      captionEl.textContent = entry.caption || "";
+      captionEl.style.display = entry.caption ? "block" : "none";
+
+      var multiple = entries.length > 1;
+      prevBtn.style.display = multiple ? "block" : "none";
+      nextBtn.style.display = multiple ? "block" : "none";
+      counterEl.style.display = multiple ? "block" : "none";
+      counterEl.textContent = (index + 1) + " / " + entries.length;
+    }
+
+    function step(delta) {
+      if (entries.length < 2) { return; }
+      index = (index + delta + entries.length) % entries.length;
+      render();
+    }
+
+    function open(list, start) {
+      if (!list || !list.length) { return; }
+      if (!overlay) { build(); }
+      entries = list;
+      index = start || 0;
+      lastFocus = document.activeElement;
+      render();
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
+
+    function close() {
+      if (!overlay) { return; }
+      overlay.setAttribute("aria-hidden", "true");
+      imgEl.src = "";
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+    }
+
+    return { open: open };
+  })();
+
+  // ---------------------------------------------------------------------
+  // Init
+  // ---------------------------------------------------------------------
+
+  // The CSS is the one thing that is not a block: it has no element to hang
+  // off and every page wants it. Everything else on the page renders through
+  // the ONE [data-block-type] path.
+  function init() {
+    injectGettingLostCss();
+    initBlocks();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

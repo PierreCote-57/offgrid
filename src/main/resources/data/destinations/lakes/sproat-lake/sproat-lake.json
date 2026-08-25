@@ -1,0 +1,99 @@
+{
+	"name": "Sproat Lake",
+	"featuredImage": "under-construction.png",
+	"excerpt": "A massive lake near Port Alberni with provincial parks, private campgrounds, and great fishing.",
+	"tags": {
+		"badgeList": [
+			"fishing",
+			"camping"
+		],
+		"typeList": [
+			"lake"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 49.2901,
+		"lng": -124.9153,
+		"icon": "lake"
+	},
+	"googleMap": {
+		"road": {
+			"file": "sproat-lake.html"
+		}
+	},
+	"fishingReferences": {
+		"bcIdentifier": "01128ALBN",
+		"areaKm2": 42.33,
+		"lakeChartList": [
+			{
+				"name": "BC Bathymetric (1985) 1 of 3",
+				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00215801.pdf"
+			},
+			{
+				"name": "BC Bathymetric (1985) 2 of 3",
+				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00215802.pdf"
+			},
+			{
+				"name": "BC Bathymetric (1985) 3 of 3",
+				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00215803.pdf"
+			}
+		],
+		"stockingName": ""
+	},
+	"noteList": [
+		{
+			"sectionName": "Destinations",
+			"itemList": [
+				{
+					"name": "Sproat Lake Camping",
+					"url": "https://www.sproatlakecamping.com",
+					"description": [
+						"Website"
+					]
+				},
+				{
+					"name": "Sproat Lake Provincial Park",
+					"url": "https://bcparks.ca/sproat-lake-park/",
+					"description": [
+						"BC Parks"
+					]
+				},
+				{
+					"name": "Sproat Lake Provincial Park",
+					"url": "sproat-lake-provincial-park.html",
+					"description": [
+						"On Getting Lost"
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Further readings",
+			"itemList": [
+				{
+					"name": "Sproat Lake Provincial Park",
+					"file": "sproat-lake-provincial-park.html",
+					"description": [
+						"Our page on the park: lakeside camping, boat launch and the K'ak'awin petroglyphs."
+					]
+				}
+			]
+		}
+	],
+	"photoGalleries": {
+		"photos": {
+			"name": "Photos",
+			"itemList": [
+				{
+					"id": "under-construction",
+					"img": "under-construction.png",
+					"label": "Under construction"
+				}
+			]
+		}
+	}
+}

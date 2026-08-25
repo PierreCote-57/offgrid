@@ -1,0 +1,198 @@
+/**
+ * gl-constants.jst
+ *
+ * Sitewide constants for "Getting Lost on VI". Loaded in the Footer
+ * template part immediately BEFORE gettinglost.jst, so every value here
+ * is on window.GL before the core script (and its renderers) run.
+ *
+ * Home for cross-cutting ALL-CAPS constants:
+ *   GL.PIN_ICONS   — map-marker SVGs keyed by a pin's "icon" value.
+ *   GL.TAG_COLORS  — tag-chip colors (used by renderTags).
+ *   GL.TAG_FALLBACK
+ *   GL.DESTINATION_TYPES — the closed tags.types vocabulary.
+ *   GL.LINK_TYPES  — the closed links[].type vocabulary.
+ *   GL.ROAD_COLORS — road-condition badge colors (used by renderRoad).
+ *   GL.MAP_CONFIG  — Google Maps API key + default zoom / type / styles.
+ *
+ * Renderer-specific config (e.g. lakes.jst's stocking-report URL) stays
+ * with its renderer; only genuinely global constants belong here.
+ */
+
+(function () {
+  "use strict";
+
+  var GL = (window.GL = window.GL || {});
+
+  GL.TAG_COLORS = {
+    camping:  { bg: "rgba(31, 158, 117, 0.88)", text: "#E1F5EE" },
+    fishing:  { bg: "rgba(55, 138, 221, 0.88)", text: "#E6F1FB" },
+    hiking:   { bg: "rgba(216, 90, 48, 0.88)",  text: "#FAECE7" },
+    picnic:   { bg: "rgba(186, 117, 23, 0.88)", text: "#FAEEDA" }
+  };
+  GL.TAG_FALLBACK = { bg: "rgba(95, 94, 90, 0.88)", text: "#F1EFE8" };
+
+  // What KIND of place a destination is, carried as `tags.types`. A CLOSED
+  // vocabulary, unlike `tags.keywords`: sync.js fails the build on a value that
+  // isn't here, so the list browser can offer these as choices and show a count of
+  // zero against one nothing uses yet.
+  //
+  // Alphabetical. Unlike ROAD_RANK, the order carries no meaning — it is only the
+  // order the dropdown lists them in, and alphabetical is the order that doesn't
+  // shift as data lands.
+  //
+  // A type is NEVER mandatory, and that is what keeps `park` meaningful: a city
+  // park (The Spit, in Campbell River) is a very different thing from a provincial
+  // park, so it carries no type at all rather than a wrong one. Someone filtering
+  // for park gets Elk Falls, not The Spit. Add a value here when a kind earns one.
+  GL.DESTINATION_TYPES = ["campground", "lake", "park", "rec-site"];
+
+  // What a link IS, carried as `type` on a `links[]` entry. CLOSED, and the KEY
+  // every renderer selects by — the label went back to being display text only.
+  // It had been doing both jobs, which is why renaming "Campground map" to
+  // "Campground" silently moved 18 links into the wrong column (2026-08-01).
+  //
+  // Optional, like tags.types: a link that is none of these keeps its label and
+  // carries no type. "VI Camping" is the case in the data — a real external site
+  // that is not the destination's own homepage, a map, or a booking page.
+  //
+  // An entry with NO url is not a link at all: reservation status prose lives in
+  // a "Reservation notes" notes section instead.
+  GL.LINK_TYPES = ["homepage", "map", "reservation"];
+
+  // Road-condition badge colors (used by renderRoad). Severity ramp,
+  // easy -> hard: blue -> green -> orange -> rust -> red. Two values sit OFF
+  // that ramp, for opposite reasons: black back_country is the absence of a
+  // ROAD, not the worst one; grey unpaved is the absence of a JUDGEMENT — a
+  // non-paved tail has been measured, but nobody has driven it and said what
+  // it does to the van. Strict 7-value vocabulary, so there is intentionally
+  // NO fallback — an unknown value renders nothing.
+  GL.ROAD_COLORS = {
+    pavement:     { bg: "rgba(45, 110, 200, 0.9)",  text: "#E6F0FB" },
+    unpaved:      { bg: "rgba(120, 118, 112, 0.9)", text: "#F1EFE8" },
+    dirt:         { bg: "rgba(46, 133, 85, 0.9)",   text: "#E4F5EC" },
+    potholes:     { bg: "rgba(196, 100, 28, 0.95)", text: "#FCEDE0" },
+    sharp_rock:   { bg: "rgba(190, 76, 34, 0.94)",  text: "#FBE8DF" },
+    rugged:       { bg: "rgba(178, 55, 44, 0.94)",  text: "#FBE4E1" },
+    back_country: { bg: "rgba(20, 20, 20, 0.94)",   text: "#EDEDED" }
+  };
+
+  // Severity order of the AUTHORABLE drive leg types, easiest -> hardest, as
+  // experienced by THE van. This is configuration, not truth: the ranking
+  // follows from the vehicle, so a different van (or an upgrade) can reorder it.
+  //
+  // Two badge values are deliberately absent, because this list doubles as the
+  // set of leg types that may be AUTHORED, and neither of them ever is:
+  //   pavement     — derived from legs: [] ("paved all the way"). Pavement
+  //                  segments are excluded from legs entirely, which is what
+  //                  lets one page's legs hold true for several origin towns.
+  //   back_country — derived whenever a leg is non-drive (walk/hike/boat). Not
+  //                  "worse road" but "no road", so it is never ranked.
+  // Both live in ROAD_COLORS only, to be painted.
+  //
+  // unpaved ranks mildest ON PURPOSE. It means a non-paved tail was measured
+  // but its character is not yet refined, so any known type must outrank it and
+  // take the badge; its grey, not its position, is what says "unknown".
+  // Mirrored as DRIVE_LEG_TYPES in sync.js; keep the two in sync.
+  GL.ROAD_RANK = [
+    "unpaved",
+    "dirt",
+    "potholes",
+    "sharp_rock",
+    "rugged"
+  ];
+
+  // Leg types where you are no longer in the van. They carry no severity rank —
+  // any one of them derives the back_country badge, which is the whole point of
+  // the distinction. walk vs hike is about footing, not distance: walk is an
+  // improved surface, hike is trail. Mirrored as NON_DRIVE_LEG_TYPES in sync.js.
+  GL.NON_DRIVE_LEG_TYPES = ["walk", "hike", "boat"];
+
+  GL.MAP_CONFIG = {
+    mapApiKey: "AIzaSyBHN5E9rVPW6wqbMXEzFE5nDc-TH58gKQ8",
+    mapZoom: 13,
+    mapTypeId: "roadmap",
+    mapStyles: [
+      // { featureType: "poi.park", elementType: "labels", stylers: [{ visibility: "off" }] }
+    ]
+  };
+
+  // Map-marker figures, keyed by a pin's "icon" value.
+  // Each is a standalone 48x48 SVG (xmlns is required for data-URI use),
+  // with the figure centered via translate(24,24) so gettinglost.jst can
+  // anchor every pin at (24,24). Unknown/absent pin -> the core script
+  // falls back to the default Google marker.
+  GL.PIN_ICONS = {
+    lake:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24) scale(0.82)">' +
+          '<circle cx="0" cy="0" r="24" fill="#2b7fbf"/>' +
+          '<g fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round">' +
+            '<path d="M-12,-7 q4,-5 8,0 t8,0 t8,0"/>' +
+            '<path d="M-12,0 q4,-5 8,0 t8,0 t8,0"/>' +
+            '<path d="M-12,7 q4,-5 8,0 t8,0 t8,0"/>' +
+          '</g>' +
+        '</g>' +
+      '</svg>',
+    campground:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)">' +
+          '<rect x="-16" y="-10" width="28" height="17" rx="3" fill="#d98324"/>' +
+          '<rect x="-12" y="-6" width="7" height="7" rx="1" fill="#f2b877"/>' +
+          '<line x1="12" y1="2" x2="18" y2="4" stroke="#d98324" stroke-width="2.6" stroke-linecap="round"/>' +
+          '<circle cx="-8" cy="9" r="3.6" fill="#d98324"/>' +
+          '<circle cx="6" cy="9" r="3.6" fill="#d98324"/>' +
+        '</g>' +
+      '</svg>',
+    park:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)">' +
+          '<polygon points="0,-18 -11,-4 11,-4" fill="#3f9a54"/>' +
+          '<polygon points="0,-11 -14,7 14,7" fill="#3f9a54"/>' +
+          '<rect x="-2.5" y="7" width="5" height="8" fill="#3f9a54"/>' +
+        '</g>' +
+      '</svg>',
+    tent:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)">' +
+          '<polygon points="0,-20 -16,11 16,11" fill="#9a6b3f"/>' +
+          '<polygon points="-5,11 5,11 0,-4" fill="#cda876"/>' +
+        '</g>' +
+      '</svg>',
+    picnic:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)" stroke="#c0504d" stroke-linecap="round" fill="none">' +
+          '<line x1="-13" y1="-6" x2="13" y2="-6" stroke-width="4.5"/>' +
+          '<line x1="-8" y1="-6" x2="-16" y2="13" stroke-width="3.5"/>' +
+          '<line x1="8" y1="-6" x2="16" y2="13" stroke-width="3.5"/>' +
+          '<line x1="-19" y1="7" x2="19" y2="7" stroke-width="3.5"/>' +
+        '</g>' +
+      '</svg>',
+    home:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)">' +
+          '<polygon points="0,-19 -19,-4 19,-4" fill="#465868"/>' +
+          '<rect x="-15" y="-4" width="30" height="20" rx="1.5" fill="#5f7488"/>' +
+          '<rect x="-10" y="1" width="20" height="15" rx="1" fill="#e6ecf1"/>' +
+          '<g stroke="#9caebf" stroke-width="1.5">' +
+            '<line x1="-10" y1="6" x2="10" y2="6"/>' +
+            '<line x1="-10" y1="11" x2="10" y2="11"/>' +
+          '</g>' +
+        '</g>' +
+      '</svg>',
+    outhouse:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+        '<g transform="translate(24,24)" stroke-linecap="round" stroke-linejoin="round">' +
+          '<polyline points="-20,-4 0,-17 20,-4" fill="none" stroke="#37692a" stroke-width="5.2"/>' +
+          '<rect x="-16.5" y="-6" width="4.6" height="27" rx="2.3" fill="#37692a"/>' +
+          '<rect x="11.9" y="-6" width="4.6" height="27" rx="2.3" fill="#37692a"/>' +
+          '<rect x="-11" y="-4" width="11" height="24" fill="#ecd6a6"/>' +
+          '<rect x="0" y="-4" width="11" height="24" fill="#b98243"/>' +
+          '<line x1="0" y1="-4" x2="0" y2="20" stroke="#8a6a3a" stroke-width="1"/>' +
+          '<rect x="-8.5" y="0" width="6.2" height="6.2" rx="1.3" fill="#7fb0e0"/>' +
+          '<circle cx="3" cy="9" r="1.4" fill="#5a3d1e"/>' +
+          '<rect x="-16.5" y="18.5" width="4.6" height="3.4" rx="1.3" fill="#2b5320"/>' +
+          '<rect x="11.9" y="18.5" width="4.6" height="3.4" rx="1.3" fill="#2b5320"/>' +
+        '</g>' +
+      '</svg>'
+  };
+})();

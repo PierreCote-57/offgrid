@@ -1,0 +1,56 @@
+{
+	"name": "Elk Falls Park",
+	"featuredImage": "under-construction.png",
+	"excerpt": "A thundering waterfall and old-growth Douglas fir, just north of Campbell River.",
+	"tags": {
+		"badgeList": [
+			"camping",
+			"fishing",
+			"hiking"
+		],
+		"typeList": [
+			"park"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 50.037009,
+		"lng": -125.295734,
+		"icon": "tent",
+		"label": "Near Campbell River"
+	},
+	"googleMap": {
+		"road": {
+			"file": "elk-falls-quinsam-campground.html"
+		}
+	},
+	"noteList": [
+		{
+			"sectionName": "Additional information",
+			"itemList": [
+				{
+					"name": "Availability",
+					"url": null,
+					"description": [
+						"Reservable; open March 20–Oct 31 plus year-round winter camping"
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Further readings",
+			"itemList": [
+				{
+					"name": "Explore BC Parks",
+					"url": "https://explorebcparks.ca/elk-falls-provincial-park/",
+					"description": [
+						"Quality Recreation"
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,262 @@
+/**
+ * maintenance.jst (javascript)
+ *
+ * Page-type-specific block renderer for the vehicle maintenance pages
+ * (van-maintenance.html, bronco-maintenance.html). Registers on
+ * window.GL.blockRenderers, the shared registry defined in gettinglost.jst
+ * (loaded on every page), which already handles:
+ *
+ *   - fetching the page's own JSON (/wp-content/uploads/<slug>.json) once
+ *   - dispatching each [data-block-type] element to its renderer
+ *   - per-block error handling (a renderer that throws just skips that
+ *     one block; other blocks on the page still render normally)
+ *   - the generic, page-type-agnostic renderers ("notes", "backToGallery", ...)
+ *
+ * This file adds one renderer:
+ *
+ *   <div data-block-type="maintenanceActual"></div>
+ *
+ * A maintenance page carries two things. `notes` is the PLAN — what is
+ * scheduled, what is being watched. `actual` is the RECORD — one entry per
+ * visit, written on return. This renderer draws the record; the plan is the
+ * generic notes renderer, and the page puts the record above it.
+ *
+ * pageData.actual is a list of entries whose top-level keys ARE the columns,
+ * in order:
+ *
+ *   { date, odometer_km, shop{name,url}, work{name,url}, cost_cad,
+ *     nextDue{km,date} }
+ *
+ * shop.url links out to the shop; work.url is the invoice or work sheet, a
+ * bare filename living beside the page JSON and uploaded flat to
+ * /wp-content/uploads/. Either link is optional — no url means plain text.
+ * A missing value renders as an empty cell, never a placeholder.
+ */
+
+(function () {
+  "use strict";
+
+  window.GL = window.GL || {};
+  window.GL.blockRenderers = window.GL.blockRenderers || {};
+
+  var UPLOADS = "/wp-content/uploads/";
+
+  // The whole table definition, one row per column: heading, fixed width,
+  // alignment, and the cell to build from an entry. Column order, tuning and
+  // rendering all come from here — there is no second list to keep in step.
+  var COLUMNS = [
+    { label: "Date", width: "15%", align: "center", buildCell: buildDateCell },
+    { label: "Odometer", width: "15%", align: "center", buildCell: buildOdometerCell },
+    { label: "Shop", width: "15%", align: "center", buildCell: buildShopCell },
+    { label: "Work", width: "30%", align: "left", buildCell: buildWorkCell },
+    { label: "Cost", width: "10%", align: "center", buildCell: buildCostCell },
+    { label: "Next due", width: "15%", align: "center", buildCell: buildNextDueCell }
+  ];
+
+  // ---------------------------------------------------------------------
+  // Small DOM helpers (same table/cell styling convention used by the
+  // generic renderers in gettinglost.jst and by lakes.jst)
+  // ---------------------------------------------------------------------
+
+  function createStyledTable() {
+    var table = document.createElement("table");
+    table.style.borderCollapse = "collapse";
+    table.style.marginTop = "0.25rem";
+    table.style.width = "90%";
+    table.style.marginLeft = "auto";
+    table.style.marginRight = "auto";
+    // Fixed layout is what makes the COLUMNS widths bind: content no longer
+    // votes on how wide a column is.
+    table.style.tableLayout = "fixed";
+    return table;
+  }
+
+  function buildColGroup() {
+    var group = document.createElement("colgroup");
+    COLUMNS.forEach(function (column) {
+      var col = document.createElement("col");
+      col.style.width = column.width;
+      group.appendChild(col);
+    });
+    return group;
+  }
+
+  function buildHeaderCell(column) {
+    var cell = document.createElement("th");
+    cell.textContent = column.label;
+    cell.style.padding = "0.2rem 0.5rem";
+    cell.style.textAlign = column.align;
+    cell.style.verticalAlign = "bottom";
+    cell.style.borderBottom = "1px solid #ccc";
+    cell.style.color = "#666";
+    cell.style.fontSize = "0.88rem";
+    cell.style.fontWeight = "600";
+    return cell;
+  }
+
+  function buildBodyCell() {
+    var cell = document.createElement("td");
+    cell.style.padding = "0.2rem 0.5rem";
+    cell.style.verticalAlign = "top";
+    cell.style.fontSize = "0.9rem";
+    return cell;
+  }
+
+  function buildLink(url, label) {
+    var link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = label;
+    return link;
+  }
+
+  // ---------------------------------------------------------------------
+  // Cell builders — one per column, in column order
+  // ---------------------------------------------------------------------
+
+  function buildTextCell(text) {
+    var cell = buildBodyCell();
+    if (text !== undefined && text !== null && text !== "") {
+      cell.textContent = text;
+    }
+    return cell;
+  }
+
+  function formatKm(km) {
+    if (typeof km !== "number") {
+      return "";
+    }
+    return km.toLocaleString("en-CA") + " km";
+  }
+
+  function buildDateCell(entry) {
+    var cell = buildTextCell(entry.date);
+    return cell;
+  }
+
+  function buildOdometerCell(entry) {
+    var cell = buildTextCell(formatKm(entry.odometer_km));
+    return cell;
+  }
+
+  function buildCostCell(entry) {
+    var cell = buildBodyCell();
+    if (typeof entry.cost_cad === "number") {
+      cell.textContent = entry.cost_cad.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+    }
+    return cell;
+  }
+
+  /**
+   * A {name, url} pair: the name, linked when a url is there, plain text when
+   * it is not. buildHref turns the entry's url into the address to link to,
+   * which is what differs between an outside shop and an uploaded invoice.
+   */
+  function buildNamedLinkCell(named, buildHref) {
+    var cell = buildBodyCell();
+    var pair = named || {};
+    if (!pair.name) {
+      return cell;
+    }
+    if (pair.url) {
+      cell.appendChild(buildLink(buildHref(pair.url), pair.name));
+    } else {
+      cell.textContent = pair.name;
+    }
+    return cell;
+  }
+
+  function buildShopCell(entry) {
+    var cell = buildNamedLinkCell(entry.shop, function (url) {
+      return url;
+    });
+    return cell;
+  }
+
+  function buildWorkCell(entry) {
+    var cell = buildNamedLinkCell(entry.work, function (url) {
+      return UPLOADS + url;
+    });
+    return cell;
+  }
+
+  /**
+   * Whichever of km and date is known. Both known puts them on two lines.
+   */
+  function buildNextDueCell(entry) {
+    var cell = buildBodyCell();
+    var due = entry.nextDue || {};
+    var lines = [];
+    var km = formatKm(due.km);
+    if (km) {
+      lines.push(km);
+    }
+    if (due.date) {
+      lines.push(due.date);
+    }
+    lines.forEach(function (line, i) {
+      if (i > 0) {
+        cell.appendChild(document.createElement("br"));
+      }
+      cell.appendChild(document.createTextNode(line));
+    });
+    return cell;
+  }
+
+  function buildEntryRow(entry) {
+    var row = document.createElement("tr");
+    COLUMNS.forEach(function (column) {
+      var cell = column.buildCell(entry);
+      cell.style.textAlign = column.align;
+      row.appendChild(cell);
+    });
+    return row;
+  }
+
+  // ---------------------------------------------------------------------
+  // Block renderer: "maintenanceActual"
+  // ---------------------------------------------------------------------
+
+  window.GL.blockRenderers.maintenanceActual = function (el, pageData) {
+    var actual = pageData.actual;
+
+    el.textContent = "";
+
+    if (actual === undefined || actual === null) {
+      return;
+    }
+    if (!Array.isArray(actual)) {
+      console.warn(
+        "[maintenance] `actual` is not a list — nothing rendered. type='" +
+        typeof actual + "' value='" + JSON.stringify(actual) + "' url='" +
+        window.location.pathname + "'"
+      );
+      return;
+    }
+    if (!actual.length) {
+      return;
+    }
+
+    el.appendChild(window.GL.buildGlHeading("Actual maintenance"));
+
+    var table = createStyledTable();
+    table.appendChild(buildColGroup());
+
+    var thead = document.createElement("thead");
+    var headerRow = document.createElement("tr");
+    COLUMNS.forEach(function (column) {
+      headerRow.appendChild(buildHeaderCell(column));
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    actual.forEach(function (entry) {
+      tbody.appendChild(buildEntryRow(entry));
+    });
+    table.appendChild(tbody);
+
+    el.appendChild(table);
+  };
+})();

@@ -1,0 +1,601 @@
+/* gettinglost.css
+ * Site-wide styles for Getting Lost in Canada.
+ * Carved out of injectGalleryCss() in gettinglost.jst so the CSS can live
+ * as a real stylesheet. Loaded via a <link> injected by injectGalleryCss().
+ */
+
+.gl-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 900px) {
+  .gl-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .gl-gallery-grid { grid-template-columns: 1fr; }
+}
+
+.gl-gallery-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.gl-gallery-card-img-wrap {
+  position: relative;
+}
+.gl-gallery-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 6px;
+  display: block;
+}
+
+.gl-tag-stack {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+.gl-tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Single road-condition badge, lower-left corner. Same pill as .gl-tag;
+   only the position differs, so the two corners read as one family. */
+.gl-road {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* ---- destination page tag row -------------------------------------------
+   The same pills as the cards, laid out along the page instead of pinned to
+   the corners of an image: badges LEFT, road badge RIGHT, keywords BELOW.
+   Only the containers are new — .gl-tag is the pill in both places, which is
+   what keeps a card and a page from drifting apart. */
+.gl-tagrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.gl-tagrow-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+.gl-tagrow-keywords {
+  margin-top: 0.4rem;
+}
+/* A vocabulary with no colour of its own. The border does the work the fill
+   does on a coloured pill, so it still reads as a pill. */
+.gl-tag.gl-plain {
+  background: #fff;
+  color: #000;
+  border: 1px solid #bbb;
+}
+/* A measurement, not a vocabulary word — no pill. */
+.gl-tagrow-km {
+  font-size: 11px;
+  color: #555;
+}
+
+.gl-gallery-card-title {
+  margin: 0.6rem 0 0.3rem;
+  font-size: 1.15rem;
+}
+.gl-gallery-card-teaser {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Booklet-download button. The title-line placement (.gl-title-with-pdf, a flex
+ * row on .wp-block-post-title) came from the retired gallery.jst; the live one is
+ * .gl-lb-booklet in the list_browser options bar, which reuses .gl-pdf-button's
+ * look. Kept here because the palette rule below is shared, and the title-line
+ * variant is one class away if we ever want it back. Brown palette matches
+ * .gl-heading so it reads as part of the same family. */
+.gl-title-with-pdf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+.gl-pdf-button,
+.gl-lb-booklet {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: #5e442c;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #2a1a0e;
+  transition: background 0.15s ease;
+}
+.gl-pdf-button:hover,
+.gl-lb-booklet:hover {
+  background: #2a1a0e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+ul, ol {
+  margin-top: 0;
+}
+li {
+  margin-top: 0.25em;
+}
+[data-howto-section] {
+  margin-bottom: 2.5rem;
+}
+
+/* Standard bordered section heading. Produced by window.GL.buildGlHeading
+ * (block renderers, lakes.jst) and used on authored <h3 class="gl-heading">. */
+.gl-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2a1a0e;
+  margin: 1.5rem 0 0.4rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid #5e442c;
+}
+
+/* Authored data table: <table class="gl-table"> with a <colgroup> giving the
+ * value columns their width. table-layout:fixed makes those widths hold whatever
+ * the cells contain, and the column left without a width absorbs the remainder —
+ * the notes column, which is why the last column reads left-aligned. */
+.gl-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.gl-table th,
+.gl-table td {
+  border: 1px solid #5e442c;
+  padding: 0.4rem 0;
+  text-align: center;
+  vertical-align: middle;
+}
+.gl-table thead th {
+  background: #f3ece4;
+  color: #2a1a0e;
+}
+/* Side padding only where text meets a border — the left-aligned first and last
+ * columns. On a centered column it never shows, and it steals the width a long
+ * header needs. */
+.gl-table th:first-child,
+.gl-table td:first-child,
+.gl-table th:last-child,
+.gl-table td:last-child {
+  text-align: left;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+}
+
+/* Drop the focus rectangle on mouse click; keep it for keyboard (Tab). */
+summary:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Menu separator. WP has no separator item, so it is a navigation link
+ * labelled "—" carrying this class; the rule makes it inert and dims it. */
+.gl-menu-sep a {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.gl-photogallery-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+@media (max-width: 900px) {
+  .gl-photogallery-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .gl-photogallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.gl-photogallery-item {
+  text-align: center;
+  border-radius: 6px;
+  scroll-margin-top: 80px;
+}
+.gl-photogallery-item img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  display: block;
+}
+.gl-photogallery-caption {
+  font-size: 0.78rem;
+  color: #666;
+  margin: 0.3rem 0 0;
+  line-height: 1.3;
+}
+.gl-photogallery-item:target {
+  outline: 3px solid #c98a3e;
+  outline-offset: 3px;
+  animation: gl-photo-flash 1.6s ease-out 1;
+}
+@keyframes gl-photo-flash {
+  0% { box-shadow: 0 0 0 6px rgba(201, 138, 62, 0.6); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 138, 62, 0); }
+}
+
+.gl-warning {
+  display: block;
+  background: #fdf3e0;
+  border: 1px solid #c98a3e;
+  border-left: 5px solid #c98a3e;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  color: #5e442c;
+}
+.gl-warning-label {
+  color: #a85d1a;
+}
+
+.gl-checklist {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 1.5rem;
+}
+.gl-checklist li {
+  margin: 0.45rem 0;
+}
+.gl-checklist label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+  line-height: 1.45;
+}
+.gl-checklist input[type="checkbox"] {
+  margin-top: 0.2rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: #c98a3e;
+  cursor: pointer;
+}
+.gl-checklist input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* gl-numcheck: same interactive row as gl-checklist, but with an automatic
+   number between the checkbox and the text (checkbox, then "1.", then text).
+   The number is a CSS counter so authors write only bare <li> lines; each
+   <ol class="gl-numcheck"> restarts its own count at 1. The .gl-num span is
+   created empty by the "checklist" block renderer; its ::before draws the digit. */
+.gl-numcheck {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 1.5rem;
+  counter-reset: gl-numcheck;
+}
+.gl-numcheck li {
+  margin: 0.45rem 0;
+  counter-increment: gl-numcheck;
+}
+.gl-numcheck label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+  line-height: 1.45;
+}
+.gl-numcheck input[type="checkbox"] {
+  margin-top: 0.2rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: #c98a3e;
+  cursor: pointer;
+}
+.gl-numcheck .gl-num {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.gl-numcheck .gl-num::before {
+  content: counter(gl-numcheck) ".";
+}
+/* On check, strike + dim the text (the number stays solid), mirroring
+   gl-checklist. The text span is the one that is not .gl-num. */
+.gl-numcheck input[type="checkbox"]:checked ~ span:not(.gl-num) {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.gl-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 3.25rem 2rem 2rem;
+  box-sizing: border-box;
+}
+.gl-lightbox[aria-hidden="false"] {
+  display: flex;
+}
+.gl-lightbox-figure {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gl-lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: 75vh;
+  min-height: 0;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+.gl-lightbox-caption {
+  color: #eee;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  text-align: center;
+  max-width: 60ch;
+}
+.gl-lightbox-counter {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ddd;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+}
+.gl-lightbox-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+.gl-lightbox-close:hover, .gl-lightbox-close:focus {
+  color: #c98a3e;
+}
+.gl-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  color: #fff;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 1rem;
+  border-radius: 6px;
+}
+.gl-lightbox-nav:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.gl-lightbox-prev {
+  left: 0.75rem;
+}
+.gl-lightbox-next {
+  right: 0.75rem;
+}
+
+/* ---- list_browser options bar (list_browser.jst) ------------------------- */
+.gl-lb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 1rem;
+}
+/* Match-count readout — not a control, so no pill. margin-left:auto floats it to
+   the right end of the bar (past any booklet button). No color of its own: it
+   inherits the theme's text brown (#4a3828), the same color the grid card titles
+   get, so it sits with the page rather than shouting. A notch larger than the
+   controls and semibold so it still reads as the answer to the filters. */
+.gl-lb-count {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+/* ONE control surface worn by all four control types. The fixed height is what
+   makes the row line up — left to itself each control sizes from its own content
+   box (and its own browser defaults), which is what made the bar look assembled
+   from parts. font-family/font-size must be stated explicitly: form elements do
+   not inherit type from the page. */
+.gl-lb-view,
+.gl-lb-dropdown summary,
+.gl-lb-select,
+.gl-lb-search {
+  box-sizing: border-box;
+  height: 34px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #5e442c;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+/* The three data-axis filters share their inner padding. The view toggle is
+   excluded: its buttons run edge to edge inside the pill. */
+.gl-lb-dropdown summary,
+.gl-lb-select,
+.gl-lb-search {
+  padding: 0 12px;
+}
+/* The same chevron on both "pick from a list" controls — the Keywords/Badges
+   summary and the Access select — so they read as one kind of control rather
+   than as our styling next to the browser's. appearance:none is what removes
+   the select's native arrow; without it ours would be the second one. */
+.gl-lb-dropdown summary,
+.gl-lb-select {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 30px;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235e442c' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+/* Open state: the chevron flips up. */
+.gl-lb-dropdown[open] summary {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 5l4-4 4 4' fill='none' stroke='%235e442c' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+/* Segmented table|grid toggle; the active view carries .is-active. Keeps the
+   family's surface but is the only control with a filled state — it picks the
+   display axis, the other three filter the data. */
+.gl-lb-view {
+  display: inline-flex;
+  overflow: hidden;
+}
+.gl-lb-view button {
+  height: 100%;
+  padding: 0 14px;
+  border: none;
+  background: #fff;
+  color: #5e442c;
+  font: inherit;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+.gl-lb-view button.is-active {
+  background: #5e442c;
+  color: #fff;
+}
+/* Keyword multi-select: <details> disclosure + absolutely-positioned panel. */
+.gl-lb-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.gl-lb-dropdown summary {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  user-select: none;
+}
+/* Safari draws its own disclosure triangle; list-style:none does not remove it. */
+.gl-lb-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+.gl-lb-panel {
+  position: absolute;
+  z-index: 5;
+  margin-top: 4px;
+  min-width: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+}
+.gl-lb-panel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.gl-lb-panel input[type="checkbox"] {
+  accent-color: #c98a3e;
+  cursor: pointer;
+}
+/* The booklet link is the one control that isn't about narrowing the list, so it
+   sits apart: auto left margin pushes it to the right end of the bar, which is
+   where this button lived when it was on the title line. It does NOT wear the
+   shared control surface (it is a filled button, not a field), but it must match
+   its 34px so the row lines up — which needs box-sizing: border-box, since
+   .gl-pdf-button's vertical padding would otherwise stack on top of the height
+   and make the button tower over everything else. No margin-left:auto: the count
+   readout is now the bar's sole right-anchored item, so the booklet stays a normal
+   control at the end of the left cluster, just before the count. */
+.gl-lb-booklet {
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 1rem;
+  display: inline-flex;
+  align-items: center;
+}
+.gl-lb-empty {
+  padding: 6px 8px;
+  color: #999;
+}
+
+/* Maps. GL.drawMap gives every map the same two children — the map and the live
+   centre/zoom caption under it — and touches no box property at all: the box is
+   CSS, and the caller states only the OUTSIDE size. .gl-mapbox is the flex column
+   that splits that height, so the caption takes its own line out of the block
+   rather than being added on underneath it.
+   The caption reserves its line before it has any text, so Google sizes the map
+   once against a box that already allows for it and never has to redraw into a
+   box that shrank underneath it. */
+.gl-mapbox {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+.gl-map {
+  flex: 1;
+  min-height: 0;
+}
+.gl-map-caption {
+  flex: none;
+  min-height: 1.4em;
+  text-align: center;
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+/* House style for a map ON A PAGE: the article text wraps around it. It lives on
+   the block selector and nowhere else, so a map drawn somewhere that is not a
+   page block — the list browser's map view — inherits none of it and sizes
+   itself. Every property here is overridable by an inline style on the div, the
+   ordinary way: the <details> road maps set width/height/float and win. */
+[data-block-type="googleMap"] {
+  width: 45%;
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+}

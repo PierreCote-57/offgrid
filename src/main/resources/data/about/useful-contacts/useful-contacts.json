@@ -1,0 +1,86 @@
+{
+	"name": "Useful Contacts",
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"noteList": [
+		{
+			"sectionName": "RV Dealers",
+			"itemList": [
+				{
+					"name": "Peden RV Superstore",
+					"url": "https://www.pedenrv.com",
+					"description": [
+						"Coachmen (Beyond) dealer on the island (Google 4.5 stars).",
+						"At 10049 Galaran Road, Sidney, BC."
+					]
+				},
+				{
+					"name": "SunWest RV Centre",
+					"url": "https://www.sunwestrv.com",
+					"description": [
+						"Although we did not purchase our Van here, they were, by far, the most helpful."
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Maintenance Contacts",
+			"itemList": [
+				{
+					"name": "Campbell River RV & Marine",
+					"url": "https://www.campbellriverrv.com",
+					"description": [
+						"Seem very appreciated, with occasional miss (Google 4.2 stars).",
+						"After some checks, they are able to perform maintenance/warranty work on our Beyond,",
+						"much more practical than driving 3 hours to Peden in Sidney.",
+						"At 1632 Coulter Rd Campbell River, BC"
+					]
+				},
+				{
+					"name": "Ford dealership in Campbell River",
+					"url": "https://www.stevemarshallfordcampbellriver.com",
+					"description": [
+						"For maintenance of the V part of RV"
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Modifications",
+			"itemList": [
+				{
+					"name": "Vantoys Overland Gear",
+					"url": "https://vantoys.ca",
+					"description": [
+						"Highly rated for RV modifications (Google 4.9 stars).",
+						"Web site is more parts retail, need to enquire about modifications.",
+						"The shop, at same address, may be related/independent business (Van Toys Off-Road).",
+						"At 1748 Alberni Hwy #1A, Coombs, BC"
+					]
+				},
+				{
+					"name": "Courtenay RC Specialists",
+					"url": "https://www.courtenayrvs.com",
+					"description": [
+						"Well rated for RV modifications (Google 4.8 stars).",
+						"At Comox, BC"
+					]
+				},
+				{
+					"name": "Van Isle Van Conversions",
+					"url": "https://vanislevanconversions.com/projects/",
+					"description": [
+						"At 10049 Galaran Road, Sidney, BC"
+					]
+				},
+				{
+					"name": "Watts of Love",
+					"url": "https://www.wattsoflove.ca",
+					"description": []
+				}
+			]
+		}
+	]
+}

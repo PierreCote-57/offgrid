@@ -1,4 +1,6 @@
-/* Forest palette. Every colour is a shade of the bar green — there is no contrasting accent. */
+/* Forest palette. Every decorative colour is a shade of the bar green — there is no
+   contrasting accent. Orange and red are not accents: they are reserved for warning and
+   error messages, and are the only colours outside the green family. */
 :root {
 	--bar: #1f5e42;
 	--bar-text: #eef3ef;
@@ -7,6 +9,12 @@
 	--brand-soft: #e7efe9;
 	--text: #243027;
 	--rule: #d6dfd8;
+	--warn: #b26a00;
+	--warn-deep: #7a4700;
+	--warn-soft: #fdf0dc;
+	--error: #a02a1f;
+	--error-deep: #7a1f16;
+	--error-soft: #fbeae8;
 }
 
 /* Hides Alpine-controlled elements until Alpine has initialised. */
@@ -24,21 +32,56 @@ body {
 	min-height: 100vh;
 }
 
+/* Messages from the processor, below the header bar. The container has no padding of its
+   own, so with no messages it takes no vertical space. */
+.message {
+	width: calc(100% - 48px);
+	max-width: 768px;
+	margin: 8px auto;
+	padding: 8px 12px;
+	border-radius: 4px;
+	border: 1px solid;
+	font-size: 15px;
+	box-sizing: border-box;
+}
+
+.message-user {
+	background: var(--brand-soft);
+	border-color: var(--brand);
+	color: var(--brand-deep);
+}
+
+.message-warning {
+	background: var(--warn-soft);
+	border-color: var(--warn);
+	color: var(--warn-deep);
+}
+
+.message-error {
+	background: var(--error-soft);
+	border-color: var(--error);
+	color: var(--error-deep);
+}
+
+/* The page column. max-width sets how wide it gets; margin-inline centres it. */
 main {
 	flex: 1;
+	width: 100%;
+	max-width: 1024px;
+	margin-inline: auto;
 	background: #ffffff;
-	padding: 2rem 1.5rem 2.5rem;
+	padding: 32px 24px 40px;
+	box-sizing: border-box;
 }
 
 main h1 {
-	margin: 0 0 0.75rem;
+	margin: 0 0 12px;
 	color: var(--brand-deep);
-	font-size: 1.9rem;
+	font-size: 30px;
 }
 
 main p {
-	margin: 0 0 1rem;
-	max-width: 40rem;
+	margin: 0 0 16px;
 	line-height: 1.55;
 }
 
@@ -47,7 +90,7 @@ main p {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.75rem 1.5rem;
+	padding: 12px 24px;
 	background: var(--bar);
 	color: var(--bar-text);
 }
@@ -55,7 +98,7 @@ main p {
 .site-header .brand {
 	font-family: "Bradley Hand", cursive;
 	font-style: italic;
-	font-size: 1.5rem;
+	font-size: 24px;
 	font-weight: 400;
 	line-height: 1;
 	text-decoration: none;
@@ -64,7 +107,7 @@ main p {
 
 .menu ul {
 	display: flex;
-	gap: 1.5rem;
+	gap: 24px;
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -75,7 +118,7 @@ main p {
 .menu a,
 .menu button {
 	font: inherit;
-	font-size: 0.95rem;
+	font-size: 15px;
 	line-height: 1.4;
 	display: inline-block;
 	vertical-align: middle;
@@ -84,7 +127,7 @@ main p {
 	background: none;
 	border: 0;
 	border-bottom: 2px solid transparent;
-	padding: 0.15rem 0;
+	padding: 2px 0;
 	cursor: pointer;
 }
 
@@ -103,11 +146,11 @@ main p {
 
 .menu .submenu {
 	position: absolute;
-	top: 2rem;
+	top: 32px;
 	left: 0;
 	display: block;
-	min-width: 9rem;
-	padding: 0.4rem 0;
+	min-width: 144px;
+	padding: 6px 0;
 	background: #ffffff;
 	color: var(--text);
 	border: 1px solid var(--rule);
@@ -116,7 +159,7 @@ main p {
 }
 
 .menu .submenu li {
-	padding: 0.3rem 1rem;
+	padding: 5px 16px;
 }
 
 .menu .submenu a {
@@ -132,9 +175,9 @@ main p {
 /* Outline button: brand-soft fill, brand border, filling in on hover. */
 .cta {
 	display: inline-block;
-	padding: 0.45rem 1rem;
+	padding: 7px 16px;
 	font-weight: 600;
-	font-size: 0.95rem;
+	font-size: 15px;
 	text-decoration: none;
 	border-radius: 4px;
 	background: var(--brand-soft);
@@ -152,10 +195,10 @@ main p {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.7rem 1.5rem;
+	padding: 11px 24px;
 	background: var(--bar);
 	color: var(--bar-text);
-	font-size: 0.85rem;
+	font-size: 14px;
 }
 
 .site-footer .footer-center {

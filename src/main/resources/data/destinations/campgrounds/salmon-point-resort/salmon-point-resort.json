@@ -1,0 +1,110 @@
+{
+	"name": "Salmon Point Resort",
+	"featuredImage": "under-construction.png",
+	"excerpt": "An RV park and marina near Campbell River, popular for salmon fishing.",
+	"tags": {
+		"badgeList": [
+			"camping",
+			"fishing"
+		],
+		"typeList": [
+			"campground"
+		],
+		"keywordList": [
+			"Visited"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 49.889183,
+		"lng": -125.1282272,
+		"icon": "campground",
+		"label": "Campbell River, BC"
+	},
+	"googleMap": {
+		"road": {
+			"file": "salmon-point-resort.html"
+		}
+	},
+	"access": {
+		"haversineList": [
+			{
+				"town": "Campbell River",
+				"km": 15
+			},
+			{
+				"town": "Nanaimo",
+				"km": 120
+			},
+			{
+				"town": "Victoria",
+				"km": 205
+			}
+		],
+		"legList": []
+	},
+	"campgroundData": {
+		"amenityList": [
+			"full hookup RV sites",
+			"marina & boat launch",
+			"heated pool (seasonal)",
+			"hot tub",
+			"washrooms & laundry",
+			"beach access",
+			"restaurant"
+		],
+		"referenceList": [
+			{
+				"label": "HomePage",
+				"type": "homepage",
+				"url": "https://salmonpoint.com"
+			},
+			{
+				"label": "Campground",
+				"type": "map",
+				"url": "https://salmonpoint.com/wp-content/uploads/2021/03/Salmon-Point-Map-4x8-web-1.pdf"
+			},
+			{
+				"label": "Reservation",
+				"type": "reservation",
+				"url": "https://www.campspot.com/book/salmon-point"
+			}
+		]
+	},
+	"noteList": [
+		{
+			"sectionName": "Additional information",
+			"itemList": [
+				{
+					"name": "Availability",
+					"url": null,
+					"description": [
+						"Reservable online (Campspot)"
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Further readings",
+			"itemList": [
+				{
+					"name": "Travel British Columbia",
+					"url": "https://www.travel-british-columbia.com/listings/salmon-point-resort-rv-park-marina/",
+					"description": [
+						"Listing"
+					]
+				},
+				{
+					"name": "Camping & RV BC",
+					"url": "https://www.campingrvbc.com/sites/bc/salmon-point-resort-rv-park-marina-campbell-river/",
+					"description": [
+						"Campground Profile"
+					]
+				}
+			]
+		}
+	]
+}

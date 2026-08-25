@@ -1,0 +1,75 @@
+{
+	"name": "Amor Lake (rec-site)",
+	"featuredImage": "under-construction.png",
+	"excerpt": "Under construction",
+	"tags": {
+		"badgeList": [],
+		"typeList": [
+			"rec-site"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 50.157993,
+		"lng": -125.580808,
+		"icon": "tent"
+	},
+	"googleMap": {
+		"road": {
+			"file": "amor-lake-rec0174.html",
+			"zoom": 15
+		}
+	},
+	"access": {
+		"haversineList": [
+			{
+				"town": "Campbell River",
+				"km": 30
+			},
+			{
+				"town": "Nanaimo",
+				"km": 160
+			},
+			{
+				"town": "Victoria",
+				"km": 250
+			}
+		]
+	},
+	"noteList": [
+		{
+			"sectionName": "Further readings",
+			"itemList": [
+				{
+					"name": "Amor Lake (REC0174)",
+					"url": "https://www.sitesandtrailsbc.ca/resource/REC0174",
+					"description": [
+						"Sites & Trails BC"
+					]
+				},
+				{
+					"name": "Amor Lake",
+					"url": "amor-lake.html",
+					"description": [
+						"On Getting Lost"
+					]
+				}
+			]
+		}
+	],
+	"photoGalleries": {
+		"photos": {
+			"name": "Photos",
+			"itemList": [
+				{
+					"id": "under-construction",
+					"img": "under-construction.png",
+					"label": "Under construction"
+				}
+			]
+		}
+	}
+}

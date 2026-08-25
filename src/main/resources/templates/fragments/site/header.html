@@ -24,3 +24,9 @@
 		</ul>
 	</nav>
 </header>
+
+<div xmlns:th="http://www.thymeleaf.org" class="messages">
+	<div class="message message-user" th:each="userMessage : ${UserMessageList}" th:text="${userMessage}"></div>
+	<div class="message message-warning" th:each="warningMessage : ${WarningMessageList}" th:text="${warningMessage}"></div>
+	<div class="message message-error" th:each="errorMessage : ${ErrorMessageList}" th:text="${errorMessage}"></div>
+</div>

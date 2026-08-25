@@ -1,0 +1,73 @@
+{
+	"name": "Roberts Lake",
+	"featuredImage": "IMG_0627.jpg",
+	"excerpt": "A 1.7 km² lake beside Highway 19, about 30 km north of Campbell River.",
+	"tags": {
+		"badgeList": [
+			"fishing"
+		],
+		"typeList": [
+			"lake"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 50.2172,
+		"lng": -125.5387,
+		"icon": "lake"
+	},
+	"googleMap": {
+		"road": {
+			"file": "roberts-lake.html"
+		}
+	},
+	"fishingReferences": {
+		"bcIdentifier": "00155SALM",
+		"areaKm2": 1.676,
+		"lakeChartList": [
+			{
+				"name": "BC Bathymetric",
+				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00202801.pdf"
+			}
+		],
+		"stockingName": ""
+	},
+	"noteList": [
+		{
+			"sectionName": "Destinations",
+			"itemList": [
+				{
+					"name": "Roberts Lake (REC0191)",
+					"url": "roberts-lake-rec0191.html",
+					"description": [
+						"On Getting Lost"
+					]
+				}
+			]
+		},
+		{
+			"sectionName": "Further readings",
+			"itemList": []
+		}
+	],
+	"photoGalleries": {
+		"photos": {
+			"name": "Photos",
+			"itemList": [
+				{
+					"id": "img_0492",
+					"img": "IMG_0492.jpg",
+					"label": ""
+				},
+				{
+					"id": "img_0627",
+					"img": "IMG_0627.jpg",
+					"label": ""
+				}
+			]
+		}
+	}
+}

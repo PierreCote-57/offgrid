@@ -14,15 +14,40 @@ runs the jar, while nothing is invested in it.
 
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
-#7 Content from GettingLost — none migrated yet.
+#7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content and
+the images are not.
 
-#8 Reading the JSON — design started, not built. Settled: the GettingLost per-page JSON
-schema is the starting point. Still open: where the files live at runtime, whether they are
-loaded at startup or per request, and whether they map to typed records or a generic tree.
+#8 Reading the JSON — the classes exist, nothing reads them yet. Settled: content lives in
+the repo; `resources/data/` mirrors `resources/templates/`, a folder per template that needs
+data; six page classes and seventeen parts under `com.lc.offgrid.pojo`. Still open: whether
+the data rides inside the jar or on disk beside it, whether it is loaded at startup or per
+request, and what picks the page subclass from `tags.typeList` plus the folder.
 
-#9 Getting content onto the server — the open thread behind #8, and it covers JSON, HTML
-and images alike. Pierre wants minimum friction, ideally a remote drive mounted in Finder
-for drag and drop. Finder mounts SMB/AFP/NFS/WebDAV read-write and FTP read-only, and has
-no SFTP support, so a real mounted volume needs Mountain Duck or Transmit (~$40). The
-alternative is no transfer at all: content in the repo, pushed, rebuilt by FullHost.
-Question to put to FullHost: which path on the container survives a redeploy.
+#9 Getting content onto the server — settled for JSON and HTML: they live in the repo and
+arrive by push and rebuild. No mounted volume needed. Still open for images only, and
+deliberately deferred.
+
+#10 **Standing rule — convert every JSON file brought in from GettingLost.** GettingLost
+keeps the old spellings and its own consumers still read them; offgrid does not. The
+conversion happens on the way in, as part of the copy, never afterwards. Everything already
+in `resources/data` is converted.
+
+    badges      -> badgeList          keywords  -> keywordList
+    types       -> typeList           legs      -> legList
+    notes       -> noteList           amenities -> amenityList
+    list        -> itemList           haversine -> haversineList
+    items       -> itemList           location_id -> locationId
+    displayName -> label
+
+    campground  -> campgroundData
+    links       -> campgroundData.referenceList   (moves inside, not just renamed)
+    location.zoom -> the googleMap entries that have none of their own
+    tags: []    -> the key is deleted
+    categories  -> deleted when empty
+
+Nothing in `com.lc.offgrid.pojo` maps key names — a file that arrives unconverted binds its
+renamed fields to null rather than failing, so the miss is silent.
+
+#14 `van/maintenance/*` (2 files) carry an `actual` block — dated service records with
+odometer, shop, cost and next-due. No class reads it. Left in place; it is real content, not
+scaffolding.

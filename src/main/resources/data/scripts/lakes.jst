@@ -1,0 +1,173 @@
+/**
+ * lakes.jst (javascript)
+ *
+ * Page-type-specific block renderers for "Getting Lost on VI" lake pages.
+ * Registers on window.GL.blockRenderers, the shared registry defined in
+ * gettinglost.jst (loaded on every page), which already handles:
+ *
+ *   - fetching the page's own JSON (/wp-content/uploads/<slug>.json) once
+ *   - dispatching each [data-block-type] element to its renderer
+ *   - per-block error handling (a renderer that throws just skips that
+ *     one block; other blocks on the page still render normally)
+ *   - the generic, page-type-agnostic renderers ("campground", "links",
+ *     "googleMap", "notes", "backToGallery")
+ *
+ * This file adds one renderer specific to lake pages:
+ *
+ *   <div data-block-type="fishingReferences"></div>
+ *
+ * It reads directly from the page's own JSON — no data-lake-id attribute,
+ * no separate fetch, no #lake-id element needed.
+ *
+ * The old "destinations" (rec-sites) table renderer was retired in the
+ * schema-unification pass (2026-07-20): a lake's nearby rec sites now live in
+ * a "Destinations" section of the shared top-level `notes` block, rendered by
+ * the generic notes renderer in gettinglost.jst.
+ *
+ * NOTE: the richer lake + rec-site multi-marker map from the old
+ * version of this file is intentionally NOT carried over in this pass.
+ * The lake page now uses the generic single-marker googleMap renderer
+ * (pageData.lat/lng) like every other page type. Revisit rec-site map
+ * markers once all lakes are migrated to this structure.
+ */
+
+(function () {
+  "use strict";
+
+  window.GL = window.GL || {};
+  window.GL.blockRenderers = window.GL.blockRenderers || {};
+
+  var CONFIG = {
+    naLabel: "NA",
+    // Every lake on this site is on Vancouver Island, so region is fixed;
+    // only the waterbody name (stockingName) varies per lake.
+    stockingReportBaseUrl:
+      "https://www.gofishbc.com/stocked-fish/?reportType=lake&region=VANCOUVER%20ISLAND&waterbody="
+  };
+
+  // ---------------------------------------------------------------------
+  // Small DOM helpers (same table/cell styling convention used by the
+  // generic renderers in gettinglost.jst)
+  // ---------------------------------------------------------------------
+
+  function createStyledTable() {
+    var table = document.createElement("table");
+    table.style.borderCollapse = "collapse";
+    table.style.marginTop = "0.25rem";
+    table.style.marginLeft = "auto";
+    table.style.marginRight = "auto";
+    return table;
+  }
+
+
+  function buildLabelCell(label) {
+    var cell = document.createElement("td");
+    cell.textContent = label;
+    cell.style.padding = "0.2rem 1.5rem 0.2rem 0";
+    cell.style.verticalAlign = "top";
+    cell.style.color = "#666";
+    cell.style.fontSize = "0.88rem";
+    return cell;
+  }
+
+  function buildBodyCell(text) {
+    var cell = document.createElement("td");
+    cell.textContent = text === undefined || text === null ? CONFIG.naLabel : text;
+    cell.style.padding = "0.2rem 0";
+    cell.style.verticalAlign = "top";
+    cell.style.fontSize = "0.9rem";
+    return cell;
+  }
+
+  function buildExternalLink(url, label) {
+    var link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = label;
+    return link;
+  }
+
+  function buildLabelValueRow(label, value) {
+    var row = document.createElement("tr");
+    row.appendChild(buildLabelCell(label));
+    row.appendChild(buildBodyCell(value || CONFIG.naLabel));
+    return row;
+  }
+
+
+  // ---------------------------------------------------------------------
+  // Generic block renderer: "fishingReferences"
+  // ---------------------------------------------------------------------
+  //
+  // Reads pageData.fishingReferences = { bcIdentifier, areaKm2,
+  // lakeChartList, stockingName }.
+  //
+  // The general-purpose "References" row that used to live in this same
+  // table has moved out to the shared, top-level pageData.furtherReading
+  // block (rendered generically by gettinglost.jst) — it's no longer
+  // part of this renderer.
+
+  window.GL.blockRenderers.fishingReferences = function (el, pageData) {
+    var fishing = pageData.fishingReferences || {};
+
+    el.textContent = "";
+    el.appendChild(window.GL.buildGlHeading("Fishing references"));
+
+    var table = createStyledTable();
+    var tbody = document.createElement("tbody");
+
+    tbody.appendChild(buildLabelValueRow("BC Identifier", fishing.bcIdentifier));
+    tbody.appendChild(buildLabelValueRow("Area", formatAreaKm2(fishing.areaKm2)));
+    tbody.appendChild(buildLakeChartRow(fishing.lakeChartList));
+    tbody.appendChild(buildStockingReportRow(fishing.stockingName));
+
+    table.appendChild(tbody);
+    el.appendChild(table);
+  };
+
+  function formatAreaKm2(areaKm2) {
+    if (typeof areaKm2 !== "number") {
+      return null;
+    }
+    return areaKm2 + "\u00A0km\u00B2";
+  }
+
+  function buildLakeChartRow(lakeCharts) {
+    // lakeCharts is an array of { name, url }. Most lakes have a single
+    // chart; some (e.g. sproat-lake) have several. Empty/missing -> NA row.
+    if (!lakeCharts || !lakeCharts.length) {
+      return buildLabelValueRow("Lake chart", null);
+    }
+    var row = document.createElement("tr");
+    row.appendChild(buildLabelCell("Lake chart"));
+    var valueCell = buildBodyCell("");
+    lakeCharts.forEach(function (chart, i) {
+      if (i > 0) {
+        valueCell.appendChild(document.createElement("br"));
+      }
+      valueCell.appendChild(buildExternalLink(chart.url, chart.name));
+    });
+    row.appendChild(valueCell);
+    return row;
+  }
+
+  /**
+   * Renders the Go Fish BC stocking report row. stockingName is the bare
+   * waterbody name Go Fish BC expects (e.g. "ECHO") -- not a full URL --
+   * so the link is built from CONFIG.stockingReportBaseUrl + the name.
+   * An empty/missing stockingName still gets a row, just showing "NA".
+   */
+  function buildStockingReportRow(stockingName) {
+    if (!stockingName) {
+      return buildLabelValueRow("Stocking report", null);
+    }
+    var row = document.createElement("tr");
+    row.appendChild(buildLabelCell("Stocking report"));
+    var url = CONFIG.stockingReportBaseUrl + encodeURIComponent(stockingName);
+    var valueCell = buildBodyCell("");
+    valueCell.appendChild(buildExternalLink(url, "Go Fish BC"));
+    row.appendChild(valueCell);
+    return row;
+  }
+})();

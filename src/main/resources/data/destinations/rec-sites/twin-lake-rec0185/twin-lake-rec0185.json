@@ -1,0 +1,82 @@
+{
+	"name": "Twin Lake (rec-site)",
+	"featuredImage": "under-construction.png",
+	"excerpt": "Under construction",
+	"tags": {
+		"badgeList": [],
+		"typeList": [
+			"rec-site"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 50.174991,
+		"lng": -125.517853,
+		"icon": "tent"
+	},
+	"googleMap": {
+		"road": {
+			"file": "twin-lake-rec0185.html",
+			"zoom": 15
+		}
+	},
+	"access": {
+		"haversineList": [
+			{
+				"town": "Campbell River",
+				"km": 25
+			},
+			{
+				"town": "Nanaimo",
+				"km": 160
+			},
+			{
+				"town": "Victoria",
+				"km": 250
+			}
+		]
+	},
+	"noteList": [
+		{
+			"sectionName": "Further readings",
+			"itemList": [
+				{
+					"name": "Twin Lake (REC0185)",
+					"url": "https://www.sitesandtrailsbc.ca/resource/REC0185",
+					"description": [
+						"Sites & Trails BC"
+					]
+				},
+				{
+					"name": "Amor Lake",
+					"url": "amor-lake.html",
+					"description": [
+						"On Getting Lost"
+					]
+				},
+				{
+					"name": "Mohun Lake",
+					"url": "mohun-lake.html",
+					"description": [
+						"On Getting Lost"
+					]
+				}
+			]
+		}
+	],
+	"photoGalleries": {
+		"photos": {
+			"name": "Photos",
+			"itemList": [
+				{
+					"id": "under-construction",
+					"img": "under-construction.png",
+					"label": "Under construction"
+				}
+			]
+		}
+	}
+}
