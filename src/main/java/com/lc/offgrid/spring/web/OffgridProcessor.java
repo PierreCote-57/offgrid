@@ -50,7 +50,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		PageData pageData = readFile("data/about/" + pageName + "/" + pageName + ".json", PageData.class);
 
 		processDefault(model, pageData.getName());
-		model.addAttribute("noteList", pageData.getNoteList());
+		model.addAttribute("pageData", pageData);
 
 		String viewName = "about/" + pageName;
 		return viewName;
@@ -65,8 +65,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		PageData pageData = readFile("data/hardware/" + name + "/" + name + ".json", PageData.class);
 
 		processDefault(model, pageData.getName());
-		model.addAttribute("noteList", pageData.getNoteList());
-		model.addAttribute("photoGalleries", pageData.getPhotoGalleries());
+		model.addAttribute("pageData", pageData);
 
 		String viewName = "hardware/" + name;
 		return viewName;
@@ -81,7 +80,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		PageData pageData = readFile("data/hardware/checklists/" + name + "/" + name + ".json", PageData.class);
 
 		processDefault(model, pageData.getName());
-		model.addAttribute("photoGalleries", pageData.getPhotoGalleries());
+		model.addAttribute("pageData", pageData);
 
 		String viewName = "hardware/checklists/" + name;
 		return viewName;
