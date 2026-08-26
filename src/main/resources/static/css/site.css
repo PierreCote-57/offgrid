@@ -107,6 +107,18 @@ main p {
 	line-height: 1.55;
 }
 
+/* Lists, spaced the way GettingLost spaced them: the list sits tight under the line that
+   introduces it, the rows are held apart, and a row that wraps reads as body copy rather
+   than closing up on itself. */
+ul, ol {
+	margin-top: 0;
+}
+
+li {
+	margin-top: 0.25em;
+	line-height: 1.55;
+}
+
 /* A noteList: one heading and one two-column table per section, the entry's name in the
    narrow column and its description beside it. The description's lines are joined into
    flowing text — a line in the data is a wrap, not a break — and they are the author's own
@@ -376,6 +388,24 @@ main p {
 .gl-numcheck input[type="checkbox"]:checked ~ span:not(.gl-num) {
 	text-decoration: line-through;
 	color: var(--faded);
+}
+
+/* A post's dateline, right under the title and in the brand's hand. */
+.gl-dateline {
+	margin: -8px 0 16px;
+	color: var(--faded);
+	font-family: "Bradley Hand", cursive;
+	font-size: 18px;
+}
+
+/* The way back to the list a page was reached from. */
+.gl-dest-back {
+	margin: 24px 0 0;
+}
+
+.gl-dest-back a {
+	color: var(--brand);
+	font-weight: 600;
 }
 
 /* The maintenance record: one row per visit to a shop. The narrow columns are centred; the

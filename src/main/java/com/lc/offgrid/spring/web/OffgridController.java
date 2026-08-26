@@ -84,6 +84,16 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processMaintenance(model, name));
 	}
 
+	@GetMapping("/posts/{name}")
+	public String post(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model,
+			@PathVariable String name)
+	{
+		return processRequest(request, response, model, () -> getService().processPost(model, name));
+	}
+
 	/**
 	 * An image, straight from the image folder. This one answers with bytes rather than a view
 	 * name, so it goes to the processor directly instead of through processRequest.

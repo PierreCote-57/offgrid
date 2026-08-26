@@ -5,6 +5,7 @@ import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
+import com.lc.offgrid.pojo.page.PostPage;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -120,6 +121,23 @@ public class OffgridProcessor extends BaseWebProcessor
 		model.addAttribute("pageData", pageData);
 
 		String viewName = String.format("hardware/maintenance/%s", name);
+		return viewName;
+	}
+
+	/**
+	 * A blog entry. The name is both the template under templates/posts and the folder holding
+	 * its JSON.
+	 */
+	public String processPost(Model model, String name)
+	{
+		String fileName = String.format("data/posts/%1$s/%1$s.json", name);
+		PostPage pageData = readFile(fileName, PostPage.class);
+		String pageTitle = pageData.getName();
+
+		processDefault(model, pageTitle);
+		model.addAttribute("pageData", pageData);
+
+		String viewName = String.format("posts/%s", name);
 		return viewName;
 	}
 

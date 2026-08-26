@@ -12,8 +12,8 @@ reset a password against, which looks exactly like this.
 #2 Deploy the skeleton to FullHost — validates that their build node builds this repo and
 runs the jar, while nothing is invested in it.
 
-#4 Menu links go nowhere — Destinations, Blog, and Howto and Checklist under Hardware are
-still `href="#"`. The van, the Bronco and the three Info items are wired. Van maintenance
+#4 Menu links go nowhere — Destinations, and Howto and Checklist under Hardware, are
+still `href="#"`. Blog is still `href="#"` and the six posts now link to `/blog`. The van, the Bronco and the three Info items are wired. Van maintenance
 and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing serves yet.
 
 #5 Footer "Last modified" is a placeholder — no source decided for the date.
@@ -21,8 +21,8 @@ and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing se
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
 #7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
-in for the two checklists, the van and the Bronco; the six howto pages, the two maintenance
-pages, the destinations, the posts and all the images are not.
+in for the two checklists, the van, the Bronco, the two maintenance pages and the six posts;
+the six howto pages, the destinations and all the images are not.
 
 #8 Reading the JSON — the classes exist, nothing reads them yet. Settled: content lives in
 the repo; `resources/data/` mirrors `resources/templates/`, a folder per template that needs
@@ -96,3 +96,7 @@ case to be the normal one.
 `bronco-2026-09-19.pdf`; neither is in the repo, and nothing serves documents the way
 `/image/{imageName}` serves images. The record links them at `/document/{documentName}`, so
 the two fixes are the missing route and the missing files.
+
+#26 Blog or posts — the folder, the template folder and the route all say `posts`, the menu
+item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
+Decide which word the site uses in a URL before either name is public.

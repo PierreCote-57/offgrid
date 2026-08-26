@@ -681,3 +681,25 @@ a PDF the WordPress renderer resolved against `/wp-content/uploads/`, and neithe
 the repo. Rendering the name as plain text instead was considered and dropped: a missing file
 is a content bug, and a template that stops linking because the content is missing is a
 template that still does not link once the content arrives.
+
+## 2026-08-26 — Posts, and the map that does not belong on one
+
+The six posts are converted. `.gl-post` — the lined paper written in the Texture pass and
+until now used by nothing — is what the body sits on, and the post's `date`, carried in all
+six JSON files and rendered by none of them, is a dateline in the brand's hand directly under
+the title.
+
+**No `googleMap` on a post.** Every WordPress post opened with one, and every GettingLost post
+JSON carried `googleMap.where`; the block is gone from all six templates and the data was not
+brought over. A post that needs to put its subject on a map links to the destination page,
+which is the page that owns the map. So `googleMap` stays on `DestinationPage` and is not
+promoted to `PageData`.
+
+Links to pages that do not exist yet are written as the real `<a th:href="@{…}">` they will
+be — the three destination links, and the "← All posts" link that used to point at
+`gettinglostonvi.wpcomstaging.com`. A link that is removed because its target is missing is a
+link nobody restores when the target arrives.
+
+`photo-gallery` now puts `id="gl-photo-<gallery>-<itemId>"` on each figure. The ids were in
+the JSON all along and the fragment dropped them, which left the picnic post's link to its
+own photo pointing at nothing.

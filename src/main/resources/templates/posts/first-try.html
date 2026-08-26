@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>offgrid</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+	<script defer th:src="@{/js/alpine.min.js}"></script>
+	<script defer th:src="@{/js/lightbox.js}"></script>
+</head>
+<body>
+	<div th:replace="~{fragments/site/header}"></div>
+
+	<main>
+		<h1 th:text="${PageName}">First try</h1>
+		<p class="gl-dateline" th:text="${pageData.date}">2026-06-06</p>
+
+		<div class="gl-post">
+			<p style="margin-top:0;">
+				Our first actual camping trip, we went to
+				<a th:href="@{/destinations/campgrounds/salmon-point-resort}">Salmon Point Resort</a>,
+				just down the road from our Campbell River home.
+			</p>
+
+			<p>
+				Every trip this summer will be a learning experience.
+				From that point of view, it was a success!
+			</p>
+			<ol>
+				<li>
+					Back-in parking, one little drop of water on the backup camera
+					challenged my driving skills with this bigger than a car vehicle
+				</li>
+				<li>
+					How to you turn on the heat in a van?<br />
+					How do you turn off the heat in the van?<br />
+					There must be  a thermostat somewhere.
+				</li>
+				<li>
+					Plug in the power, check.<br />
+					Plug in the water, oops. Forgot the key.
+				</li>
+				<li>
+					Bedtime: How do we setup? What about blankets?<br />
+					Tomorrow, trip to Canadian Tire for a sleeping bag for me.
+				</li>
+			</ol>
+
+			<p>
+				The resort is on the water, our site was on the water (Straight of Georgia) and,
+				having backed into it, we had a gorgeous view of the Straight,
+				including the cruise ships that go by in the evening.
+				The marina offers complete services, keeps the boats safe
+				and gives us visitors something nice to look at.
+			</p>
+
+			<p>
+				The people at the office/mini-store are friendly, not pushy,
+				yet appropriately generous of advice and explanations.
+				I now kind of almost know how to hook-up the water
+				for next time (the going in and the going out water).
+			</p>
+		</div>
+
+		<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+	</main>
+
+	<div th:replace="~{fragments/site/footer}"></div>
+</body>
+</html>
