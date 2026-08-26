@@ -1,6 +1,6 @@
 {
 	"name": "How To: Awning",
-	"featuredImage": "awning-control-panel.png",
+	"featuredImage": "/awning-control-panel.png",
 	"excerpt": "Extend and retract the Carefree Eclipse automated awning.",
 	"wpSettings": {
 		"published": true,

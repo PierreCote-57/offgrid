@@ -1,11 +1,14 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.pojo.page.PostPage;
+import com.lc.offgrid.pojo.part.Dataset;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -17,7 +20,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope("prototype")
@@ -107,6 +114,24 @@ public class OffgridProcessor extends BaseWebProcessor
 		return viewName;
 	}
 
+
+	/**
+	 * A checklist page. The name is both the template under templates/hardware/checklists
+	 * and the folder holding its JSON, so one mapping serves every checklist.
+	 */
+	public String processHowto(Model model, String name)
+	{
+		String fileName = String.format("data/hardware/howto/%1$s/%1$s.json", name);
+		PageData pageData = readFile(fileName, PageData.class);
+		String pageTitle = pageData.getName();
+
+		processDefault(model, pageTitle);
+		model.addAttribute("pageData", pageData);
+
+		String viewName = String.format("hardware/howto/%s", name);
+		return viewName;
+	}
+
 	/**
 	 * A maintenance page — the van's record, the Bronco's. The name is both the template under
 	 * templates/hardware/maintenance and the folder holding its JSON.
@@ -154,11 +179,107 @@ public class OffgridProcessor extends BaseWebProcessor
 		FileSystemResource	imageResource	= new FileSystemResource(imageFile);
 		MediaType			mediaType		= metadata.getMediaType();
 
-		ResponseEntity.BodyBuilder builder = ResponseEntity.ok();
-		builder = builder.contentType(mediaType);
-
-		ResponseEntity<Resource> answer = builder.body(imageResource);
+		ResponseEntity<Resource> answer = makeResponseOk(mediaType, imageResource);
 		return answer;
+	}
+
+	/**
+	 * The browser page: one page over every dataset, in a table, a grid or a map. The page
+	 * itself carries no data — the query string is the whole state, and the browser fetches
+	 * the definition list and the rows it names.
+	 */
+	public String processBrowser(Model model)
+	{
+		String fileName = "data/shared/browser/browser.json";
+		PageData pageData = readFile(fileName, PageData.class);
+		String pageTitle = pageData.getName();
+
+		processDefault(model, pageTitle);
+		model.addAttribute("pageData", pageData);
+
+		String viewName = "shared/browser";
+		return viewName;
+	}
+
+	/**
+	 * The rows of one dataset, as JSON, for the browser page. datasets.json maps the id to
+	 * the file that holds them; an id nobody defined answers 404 rather than an error page.
+	 *
+	 * The file is answered as it stands. Resolving a row's pointers into the row itself is
+	 * this method's job to come.
+	 */
+	public ResponseEntity<String> processBrowserData(String id)
+	{
+		Dataset dataset = findDataset(id);
+		if (null == dataset)
+		{
+			getLogger().error("Unknown dataset: %s", id);
+			return makeResponseNotFound();
+		}
+
+		String fileName = String.format("data/shared/browser/%s", dataset.getFile());
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> pageList = readFile(fileName, List.class);
+		hydratePageList(pageList);
+		String jsonTo = getGson().toJson(pageList);
+
+		ResponseEntity<String> answer = makeResponseOk(MediaType.APPLICATION_JSON, jsonTo);
+		return answer;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void hydratePageList(List<Map<String, Object>> pageList)
+	{
+		for (int i  = 0; i < pageList.size(); i++)
+		{
+			Map<String, Object> page = pageList.get(i);
+			String filePointer = page.get("file").toString();
+			if (null != filePointer)
+			{
+				try
+				{
+					Map<String, Object> realPage = readFile(filePointer, Map.class);
+					realPage.putAll(page);
+					pageList.set(i, realPage);
+				}
+				catch (Exception e)
+				{
+					getLogger().error("Error reading file pointer: %s", filePointer);
+				}
+			}
+		}
+	}
+
+	/**
+	 * The datasets.json entry for an id, or null when nothing defines it. The file is public —
+	 * the browser reads it too, to build its controls — so it lives under static.
+	 */
+	private Dataset findDataset(String id)
+	{
+		String fileName = "static/shared/browser/datasets.json";
+		Dataset[] datasetList = readFile(fileName, Dataset[].class);
+
+		for (Dataset dataset : datasetList)
+		{
+			String datasetId = dataset.getId();
+			if (datasetId.equals(id))
+			{
+				return dataset;
+			}
+		}
+		return null;
+	}
+
+	/** One file off the classpath, as text — no parsing, for content answered as it stands. */
+	private String readTextFile(String path)
+	{
+		URL url = OffgridProcessor.class.getClassLoader().getResource(path);
+		if (null == url)
+		{
+			throw new BasicRuntimeException("No such file: %s", path);
+		}
+		String text = BasicFileReader.readTextFile(url);
+		return text;
 	}
 
 	public String processPi(Model model)
@@ -167,5 +288,17 @@ public class OffgridProcessor extends BaseWebProcessor
 
 		String viewName = "info/pi";
 		return viewName;
+	}
+
+	private <T> ResponseEntity<T> makeResponseOk(MediaType mediaType, T response)
+	{
+		ResponseEntity.BodyBuilder builder = ResponseEntity.ok();
+		builder = builder.contentType(mediaType);
+		ResponseEntity<T> answer = builder.body(response);
+		return answer;
+	}
+	private <T> ResponseEntity<T> makeResponseNotFound()
+	{
+		return ResponseEntity.notFound().build();
 	}
 }

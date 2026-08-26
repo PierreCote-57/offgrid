@@ -7,6 +7,7 @@
 package com.lc.offgrid.spring.tools;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicException;
@@ -25,7 +26,10 @@ import java.util.List;
 public abstract class BaseWebProcessor
 {
 	private static final BasicLogger LOGGER					= BasicLogger.getLogger(BaseWebProcessor.class);
-	private static final Gson GSON							= new Gson();
+	private static final Gson GSON							=
+			new GsonBuilder().setPrettyPrinting()
+					.disableHtmlEscaping()
+					.create();
 
 	@Value("${BaseWebProcessor.welcomeMessage}")
 	private String				m_welcomeMessage;
@@ -55,6 +59,10 @@ public abstract class BaseWebProcessor
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
+	}
+	public static Gson getGson()
+	{
+		return GSON;
 	}
 	public BasicTimer getTimer()
 	{

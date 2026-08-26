@@ -703,3 +703,48 @@ link nobody restores when the target arrives.
 `photo-gallery` now puts `id="gl-photo-<gallery>-<itemId>"` on each figure. The ids were in
 the JSON all along and the fragment dropped them, which left the picnic post's link to its
 own photo pointing at nothing.
+
+## 2026-08-26 — The browser page
+
+The GettingLost list browser is here, renamed `browser` throughout: one page, two independent
+axes — display (table/grid/map) x data — and the URL query string is the whole state. Every
+control commits by navigating to a new URL, so the page renders from scratch and Back/Forward
+work with no history machinery to maintain.
+
+**Four calls, each one file.** The page at `/shared/browser`; `static/js/browser.js`;
+`/shared/browser/datasets.json`, a static file the browser reads to resolve `?dataset=` itself;
+and `/shared/browser/data/{id}`, which answers that dataset's rows. Nothing is woven into the
+page's HTML on the way out — no Java class has to mix the content of two files, and each trip
+matches the data design. Embedding the definition list into the page was proposed and dropped:
+the only thing it bought was a saved read.
+
+**The browser resolves the id, the server resolves the file.** `datasets.json` keeps its `file`
+field for `findDataset` to map an id to a filename; the browser stops reading it. An unknown id
+is a 404 from the data call and an error line on the page from the definition list.
+
+**A `{id}` mapping would shadow the static file.** `/shared/browser/datasets.json` would reach
+the controller as `id = "datasets.json"`, because a controller mapping outranks Spring's static
+resource handler — so the dynamic call took a path segment of its own, `data/{id}`, and the
+definition list stayed in the browser page's own folder.
+
+**Counts are counted in the browser.** GettingLost's sync step wrote a `counts` block onto each
+dataset entry, which a hand-authored `datasets.json` cannot carry without being maintained by
+hand. `collectCounts` walks the rows the data call just delivered — the UNFILTERED ones, since a
+vocabulary derived from the filtered list deletes the choices you need to widen the search next.
+
+**A card is a link, so the grid is the one view that narrows** — to rows with a `file`.
+`isPublished` and `fileToSlug` did not come over: a row carries its own href, and `pageHref` is
+the one place a card, a map pin and the table's View link read it, so they cannot disagree.
+
+`gl-constants.js` holds the vocabularies — `TAG_COLORS`, `DESTINATION_TYPES`, `LINK_TYPES`,
+`ROAD_COLORS`, `ROAD_RANK`, `NON_DRIVE_LEG_TYPES` — because the browser is the only reader and
+putting them in Java would mean inventing a way to ship them out again. `map.js` is a stub
+(#27); the map view builds the real `mapObject` and hands it over.
+
+**The table does not break out of the page column.** GettingLost forced `width:1180px` with
+negative side margins to escape a 900px content cap; `main` here is 1024 wide, which leaves 976
+for a table whose fixed columns want 875. The wrapper keeps `overflow-x: auto` so a narrow
+viewport scrolls the table instead of the page.
+
+The two booklet PDFs moved to `static/shared/browser/`, next to `datasets.json`: the booklet
+button is a download the visitor's browser fetches, so the file has to have a URL.

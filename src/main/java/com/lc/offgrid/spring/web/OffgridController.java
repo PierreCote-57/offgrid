@@ -74,6 +74,16 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processChecklist(model, name));
 	}
 
+	@GetMapping("/hardware/howto/{name}")
+	public String howto(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model,
+			@PathVariable String name)
+	{
+		return processRequest(request, response, model, () -> getService().processHowto(model, name));
+	}
+
 	@GetMapping("/hardware/maintenance/{name}")
 	public String maintenance(
 			HttpServletRequest request,
@@ -92,6 +102,30 @@ public class OffgridController extends BaseWebController
 			@PathVariable String name)
 	{
 		return processRequest(request, response, model, () -> getService().processPost(model, name));
+	}
+
+	@GetMapping("/shared/browser")
+	public String browser(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model)
+	{
+		return processRequest(request, response, model, () -> getService().processBrowser(model));
+	}
+
+	/**
+	 * The rows the browser page draws. This one answers JSON rather than a view name, so it
+	 * goes to the processor directly instead of through processRequest.
+	 *
+	 * The path segment keeps it clear of /shared/browser/datasets.json, which is a static file:
+	 * a {id} mapping at that level would shadow it, since a controller mapping outranks the
+	 * static resource handler.
+	 */
+	@GetMapping("/shared/browser/data/{id}")
+	public ResponseEntity<String> browserData(
+			@PathVariable String id)
+	{
+		return getService().processBrowserData(id);
 	}
 
 	/**
