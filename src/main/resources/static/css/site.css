@@ -16,6 +16,19 @@
 	--error: #a02a1f;
 	--error-deep: #7a1f16;
 	--error-soft: #fbeae8;
+
+	/* Paper. The site is printed on warm off-white, not white. */
+	--paper: #faf7f0;
+	--rust: #b5502f;
+	--ruling: #dfe6e1;
+}
+
+/* Contour lines — the site's texture. Two tiles of the same drawing: pale lines for the
+   coloured bars, green lines for the page. Kept near the edge of visible on purpose; at
+   full strength they compete with the text. */
+:root {
+	--contour-pale: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='120' viewBox='0 0 260 120'><g fill='none' stroke='%23ffffff' stroke-opacity='0.075' stroke-width='1.1'><path d='M-20 20 C 40 -10, 90 50, 150 18 S 250 -6, 300 32'/><path d='M-20 48 C 40 18, 92 78, 152 46 S 250 22, 300 60'/><path d='M-20 78 C 44 48, 96 108, 156 76 S 252 54, 300 90'/><path d='M-20 110 C 48 82, 100 142, 160 110 S 254 88, 300 124'/></g></svg>");
+	--contour-green: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='none' stroke='%231f5e42' stroke-opacity='0.075' stroke-width='1.1'><path d='M-20 60 C 40 20, 90 90, 150 55 S 250 30, 300 70'/><path d='M-20 84 C 40 44, 92 112, 152 78 S 250 54, 300 92'/><path d='M-20 110 C 44 72, 96 138, 156 104 S 252 82, 300 118'/><path d='M-20 146 C 48 112, 100 176, 160 142 S 254 120, 300 156'/><path d='M-20 186 C 52 154, 104 214, 164 182 S 256 160, 300 194'/><path d='M-20 232 C 56 198, 108 258, 168 226 S 258 204, 300 238'/></g></svg>");
 }
 
 /* Hides Alpine-controlled elements until Alpine has initialised. */
@@ -27,7 +40,7 @@ body {
 	margin: 0;
 	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 	color: var(--text);
-	background: #ffffff;
+	background: var(--paper);
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
@@ -70,7 +83,8 @@ main {
 	width: 100%;
 	max-width: 1024px;
 	margin-inline: auto;
-	background: #ffffff;
+	background-color: var(--paper);
+	background-image: var(--contour-green);
 	padding: 32px 24px 40px;
 	box-sizing: border-box;
 }
@@ -122,7 +136,8 @@ main p {
 	align-items: center;
 	justify-content: space-between;
 	padding: 12px 24px;
-	background: var(--bar);
+	background-color: var(--bar);
+	background-image: var(--contour-pale);
 	color: var(--bar-text);
 }
 
@@ -182,7 +197,7 @@ main p {
 	display: block;
 	min-width: 144px;
 	padding: 6px 0;
-	background: #ffffff;
+	background: var(--paper);
 	color: var(--text);
 	border: 1px solid var(--rule);
 	border-radius: 4px;
@@ -227,7 +242,8 @@ main p {
 	align-items: center;
 	justify-content: space-between;
 	padding: 11px 24px;
-	background: var(--bar);
+	background-color: var(--bar);
+	background-image: var(--contour-pale);
 	color: var(--bar-text);
 	font-size: 14px;
 }
@@ -246,12 +262,40 @@ main p {
 	margin-bottom: 40px;
 }
 
+/* The two paper rulings. Quadrille at 15px for a checklist, horizontals at 30px for a post.
+   Both sit on the warm ground with a rust edge down the left, so a ruled block reads as a
+   page torn out of a notebook rather than as a panel. */
+.gl-checklist,
+.gl-numcheck,
+.gl-post {
+	background-color: #fdfbf4;
+	border-left: 3px solid var(--rust);
+	padding: 12px 20px 16px;
+}
+
+.gl-checklist,
+.gl-numcheck {
+	background-image:
+		repeating-linear-gradient(to bottom, transparent 0 14px, var(--ruling) 14px 15px),
+		repeating-linear-gradient(to right,  transparent 0 14px, var(--ruling) 14px 15px);
+}
+
+.gl-post {
+	background-image:
+		repeating-linear-gradient(to bottom, transparent 0 29px, var(--ruling) 29px 30px);
+}
+
+/* Copy on lined paper has to sit on the ruling, so the rhythm is the line spacing. */
+.gl-post p {
+	margin: 0;
+	line-height: 30px;
+}
+
 /* Checklists. The label, checkbox and text span are emitted by
    ChecklistElementProcessor; authors write bare <li> lines. The class carries the styling
    and selects the variant, so it stays on the list. */
 .gl-checklist {
 	list-style: none;
-	padding-left: 0;
 	margin: 8px 0 24px;
 }
 
@@ -288,7 +332,6 @@ main p {
    bare; the processor emits the .gl-num span empty and ::before draws the digit. */
 .gl-numcheck {
 	list-style: none;
-	padding-left: 0;
 	margin: 8px 0 24px;
 	counter-reset: gl-numcheck;
 }
