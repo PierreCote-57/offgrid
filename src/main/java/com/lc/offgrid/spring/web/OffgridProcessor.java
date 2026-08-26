@@ -1,9 +1,11 @@
 package com.lc.offgrid.spring.web;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.offgrid.misc.imaging.ImageMetadata;
+import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -12,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.Date;
 
 @Component
@@ -26,20 +26,12 @@ public class OffgridProcessor extends BaseWebProcessor
 	/** Temporary: every image request answers with this one file, whatever name was asked for. */
 	private static final String			FIXED_IMAGE		= "IMG_0627.JPG";
 
-	@Value("${folder.image}")
-	private String		folderImage;
+	@Autowired
+	private OffgridImageManager imageManager;
 
-	@Value("${folder.data}")
-	private String		folderData;
-
-	public String getFolderImage()
+	public OffgridImageManager getImageManager()
 	{
-		return folderImage;
-	}
-
-	public String getFolderData()
-	{
-		return folderData;
+		return imageManager;
 	}
 
 	public String processHome(Model model)
@@ -115,19 +107,10 @@ public class OffgridProcessor extends BaseWebProcessor
 	 */
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
-		imageName = FIXED_IMAGE;
-		Path	imagePath	= Paths.get(getFolderImage() + "/" + imageName);
-
-		if (!Files.isReadable(imagePath))
-		{
-			LOGGER.warn("No image file: %s", imagePath);
-
-			ResponseEntity<Resource> missing = ResponseEntity.notFound().build();
-			return missing;
-		}
-
-		FileSystemResource	imageResource	= new FileSystemResource(imagePath);
-		MediaType			mediaType		= mediaTypeOf(imageName);
+//		imageName = FIXED_IMAGE;
+		ImageMetadata metadata = getImageManager().getImageMetadata(imageName);
+		FileSystemResource	imageResource	= new FileSystemResource(metadata.getFile());
+		MediaType			mediaType		= metadata.getMediaType();
 
 		ResponseEntity<Resource> answer = ResponseEntity.ok()
 				.contentType(mediaType)
@@ -135,38 +118,10 @@ public class OffgridProcessor extends BaseWebProcessor
 		return answer;
 	}
 
-	/**
-	 * The media type an image filename implies, from its extension. Anything unrecognized is
-	 * served as raw bytes.
-	 */
-	public static MediaType mediaTypeOf(String imageName)
-	{
-		String		lowerName	= imageName.toLowerCase();
-		MediaType	answer		= MediaType.APPLICATION_OCTET_STREAM;
-
-		if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg"))
-		{
-			answer = MediaType.IMAGE_JPEG;
-		}
-		else if (lowerName.endsWith(".png"))
-		{
-			answer = MediaType.IMAGE_PNG;
-		}
-		else if (lowerName.endsWith(".gif"))
-		{
-			answer = MediaType.IMAGE_GIF;
-		}
-		else if (lowerName.endsWith(".webp"))
-		{
-			answer = MediaType.valueOf("image/webp");
-		}
-		return answer;
-	}
-
 	public String processPi(Model model)
 	{
 		processDefault(model, "The net");
 
-		return "admin/pi";
+		return "info/pi";
 	}
 }

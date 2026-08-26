@@ -398,8 +398,19 @@ details > summary:focus:not(:focus-visible) {
 	margin: 0;
 }
 
+/* Every thumbnail gets the same bounding rectangle and is sized to fit inside it — contain,
+   never crop — so a portrait and a landscape shot sit on the same grid lines. */
+.gl-gallery-item img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	object-fit: contain;
+	object-position: bottom;
+}
+
 .gl-gallery-item figcaption {
-	margin-top: 6px;
+	margin-top: 2px;
+	text-align: center;
 	font-size: 14px;
 	line-height: 1.4;
 }
@@ -426,4 +437,113 @@ main thead th {
 
 main tbody tr:last-child td {
 	border-bottom: 0;
+}
+
+/* The pop-up image viewer (lightbox.js). It builds its own markup, so these classes have no
+   counterpart in the templates. */
+.gl-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.85);
+	padding: 3.25rem 2rem 2rem;
+	box-sizing: border-box;
+}
+
+.gl-lightbox[aria-hidden="false"] {
+	display: flex;
+}
+
+/* min-height:0 on both the figure and the image is load bearing: without it the max-height
+   below never binds, and a portrait shot grows past the viewport and clips at the top. */
+.gl-lightbox-figure {
+	margin: 0;
+	max-width: 100%;
+	max-height: 100%;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.gl-lightbox-img {
+	display: block;
+	max-width: 100%;
+	max-height: 75vh;
+	min-height: 0;
+	object-fit: contain;
+	border-radius: 4px;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gl-lightbox-caption {
+	margin-top: 0.75rem;
+	max-width: 60ch;
+	color: #eee;
+	font-size: 0.9rem;
+	text-align: center;
+}
+
+.gl-lightbox-counter {
+	position: absolute;
+	top: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	color: #ddd;
+	font-size: 0.85rem;
+	letter-spacing: 0.03em;
+}
+
+.gl-lightbox-close {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.9rem;
+	padding: 0.25rem 0.5rem;
+	border: none;
+	background: none;
+	color: #fff;
+	font-size: 2.5rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.gl-lightbox-close:hover, .gl-lightbox-close:focus {
+	color: var(--brand-deep);
+}
+
+.gl-lightbox-nav {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 0.25rem 1rem;
+	border: none;
+	border-radius: 6px;
+	background: rgba(0, 0, 0, 0.35);
+	color: #fff;
+	font-size: 3rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.gl-lightbox-nav:hover {
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.gl-lightbox-prev {
+	left: 0.75rem;
+}
+
+.gl-lightbox-next {
+	right: 0.75rem;
+}
+
+/* A thumbnail link is the image and nothing else — no underline, no link colour. */
+.gl-gallery-item a,
+a.gl-photo-link {
+	display: block;
+	text-decoration: none;
+	cursor: zoom-in;
 }

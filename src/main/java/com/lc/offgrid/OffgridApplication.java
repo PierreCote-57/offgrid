@@ -1,4 +1,4 @@
-package com.lc.offgrid.spring;
+package com.lc.offgrid;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
