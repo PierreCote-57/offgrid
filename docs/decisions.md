@@ -713,7 +713,8 @@ work with no history machinery to maintain.
 
 **Four calls, each one file.** The page at `/shared/browser`; `static/js/browser.js`;
 `/shared/browser/datasets.json`, a static file the browser reads to resolve `?dataset=` itself;
-and `/shared/browser/data/{id}`, which answers that dataset's rows. Nothing is woven into the
+and `/shared/browser/data/{id}`, which answers that dataset's rows, resolving each `{file}`
+pointer against the page JSON it names on the way out. Nothing is woven into the
 page's HTML on the way out — no Java class has to mix the content of two files, and each trip
 matches the data design. Embedding the definition list into the page was proposed and dropped:
 the only thing it bought was a saved read.
@@ -748,3 +749,35 @@ viewport scrolls the table instead of the page.
 
 The two booklet PDFs moved to `static/shared/browser/`, next to `datasets.json`: the booklet
 button is a download the visitor's browser fetches, so the file has to have a URL.
+
+## 2026-08-26 — The tab says which page, and which machine
+
+Every page's `<title>` was the literal `offgrid`, in all 24 templates, so a window of Safari
+tabs read the same word 24 times. The title is now `${PageName} — ${SiteName}`.
+
+**The page name comes FIRST.** A tab keeps the front of a title and truncates the rest, so a
+title that opens with the site name identifies nothing. The site name still earns its place at
+the end, where bookmarks, history and search results show it.
+
+**`SiteName` is a new thing, not `WelcomeMessage`.** The header's brand text is a greeting and
+happens to read like an identity; they are not the same string and were not merged.
+`BaseWebProcessor.siteName` is a property like the other three, and `processDefault` puts it on
+every model.
+
+**`application-local.yaml` overrides it to `β - Going offgrid`.** The marker goes in front for
+the same reason the page name does: at the end it is the first thing a tab drops. The tab now
+says which machine you are looking at before you read anything else.
+
+## 2026-08-26 — The howto pages are real pages
+
+The six `hardware/howto` templates were still raw WordPress fragments — no page skeleton, and
+every block written as a `data-block-type` marker for a renderer that does not exist here. They
+are now full pages like the checklists: header, `<main>`, footer, and the Thymeleaf fragments
+`photo-ref`, `photo-gallery`, `photo`, `warning`, `note-list` and `back-to-gallery`.
+
+The `pageLink` block became the real `<a th:href="@{/hardware/checklists/arriving-campsite}">`
+it will be, following the rule the posts pass set.
+
+**Step lists carry `gl-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
+that choice; awning, climate and water follow it. The lists in battery and power enumerate
+things rather than tell you to do them in order, so they are not checkboxes.

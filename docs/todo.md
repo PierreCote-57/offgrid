@@ -108,7 +108,5 @@ The browser page's map view already builds the real `mapObject` (`{lat, lng, zoo
 pins shaped like `Place`), so the map session is the drawing and the pin vocabulary, not the
 data.
 
-#28 `/shared/browser/data/{id}` answers the dataset file as it stands. `van-howto.json` and
-`van-checklist.json` are lists of `{file}` pointers, so those two datasets currently reach the
-browser as rows with nothing in them but a filename. Resolving a pointer against the page JSON
-it names is the hydration step, and it belongs in `processBrowserData`.
+#29 `data/shared/browser/browser.json` has an empty `name`, so the browser page's `<h1>` is
+blank and its tab reads `— Going offgrid`. Every other page's name comes from its JSON.

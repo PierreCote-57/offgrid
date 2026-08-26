@@ -2,6 +2,9 @@
 # Local environment = everything on the local machine
 #
 
+BaseWebProcessor:
+  siteName: "β-Going offgrid"
+
 folder:
   image: "/Users/pierrecote/Pictures/offgrid"
   data: "/Users/pierrecote/src/github/offgrid"

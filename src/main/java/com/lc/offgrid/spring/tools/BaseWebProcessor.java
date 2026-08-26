@@ -31,6 +31,9 @@ public abstract class BaseWebProcessor
 					.disableHtmlEscaping()
 					.create();
 
+	@Value("${BaseWebProcessor.siteName}")
+	private String				m_siteName;
+
 	@Value("${BaseWebProcessor.welcomeMessage}")
 	private String				m_welcomeMessage;
 
@@ -76,6 +79,7 @@ public abstract class BaseWebProcessor
 
 		model.addAttribute("Timer", getTimer());
 
+		model.addAttribute("SiteName", m_siteName);
 		model.addAttribute("WelcomeMessage", m_welcomeMessage);
 		model.addAttribute("SiteVersion", m_siteVersion);
 		model.addAttribute("AdministratorEmail", m_administratorEmail);
