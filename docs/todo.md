@@ -12,8 +12,9 @@ reset a password against, which looks exactly like this.
 #2 Deploy the skeleton to FullHost — validates that their build node builds this repo and
 runs the jar, while nothing is invested in it.
 
-#4 Menu links go nowhere — Destinations, Blog and the four Hardware items are still
-`href="#"`. The three Info items (About, Useful links, Useful contacts) are wired.
+#4 Menu links go nowhere — Destinations, Blog, and Howto and Checklist under Hardware are
+still `href="#"`. The van, the Bronco and the three Info items are wired. Van maintenance
+and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing serves yet.
 
 #5 Footer "Last modified" is a placeholder — no source decided for the date.
 
@@ -30,8 +31,10 @@ the data rides inside the jar or on disk beside it, whether it is loaded at star
 request, and what picks the page subclass from `tags.typeList` plus the folder.
 
 #9 Getting content onto the server — settled for JSON and HTML: they live in the repo and
-arrive by push and rebuild. No mounted volume needed. Still open for images only, and
-deliberately deferred.
+arrive by push and rebuild. No mounted volume needed. Settled 2026-08-25 for images too:
+they live in the folder `folder.image` names, outside the resource tree, and are served
+through `/image/{imageName}`. What is still open is how that folder gets onto the server,
+which the local profile does not answer.
 
 #10 **Standing rule — convert every JSON file brought in from GettingLost.** GettingLost
 keeps the old spellings and its own consumers still read them; offgrid does not. The
@@ -54,10 +57,6 @@ in `resources/data` is converted.
 Nothing in `com.lc.offgrid.pojo` maps key names — a file that arrives unconverted binds its
 renamed fields to null rather than failing, so the miss is silent.
 
-#14 `van/maintenance/*` (2 files) carry an `actual` block — dated service records with
-odometer, shop, cost and next-due. No class reads it. Left in place; it is real content, not
-scaffolding.
-
 #16 A URL that does not resolve lands on the `exception` view. It survives and it logs,
 which is the requirement; the page itself is not fit to look at yet.
 
@@ -72,3 +71,28 @@ each new page copied over brings another.
 
 #19 `back-to-gallery` is a placeholder with nothing to point at — no list page exists yet.
 The Bronco and both checklists call it.
+
+#20 `OffgridImageManager.getImageMetadata` reads the file on every call — no cache. Fine
+while nothing calls it; it is a disk read per request the day something does.
+
+#21 `photo-ref` still renders text. It takes a `gallery/itemId`, not a filename, so unlike
+the other two photo blocks it cannot be pointed at `/image/` without a resolution step
+against `photoGalleries`.
+
+#22 A thumbnail and its lightbox load the same file. GettingLost split them — a small
+Photon URL for the grid, the 1920 cap for the overlay — and offgrid has one URL per image,
+so the grid pulls full-size originals. This is where a resize seam goes.
+
+#23 Signage typography is parked, not dropped — condensed uppercase headings, a letterspaced
+kicker in amber, a route-shield chip. Revisit when there are buttons or controls to carry it.
+The sample is the `signage` block in an earlier revision of `_preview/samples.html`.
+
+#24 `ImageMetadata.cameraDirection` will be null on almost everything that is not a phone.
+Standalone cameras do not write `TAG_IMG_DIRECTION`, so any UI built on it needs the absent
+case to be the normal one.
+
+#25 The two maintenance work sheets have no file and no route. `workUrl` in
+`maintenance/van.json` and `maintenance/bronco.json` name `van-2026-08-17.pdf` and
+`bronco-2026-09-19.pdf`; neither is in the repo, and nothing serves documents the way
+`/image/{imageName}` serves images. The record links them at `/document/{documentName}`, so
+the two fixes are the missing route and the missing files.

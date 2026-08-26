@@ -7,9 +7,11 @@
 				<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Hardware</button>
 				<ul class="submenu" x-show="open" x-cloak>
 					<li><a th:href="@{/hardware/van}">The van</a></li>
+					<li><a th:href="@{/hardware/maintenance/van}">Van maintenance</a></li>
 					<li><a href="#">Howto</a></li>
 					<li><a href="#">Checklist</a></li>
 					<li><a th:href="@{/hardware/bronco}">The Bronco</a></li>
+					<li><a th:href="@{/hardware/maintenance/bronco}">Bronco maintenance</a></li>
 				</ul>
 			</li>
 			<li><a href="#">Blog</a></li>

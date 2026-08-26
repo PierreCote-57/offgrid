@@ -1,13 +1,19 @@
 <div xmlns:th="http://www.thymeleaf.org" class="note-list">
 	<section class="note-section" th:each="noteSection : ${pageData.noteList}">
-		<h2 th:text="${noteSection.sectionName}">Section name</h2>
+		<h3 class="gl-heading" th:text="${noteSection.sectionName}">Section name</h3>
 
-		<div class="note-item" th:each="noteItem : ${noteSection.itemList}">
-			<h3>
-				<a th:if="${noteItem.url}" th:href="${noteItem.url}" th:text="${noteItem.name}">Name</a>
-				<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
-			</h3>
-			<p th:each="descriptionLine : ${noteItem.description}" th:text="${descriptionLine}">Description line</p>
-		</div>
+		<table>
+			<tbody>
+			<tr th:each="noteItem : ${noteSection.itemList}">
+				<td class="note-name">
+					<a th:if="${noteItem.url}" th:href="${noteItem.url}" target="_blank"
+					   rel="noopener noreferrer" th:text="${noteItem.name}">Name</a>
+					<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
+				</td>
+				<td class="note-description"
+					th:utext="${#strings.listJoin(noteItem.description, ' ')}">Description</td>
+			</tr>
+			</tbody>
+		</table>
 	</section>
 </div>

@@ -21,6 +21,13 @@
 	--paper: #faf7f0;
 	--rust: #b5502f;
 	--ruling: #dfe6e1;
+
+	/* Highway signage. The orange is the temporary-condition family — the construction
+	   diamond, the one that means watch this while it happens — and is louder than the
+	   --warn used by a message bar. Sign ink is not pure black; it is the ink printed on
+	   retroreflective sheeting, which reads warmer. */
+	--sign-orange: #ee7622;
+	--sign-ink: #1b1b16;
 }
 
 /* Contour lines — the site's texture. Two tiles of the same drawing: pale lines for the
@@ -100,34 +107,31 @@ main p {
 	line-height: 1.55;
 }
 
-/* A noteList: titled sections, each holding named entries whose description is carried a
-   line at a time. Lines stack with no gap between them, so a blank line in the data is a
-   blank line on the page rather than a paragraph break. */
-.note-section h2 {
-	margin: 28px 0 4px;
-	padding-bottom: 4px;
-	border-bottom: 1px solid var(--rule);
-	color: var(--brand-deep);
-	font-size: 20px;
+/* A noteList: one heading and one two-column table per section, the entry's name in the
+   narrow column and its description beside it. The description's lines are joined into
+   flowing text — a line in the data is a wrap, not a break — and they are the author's own
+   HTML, so it is the author's job for it to be valid. */
+.note-section table {
+	width: 100%;
+	margin: 4px 0 16px;
+	border-collapse: collapse;
 }
 
-.note-item {
-	margin: 14px 0 0;
-}
-
-.note-item h3 {
-	margin: 0 0 2px;
-	font-size: 16px;
+.note-name {
+	width: 25%;
+	padding: 5px 24px 5px 0;
+	vertical-align: top;
 	font-weight: 600;
 }
 
-.note-item a {
-	color: var(--brand);
+.note-description {
+	padding: 5px 0;
+	vertical-align: top;
+	line-height: 1.5;
 }
 
-.note-item p {
-	margin: 0;
-	line-height: 1.5;
+.note-section a {
+	color: var(--brand);
 }
 
 /* Header: brand on the left, menu on the right, on the coloured bar. */
@@ -372,6 +376,87 @@ main p {
 .gl-numcheck input[type="checkbox"]:checked ~ span:not(.gl-num) {
 	text-decoration: line-through;
 	color: var(--faded);
+}
+
+/* The maintenance record: one row per visit to a shop. The narrow columns are centred; the
+   work done is the only one that runs long enough to want its left edge. */
+.gl-maintenance {
+	width: 90%;
+	margin: 4px auto 24px;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.gl-maintenance th,
+.gl-maintenance td {
+	padding: 4px 8px;
+	text-align: center;
+}
+
+.gl-maintenance th {
+	vertical-align: bottom;
+	border-bottom: 1px solid var(--rule);
+	color: var(--faded);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.gl-maintenance td {
+	vertical-align: top;
+	font-size: 15px;
+}
+
+.gl-maintenance th:nth-child(4),
+.gl-maintenance td:nth-child(4) {
+	text-align: left;
+}
+
+/* A warning, drawn as roadside signage: an orange construction diamond beside the words,
+   on a pale panel edged in the same orange. The diamond is authored as geometry only, so
+   every colour in it stays here with the rest of the palette. */
+.gl-warning {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	margin: 16px 0;
+	padding: 14px 18px 14px 16px;
+	background: var(--warn-soft);
+	border-left: 4px solid var(--sign-orange);
+}
+
+.gl-warning-sign {
+	flex: none;
+	width: 62px;
+	height: auto;
+}
+
+.gl-warning-sign .field {
+	fill: var(--sign-orange);
+}
+
+.gl-warning-sign .border {
+	fill: none;
+	stroke: var(--sign-ink);
+	stroke-width: 5;
+}
+
+.gl-warning-sign .mark {
+	fill: var(--sign-ink);
+}
+
+/* The first of the signage lettering to reach a page: condensed, uppercase, letterspaced. */
+.gl-warning-kicker {
+	margin: 2px 0 4px;
+	font-family: "Avenir Next Condensed", "Futura", system-ui, sans-serif;
+	text-transform: uppercase;
+	letter-spacing: .14em;
+	font-size: 12px;
+	color: var(--rust);
+}
+
+.gl-warning-text {
+	margin: 0;
+	line-height: 1.5;
 }
 
 /* Placeholder for a block whose renderer does not exist yet. */

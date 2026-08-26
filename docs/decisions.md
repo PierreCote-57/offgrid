@@ -81,6 +81,9 @@ changes in one place.
 
 Header and footer wear the colour, the page between them is white.
 
+**Superseded 2026-08-25 on both counts** — the page is warm paper and the green family is no
+longer alone. See *Paper, not white* below.
+
 **There is no contrasting accent colour.** Every decorative colour on the site is a shade of
 the bar green. An amber accent was tried and rejected — the button jumped off the page.
 Buttons are outline style: soft fill, brand border, filling in on hover.
@@ -397,9 +400,16 @@ it does not survive the first part whose members are addressed one at a time.
 One fragment for the whole `noteList` block, not one per section. It splits the day
 something renders a section on its own.
 
-A description is a `List<String>` and each entry is one `<p>` with no margin, so the lines
-stack the way they are written. A blank string is therefore a blank line, not a paragraph
-break — the data says where the breaks go, the stylesheet does not guess.
+A description is a `List<String>` joined into one flowing cell, and it is rendered with
+`th:utext`. **Corrected 2026-08-26** — it had been one `<p>` per entry, escaped. Both were
+regressions against the GettingLost renderer this replaced, which joins the lines as a soft
+word separator and assigns `innerHTML`: a line in the data is where the author wrapped the
+JSON, not a break on the page, and the author writes `<b>` or `<a>` in the string and means
+it. Escaping the description took that away for nothing.
+
+The one thing that does not survive the move: a block span written into a description — a
+photoRef, say — no longer expands. GettingLost's dispatcher made another pass over the
+elements a renderer emitted, and Thymeleaf renders once.
 
 ## 2026-08-25 — Checklist pages: one route, a processor for the rows
 
@@ -502,3 +512,172 @@ The consequence: the heading is authored in the page rather than taken from the 
 from, so every photo and every thumbnail shows the filename it wanted. That is the diagnostic
 form — it says which file is missing rather than leaving a hole — and it disappears the day
 images have a path.
+
+**Superseded 2026-08-25.** Images have a path. All three fragments emit real `<img>` tags —
+see *Images live outside the resource tree* below.
+
+## 2026-08-25 — The whole page data goes into the model
+
+A handler puts `pageData` in the model, not a field at a time. `model.addAttribute("noteList",
+pageData.getNoteList())` writes *which fields a page has* in a second place, so adding a field
+means editing Java to expose something the template already had in hand.
+
+The honest size of the win: three naming sites become two. The template names the field
+either way; only the controller's copy disappears.
+
+The argument that did **not** decide it, recorded so it is not made again: a shared fragment
+needing one known attribute name. Header and footer data is cross-cutting and arrives on its
+own channel whatever a handler puts in the model, so it says nothing about how much of the
+page's own data travels.
+
+## 2026-08-25 — The application class sits at the package root
+
+`OffgridApplication` moved from `com.lc.offgrid.spring` to `com.lc.offgrid`. Component
+scanning starts at the annotated class's own package, so anything outside `spring/` — the
+first case was `misc/imaging` — was never scanned and could not become a bean.
+
+`scanBasePackages` would have fixed the one case. Moving the class fixes every future one,
+and the failure it prevents is nasty: an injection error somewhere unrelated to the class
+that was actually invisible.
+
+## 2026-08-25 — Images live outside the resource tree, behind `/image/`
+
+Pictures are not in the repo. They sit in a folder on the machine named by `folder.image`,
+and reach the browser through `GET /image/{imageName}` — a controller method that returns
+`ResponseEntity<Resource>` and never goes through `processRequest`, because it answers with
+bytes rather than a view name.
+
+**The URL carries a bare filename, not a path.** That is already what the JSON holds, and it
+leaves the folder layout under `folder.image` free to be rearranged without touching a single
+data file. The cost accepted: the server resolves name to file, and two files with the same
+name in different folders are ambiguous.
+
+The prefix is written once, in the fragments, as `@{/image/{imageName}(imageName=${img})}`
+rather than a literal string — `@{}` prepends the servlet context path and URL-encodes the
+substitution, which matters the first time a filename has a space in it.
+
+`OffgridImageManager` is the singleton that knows where a name lands; `ImageMetadataExtractor`
+reads EXIF through metadata-extractor 2.19.0 and flattens it into `ImageMetadata`. Drew
+Noakes over Apache Commons Imaging for the read path: Commons sat in `1.0-alpha` for about a
+decade and its makernote coverage is narrower. Commons is the better bet the day metadata has
+to be written back.
+
+## 2026-08-25 — Paper, not white
+
+The site felt bland, and the cause was written at the top of the stylesheet as policy: every
+decorative colour a shade of the bar green, with orange and red locked away for messages. On
+a site about forests and gravel roads that spent the whole palette on one hue.
+
+Three paper treatments now, one stylesheet, scoped by what the element is:
+
+- **Wavy** — topographic contour lines, pale on the bar and footer, green on the page. Two
+  `url()` data-URIs held in custom properties, so the drawing exists once.
+- **Grid** — quadrille at 15px, one weight, on `.gl-checklist` and `.gl-numcheck`. Not
+  scientific graph paper: no fine sub-grid, no heavier majors.
+- **Lined** — horizontals at 30px on `.gl-post`, with the copy sitting on the rulings.
+
+All three stand on warm paper `#faf7f0`, which replaced white everywhere. Ruled blocks carry
+a rust edge down the left so they read as a page out of a notebook rather than as a panel.
+
+The rulings are deliberately near the edge of visible. At full strength they compete with the
+text, which is what the first pass got wrong.
+
+**Rejected:** park-patch badges, and a full-bleed photographic hero. **Parked:** signage
+typography — condensed uppercase headings with a route-shield chip — until there are buttons
+or controls for it to apply to.
+
+## 2026-08-25 — The lightbox came back from GettingLost
+
+Clicking a photo opens a shared in-page overlay: backdrop, ✕ and Esc close it, ←/→ and the
+buttons page through the gallery with an "n / total" counter. Ported from the `lightbox` IIFE
+in `gettinglost.jst` rather than rewritten against Alpine — it is vanilla, so it needs
+nothing, and the sizing traps in it were already paid for.
+
+`min-height: 0` on both the overlay figure and the image is load bearing. Without it the
+`max-height` never binds and a portrait shot grows past the viewport and clips at the top.
+
+Three simplifications on the way over: one delegated click listener on the document instead
+of per-image handlers; the gallery read from the DOM, so there is no parallel JS array to keep
+in step with the markup; and the WordPress admin-bar z-index of 100000 dropped to 1000.
+
+Anchors keep a real `href`, so a click still shows the image with JavaScript off and
+cmd-click still opens a tab.
+
+## 2026-08-26 — A warning is a road sign
+
+`fragments/block/warning.html`, called as
+`~{fragments/block/warning :: warning('…')}`. The page supplies the words, so it takes a
+parameter, which is the rule already set for a block placed individually.
+
+An orange construction diamond sits left of the text on a pale panel with the same orange
+down its left edge — the notebook's rust-edge idiom, in the warning colour. Orange is the
+temporary-condition family: something is happening right now and you have to watch it.
+Yellow, the permanent-hazard family, is unused so far.
+
+The diamond is inline SVG carrying geometry and three class names — `field`, `border`,
+`mark` — with every colour in `site.css`. A drawing whose colours are baked into the markup
+cannot follow the palette.
+
+The panel reuses `--warn-soft` rather than mixing a fourth cream from the sign orange. Two
+new properties were needed: `--sign-orange`, louder than the `--warn` a message bar uses,
+and `--sign-ink`, the warm near-black of printed sheeting.
+
+This is where the parked signage typography first lands — the `Warning` kicker is condensed
+uppercase, letterspaced, in rust. The rest of it stays parked.
+
+Alternatives drawn and rejected in `_preview/signs.html`: the sign bare on the paper with no
+panel, mounted on two posts above the text, a hazard-tape strip with a small chip, and a
+worded orange panel with no symbol at all.
+
+## 2026-08-26 — A folder per kind of page, and the file does not repeat it
+
+`templates/hardware/howto/awning.html` at `/hardware/howto/awning`, not
+`howto/howto-awning.html` at `/hardware/howto/howto-awning`. The folder says what kind of
+page it is, so the file saying it again is stutter. Ten files renamed — six howto, two
+maintenance, two checklists — and each data folder with the JSON inside it follows the
+template name: `data/hardware/howto/awning/awning.json`.
+
+One `@GetMapping` and one processor method per folder, the shape `processChecklist` already
+had. **The mapping method is the class choice.** `readFile` has to name the class it
+deserializes into, and a maintenance page is not a `PageData`; a method reached only from
+`/hardware/maintenance/{name}` knows that statically, with no dispatch table.
+
+**Rejected — one generic `/hardware/{folder}/{name}`.** It cannot name a class. The folder
+arrives as a string, so the read call would need a folder-to-class map, which is the same
+switch written somewhere less obvious.
+
+**Rejected — flattening the folders away.** `processHardware` reads
+`data/hardware/{name}/{name}.json`, so a flat `van-maintenance.html` would have needed no
+new code at all. It lands the same problem on `processHardware`, which would then pick the
+class by testing the name for a `-maintenance` suffix. Sniffing a filename for a type is the
+cost, and the tree stops saying what a page is.
+
+`hardware/van` and `hardware/maintenance/van` are two different pages both named van. That
+is the folder doing its job.
+
+## 2026-08-26 — MaintenancePage, and the record the JS used to draw
+
+`maintenance.jst` fetched the page JSON in the browser and built the table from a `COLUMNS`
+list. That work is now split the way the rest of the site is: `MaintenancePage` carries
+`List<MaintenanceEntry>`, `fragments/block/maintenance-actual.html` draws it, and
+`site.css` holds every rule the JS used to set inline.
+
+The block reads the model and takes no parameter — a page that wants the record sets
+`actualList`, the same contract `noteList` already has.
+
+**The entry is flat.** `shop{name,url}` and `work{name,url}` became `shopName`/`shopUrl` and
+`workName`/`workUrl`, `nextDue{km,date}` became `nextDueKm`/`nextDueDate`, and `odometer_km`
+and `cost_cad` were the last snake_case keys in `resources/data`. A flat entry makes a table
+row a straight read with nothing to walk into, and `Reference` was the wrong home for the
+pairs — it is `{label, type, url}`, not `{name, url}`.
+
+`actual` became `actualList` because it is a list, which is the naming rule everywhere else.
+
+Every number field is boxed — `Integer`, `Double` — so a value that is absent is null and its
+cell renders empty. An `int` would have printed a zero odometer as a fact.
+
+The work sheet links at `/document/{documentName}`, which nothing serves yet. `workUrl` names
+a PDF the WordPress renderer resolved against `/wp-content/uploads/`, and neither file is in
+the repo. Rendering the name as plain text instead was considered and dropped: a missing file
+is a content bug, and a template that stops linking because the content is missing is a
+template that still does not link once the content arrives.

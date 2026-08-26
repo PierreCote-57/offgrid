@@ -44,23 +44,14 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processHome(model));
 	}
 
-	@GetMapping("/info/about")
-	public String about(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model)
-	{
-		return processRequest(request, response, model, () -> getService().processAbout(model));
-	}
-
-	@GetMapping("/info/useful-{name}")
+	@GetMapping("/info/{name}")
 	public String useful(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			Model model,
 			@PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processUseful(model, name));
+		return processRequest(request, response, model, () -> getService().processInfo(model, name));
 	}
 
 	@GetMapping("/hardware/{name}")
@@ -83,6 +74,16 @@ public class OffgridController extends BaseWebController
 		return processRequest(request, response, model, () -> getService().processChecklist(model, name));
 	}
 
+	@GetMapping("/hardware/maintenance/{name}")
+	public String maintenance(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Model model,
+			@PathVariable String name)
+	{
+		return processRequest(request, response, model, () -> getService().processMaintenance(model, name));
+	}
+
 	/**
 	 * An image, straight from the image folder. This one answers with bytes rather than a view
 	 * name, so it goes to the processor directly instead of through processRequest.
@@ -91,8 +92,7 @@ public class OffgridController extends BaseWebController
 	public ResponseEntity<Resource> image(
 			@PathVariable String imageName)
 	{
-		ResponseEntity<Resource> answer = getService().processImage(imageName);
-		return answer;
+		return getService().processImage(imageName);
 	}
 
 	@GetMapping(value = {"/pi"}, produces = "text/html")

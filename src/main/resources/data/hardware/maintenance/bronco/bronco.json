@@ -4,23 +4,17 @@
 		"published": true,
 		"comments": "open"
 	},
-	"actual": [
+	"actualList": [
 		{
 			"date": "2026-09-19",
-			"odometer_km": 4321,
-			"shop": {
-				"name": "Marshall Ford",
-				"url": "https://www.stevemarshallfordcampbellriver.com"
-			},
-			"work": {
-				"name": "New car diagnostic",
-				"url": "bronco-2026-09-19.pdf"
-			},
-			"cost_cad": 0.0,
-			"nextDue": {
-				"km": 12800,
-				"date": "2027-02-01"
-			}
+			"odometerKm": 4321,
+			"shopName": "Marshall Ford",
+			"shopUrl": "https://www.stevemarshallfordcampbellriver.com",
+			"workName": "New car diagnostic",
+			"workUrl": "bronco-2026-09-19.pdf",
+			"costCad": 0.0,
+			"nextDueKm": 12800,
+			"nextDueDate": "2027-02-01"
 		}
 	],
 	"noteList": [

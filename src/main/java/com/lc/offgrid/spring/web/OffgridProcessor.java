@@ -3,6 +3,7 @@ package com.lc.offgrid.spring.web;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
+import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,36 +39,36 @@ public class OffgridProcessor extends BaseWebProcessor
 	{
 		processDefault(model, "Offgrid's home page");
 
-		addInfoMessage("Welcome to Offgrid " + new Date());
-		addWarningMessage("Welcome to WARNING " + new Date());
-		addErrorMessage("Welcome to ERROR " + new Date());
+		Date infoDate = new Date();
+		String infoMessage = String.format("Welcome to Offgrid %s", infoDate);
+		addInfoMessage(infoMessage);
+
+		Date warningDate = new Date();
+		String warningMessage = String.format("Welcome to WARNING %s", warningDate);
+		addWarningMessage(warningMessage);
+
+		Date errorDate = new Date();
+		String errorMessage = String.format("Welcome to ERROR %s", errorDate);
+		addErrorMessage(errorMessage);
 
 		String viewName = "index";
 		return viewName;
 	}
 
-	public String processAbout(Model model)
-	{
-		processDefault(model, "About");
-
-		String viewName = "info/about";
-		return viewName;
-	}
-
 	/**
-	 * One of the Useful pages. The name completes the page name, which is the view name and
-	 * the data folder both, so a new one is a template plus its folder.
+	 * One of the Info pages. The name is the view name and the data folder both, so a new one
+	 * is a template plus its folder.
 	 */
-	public String processUseful(Model model, String name)
+	public String processInfo(Model model, String name)
 	{
-		String pageName = "useful-" + name;
+		String fileName = String.format("data/info/%1$s/%1$s.json", name);
+		PageData pageData = readFile(fileName, PageData.class);
+		String pageTitle = pageData.getName();
 
-		PageData pageData = readFile("data/info/" + pageName + "/" + pageName + ".json", PageData.class);
-
-		processDefault(model, pageData.getName());
+		processDefault(model, pageTitle);
 		model.addAttribute("pageData", pageData);
 
-		String viewName = "info/" + pageName;
+		String viewName = String.format("info/%s", name);
 		return viewName;
 	}
 
@@ -77,12 +78,14 @@ public class OffgridProcessor extends BaseWebProcessor
 	 */
 	public String processHardware(Model model, String name)
 	{
-		PageData pageData = readFile("data/hardware/" + name + "/" + name + ".json", PageData.class);
+		String fileName = String.format("data/hardware/%1$s/%1$s.json", name);
+		PageData pageData = readFile(fileName, PageData.class);
+		String pageTitle = pageData.getName();
 
-		processDefault(model, pageData.getName());
+		processDefault(model, pageTitle);
 		model.addAttribute("pageData", pageData);
 
-		String viewName = "hardware/" + name;
+		String viewName = String.format("hardware/%s", name);
 		return viewName;
 	}
 
@@ -92,12 +95,31 @@ public class OffgridProcessor extends BaseWebProcessor
 	 */
 	public String processChecklist(Model model, String name)
 	{
-		PageData pageData = readFile("data/hardware/checklists/" + name + "/" + name + ".json", PageData.class);
+		String fileName = String.format("data/hardware/checklists/%1$s/%1$s.json", name);
+		PageData pageData = readFile(fileName, PageData.class);
+		String pageTitle = pageData.getName();
 
-		processDefault(model, pageData.getName());
+		processDefault(model, pageTitle);
 		model.addAttribute("pageData", pageData);
 
-		String viewName = "hardware/checklists/" + name;
+		String viewName = String.format("hardware/checklists/%s", name);
+		return viewName;
+	}
+
+	/**
+	 * A maintenance page — the van's record, the Bronco's. The name is both the template under
+	 * templates/hardware/maintenance and the folder holding its JSON.
+	 */
+	public String processMaintenance(Model model, String name)
+	{
+		String fileName = String.format("data/hardware/maintenance/%1$s/%1$s.json", name);
+		MaintenancePage pageData = readFile(fileName, MaintenancePage.class);
+		String pageTitle = pageData.getName();
+
+		processDefault(model, pageTitle);
+		model.addAttribute("pageData", pageData);
+
+		String viewName = String.format("hardware/maintenance/%s", name);
 		return viewName;
 	}
 
@@ -108,13 +130,16 @@ public class OffgridProcessor extends BaseWebProcessor
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
 //		imageName = FIXED_IMAGE;
-		ImageMetadata metadata = getImageManager().getImageMetadata(imageName);
-		FileSystemResource	imageResource	= new FileSystemResource(metadata.getFile());
+		OffgridImageManager	manager			= getImageManager();
+		ImageMetadata		metadata		= manager.getImageMetadata(imageName);
+		File				imageFile		= metadata.getFile();
+		FileSystemResource	imageResource	= new FileSystemResource(imageFile);
 		MediaType			mediaType		= metadata.getMediaType();
 
-		ResponseEntity<Resource> answer = ResponseEntity.ok()
-				.contentType(mediaType)
-				.body(imageResource);
+		ResponseEntity.BodyBuilder builder = ResponseEntity.ok();
+		builder = builder.contentType(mediaType);
+
+		ResponseEntity<Resource> answer = builder.body(imageResource);
 		return answer;
 	}
 
@@ -122,6 +147,7 @@ public class OffgridProcessor extends BaseWebProcessor
 	{
 		processDefault(model, "The net");
 
-		return "info/pi";
+		String viewName = "info/pi";
+		return viewName;
 	}
 }

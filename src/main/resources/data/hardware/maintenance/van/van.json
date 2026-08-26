@@ -1,0 +1,53 @@
+{
+	"name": "Van maintenance",
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"actualList": [
+		{
+			"date": "2026-08-17",
+			"odometerKm": 1234,
+			"shopName": "Marshall Ford",
+			"shopUrl": "https://www.stevemarshallfordcampbellriver.com",
+			"workName": "Recall, beep (probably) and oil change",
+			"workUrl": "van-2026-08-17.pdf",
+			"costCad": 0.0,
+			"nextDueKm": 123200,
+			"nextDueDate": null
+		}
+	],
+	"noteList": [
+		{
+			"sectionName": "Scheduled maintenance notes",
+			"itemList": [
+				{
+					"name": "Monday, August 17, 2026 @ 8:00 AM",
+					"description": [
+						"Camera recall. <br />",
+						"Low occasional beep, visible on diagnostics<br />",
+						"Inquire about oil change"
+					]
+				},
+				{
+					"name": "March 2027",
+					"description": [
+						"Oil change when out of Winter storage"
+					]
+				},
+				{
+					"name": "May 2027",
+					"description": [
+						"Oil change during trans-Canada trip"
+					]
+				},
+				{
+					"name": "June 2027 ???",
+					"description": [
+						"Make FSR compatible"
+					]
+				}
+			]
+		}
+	]
+}
