@@ -1,0 +1,25 @@
+<nav xmlns:th="http://www.thymeleaf.org" class="menu">
+	<ul>
+		<li><a th:href="@{/shared/browser(dataset='destinations',view='grid')}">Destinations</a></li>
+		<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+			<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Hardware</button>
+			<ul class="submenu" x-show="open" x-cloak>
+				<li><a th:href="@{/hardware/van}">The van</a></li>
+				<li><a th:href="@{/hardware/maintenance/van}">Van maintenance</a></li>
+				<li><a th:href="@{/shared/browser(dataset='van-howto',view='grid',booklet='howto')}">Howto</a></li>
+				<li><a th:href="@{/shared/browser(dataset='van-checklist',view='grid',booklet='checklists')}">Checklist</a></li>
+				<li><a th:href="@{/hardware/bronco}">The Bronco</a></li>
+				<li><a th:href="@{/hardware/maintenance/bronco}">Bronco maintenance</a></li>
+			</ul>
+		</li>
+		<li><a href="#">Blog</a></li>
+		<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+			<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Info</button>
+			<ul class="submenu" x-show="open" x-cloak>
+				<li><a th:href="@{/info/about}">About</a></li>
+				<li><a th:href="@{/info/useful-links}">Useful links</a></li>
+				<li><a th:href="@{/info/useful-contacts}">Useful contacts</a></li>
+			</ul>
+		</li>
+	</ul>
+</nav>
