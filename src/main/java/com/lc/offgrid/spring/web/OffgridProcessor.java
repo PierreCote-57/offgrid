@@ -233,7 +233,7 @@ public class OffgridProcessor extends BaseWebProcessor
 		for (int i  = 0; i < pageList.size(); i++)
 		{
 			Map<String, Object> page = pageList.get(i);
-			String filePointer = page.get("file").toString();
+			String filePointer = (String) page.get("file");
 			if (null != filePointer)
 			{
 				try
