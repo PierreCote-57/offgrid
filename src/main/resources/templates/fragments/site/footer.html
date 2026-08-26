@@ -9,11 +9,12 @@
 	</span>
 	<span class="footer-right">
 		<span class="footer-right"
-			  th:text="'Rendered: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
+			  th:text="'Rendered on: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
 		</span><br />
-		<span th:text="'Render in: ' + ${Timer.elapsedTime}"></span>
+		<span th:text="'Renderer in: ' + ${Timer.elapsedTime}"></span>
 	</span>
 
 	<span style="font-size: 0pt" th:text="'
 ' + ${Timer.results}"></span>
 </footer>
+</body>

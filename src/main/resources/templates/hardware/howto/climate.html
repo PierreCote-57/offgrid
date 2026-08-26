@@ -1,128 +1,118 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title th:text="${PageName} + ' — ' + ${SiteName}">offgrid</title>
-	<link rel="stylesheet" th:href="@{/css/site.css}">
-	<script defer th:src="@{/js/alpine.min.js}"></script>
-	<script defer th:src="@{/js/lightbox.js}"></script>
-</head>
-<body>
-	<div th:replace="~{fragments/site/header}"></div>
+<div th:replace="~{fragments/site/header}"></div>
 
-	<main>
-		<h1 th:text="${PageName}">How To: Climate</h1>
+<main>
+	<h1 th:text="${PageName}">How To: Climate</h1>
 
-		<section data-howto-section="howto">
-			<details>
-				<summary><h2 id="once-heading" style="display:inline;">One time (mostly)</h2></summary>
-				<p>
-					You will be working on the Truma control (set to external control) —
-					see <span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-location')}"></span>.
-				</p>
-
-				<ol class="gl-numcheck">
-					<li>
-						Select
-						<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-tools')}"></span>
-					</li>
-					<li>Find the ACC setting</li>
-					<li>
-						Ensure the
-						<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-acc')}"></span>
-						is set to ON.<br />
-						This will allow communication between the Truma panel and the Garmin panel.
-					</li>
-				</ol>
-			</details>
-
-			<details open>
-				<summary><h2 id="daytoday-heading" style="display:inline;">Day-to-day operation</h2></summary>
-				<ol class="gl-numcheck">
-					<li>On the Garmin, right-hand side, select home</li>
-					<li>
-						Click on the gear next words "Temperature control"<br />
-						<span th:replace="~{fragments/block/photo-ref :: ref('howto/garmin-temp-select')}"></span>
-					</li>
-					<li>
-						Adjust to the desired temperature with the up and down arrows (upper left corner)
-						<span th:replace="~{fragments/block/photo-ref :: ref('howto/garmin-temp-panel')}"></span>
-					</li>
-					<li>
-						If there is no 120 VAC, and you need AC,
-						the Truma panel will display "W 45 H",
-						indicating AC is disabled.
-					</li>
-				</ol>
-				<span th:replace="~{fragments/block/photo-ref :: ref('howto/cabin-outdoor')}"></span>
-				shows the heater coming on at night (cold outside) to keep
-				the temperature constant.
-			</details>
-		</section>
-
-		<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
-
+	<section data-howto-section="howto">
 		<details>
-			<summary><h2 style="display:inline;">The details</h2></summary>
-			<p style="margin-top:0;">
-				The van comes with both heat and AC, and the temperature control can be fully automated.
-			</p>
+			<summary><h2 id="once-heading" style="display:inline;">One time (mostly)</h2></summary>
 			<p>
-				The # 1 thing to understand is that the Tuma panel is in charge.
-				At best, all the Garmin panel can do is send settings to the Tuma panel,
-				<!--        equivalent to what you can do on the Truma panel itself.-->
+				You will be working on the Truma control (set to external control) —
+				see <span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-location')}"></span>.
 			</p>
-			<p>
-				There are three elements at play for the complete system:
-			</p>
-			<ol>
-				<li>Where the power comes from</li>
+
+			<ol class="gl-numcheck">
 				<li>
-					The Truma control (set to external control) —
-					see <span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-on-panel')}"></span>,
-					<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-acc')}"></span>,
+					Select
 					<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-tools')}"></span>
 				</li>
+				<li>Find the ACC setting</li>
 				<li>
-					The Garmin control panel, the brains —
-					see <span th:replace="~{fragments/block/photo-ref :: ref('details/garmin-temp-panel')}"></span>,
-					<span th:replace="~{fragments/block/photo-ref :: ref('details/garmin-temp-select')}"></span>
+					Ensure the
+					<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-acc')}"></span>
+					is set to ON.<br />
+					This will allow communication between the Truma panel and the Garmin panel.
 				</li>
 			</ol>
-			<p>
-				The eventual goal is to control the heater and the AC,
-				each of which has separate power requirements and options
-			</p>
-			<ol>
+		</details>
+
+		<details open>
+			<summary><h2 id="daytoday-heading" style="display:inline;">Day-to-day operation</h2></summary>
+			<ol class="gl-numcheck">
+				<li>On the Garmin, right-hand side, select home</li>
 				<li>
-					The heater can use
-					<ol>
-						<li>electricity</li>
-						<li>gas</li>
-						<li>a mix of both</li>
-					</ol>
+					Click on the gear next words "Temperature control"<br />
+					<span th:replace="~{fragments/block/photo-ref :: ref('howto/garmin-temp-select')}"></span>
 				</li>
 				<li>
-					The AC (electric only) can use
-					<ol>
-						<li>Use 120 VAC</li>
-						<li>Requires shore power or generator</li>
-						<li>Will not start on battery alone</li>
-					</ol>
+					Adjust to the desired temperature with the up and down arrows (upper left corner)
+					<span th:replace="~{fragments/block/photo-ref :: ref('howto/garmin-temp-panel')}"></span>
+				</li>
+				<li>
+					If there is no 120 VAC, and you need AC,
+					the Truma panel will display "W 45 H",
+					indicating AC is disabled.
 				</li>
 			</ol>
-			<div th:replace="~{fragments/block/photo-gallery :: gallery('details')}"></div>
+			<span th:replace="~{fragments/block/photo-ref :: ref('howto/cabin-outdoor')}"></span>
+			shows the heater coming on at night (cold outside) to keep
+			the temperature constant.
 		</details>
+	</section>
 
-		<details>
-			<summary><h2 style="display:inline;">Supplier documentation</h2></summary>
-			<div th:replace="~{fragments/block/note-list}"></div>
-		</details>
-		<br/>
-		<div th:replace="~{fragments/block/back-to-gallery}"></div>
-	</main>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
 
-	<div th:replace="~{fragments/site/footer}"></div>
-</body>
+	<details>
+		<summary><h2 style="display:inline;">The details</h2></summary>
+		<p style="margin-top:0;">
+			The van comes with both heat and AC, and the temperature control can be fully automated.
+		</p>
+		<p>
+			The # 1 thing to understand is that the Tuma panel is in charge.
+			At best, all the Garmin panel can do is send settings to the Tuma panel,
+			<!--        equivalent to what you can do on the Truma panel itself.-->
+		</p>
+		<p>
+			There are three elements at play for the complete system:
+		</p>
+		<ol>
+			<li>Where the power comes from</li>
+			<li>
+				The Truma control (set to external control) —
+				see <span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-on-panel')}"></span>,
+				<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-acc')}"></span>,
+				<span th:replace="~{fragments/block/photo-ref :: ref('howto/truma-tools')}"></span>
+			</li>
+			<li>
+				The Garmin control panel, the brains —
+				see <span th:replace="~{fragments/block/photo-ref :: ref('details/garmin-temp-panel')}"></span>,
+				<span th:replace="~{fragments/block/photo-ref :: ref('details/garmin-temp-select')}"></span>
+			</li>
+		</ol>
+		<p>
+			The eventual goal is to control the heater and the AC,
+			each of which has separate power requirements and options
+		</p>
+		<ol>
+			<li>
+				The heater can use
+				<ol>
+					<li>electricity</li>
+					<li>gas</li>
+					<li>a mix of both</li>
+				</ol>
+			</li>
+			<li>
+				The AC (electric only) can use
+				<ol>
+					<li>Use 120 VAC</li>
+					<li>Requires shore power or generator</li>
+					<li>Will not start on battery alone</li>
+				</ol>
+			</li>
+		</ol>
+		<div th:replace="~{fragments/block/photo-gallery :: gallery('details')}"></div>
+	</details>
+
+	<details>
+		<summary><h2 style="display:inline;">Supplier documentation</h2></summary>
+		<div th:replace="~{fragments/block/note-list}"></div>
+	</details>
+	<br/>
+	<div th:replace="~{fragments/block/back-to-gallery}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
 </html>

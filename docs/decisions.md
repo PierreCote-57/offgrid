@@ -59,13 +59,47 @@ per file, so the tree says which is which and no file accumulates unrelated frag
 
 Two fragment folders, split on who decides the markup appears:
 
-- `fragments/site/` — chrome every page gets whether or not it asked for it: header, footer.
+- `fragments/site/` — chrome every page gets whether or not it asked for it: header, menu,
+  footer.
 - `fragments/block/` — content a page deliberately places inside itself.
 
 The day that boundary blurs is the day the split stops helping, so it is written down here
 rather than left to be inferred from the folder names.
 
-Fragment files hold only their markup, with no `<html>`/`<body>` wrapper.
+A `site/` fragment is cut on where it lands in the page, not on what kind of markup it
+holds, so `header` carries the `<head>` element as well as the header bar — everything above
+`<main>`. `menu` is the exception, and it is cut for editing: the nav is the part that
+changes, and it should not sit under a script list nobody touches.
+
+A page is therefore its own content and nothing else — doctype, `<html>`, the header
+include, its `<main>`, the footer include:
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">About</h1>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>
+```
+
+`<body>` opens at the end of `header.html` and closes at the end of `footer.html`, so no
+page carries either tag and the two files are deliberately unbalanced. Thymeleaf's model is
+an event sequence rather than an element tree, so an open tag with no close passes straight
+through. The price is that an HTML tool reading any one of these files alone — IntelliJ
+included — reports the missing partner.
+
+The host tag on an include is a placeholder and nothing else: `th:replace` discards it and
+emits the fragment in its place, so `<div>` renders identically to any other name.
+
+Every script the site has is loaded on every page. Each one is inert where it is not used —
+`gl-constants.js` and `map.js` only register on `window.GL`, and `lightbox.js` and
+`browser.js` return immediately when the element they look for is absent. So there is one
+script list, in one file, and a page that adds a block needing a script declares nothing.
 
 One fragment per file means a fragment that takes nothing needs no `:: name` selector — a
 fragment expression with no `::` includes the whole template, so `~{fragments/site/header}`

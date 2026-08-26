@@ -1,175 +1,165 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title th:text="${PageName} + ' — ' + ${SiteName}">offgrid</title>
-	<link rel="stylesheet" th:href="@{/css/site.css}">
-	<script defer th:src="@{/js/alpine.min.js}"></script>
-	<script defer th:src="@{/js/lightbox.js}"></script>
-</head>
-<body>
-	<div th:replace="~{fragments/site/header}"></div>
+<div th:replace="~{fragments/site/header}"></div>
 
-	<main>
-		<h1 th:text="${PageName}">Rathtrevor, June</h1>
-		<p class="gl-dateline" th:text="${pageData.date}">2026-06-17</p>
+<main>
+	<h1 th:text="${PageName}">Rathtrevor, June</h1>
+	<p class="gl-dateline" th:text="${pageData.date}">2026-06-17</p>
 
-		<div class="gl-post">
-			<p style="margin-top:0;">
-				First, the place was awesome, just as expected.
-				At low tide, the beach really goes on forever.
-			</p>
-			<p>
-				To say the trip was a disappointement is an understatement.
-				Issues encountered:
-			</p>
-			<ol>
-				<li>Not enough power</li>
-				<li>Terrible internet signal</li>
-			</ol>
+	<div class="gl-post">
+		<p style="margin-top:0;">
+			First, the place was awesome, just as expected.
+			At low tide, the beach really goes on forever.
+		</p>
+		<p>
+			To say the trip was a disappointement is an understatement.
+			Issues encountered:
+		</p>
+		<ol>
+			<li>Not enough power</li>
+			<li>Terrible internet signal</li>
+		</ol>
 
-			<p>
-				It appears that, while we enjoy getting away, the beautiful environment,
-				we also have our habits and our needs.
-				It should not have been surprising that we wanted internet access,
-				and found it difficult when the phones/Hotspot failed due to insufficent signal.
-				Similarly, we appreciate some level of creature comfort
-				and running out of battery power was an experience we are choosing
-				to not repeat
-			</p>
+		<p>
+			It appears that, while we enjoy getting away, the beautiful environment,
+			we also have our habits and our needs.
+			It should not have been surprising that we wanted internet access,
+			and found it difficult when the phones/Hotspot failed due to insufficent signal.
+			Similarly, we appreciate some level of creature comfort
+			and running out of battery power was an experience we are choosing
+			to not repeat
+		</p>
 
-			<p>
-				Where does that leave us?
-			</p>
+		<p>
+			Where does that leave us?
+		</p>
 
-			<h2>Internet</h2>
-			<p>
-				The internet thing is easily solvable with a Starlink.
-				The van has an external connector for the Starlink Standard,
-				which appears to terminate inside as a RJ45 connector.
-				My understanding is that the dish's cable goes outside,
-				the RJ45 inside goes in the router, in the van, and line voltage
-				(120 VAC) goes to the router. Confusingly, the mobile van
-				is equipped with a connector for the Starlink intended
-				for a static permanent installation.
-			</p>
+		<h2>Internet</h2>
+		<p>
+			The internet thing is easily solvable with a Starlink.
+			The van has an external connector for the Starlink Standard,
+			which appears to terminate inside as a RJ45 connector.
+			My understanding is that the dish's cable goes outside,
+			the RJ45 inside goes in the router, in the van, and line voltage
+			(120 VAC) goes to the router. Confusingly, the mobile van
+			is equipped with a connector for the Starlink intended
+			for a static permanent installation.
+		</p>
 
-			<p>
-				An alternative is the Starlink mini,
-				That one is intended for nomads, highly portable and requiring
-				less power. By default, it would plug into 120 VAC, but adapters
-				exist to power it from a cigarette lighter plug (adapter has
-				a 12 VDC-> 24 VDC adapter to avoid the low end of the range of
-				acceptable voltage and reduce the current on the 15m cable.
-			</p>
+		<p>
+			An alternative is the Starlink mini,
+			That one is intended for nomads, highly portable and requiring
+			less power. By default, it would plug into 120 VAC, but adapters
+			exist to power it from a cigarette lighter plug (adapter has
+			a 12 VDC-> 24 VDC adapter to avoid the low end of the range of
+			acceptable voltage and reduce the current on the 15m cable.
+		</p>
 
-			<p>
-				The Starlink mini seems like the right choice for us.
-			</p>
+		<p>
+			The Starlink mini seems like the right choice for us.
+		</p>
 
-			<h2>Battery power</h2>
-			<p>
-				The power thing is not as easily solvable as the internet thing.
-			</p>
-			<p>
-				We do not know exactly how much charge was in the battery over the weekend.
-				We do know we did not enough power.
-				Was this because we started with a battery with a low charge level
-				or because we used more power than the battery supports?
-				Whatever the answer, we aborted our trip on Saturday
-				to avoid going in damage zone in the battery (below 50%)
-				on Sunday morning. Also, during the day on Saturday,
-				we limited our power usage more than we are comfortable with.
-			</p>
-			<p>
-				Some information from Shawn, at Coachmen
-			</p>
-			<ol>
-				<li>
-					When the switch (Disconnect) is off, "the Truma"
-					remains on AND is the only thing powered
-				</li>
-				<li>
-					Confirmed the CO detector turns off, contradicting the information
-					from Claude and Google AI
-				</li>
-				<li>
-					"The truma" is unclear. Shawn pointed me to the control panel. On the control panel,
-					I can turn off the heater + AC, but not the panel itself.
-				</li>
-				<li>
-					It is possible that he meant that the heater remained on when we
-					put the van in storage, with Disconnect in the OFF position.
-					That sounds so broken, that you go in "don't use the battery" mode
-					and the heater remains on. That would certainly explain the dead battery last week.
-				</li>
-				<li>
-					Yet, that appears to be the only thing I can turn off.
-					IF I am correct that the control panel cannot be turned off,
-					then it is a "parasitic draw", small but existent.
-					The same applies to the two Garmin screen, which
-					are still on (albeit with white text on black background)
-					when I turn off at the disconnect button.
-				</li>
-				<li>
-					By design, it appears the expectation is that, while in storage,
-					the van will receive power from either the solar or plugged in shore power
-					(a 15 A circuit is sufficient here).
-					Storing the van for weeks without a source of power is
-					"not supported" (my words).
-				</li>
-			</ol>
-			<h2>New information</h2>
-			<p>
-				According to the "Truma CP plus" manual (top right corner of page 4):
-			</p>
-			<ol>
-				<li>
-					Press the rotary push button (8) for more than 3 seconds.
-				</li>
-				<li>
-					When you switch off the control
-					panel, any Truma Combi device that
-					is connected is also switched off
-					automatically.
-				</li>
-			</ol>
-			<p>
-				This seems to indicate that the Truma Combi device
-				remains powered when the Disconnect button is OFF.
-				Still investigating this, sent email to Shawn and Tony to confirm.
-				Truma Combi appears to the heater.
-				Note that, overnight with Disconnect OFF, the van's heater
-				appears to have not worked (outside = 57F; inside = 62F).
-				May be ... The temperature recording does go as low as 62F
-				with heat on and thermostat set to 70F.
-			</p>
-			<p>
-				Bottom line is still that the Disconnect button set to OFF
-				is NOT equivalent to the big red switch on the boat.
-			</p>
+		<h2>Battery power</h2>
+		<p>
+			The power thing is not as easily solvable as the internet thing.
+		</p>
+		<p>
+			We do not know exactly how much charge was in the battery over the weekend.
+			We do know we did not enough power.
+			Was this because we started with a battery with a low charge level
+			or because we used more power than the battery supports?
+			Whatever the answer, we aborted our trip on Saturday
+			to avoid going in damage zone in the battery (below 50%)
+			on Sunday morning. Also, during the day on Saturday,
+			we limited our power usage more than we are comfortable with.
+		</p>
+		<p>
+			Some information from Shawn, at Coachmen
+		</p>
+		<ol>
+			<li>
+				When the switch (Disconnect) is off, "the Truma"
+				remains on AND is the only thing powered
+			</li>
+			<li>
+				Confirmed the CO detector turns off, contradicting the information
+				from Claude and Google AI
+			</li>
+			<li>
+				"The truma" is unclear. Shawn pointed me to the control panel. On the control panel,
+				I can turn off the heater + AC, but not the panel itself.
+			</li>
+			<li>
+				It is possible that he meant that the heater remained on when we
+				put the van in storage, with Disconnect in the OFF position.
+				That sounds so broken, that you go in "don't use the battery" mode
+				and the heater remains on. That would certainly explain the dead battery last week.
+			</li>
+			<li>
+				Yet, that appears to be the only thing I can turn off.
+				IF I am correct that the control panel cannot be turned off,
+				then it is a "parasitic draw", small but existent.
+				The same applies to the two Garmin screen, which
+				are still on (albeit with white text on black background)
+				when I turn off at the disconnect button.
+			</li>
+			<li>
+				By design, it appears the expectation is that, while in storage,
+				the van will receive power from either the solar or plugged in shore power
+				(a 15 A circuit is sufficient here).
+				Storing the van for weeks without a source of power is
+				"not supported" (my words).
+			</li>
+		</ol>
+		<h2>New information</h2>
+		<p>
+			According to the "Truma CP plus" manual (top right corner of page 4):
+		</p>
+		<ol>
+			<li>
+				Press the rotary push button (8) for more than 3 seconds.
+			</li>
+			<li>
+				When you switch off the control
+				panel, any Truma Combi device that
+				is connected is also switched off
+				automatically.
+			</li>
+		</ol>
+		<p>
+			This seems to indicate that the Truma Combi device
+			remains powered when the Disconnect button is OFF.
+			Still investigating this, sent email to Shawn and Tony to confirm.
+			Truma Combi appears to the heater.
+			Note that, overnight with Disconnect OFF, the van's heater
+			appears to have not worked (outside = 57F; inside = 62F).
+			May be ... The temperature recording does go as low as 62F
+			with heat on and thermostat set to 70F.
+		</p>
+		<p>
+			Bottom line is still that the Disconnect button set to OFF
+			is NOT equivalent to the big red switch on the boat.
+		</p>
 
-			<h2>Conclusion(s)</h2>
-			<ol>
-				<li>
-					Internet: Go Starlink mini ...
-					OR ask about a fixed roof installation.
-				</li>
-				<li>
-					Battery: No matter what, leave plugged in while in storage.
-				</li>
-				<li>Battery: Appt at
-					<a href="https://vantoys.ca"> Van toys</a>
-					on Saturday (Aug 22, 2026 9:00 AM)
-					to evaluate options to switch to Lithium
-				</li>
-			</ol>
-		</div>
+		<h2>Conclusion(s)</h2>
+		<ol>
+			<li>
+				Internet: Go Starlink mini ...
+				OR ask about a fixed roof installation.
+			</li>
+			<li>
+				Battery: No matter what, leave plugged in while in storage.
+			</li>
+			<li>Battery: Appt at
+				<a href="https://vantoys.ca"> Van toys</a>
+				on Saturday (Aug 22, 2026 9:00 AM)
+				to evaluate options to switch to Lithium
+			</li>
+		</ol>
+	</div>
 
-		<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
-	</main>
+	<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+</main>
 
-	<div th:replace="~{fragments/site/footer}"></div>
-</body>
+<div th:replace="~{fragments/site/footer}"></div>
 </html>

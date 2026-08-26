@@ -1,27 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title th:text="${PageName} + ' — ' + ${SiteName}">offgrid</title>
-	<link rel="stylesheet" th:href="@{/css/site.css}">
-	<script defer th:src="@{/js/alpine.min.js}"></script>
-	<script defer th:src="@{/js/lightbox.js}"></script>
-	<script defer th:src="@{/js/gl-constants.js}"></script>
-	<script defer th:src="@{/js/map.js}"></script>
-	<script defer th:src="@{/js/browser.js}"></script>
-</head>
-<body>
-	<div th:replace="~{fragments/site/header}"></div>
+<div th:replace="~{fragments/site/header}"></div>
 
-	<main>
-		<h1 th:text="${PageName}">Browser</h1>
+<main>
+	<h1 th:text="${PageName}">Browser</h1>
 
-		<!-- browser.js fills this: the options bar, then the table, grid or map. It reads
-		     nothing off the element — the whole state is the query string. -->
-		<div data-block-type="browser"></div>
-	</main>
+	<!-- browser.js fills this: the options bar, then the table, grid or map. It reads
+	     nothing off the element — the whole state is the query string. -->
+	<div data-block-type="browser"></div>
+</main>
 
-	<div th:replace="~{fragments/site/footer}"></div>
-</body>
+<div th:replace="~{fragments/site/footer}"></div>
 </html>

@@ -1,30 +1,18 @@
+<head xmlns:th="http://www.thymeleaf.org">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="${PageName} + ' — ' + ${SiteName}">offgrid</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+	<script defer th:src="@{/js/alpine.min.js}"></script>
+	<script defer th:src="@{/js/gl-constants.js}"></script>
+	<script defer th:src="@{/js/lightbox.js}"></script>
+	<script defer th:src="@{/js/map.js}"></script>
+	<script defer th:src="@{/js/browser.js}"></script>
+</head>
+<body>
 <header xmlns:th="http://www.thymeleaf.org" class="site-header">
 	<a class="brand" th:href="@{/}" th:text="${WelcomeMessage}"></a>
-	<nav class="menu">
-		<ul>
-			<li><a th:href="@{/shared/browser(dataset='destinations',view='grid')}">Destinations</a></li>
-			<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-				<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Hardware</button>
-				<ul class="submenu" x-show="open" x-cloak>
-					<li><a th:href="@{/hardware/van}">The van</a></li>
-					<li><a th:href="@{/hardware/maintenance/van}">Van maintenance</a></li>
-					<li><a th:href="@{/shared/browser(dataset='van-howto',view='grid',booklet='howto')}">Howto</a></li>
-					<li><a th:href="@{/shared/browser(dataset='van-checklist',view='grid',booklet='checklists')}">Checklist</a></li>
-					<li><a th:href="@{/hardware/bronco}">The Bronco</a></li>
-					<li><a th:href="@{/hardware/maintenance/bronco}">Bronco maintenance</a></li>
-				</ul>
-			</li>
-			<li><a href="#">Blog</a></li>
-			<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-				<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Info</button>
-				<ul class="submenu" x-show="open" x-cloak>
-					<li><a th:href="@{/info/about}">About</a></li>
-					<li><a th:href="@{/info/useful-links}">Useful links</a></li>
-					<li><a th:href="@{/info/useful-contacts}">Useful contacts</a></li>
-				</ul>
-			</li>
-		</ul>
-	</nav>
+	<div th:replace="~{fragments/site/menu}"></div>
 </header>
 
 <div xmlns:th="http://www.thymeleaf.org" class="messages">
