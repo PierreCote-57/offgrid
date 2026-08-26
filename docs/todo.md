@@ -24,11 +24,13 @@ and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing se
 in for the two checklists, the van, the Bronco, the two maintenance pages and the six posts;
 the six howto pages, the destinations and all the images are not.
 
-#8 Reading the JSON — the classes exist, nothing reads them yet. Settled: content lives in
-the repo; `resources/data/` mirrors `resources/templates/`, a folder per template that needs
-data; six page classes and seventeen parts under `com.lc.offgrid.pojo`. Still open: whether
-the data rides inside the jar or on disk beside it, whether it is loaded at startup or per
-request, and what picks the page subclass from `tags.typeList` plus the folder.
+#8 Reading the JSON — `readFile` reads it per request, and the mapping method names the
+class: `PageData` for info and hardware, `MaintenancePage`, `PostPage`. Settled: content
+lives in the repo; `resources/data/` mirrors `resources/templates/`, a folder per template
+that needs data; seven page classes and eighteen parts under `com.lc.offgrid.pojo`. Still
+open: whether the data rides inside the jar or on disk beside it, and whether the
+destinations — where one folder holds several kinds — can be served the same way, since a
+single `/destinations/{folder}/{name}` cannot name a class the way the hardware routes do.
 
 #9 Getting content onto the server — settled for JSON and HTML: they live in the repo and
 arrive by push and rebuild. No mounted volume needed. Settled 2026-08-25 for images too:
