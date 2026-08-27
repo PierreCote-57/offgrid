@@ -6,6 +6,9 @@
 
 package com.lc.offgrid.misc.imaging;
 
+import com.lc.offgrid.misc.geography.object.Angle;
+import com.lc.offgrid.misc.geography.point.LatLonPoint;
+import com.lc.offgrid.misc.geography.point.LatLonPointPojo;
 import org.springframework.http.MediaType;
 
 import java.io.File;
@@ -257,5 +260,11 @@ public class ImageMetadata
 	public void setTagMap(Map<String, String> tagMap)
 	{
 		this.tagMap = tagMap;
+	}
+
+	public LatLonPoint getGeoPoint()
+	{
+		LatLonPointPojo ppint = new LatLonPointPojo(getLatitude(), getLongitude());
+		return ppint;
 	}
 }
