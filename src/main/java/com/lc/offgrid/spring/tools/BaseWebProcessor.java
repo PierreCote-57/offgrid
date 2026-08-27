@@ -7,7 +7,7 @@
 package com.lc.offgrid.spring.tools;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicException;
@@ -26,10 +26,6 @@ import java.util.List;
 public abstract class BaseWebProcessor
 {
 	private static final BasicLogger LOGGER					= BasicLogger.getLogger(BaseWebProcessor.class);
-	private static final Gson GSON							=
-			new GsonBuilder().setPrettyPrinting()
-					.disableHtmlEscaping()
-					.create();
 
 	@Value("${BaseWebProcessor.siteName}")
 	private String				m_siteName;
@@ -65,7 +61,7 @@ public abstract class BaseWebProcessor
 	}
 	public static Gson getGson()
 	{
-		return GSON;
+		return BaseFileHandler.getGson();
 	}
 	public BasicTimer getTimer()
 	{
@@ -177,8 +173,7 @@ public abstract class BaseWebProcessor
 		URL url = BaseWebProcessor.class.getClassLoader().getResource(path);
 		try
 		{
-			String text = BasicFileReader.readTextFile(url);
-			T obj = GSON.fromJson(text, clazz);
+			T obj = BasicFileReader.readJsonFile(url, clazz);
 			return obj;
 		}
 		catch (Exception e)

@@ -6,6 +6,8 @@
 
 package com.lc.basics.tools.file;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.time.WallClock;
 import com.lc.basics.tools.time.WallClock.FormatDate;
@@ -28,6 +30,11 @@ public class BaseFileHandler
 	public static final String	LINE_SEPARATOR					= System.lineSeparator();
 	public static final String	FOLDER_SEPARATOR				= FileSystems.getDefault().getSeparator();
 
+	private static final Gson	GSON							=
+			new GsonBuilder().setPrettyPrinting()
+					.disableHtmlEscaping()
+					.create();
+
 	public static final String	SETTING_PREFIX					= BaseFileHandler.class.getName();
 	public static final String	SETTING_NAME_WORKING_FOLDER		= SETTING_PREFIX + ".WorkingFolder";
 
@@ -46,6 +53,10 @@ public class BaseFileHandler
 		s_currentFolderName = currentFolderName;
 	}
 
+	public static Gson getGson()
+	{
+		return GSON;
+	}
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;

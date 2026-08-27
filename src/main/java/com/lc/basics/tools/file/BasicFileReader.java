@@ -338,6 +338,56 @@ public class BasicFileReader extends BaseFileHandler implements Closeable
 		return properties;
 	}
 
+	public static <T> T readJsonFile(URL url, Class<T> clazz) throws IOException
+	{
+		InputStream inputStream		= null;
+
+		try
+		{
+			inputStream		= url.openStream();
+			return readJsonFile(inputStream, clazz);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+
+	public static <T> T readJsonFile(File file, Class<T> clazz) throws IOException
+	{
+		InputStream inputStream		= null;
+		try
+		{
+			inputStream = new FileInputStream(file);
+			return readJsonFile(inputStream, clazz);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+
+	public static <T> T readJsonFile(String filename, Class<T> clazz) throws IOException
+	{
+		InputStream inputStream		= null;
+		try
+		{
+			inputStream = new FileInputStream(filename);
+			return readJsonFile(inputStream, clazz);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+	public static <T> T readJsonFile(InputStream inputStream, Class<T> clazz) throws IOException
+	{
+		String	text		= readTextFile(inputStream);
+		T		object		= getGson().fromJson(text, clazz);
+
+		return object;
+	}
+
 	public static Map<String, String> convertToMap(Properties properties)
 	{
 		Map<String, String>		map		= new TreeMap<>();
