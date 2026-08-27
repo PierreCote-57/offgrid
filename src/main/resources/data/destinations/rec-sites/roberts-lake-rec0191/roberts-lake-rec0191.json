@@ -1,6 +1,6 @@
 {
 	"name": "Roberts Lake (rec-site)",
-	"featuredImage": "IMG_0627.jpg",
+	"featuredImage": "IMG_0627",
 	"excerpt": "A wheelchair-accessible day-use site with sandy beach, popular with anglers and picnickers.",
 	"tags": {
 		"badgeList": [
@@ -75,12 +75,12 @@
 			"itemList": [
 				{
 					"id": "img_0492",
-					"img": "IMG_0492.jpg",
+					"img": "IMG_0492",
 					"label": ""
 				},
 				{
 					"id": "img_0627",
-					"img": "IMG_0627.jpg",
+					"img": "IMG_0627",
 					"label": ""
 				}
 			]

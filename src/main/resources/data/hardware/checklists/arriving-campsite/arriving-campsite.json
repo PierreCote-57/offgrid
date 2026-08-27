@@ -1,6 +1,6 @@
 {
 	"name": "Checklist: Arriving at Campsite",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "Step-by-step checklist for setting up when you arrive at a campsite.",
 	"wpSettings": {
 		"published": true,
@@ -12,7 +12,7 @@
 			"itemList": [
 				{
 					"id": "campers-code",
-					"img": "CampersCode_CampfireIllustration.jpg",
+					"img": "CampersCode_CampfireIllustration",
 					"label": "Camper's Code"
 				}
 			]
@@ -22,7 +22,7 @@
 			"itemList": [
 				{
 					"id": "campers-code",
-					"img": "CampersCode_CampfireIllustration.jpg",
+					"img": "CampersCode_CampfireIllustration",
 					"label": "Camper's Code"
 				}
 			]

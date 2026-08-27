@@ -1,6 +1,6 @@
 {
 	"name": "Sproat Lake Provincial Park",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "Warm-water lakeside camping, boat launch and the K'ak'awin petroglyphs near Port Alberni.",
 	"tags": {
 		"badgeList": [
@@ -55,7 +55,7 @@
 			"itemList": [
 				{
 					"id": "under-construction",
-					"img": "under-construction.png",
+					"img": "under-construction",
 					"label": "Under construction"
 				}
 			]

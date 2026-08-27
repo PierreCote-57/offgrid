@@ -1,6 +1,6 @@
 {
 	"name": "Van Overview",
-	"featuredImage": "beyond_22d_floorplan_5fx5gqbr8e.jpg",
+	"featuredImage": "beyond_22d_floorplan_5fx5gqbr8e",
 	"wpSettings": {
 		"published": true,
 		"comments": "open"
@@ -11,37 +11,37 @@
 			"itemList": [
 				{
 					"id": "3220",
-					"img": "control-panel.png",
+					"img": "control-panel",
 					"label": "Control panel"
 				},
 				{
 					"id": "3",
-					"img": "IMG_2771_crop.jpg",
+					"img": "IMG_2771_crop",
 					"label": "Driver"
 				},
 				{
 					"id": "4",
-					"img": "IMG_2772_crop.jpg",
+					"img": "IMG_2772_crop",
 					"label": "Front"
 				},
 				{
 					"id": "5",
-					"img": "IMG_2773_crop.jpg",
+					"img": "IMG_2773_crop",
 					"label": "Passenger"
 				},
 				{
 					"id": "2",
-					"img": "IMG_2770_crop.jpg",
+					"img": "IMG_2770_crop",
 					"label": "Back"
 				},
 				{
 					"id": "1",
-					"img": "IMG_2769_crop.jpg",
+					"img": "IMG_2769_crop",
 					"label": "Top"
 				},
 				{
 					"id": "Tires",
-					"img": "IMG_2814.jpg",
+					"img": "IMG_2814",
 					"label": "Original tires"
 				}
 			]
@@ -51,107 +51,107 @@
 			"itemList": [
 				{
 					"id": "1",
-					"img": "beyond_22d_floorplan_5fx5gqbr8e.jpg.webp",
+					"img": "beyond_22d_floorplan_5fx5gqbr8e",
 					"label": ""
 				},
 				{
 					"id": "2",
-					"img": "img_5515_wzparrun2b.jpg.webp",
+					"img": "img_5515_wzparrun2b",
 					"label": ""
 				},
 				{
 					"id": "3",
-					"img": "img_5964_fmimbnk79c.jpg.webp",
+					"img": "img_5964_fmimbnk79c",
 					"label": ""
 				},
 				{
 					"id": "4",
-					"img": "img_5965_9aoa2p2ukw.jpg.webp",
+					"img": "img_5965_9aoa2p2ukw",
 					"label": ""
 				},
 				{
 					"id": "5",
-					"img": "img_5966_6ufww700uy.jpg.webp",
+					"img": "img_5966_6ufww700uy",
 					"label": ""
 				},
 				{
 					"id": "6",
-					"img": "img_5967_risdniw771.jpg.webp",
+					"img": "img_5967_risdniw771",
 					"label": ""
 				},
 				{
 					"id": "7",
-					"img": "img_5968_ulzms78k8r.jpg.webp",
+					"img": "img_5968_ulzms78k8r",
 					"label": ""
 				},
 				{
 					"id": "8",
-					"img": "img_5969_z4gtqo49ub.jpg.webp",
+					"img": "img_5969_z4gtqo49ub",
 					"label": ""
 				},
 				{
 					"id": "9",
-					"img": "img_5970_ui1jix36xu.jpg.webp",
+					"img": "img_5970_ui1jix36xu",
 					"label": ""
 				},
 				{
 					"id": "10",
-					"img": "img_5971_trso67r1v9.jpg.webp",
+					"img": "img_5971_trso67r1v9",
 					"label": ""
 				},
 				{
 					"id": "11",
-					"img": "img_5972_0tdjwyp0pi.jpg.webp",
+					"img": "img_5972_0tdjwyp0pi",
 					"label": ""
 				},
 				{
 					"id": "12",
-					"img": "img_5973_9fe967c1h6.jpg.webp",
+					"img": "img_5973_9fe967c1h6",
 					"label": ""
 				},
 				{
 					"id": "13",
-					"img": "img_5974_s53120jofo.jpg.webp",
+					"img": "img_5974_s53120jofo",
 					"label": ""
 				},
 				{
 					"id": "14",
-					"img": "img_5976_93dyonmwah.jpg.webp",
+					"img": "img_5976_93dyonmwah",
 					"label": ""
 				},
 				{
 					"id": "15",
-					"img": "img_5978_2pwlbbwa78.jpg.webp",
+					"img": "img_5978_2pwlbbwa78",
 					"label": ""
 				},
 				{
 					"id": "16",
-					"img": "img_5979_93hay3cd31.jpg.webp",
+					"img": "img_5979_93hay3cd31",
 					"label": ""
 				},
 				{
 					"id": "17",
-					"img": "img_6412_gfhs68xofk.jpg.webp",
+					"img": "img_6412_gfhs68xofk",
 					"label": ""
 				},
 				{
 					"id": "18",
-					"img": "img_6413_mvso8p7g7h.jpg.webp",
+					"img": "img_6413_mvso8p7g7h",
 					"label": ""
 				},
 				{
 					"id": "19",
-					"img": "img_6414_oqzjmjwyb0.jpg.webp",
+					"img": "img_6414_oqzjmjwyb0",
 					"label": ""
 				},
 				{
 					"id": "20",
-					"img": "img_6415_drsnaaz7fv.jpg.webp",
+					"img": "img_6415_drsnaaz7fv",
 					"label": ""
 				},
 				{
 					"id": "21",
-					"img": "img_6416_bu9cqirazk.jpg.webp",
+					"img": "img_6416_bu9cqirazk",
 					"label": ""
 				}
 			]

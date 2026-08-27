@@ -1,6 +1,6 @@
 {
 	"name": "How to: Empty sewage",
-	"featuredImage": "DumpStation.jpeg",
+	"featuredImage": "DumpStation",
 	"excerpt": "Emptying the van's grey and black water tanks.",
 	"wpSettings": {
 		"published": true,
@@ -12,17 +12,17 @@
 			"itemList": [
 				{
 					"id": "van-side-view",
-					"img": "IMG_2771-labelled.jpg",
+					"img": "IMG_2771-labelled",
 					"label": "Side view of the van"
 				},
 				{
 					"id": "dump-station",
-					"img": "IMG_2790.jpeg",
+					"img": "IMG_2790",
 					"label": "Sewage controls on the van"
 				},
 				{
 					"id": "dump-water",
-					"img": "IMG_2774.jpg",
+					"img": "IMG_2774",
 					"label": "Water connections"
 				}
 			]

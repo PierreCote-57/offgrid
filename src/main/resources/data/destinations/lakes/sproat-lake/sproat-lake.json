@@ -1,6 +1,6 @@
 {
 	"name": "Sproat Lake",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "A massive lake near Port Alberni with provincial parks, private campgrounds, and great fishing.",
 	"tags": {
 		"badgeList": [
@@ -90,7 +90,7 @@
 			"itemList": [
 				{
 					"id": "under-construction",
-					"img": "under-construction.png",
+					"img": "under-construction",
 					"label": "Under construction"
 				}
 			]

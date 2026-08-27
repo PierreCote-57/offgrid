@@ -1,8 +1,8 @@
 [
 	{
-		"file": "data/hardware/checklists/arriving-campsite/arriving-campsite.json"
+		"file": "/hardware/checklists/arriving-campsite"
 	},
 	{
-		"file": "data/hardware/checklists/leaving-campsite/leaving-campsite.json"
+		"file": "/hardware/checklists/leaving-campsite"
 	}
 ]

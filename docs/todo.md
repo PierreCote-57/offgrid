@@ -110,3 +110,11 @@ data.
 
 #29 `data/shared/browser/browser.json` has an empty `name`, so the browser page's `<h1>` is
 blank and its tab reads `— Going offgrid`. Every other page's name comes from its JSON.
+
+#30 The external downloads have no smart accessors. `FeatureGeometry.getCoordinates()` hands
+back a raw `Object`, so nothing answers where a rest stop is without indexing the list itself,
+and a rest stop's nearest town is still prose. The parse for it: 204 of the 219 values of
+`DISTANCE_FROM_MUNICIPALITY` read as `<distance> KM <direction> OF|FROM <town>`; of the 15 that
+do not, 8 name no town at all (`2 KM`, `13.256`, `10`, `AT BC/YUKON BORDER`, `TOP OF KOOTENAY
+PASS`, and three ferry terminals).
+

@@ -1,6 +1,6 @@
 {
 	"name": "Twin Lake (rec-site)",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "Under construction",
 	"tags": {
 		"badgeList": [],
@@ -73,7 +73,7 @@
 			"itemList": [
 				{
 					"id": "under-construction",
-					"img": "under-construction.png",
+					"img": "under-construction",
 					"label": "Under construction"
 				}
 			]

@@ -1,6 +1,6 @@
 {
 	"name": "Roberts Lake",
-	"featuredImage": "IMG_0627.jpg",
+	"featuredImage": "IMG_0627",
 	"excerpt": "A 1.7 km² lake beside Highway 19, about 30 km north of Campbell River.",
 	"tags": {
 		"badgeList": [
@@ -59,12 +59,12 @@
 			"itemList": [
 				{
 					"id": "img_0492",
-					"img": "IMG_0492.jpg",
+					"img": "IMG_0492",
 					"label": ""
 				},
 				{
 					"id": "img_0627",
-					"img": "IMG_0627.jpg",
+					"img": "IMG_0627",
 					"label": ""
 				}
 			]

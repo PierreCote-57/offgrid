@@ -1,6 +1,6 @@
 {
 	"name": "How To: Battery",
-	"featuredImage": "12V206H_img.webp",
+	"featuredImage": "12V206H_img",
 	"excerpt": "Extend and retract the Carefree Eclipse automated awning.",
 	"wpSettings": {
 		"published": true,
@@ -12,22 +12,22 @@
 			"itemList": [
 				{
 					"id": "12V206H_img",
-					"img": "12V206H_img.jpg",
+					"img": "12V206H_img",
 					"label": "12V206H"
 				},
 				{
 					"id": "12V206H_spec",
-					"img": "12V206H_spec.webp",
+					"img": "12V206H_spec",
 					"label": "12V206H"
 				},
 				{
 					"id": "12V206P_img",
-					"img": "12V206P_img.jpg",
+					"img": "12V206P_img",
 					"label": "12V206P"
 				},
 				{
 					"id": "12V206P_spec",
-					"img": "12V206P_spec.webp",
+					"img": "12V206P_spec",
 					"label": "12V206P"
 				}
 			]

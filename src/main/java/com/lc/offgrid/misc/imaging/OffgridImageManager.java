@@ -1,6 +1,6 @@
 package com.lc.offgrid.misc.imaging;
 
-import org.springframework.beans.factory.InitializingBean;
+import com.lc.offgrid.misc.files.AbstractFileManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Component
-public class OffgridImageManager implements InitializingBean
+public class OffgridImageManager extends AbstractFileManager
 {
 	private static final ImageMetadataExtractor EXTRACTOR = new ImageMetadataExtractor();
 
@@ -17,62 +17,14 @@ public class OffgridImageManager implements InitializingBean
 	// Initializer for tests. As WEB/bean, it gets from config
 	private String folderImage = "/Users/pierrecote/Pictures/offgrid";
 
-	private final Map<String, File> nameMap = new TreeMap<>();
-
-	public String getFolderImage()
+	@Override
+	public String getRootFolder()
 	{
 		return folderImage;
 	}
 
-	public Map<String, File> getNameMap()
-	{
-		return nameMap;
-	}
-
-	public File getFile(String name)
-	{
-		return nameMap.get(name);
-	}
-
-	public ImageMetadata getImageMetadata(String name)
-	{
-		File file = getFile(name);
-		ImageMetadata imageMetadata = EXTRACTOR.getImageMetadata(file);
-		return imageMetadata;
-	}
-
-
 	@Override
-	public void afterPropertiesSet() throws Exception
-	{
-		initNameMap(new File(getFolderImage()));
-	}
-
-	private void initNameMap(File file)
-	{
-		if (file.isFile())
-		{
-			if (isImage(file))
-			{
-				String filename = file.getName();
-				String imageName = filename.substring(0, filename.lastIndexOf('.'));
-				nameMap.put(imageName, file);
-			}
-		}
-		else // isDirectory
-		{
-			File[] children = file.listFiles();
-			if (null != children)
-			{
-				for (File child : children)
-				{
-					initNameMap(child);
-				}
-			}
-		}
-	}
-
-	private boolean isImage(File file)
+	public boolean isValid(File file)
 	{
 		try
 		{
@@ -83,5 +35,14 @@ public class OffgridImageManager implements InitializingBean
 		{
 			return false;
 		}
+	}
+
+	public ImageMetadata getImageMetadata(String name)
+	{
+		File file = getFile(name);
+		ImageMetadata imageMetadata = null == file
+				? null
+				: EXTRACTOR.getImageMetadata(file);
+		return imageMetadata;
 	}
 }

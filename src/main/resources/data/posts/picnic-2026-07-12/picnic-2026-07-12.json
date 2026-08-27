@@ -1,7 +1,7 @@
 {
 	"name": "Picnic at Beavertail Lake",
 	"excerpt": "Great picnic, too many potholes for the van",
-	"featuredImage": "IMG_0873.jpg",
+	"featuredImage": "IMG_0873",
 	"date": "2026-07-12T06:00:00",
 	"tags": {
 		"badgeList": [
@@ -18,17 +18,17 @@
 			"itemList": [
 				{
 					"id": "img_0874",
-					"img": "IMG_0874.jpg",
+					"img": "IMG_0874",
 					"label": "Fishing dock (under construction in June '21)"
 				},
 				{
 					"id": "img_2796",
-					"img": "IMG_2796.jpeg",
+					"img": "IMG_2796",
 					"label": "New floating dock and gangway"
 				},
 				{
 					"id": "img_2801",
-					"img": "IMG_2801.jpeg",
+					"img": "IMG_2801",
 					"label": "Outhouse"
 				}
 			]

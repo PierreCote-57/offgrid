@@ -1,6 +1,6 @@
 {
 	"name": "How To: Use water",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "Manage the van's fresh water system.",
 	"wpSettings": {
 		"published": true,
@@ -12,12 +12,12 @@
 			"itemList": [
 				{
 					"id": "van-side-view",
-					"img": "IMG_2771-labelled.jpg",
+					"img": "IMG_2771-labelled",
 					"label": "Side view of the van"
 				},
 				{
 					"id": "water-hookup",
-					"img": "IMG_2774.jpg",
+					"img": "IMG_2774",
 					"label": "Water connections"
 				}
 			]

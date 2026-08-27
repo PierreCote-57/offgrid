@@ -3,6 +3,7 @@ package com.lc.offgrid.spring.web;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicRuntimeException;
+import com.lc.offgrid.misc.files.ResourceFileManager;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import com.lc.offgrid.pojo.page.MaintenancePage;
@@ -38,9 +39,17 @@ public class OffgridProcessor extends BaseWebProcessor
 	@Autowired
 	private OffgridImageManager imageManager;
 
+	@Autowired
+	private ResourceFileManager.JsonResourceFileManager jsonManager ;
+
 	public OffgridImageManager getImageManager()
 	{
 		return imageManager;
+	}
+
+	public ResourceFileManager.JsonResourceFileManager getJsonManager()
+	{
+		return jsonManager;
 	}
 
 	public String processHome(Model model)
@@ -173,14 +182,22 @@ public class OffgridProcessor extends BaseWebProcessor
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
 //		imageName = FIXED_IMAGE;
-		OffgridImageManager	manager			= getImageManager();
-		ImageMetadata		metadata		= manager.getImageMetadata(imageName);
-		File				imageFile		= metadata.getFile();
-		FileSystemResource	imageResource	= new FileSystemResource(imageFile);
-		MediaType			mediaType		= metadata.getMediaType();
+		try
+		{
+			OffgridImageManager manager = getImageManager();
+			ImageMetadata metadata = manager.getImageMetadata(imageName);
+			File imageFile = metadata.getFile();
+			FileSystemResource imageResource = new FileSystemResource(imageFile);
+			MediaType mediaType = metadata.getMediaType();
 
-		ResponseEntity<Resource> answer = makeResponseOk(mediaType, imageResource);
-		return answer;
+			ResponseEntity<Resource> answer = makeResponseOk(mediaType, imageResource);
+			return answer;
+		}
+		catch (Exception e)
+		{
+			getLogger().error("Unable to locate image %s", imageName);
+			return makeResponseNotFound();
+		}
 	}
 
 	/**
@@ -233,18 +250,20 @@ public class OffgridProcessor extends BaseWebProcessor
 		for (int i  = 0; i < pageList.size(); i++)
 		{
 			Map<String, Object> page = pageList.get(i);
-			String filePointer = (String) page.get("file");
-			if (null != filePointer)
+			String fileText = (String) page.get("file");
+			if (null != fileText)
 			{
 				try
 				{
-					Map<String, Object> realPage = readFile(filePointer, Map.class);
+					String jsonName = fileText.substring(fileText.lastIndexOf("/") + 1);
+					File file = getJsonManager().getFile(jsonName);
+					Map<String, Object> realPage = BasicFileReader.readJsonFile(file, Map.class);
 					realPage.putAll(page);
 					pageList.set(i, realPage);
 				}
 				catch (Exception e)
 				{
-					getLogger().error("Error reading file pointer: %s", filePointer);
+					getLogger().error("Error reading file pointer: %s", fileText);
 				}
 			}
 		}
@@ -268,18 +287,6 @@ public class OffgridProcessor extends BaseWebProcessor
 			}
 		}
 		return null;
-	}
-
-	/** One file off the classpath, as text — no parsing, for content answered as it stands. */
-	private String readTextFile(String path)
-	{
-		URL url = OffgridProcessor.class.getClassLoader().getResource(path);
-		if (null == url)
-		{
-			throw new BasicRuntimeException("No such file: %s", path);
-		}
-		String text = BasicFileReader.readTextFile(url);
-		return text;
 	}
 
 	public String processPi(Model model)

@@ -1,20 +1,20 @@
 [
 	{
-		"file": "data/hardware/howto/awning/awning.html"
+		"file": "/hardware/howto/awning"
 	},
 	{
-		"file": "battery.html"
+		"file": "/hardware/howto/battery"
 	},
 	{
-		"file": "climate.html"
+		"file": "/hardware/howto/climate"
 	},
 	{
-		"file": "dump.html"
+		"file": "/hardware/howto/dump"
 	},
 	{
-		"file": "power.html"
+		"file": "/hardware/howto/power"
 	},
 	{
-		"file": "water.html"
+		"file": "/hardware/howto/water"
 	}
 ]

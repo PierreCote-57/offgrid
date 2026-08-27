@@ -1,6 +1,6 @@
 {
 	"name": "Beavertail Lake (day-use)",
-	"featuredImage": "IMG_0866.jpg",
+	"featuredImage": "IMG_0866",
 	"excerpt": "Under construction",
 	"tags": {
 		"badgeList": [
@@ -93,62 +93,62 @@
 			"itemList": [
 				{
 					"id": "img_0863",
-					"img": "IMG_0863.jpg",
+					"img": "IMG_0863",
 					"label": "RR Channel # 3"
 				},
 				{
 					"id": "img_0866",
-					"img": "IMG_0866.jpg",
+					"img": "IMG_0866",
 					"label": "Entrance to the day use site"
 				},
 				{
 					"id": "img_0869-rotated",
-					"img": "IMG_0869-rotated.jpg",
+					"img": "IMG_0869-rotated",
 					"label": "Campbell River Fish & Wildlife Association"
 				},
 				{
 					"id": "img_0873",
-					"img": "IMG_0873.jpg",
+					"img": "IMG_0873",
 					"label": "Boat ramp and fishing dock"
 				},
 				{
 					"id": "img_0871",
-					"img": "IMG_0871.jpg",
+					"img": "IMG_0871",
 					"label": "Boat ramp"
 				},
 				{
 					"id": "img_0870-rotated",
-					"img": "IMG_0870-rotated.jpg",
+					"img": "IMG_0870-rotated",
 					"label": "Path to fishing dock"
 				},
 				{
 					"id": "img_0874",
-					"img": "IMG_0874.jpg",
+					"img": "IMG_0874",
 					"label": "Fishing dock (under construction in June '21)"
 				},
 				{
 					"id": "img_0875",
-					"img": "IMG_0875.jpg",
+					"img": "IMG_0875",
 					"label": "Boat ramp from fishing dock"
 				},
 				{
 					"id": "img_0876",
-					"img": "IMG_0876.jpg",
+					"img": "IMG_0876",
 					"label": "Logs underwater"
 				},
 				{
 					"id": "img_2796",
-					"img": "IMG_2796.jpeg",
+					"img": "IMG_2796",
 					"label": "New floating dock and gangway"
 				},
 				{
 					"id": "img_2800",
-					"img": "IMG_2800.jpeg",
+					"img": "IMG_2800",
 					"label": "Day use picnic area sign"
 				},
 				{
 					"id": "img_2801",
-					"img": "IMG_2801.jpeg",
+					"img": "IMG_2801",
 					"label": "Outhouse"
 				}
 			]

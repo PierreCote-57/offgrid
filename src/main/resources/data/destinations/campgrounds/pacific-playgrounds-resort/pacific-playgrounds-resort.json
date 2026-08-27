@@ -1,6 +1,6 @@
 {
 	"name": "Pacific Playgrounds Resort",
-	"featuredImage": "IMG_2822.jpg",
+	"featuredImage": "IMG_2822",
 	"excerpt": "An oceanside resort and campground near Black Creek on Vancouver Island's east coast.",
 	"tags": {
 		"badgeList": [
@@ -80,52 +80,52 @@
 			"itemList": [
 				{
 					"id": "img_2822",
-					"img": "IMG_2822.jpg",
+					"img": "IMG_2822",
 					"label": ""
 				},
 				{
 					"id": "img_2823",
-					"img": "IMG_2823.jpg",
+					"img": "IMG_2823",
 					"label": ""
 				},
 				{
 					"id": "img_2824",
-					"img": "IMG_2824.jpg",
+					"img": "IMG_2824",
 					"label": ""
 				},
 				{
 					"id": "img_2826",
-					"img": "IMG_2826.jpg",
+					"img": "IMG_2826",
 					"label": ""
 				},
 				{
 					"id": "img_2827",
-					"img": "IMG_2827.jpg",
+					"img": "IMG_2827",
 					"label": ""
 				},
 				{
 					"id": "img_2828",
-					"img": "IMG_2828.jpg",
+					"img": "IMG_2828",
 					"label": ""
 				},
 				{
 					"id": "img_2829",
-					"img": "IMG_2829.jpg",
+					"img": "IMG_2829",
 					"label": ""
 				},
 				{
 					"id": "img_2830",
-					"img": "IMG_2830.jpg",
+					"img": "IMG_2830",
 					"label": ""
 				},
 				{
 					"id": "img_2831",
-					"img": "IMG_2831.jpg",
+					"img": "IMG_2831",
 					"label": ""
 				},
 				{
 					"id": "img_2832",
-					"img": "IMG_2832.jpg",
+					"img": "IMG_2832",
 					"label": ""
 				}
 			]

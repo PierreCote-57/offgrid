@@ -815,3 +815,67 @@ it will be, following the rule the posts pass set.
 **Step lists carry `gl-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
 that choice; awning, climate and water follow it. The lists in battery and power enumerate
 things rather than tell you to do them in order, so they are not checkboxes.
+
+## 2026-08-27 — The external downloads, and what `external` is allowed to know
+
+Four reference downloads live in `resources/external/download/`: `bc_reststop.json` and
+`bc_offramp.json` from the province's DataBC WFS, `bc_exits.json` and `bc_exits_amenities.json`
+from OpenStreetMap through Overpass. They are read-only reference data, not content, and no
+page consumes them yet.
+
+**`com.lc.offgrid.pojo.external` is the file and nothing else.** A class there maps a JSON
+shape strictly — every key has a home — and interprets nothing. The packages under it are named
+for the supplier, not the subject: `external/bc/reststop`, `external/bc/offramp`,
+`external/overpass/exits`, `external/overpass/amenities`. A re-download changes the mirror and
+cannot reach a page.
+
+**A properties block is a Map, not a set of fields.** `shared/FeatureProperties extends
+HashMap<String, Object>`, and each file's block extends it — `RestStopProperties`,
+`OfframpProperties`, `ExitTags`, `AmenityTags` — adding a private key constant and a typed
+getter per known column. DataBC adds and drops columns and OSM mappers invent tags; a strict
+POJO drops what it was not told about, silently. This keeps everything and still reads well:
+`bc_exits_amenities.json` carries 296 distinct tag keys, of which 33 are worth a method.
+
+The base has to *be* a Map rather than hold one — Gson routes anything assignable to `Map`
+through its map adapter, while a class holding a `Map` field makes Gson hunt for a JSON key by
+that field's name.
+
+**Every number in those maps comes back a `Double`.** For an `Object`-typed value Gson has no
+other choice, so `NUMBER_OF_TOILETS` arrives as `1.0`. `FeatureProperties.getInteger` converts
+rather than casts; nothing is lost, since every id in these files is well under 2^53.
+
+**`geometry.coordinates` is declared `Object`.** A Point is `[lng, lat]` and a LineString is a
+list of those, and Gson binds `coordinates` to whatever the field declares — a `Double[]` and a
+`Double[][]` cannot be the same class. `Object` takes both: Gson builds an `ArrayList` of two
+`Double` for a Point, an `ArrayList` of those for a LineString. All 1336 offramp features are
+LineString; all 219 rest stops are Point.
+
+**What is common across suppliers lives in `external/shared`.** `FeatureGeometry` (with
+`GeometryType` as a public enum inside it — all seven GeoJSON shapes, since Gson returns null
+for an enum value it cannot match), `FeatureProperties`, `FeatureCollectionCrs`,
+`OverpassOsm3s`, `OverpassCenter`, `OverpassElementType`. Nothing in a supplier package imports
+from another supplier package.
+
+**Overpass has no geometry block.** A node carries `lat`/`lon` itself; a way or a relation
+carries neither and has a `center` instead, because the query ended `out center`. 906 ways and
+22 relations of the 3225 amenity elements have no `lat` — reading only `lat`/`lon` drops every
+building, which is most of the shops, hotels and supermarkets. OSM ids need `Long`: the largest
+in `bc_exits.json` is 13,772,932,805.
+
+**`ExternalUpdater` holds where each file came from and where it is kept** — a path and a
+source URL per download. `ExternalManager` is a `@Component implements InitializingBean` that
+reads all four once in `afterPropertiesSet` and hands out the cached objects. Nothing in
+`src/main` uses it yet; `ExternalTests` drives it.
+
+## 2026-08-27 — The Gson moved down to `BaseFileHandler`
+
+`BaseWebProcessor` owned the only `Gson` and did its own parse inside `readFile`. The instance
+is now `BaseFileHandler.GSON`, where `BasicFileWriter` reaches it too, and the parse is
+`BasicFileReader.readJsonFile` — four overloads by source (URL, File, filename, InputStream),
+the same shape `readPropertiesFile` already had. `readPropertiesFile` is the precedent: reading
+a format into an object is what that class does, and the method names itself after the format.
+
+`BaseWebProcessor.readFile` keeps the classloader lookup and delegates, so its eleven callers
+in `OffgridProcessor` did not move, and `getGson()` delegates as well. The builder settings
+(`setPrettyPrinting`, `disableHtmlEscaping`) came along, so the one `toJson` in `OffgridProcessor`
+writes exactly what it wrote before.

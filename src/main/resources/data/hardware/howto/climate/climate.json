@@ -1,6 +1,6 @@
 {
 	"name": "How To: Climate Control",
-	"featuredImage": "garmin-temp-panel.png",
+	"featuredImage": "garmin-temp-panel",
 	"excerpt": "Set up and operate the Truma heating and air conditioning system.",
 	"wpSettings": {
 		"published": true,
@@ -12,47 +12,47 @@
 			"itemList": [
 				{
 					"id": "truma-location",
-					"img": "control-panel.png",
+					"img": "control-panel",
 					"label": "Truma panel, far left"
 				},
 				{
 					"id": "truma-tools",
-					"img": "truma-tools.png",
+					"img": "truma-tools",
 					"label": "Truma touchscreen — tool icons"
 				},
 				{
 					"id": "truma-acc",
-					"img": "truma-ACC.png",
+					"img": "truma-ACC",
 					"label": "Truma touchscreen — ACC/Auto mode"
 				},
 				{
 					"id": "truma-on-panel",
-					"img": "truma-on-panel.png",
+					"img": "truma-on-panel",
 					"label": "Truma touchscreen — ACC on"
 				},
 				{
 					"id": "garmin-temp-select",
-					"img": "garmin-temp-select.png",
+					"img": "garmin-temp-select",
 					"label": "Garmin temperature select screen"
 				},
 				{
 					"id": "garmin-temp-panel",
-					"img": "garmin-temp-panel.png",
+					"img": "garmin-temp-panel",
 					"label": "Garmin climate panel"
 				},
 				{
 					"id": "cabin-outdoor",
-					"img": "cabin-outdoors.png",
+					"img": "cabin-outdoors",
 					"label": "Cabin temperature overnight"
 				},
 				{
 					"id": "cabin-indoor",
-					"img": "cabin-indoor-2026-07-13.png",
+					"img": "cabin-indoor-2026-07-13",
 					"label": "Cabin climate in storage"
 				},
 				{
 					"id": "freezer",
-					"img": "freezer-3-2026-07-19.png",
+					"img": "freezer-3-2026-07-19",
 					"label": "Freezer settling time (level 3)"
 				}
 			]
@@ -62,12 +62,12 @@
 			"itemList": [
 				{
 					"id": "garmin-temp-panel",
-					"img": "garmin-temp-panel.png",
+					"img": "garmin-temp-panel",
 					"label": "Garmin SERV panel"
 				},
 				{
 					"id": "garmin-temp-select",
-					"img": "garmin-temp-select.png",
+					"img": "garmin-temp-select",
 					"label": "Garmin temperature select screen"
 				}
 			]

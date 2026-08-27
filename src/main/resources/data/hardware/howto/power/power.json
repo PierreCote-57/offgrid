@@ -1,6 +1,6 @@
 {
 	"name": "How to: Power management",
-	"featuredImage": "under-construction.png",
+	"featuredImage": "under-construction",
 	"excerpt": "Understand and manage the van's power sources and loads.",
 	"wpSettings": {
 		"published": true,
@@ -12,22 +12,22 @@
 			"itemList": [
 				{
 					"id": "master-cutoff",
-					"img": "master-cutoff.png",
+					"img": "master-cutoff",
 					"label": "Master controls"
 				},
 				{
 					"id": "garmin-inverter",
-					"img": "garmin-inverter.png",
+					"img": "garmin-inverter",
 					"label": "Inverter controls"
 				},
 				{
 					"id": "solar-panel",
-					"img": "solar-panel.png",
+					"img": "solar-panel",
 					"label": "Go Power solar controller"
 				},
 				{
 					"id": "garmin-generator",
-					"img": "garmin-generator.png",
+					"img": "garmin-generator",
 					"label": "Generator controls"
 				}
 			]
@@ -37,12 +37,12 @@
 			"itemList": [
 				{
 					"id": "construction-sources",
-					"img": "under-construction.png",
+					"img": "under-construction",
 					"label": "Placeholder — power sources"
 				},
 				{
 					"id": "construction-sinks",
-					"img": "under-construction.png",
+					"img": "under-construction",
 					"label": "Placeholder — power sinks"
 				}
 			]

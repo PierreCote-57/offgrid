@@ -206,8 +206,12 @@ li {
 	content: " \25be";
 }
 
+/* An open dropdown has to beat everything the page positions under it — a gallery card's
+   image wrapper, the badge pills, the list browser's filter panel — or the page paints over
+   it and takes the click. The value sits above .gl-lb-panel and below .gl-lightbox. */
 .menu .submenu {
 	position: absolute;
+	z-index: 20;
 	top: 32px;
 	left: 0;
 	display: block;
@@ -220,12 +224,30 @@ li {
 	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
+/* The row's padding belongs to the anchor, not the item, so the highlight and the clickable
+   rectangle are the same shape. The margin the global `li` gives a prose list is dead space
+   here: it opens an unlit gap between two rows that should touch. */
 .menu .submenu li {
-	padding: 5px 16px;
+	margin-top: 0;
+	padding: 0;
 }
 
+/* The bar's line-height is set for items sitting alone on one row; stacked in a dropdown it
+   reads as gaps between the entries. Tighter here, and only here. The bar's hover underline
+   is dropped: on this panel the whole row lights instead. */
 .menu .submenu a {
+	display: block;
+	padding: 5px 16px;
+	border-bottom: 0;
 	color: var(--text);
+	line-height: 1.25;
+	white-space: nowrap;
+}
+
+/* The selected row on a light panel: the fill goes dark and the text goes light. */
+.menu .submenu a:hover {
+	background: var(--brand);
+	color: var(--bar-text);
 }
 
 /* The last menu's dropdown opens leftwards so it stays inside the window. */
