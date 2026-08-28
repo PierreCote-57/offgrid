@@ -2,7 +2,7 @@
 	{
 		"id": "destinations",
 		"file": "destinations.json",
-		"title": "All destinations",
+		"title": "Destinations",
 		"options": [
 			"view",
 			"types",

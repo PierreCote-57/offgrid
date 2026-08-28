@@ -21,8 +21,9 @@ and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing se
 #6 MCP controller — not started. The Client controller is the only one that exists.
 
 #7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
-in for the two checklists, the van, the Bronco, the two maintenance pages and the six posts;
-the six howto pages, the destinations and all the images are not.
+in for the two checklists, the van, the Bronco, the two maintenance pages, the six posts and
+one destination (echo-lake, the pattern for the rest); the six howto pages, the remaining
+destinations and all the images are not.
 
 #8 Reading the JSON — `readFile` reads it per request, and the mapping method names the
 class: `PageData` for info and hardware, `MaintenancePage`, `PostPage`. Settled: content
@@ -70,9 +71,6 @@ tiles only, so if the JSON wins, something else has to put the heading on the pa
 #18 The summary headings copied from GettingLost still carry `style="display:inline;"` —
 checklists, van, bronco. `site.css` does it now, so every one of them is dead weight, and
 each new page copied over brings another.
-
-#19 `back-to-gallery` is a placeholder with nothing to point at — no list page exists yet.
-The Bronco and both checklists call it.
 
 #20 `OffgridImageManager.getImageMetadata` reads the file on every call — no cache. Fine
 while nothing calls it; it is a disk read per request the day something does.
@@ -140,3 +138,11 @@ and 565, so only the card renderer is on the old spelling.
 `data-lat`/`data-lng` and rendered a DMS caption linking to Google Maps; the fragment takes
 the filename only. `destinations/lakes/echo-lake.html` has the one call that used it —
 49.984331, -125.413606 on the third photo — and now shows the picture with no caption.
+
+#35 The tags row has no road badge. GettingLost drew badges LEFT and the road badge RIGHT,
+derived from `access.legList` — worst leg type wins the word, every leg of that type sums to
+the km. `PageData` has no `access` and `OffgridController.destination` binds `PageData`, so
+the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand group empty
+and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
+derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
+`browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.

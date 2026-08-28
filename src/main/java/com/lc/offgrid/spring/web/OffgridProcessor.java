@@ -63,6 +63,18 @@ public class OffgridProcessor extends BaseWebProcessor
 
 		return path;
 	}
+	public String processBrowser(Model model, String path, Class<? extends PageData> clazz, String datasetName)
+	{
+		String answer = processPage(model, path, clazz);
+		// TODO Adjust the page title
+		Dataset dataset = findDataset(datasetName);
+		if (null != dataset)
+		{
+			model.addAttribute("PageName", dataset.getTitle());
+		}
+
+		return answer;
+	}
 
 	/**
 	 * The bytes of one image, read from the image folder, which sits outside the resource tree.

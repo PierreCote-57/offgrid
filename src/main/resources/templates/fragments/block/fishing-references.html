@@ -1,1 +1,47 @@
-<div class="block-unavailable">Fishing references unavailable</div>
+<!--
+	What the province publishes about a lake.
+
+	Four rows, always all four: a row with nothing in it says NA rather than disappearing,
+	so the table says what is known AND what is not. The stocking report is a link built
+	from the waterbody name — Go Fish BC wants the bare name, not a URL — and every lake on
+	this site is on Vancouver Island, so the region is fixed here.
+-->
+<div xmlns:th="http://www.thymeleaf.org" class="gl-fishing"
+	 th:with="fishing=${pageData.fishingReferences},
+			  stockingUrl='https://www.gofishbc.com/stocked-fish/?reportType=lake&amp;region=VANCOUVER%20ISLAND&amp;waterbody='">
+	<h3 class="gl-heading">Fishing references</h3>
+
+	<table>
+		<tbody>
+		<tr>
+			<td class="gl-fishing-label">BC Identifier</td>
+			<td class="gl-fishing-value" th:text="${fishing?.bcIdentifier} ?: 'NA'">NA</td>
+		</tr>
+		<tr>
+			<td class="gl-fishing-label">Area</td>
+			<td class="gl-fishing-value"
+				th:text="${fishing?.areaKm2 == null} ? 'NA' : ${fishing.areaKm2} + ' km²'">NA</td>
+		</tr>
+		<tr>
+			<td class="gl-fishing-label">Lake chart</td>
+			<td class="gl-fishing-value">
+				<span th:if="${#lists.isEmpty(fishing?.lakeChartList)}">NA</span>
+				<span th:each="chart, iter : ${fishing?.lakeChartList}">
+					<br th:if="${!iter.first}">
+					<a th:href="${chart.url}" target="_blank" rel="noopener noreferrer"
+					   th:text="${chart.name}">Chart</a>
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="gl-fishing-label">Stocking report</td>
+			<td class="gl-fishing-value">
+				<span th:if="${#strings.isEmpty(fishing?.stockingName)}">NA</span>
+				<a th:unless="${#strings.isEmpty(fishing?.stockingName)}"
+				   th:href="${stockingUrl + #uris.escapeQueryParam(fishing.stockingName)}"
+				   target="_blank" rel="noopener noreferrer">Go Fish BC</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>

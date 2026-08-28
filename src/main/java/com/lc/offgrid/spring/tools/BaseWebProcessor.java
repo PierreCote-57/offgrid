@@ -178,7 +178,6 @@ public abstract class BaseWebProcessor
 		catch (Exception e)
 		{
 			// Fall through, try something else
-			LOGGER.error("Error reading file: " + path, e);
 		}
 
 		URL url = BaseWebProcessor.class.getClassLoader().getResource(path);

@@ -1,1 +1,32 @@
-<div class="block-unavailable">Tags unavailable</div>
+<!--
+	The page's own vocabularies, the ones the browser filters on.
+
+		badgeList    LEFT    what you would do there      (closed, coloured)
+		keywordList  BELOW   everything else              (open, plain)
+
+	typeList is deliberately absent: it filters, and the page already says what kind of
+	place it is. The right-hand group is the road badge's place; it stays empty until the
+	page class carries `access`.
+
+	The pill is one class here and on a gallery card, so the two cannot drift apart. The
+	colour is not written here — offgrid.js paints it from the one palette in gl-constants.js.
+	Nothing renders at all when there is nothing to say.
+-->
+<div xmlns:th="http://www.thymeleaf.org"
+	 th:if="${pageData.tags != null and (!#lists.isEmpty(pageData.tags.badgeList) or !#lists.isEmpty(pageData.tags.keywordList))}">
+
+	<div class="gl-tagrow" th:if="${!#lists.isEmpty(pageData.tags.badgeList)}">
+		<div class="gl-tagrow-group">
+			<span class="gl-tag" th:each="badge : ${#lists.sort(pageData.tags.badgeList)}"
+				  th:attr="data-tag=${badge}" th:text="${badge}">badge</span>
+		</div>
+		<div class="gl-tagrow-group"></div>
+	</div>
+
+	<div class="gl-tagrow-keywords" th:if="${!#lists.isEmpty(pageData.tags.keywordList)}">
+		<div class="gl-tagrow-group">
+			<span class="gl-tag gl-plain" th:each="keyword : ${#lists.sort(pageData.tags.keywordList)}"
+				  th:text="${keyword}">keyword</span>
+		</div>
+	</div>
+</div>

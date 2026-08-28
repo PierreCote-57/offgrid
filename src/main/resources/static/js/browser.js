@@ -194,13 +194,14 @@
 	}
 
 	// The badge pills in the card image's top-right corner. An empty list renders nothing.
+	// The pill carries its word and no colour — GL.paintTags fills that in once the card is
+	// in the document, so a card pill and a page pill come from the one palette.
 	function renderTags(tagList) {
 		if (!tagList || !tagList.length) { return ""; }
 		var sorted = tagList.slice().sort();
 		var html = '<div class="gl-tag-stack">';
 		for (var i = 0; i < sorted.length; i++) {
-			var colors = window.GL.TAG_COLORS[sorted[i]] || window.GL.TAG_FALLBACK;
-			html += '<span class="gl-tag" style="background:' + colors.bg + ";color:" + colors.text + ';">' +
+			html += '<span class="gl-tag" data-tag="' + escapeHtml(sorted[i]) + '">' +
 				escapeHtml(sorted[i]) + "</span>";
 		}
 		html += "</div>";
@@ -208,16 +209,14 @@
 	}
 
 	// The road badge, lower-left corner. A falsy road (legs not filled in yet) renders
-	// nothing, exactly like an empty tag list. The vocabulary is strict, so an unknown value
-	// is a data error: render nothing and log it.
+	// nothing, exactly like an empty tag list. The vocabulary is strict, and GL.paintTags is
+	// where that is enforced: it drops a badge whose word the palette does not know.
+	//
+	// The underscore in a value is an id convention, not something to show a reader, so it
+	// becomes a space on the way to the badge. data-road keeps the id.
 	function renderRoad(road) {
 		if (!road) { return ""; }
-		var colors = window.GL.ROAD_COLORS[road];
-		if (!colors) {
-			console.error('[browser] Unknown road value "' + road + '" — no road badge rendered.');
-			return "";
-		}
-		var html = '<span class="gl-road" style="background:' + colors.bg + ";color:" + colors.text + ';">' +
+		var html = '<span class="gl-road" data-road="' + escapeHtml(road) + '">' +
 			escapeHtml(road.replace(/_/g, " ")) + "</span>";
 		return html;
 	}
@@ -590,6 +589,7 @@
 			html += renderCard(rows[i]);
 		}
 		grid.innerHTML = html;
+		window.GL.paintTags(grid);
 		return grid;
 	}
 

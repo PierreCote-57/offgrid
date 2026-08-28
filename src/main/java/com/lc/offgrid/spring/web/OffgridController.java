@@ -1,6 +1,11 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.offgrid.pojo.page.CampSitePage;
+import com.lc.offgrid.pojo.page.DestinationPage;
+import com.lc.offgrid.pojo.page.LakePage;
+import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
+import com.lc.offgrid.pojo.page.PostPage;
 import com.lc.offgrid.spring.tools.BaseWebController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Serves the site's pages.
@@ -48,35 +54,45 @@ public class OffgridController extends BaseWebController
 			@PathVariable String type, @PathVariable String name)
 	{
 		String path = String.format("/destinations/%1$s/%2$s", type, name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		Class<? extends PageData> clazz = getPageDataClass(type);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, clazz));
 	}
 
-	@GetMapping("/hardware/checklists/{name}")
-	public String checklist(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	private Class<? extends PageData> getPageDataClass(String type)
 	{
-		String path = String.format("/hardware/checklists/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		Class<? extends PageData> pageDataClass = switch (type)
+		{
+			case "howto" -> PageData.class;
+			case "checklist" -> PageData.class;
+			case "maintenance" -> MaintenancePage.class;
+			case "lakes" -> LakePage.class;
+			case "campsite" -> CampSitePage.class;
+			default -> DestinationPage.class;
+		};
+		return  pageDataClass;
 	}
 
-	@GetMapping("/hardware/howto/{name}")
-	public String howto(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	@GetMapping("/hardware/{name}")
+	public String checklist(HttpServletRequest request, HttpServletResponse response, Model model,
+			@PathVariable String name)
 	{
-		String path = String.format("/hardware/howto/%1$s", name);
+		String path = String.format("/hardware/%1$s", name);
 		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
-
-	@GetMapping("/hardware/maintenance/{name}")
-	public String maintenance(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	@GetMapping("/hardware/{type}/{name}")
+	public String hardwareType(HttpServletRequest request, HttpServletResponse response, Model model,
+			@PathVariable String type, @PathVariable String name)
 	{
-		String path = String.format("/hardware/maintenance/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		String path = String.format("/hardware/%1$s/%2$s", type, name);
+		Class<? extends PageData> clazz = getPageDataClass(type);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, clazz));
 	}
 
 	@GetMapping("/posts/{name}")
 	public String post(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
 		String path = String.format("/post/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PostPage.class));
 	}
 
 	@GetMapping("/info/{name}")
@@ -87,10 +103,11 @@ public class OffgridController extends BaseWebController
 	}
 
 	@GetMapping("/shared/browser")
-	public String browser(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String browser(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam String dataset)
 	{
 		String path = String.format("/shared/%1$s", "browser");
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getService().processBrowser(model, path, PageData.class, dataset));
 	}
 
 	/**
