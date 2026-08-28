@@ -23,6 +23,9 @@ public abstract class AbstractFileManager implements InitializingBean
 
 	public File getFile(String name)
 	{
+		name = name.contains("/")
+				? name.substring(name.lastIndexOf("/")+1)
+				: name;
 		return nameMap.get(name);
 	}
 

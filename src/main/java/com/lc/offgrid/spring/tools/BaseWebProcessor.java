@@ -170,6 +170,17 @@ public abstract class BaseWebProcessor
 
 	public static <T> T readFile(String path, Class<T> clazz)
 	{
+		try
+		{
+			T obj = BasicFileReader.readJsonFile(path, clazz);
+			return obj;
+		}
+		catch (Exception e)
+		{
+			// Fall through, try something else
+			LOGGER.error("Error reading file: " + path, e);
+		}
+
 		URL url = BaseWebProcessor.class.getClassLoader().getResource(path);
 		try
 		{

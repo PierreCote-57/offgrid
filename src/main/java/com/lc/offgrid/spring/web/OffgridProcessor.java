@@ -52,127 +52,16 @@ public class OffgridProcessor extends BaseWebProcessor
 		return jsonManager;
 	}
 
-	public String processHome(Model model)
+	public String processPage(Model model, String path, Class<? extends PageData> clazz)
 	{
-		processDefault(model, "Offgrid's home page");
-
-		Date infoDate = new Date();
-		String infoMessage = String.format("Welcome to Offgrid %s", infoDate);
-		addInfoMessage(infoMessage);
-
-		Date warningDate = new Date();
-		String warningMessage = String.format("Welcome to WARNING %s", warningDate);
-		addWarningMessage(warningMessage);
-
-		Date errorDate = new Date();
-		String errorMessage = String.format("Welcome to ERROR %s", errorDate);
-		addErrorMessage(errorMessage);
-
-		String viewName = "index";
-		return viewName;
-	}
-
-	/**
-	 * One of the Info pages. The name is the view name and the data folder both, so a new one
-	 * is a template plus its folder.
-	 */
-	public String processInfo(Model model, String name)
-	{
-		String fileName = String.format("data/info/%1$s/%1$s.json", name);
-		PageData pageData = readFile(fileName, PageData.class);
+		File jsonFile = getJsonManager().getFile(path);
+		PageData pageData = readFile(jsonFile.getAbsolutePath(), clazz);
 		String pageTitle = pageData.getName();
 
 		processDefault(model, pageTitle);
 		model.addAttribute("pageData", pageData);
 
-		String viewName = String.format("info/%s", name);
-		return viewName;
-	}
-
-	/**
-	 * One of the hardware pages — the van, the Bronco. The name is the view name and the data
-	 * folder both.
-	 */
-	public String processHardware(Model model, String name)
-	{
-		String fileName = String.format("data/hardware/%1$s/%1$s.json", name);
-		PageData pageData = readFile(fileName, PageData.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = String.format("hardware/%s", name);
-		return viewName;
-	}
-
-	/**
-	 * A checklist page. The name is both the template under templates/hardware/checklists
-	 * and the folder holding its JSON, so one mapping serves every checklist.
-	 */
-	public String processChecklist(Model model, String name)
-	{
-		String fileName = String.format("data/hardware/checklists/%1$s/%1$s.json", name);
-		PageData pageData = readFile(fileName, PageData.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = String.format("hardware/checklists/%s", name);
-		return viewName;
-	}
-
-
-	/**
-	 * A checklist page. The name is both the template under templates/hardware/checklists
-	 * and the folder holding its JSON, so one mapping serves every checklist.
-	 */
-	public String processHowto(Model model, String name)
-	{
-		String fileName = String.format("data/hardware/howto/%1$s/%1$s.json", name);
-		PageData pageData = readFile(fileName, PageData.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = String.format("hardware/howto/%s", name);
-		return viewName;
-	}
-
-	/**
-	 * A maintenance page — the van's record, the Bronco's. The name is both the template under
-	 * templates/hardware/maintenance and the folder holding its JSON.
-	 */
-	public String processMaintenance(Model model, String name)
-	{
-		String fileName = String.format("data/hardware/maintenance/%1$s/%1$s.json", name);
-		MaintenancePage pageData = readFile(fileName, MaintenancePage.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = String.format("hardware/maintenance/%s", name);
-		return viewName;
-	}
-
-	/**
-	 * A blog entry. The name is both the template under templates/posts and the folder holding
-	 * its JSON.
-	 */
-	public String processPost(Model model, String name)
-	{
-		String fileName = String.format("data/posts/%1$s/%1$s.json", name);
-		PostPage pageData = readFile(fileName, PostPage.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = String.format("posts/%s", name);
-		return viewName;
+		return path;
 	}
 
 	/**
@@ -198,24 +87,6 @@ public class OffgridProcessor extends BaseWebProcessor
 			getLogger().error("Unable to locate image %s", imageName);
 			return makeResponseNotFound();
 		}
-	}
-
-	/**
-	 * The browser page: one page over every dataset, in a table, a grid or a map. The page
-	 * itself carries no data — the query string is the whole state, and the browser fetches
-	 * the definition list and the rows it names.
-	 */
-	public String processBrowser(Model model)
-	{
-		String fileName = "data/shared/browser/browser.json";
-		PageData pageData = readFile(fileName, PageData.class);
-		String pageTitle = pageData.getName();
-
-		processDefault(model, pageTitle);
-		model.addAttribute("pageData", pageData);
-
-		String viewName = "shared/browser";
-		return viewName;
 	}
 
 	/**
@@ -255,8 +126,7 @@ public class OffgridProcessor extends BaseWebProcessor
 			{
 				try
 				{
-					String jsonName = fileText.substring(fileText.lastIndexOf("/") + 1);
-					File file = getJsonManager().getFile(jsonName);
+					File file = getJsonManager().getFile(fileText);
 					Map<String, Object> realPage = BasicFileReader.readJsonFile(file, Map.class);
 					realPage.putAll(page);
 					pageList.set(i, realPage);
@@ -287,14 +157,6 @@ public class OffgridProcessor extends BaseWebProcessor
 			}
 		}
 		return null;
-	}
-
-	public String processPi(Model model)
-	{
-		processDefault(model, "The net");
-
-		String viewName = "info/pi";
-		return viewName;
 	}
 
 	private <T> ResponseEntity<T> makeResponseOk(MediaType mediaType, T response)

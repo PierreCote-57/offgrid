@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Echo Lake</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div>
+		<div style="width:45%;float:left;margin:0 1.5rem 1rem 0;">
+			<div th:replace="~{fragments/block/photo :: photo('IMG_0522')}"></div>
+		</div>
+		<div style="width:45%;float:right;margin:0 0 1rem 1.5rem;">
+			<div th:replace="~{fragments/block/photo :: photo('IMG_0512')}"></div>
+		</div>
+
+		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<p style="margin-top:0;">
+			Beautiful, small lake with easy access and only 30 minutes from Campbell River.
+			The park at the South end is access through a small dirt road,
+			has a bathroom (possibly dirty), picnic table, boat ramp and a great fishing pier.
+			There is also access directly from I-28, through small access path,
+			that is easy to miss as you drive through.
+		</p>
+		<p>
+			Ideal place for taking the young ones. This is also my goto site to test gear,
+			small boat, new casting rod or to practice
+			with your fly rod. Fishing is likely to be hit/miss,
+			be aware of the stocking (plant) dates (see below). You are much more
+			likely to catch small trout than the lunker you wanted to brag about.
+		</p>
+		<div style="width:25%;float:left;margin:0 1.5rem 1rem 0;">
+			<div th:replace="~{fragments/block/photo :: photo('IMG_0512')}"></div>
+		</div>
+		<p>
+			Getting there is straight forward, beware of the sharp left turn when exiting I-28. The picnic/fishing area is 5 minutes from
+			I-28, on a wide, bumpy dirt road; the entrance is easily visible on the left.
+		</p>
+		<p>
+			The main area has a picnic table, fire pit as well as a beautiful fishing pier.
+			There is also a surprisingly good boat ramp.
+			Remember that only electric motors are allowed on this small lake.
+		</p>
+	</div>
+
+	<div th:replace="~{fragments/block/fishing-references}"></div>
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

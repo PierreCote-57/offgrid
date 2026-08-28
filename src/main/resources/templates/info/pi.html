@@ -3,7 +3,8 @@
 <div th:replace="~{fragments/site/header}"></div>
 
 <main>
-	<h1 th:text="${PageName}">About</h1>
+	<div class="gl-photo" style="width:100%;float:left;"
+		 th:insert="~{fragments/block/photo :: photo('TheNet')}"></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

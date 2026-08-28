@@ -1,5 +1,6 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.spring.tools.BaseWebController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,85 +33,64 @@ public class OffgridController extends BaseWebController
 	}
 	public OffgridProcessor getService()
 	{
-		return getBeanFactory().getBean(OffgridProcessor.class);
+		return service;
 	}
 
 	@GetMapping("/")
-	public String home(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model)
+	public String home(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		return processRequest(request, response, model, () -> getService().processHome(model));
+		String path = String.format("/index");
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
-	@GetMapping("/info/{name}")
-	public String useful(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
+	@GetMapping("/destinations/{type}/{name}")
+	public String destination(HttpServletRequest request, HttpServletResponse response, Model model,
+			@PathVariable String type, @PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processInfo(model, name));
-	}
-
-	@GetMapping("/hardware/{name}")
-	public String hardware(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
-	{
-		return processRequest(request, response, model, () -> getService().processHardware(model, name));
+		String path = String.format("/destinations/%1$s/%2$s", type, name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/hardware/checklists/{name}")
-	public String checklist(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
+	public String checklist(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processChecklist(model, name));
+		String path = String.format("/hardware/checklists/%1$s", name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/hardware/howto/{name}")
-	public String howto(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
+	public String howto(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processHowto(model, name));
+		String path = String.format("/hardware/howto/%1$s", name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/hardware/maintenance/{name}")
-	public String maintenance(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
+	public String maintenance(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processMaintenance(model, name));
+		String path = String.format("/hardware/maintenance/%1$s", name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/posts/{name}")
-	public String post(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
-			@PathVariable String name)
+	public String post(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		return processRequest(request, response, model, () -> getService().processPost(model, name));
+		String path = String.format("/post/%1$s", name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+	}
+
+	@GetMapping("/info/{name}")
+	public String useful(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	{
+		String path = String.format("/info/%1$s", name);
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/shared/browser")
-	public String browser(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model)
+	public String browser(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		return processRequest(request, response, model, () -> getService().processBrowser(model));
+		String path = String.format("/shared/%1$s", "browser");
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 	/**
@@ -122,8 +102,7 @@ public class OffgridController extends BaseWebController
 	 * static resource handler.
 	 */
 	@GetMapping("/shared/browser/data/{id}")
-	public ResponseEntity<String> browserData(
-			@PathVariable String id)
+	public ResponseEntity<String> browserData(@PathVariable String id)
 	{
 		return getService().processBrowserData(id);
 	}
@@ -133,19 +112,16 @@ public class OffgridController extends BaseWebController
 	 * name, so it goes to the processor directly instead of through processRequest.
 	 */
 	@GetMapping("/image/{imageName}")
-	public ResponseEntity<Resource> image(
-			@PathVariable String imageName)
+	public ResponseEntity<Resource> image(@PathVariable String imageName)
 	{
 		return getService().processImage(imageName);
 	}
 
 	@GetMapping(value = {"/pi"}, produces = "text/html")
-	public String pi(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model)
+	public String pi(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		return processRequest(request, response, model, () -> getService().processPi(model));
+		String path = String.format("/info/%s", "pi");
+		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
 
 }

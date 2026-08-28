@@ -118,3 +118,25 @@ and a rest stop's nearest town is still prose. The parse for it: 204 of the 219 
 do not, 8 name no town at all (`2 KM`, `13.256`, `10`, `AT BC/YUKON BORDER`, `TOP OF KOOTENAY
 PASS`, and three ferry terminals).
 
+
+#31 Two spellings of a page pointer now coexist. `shared/browser/destinations.json` carries
+folder paths with no extension (`destinations/rec-sites/echo-lake-dayuse`), while the
+individual page JSONs still carry bare filenames: 22 `file` values across the destination
+pages, one more at `hardware/bronco/bronco.json:222` (`logging.html`), and 17 internal `url`
+values linking a destination to a sibling (`lakes/echo-lake/echo-lake.json:57` ->
+`echo-lake-dayuse.html`). The two Canadian Tire `url` values in `bronco.json` also end in
+`.html` and are external.
+
+#32 Nothing serves a destination page. The gallery card's href is `row.file` verbatim
+(`browser.js:145`), so it is now a relative `destinations/rec-sites/echo-lake-dayuse` against
+`/shared/browser`, and `OffgridController` has no mapping under `/destinations`.
+
+#33 Gallery cards never draw badges. `browser.js:237` reads `(row.tags || {}).badges`, but
+every row carries `tags.badgeList` after the #10 conversion — `hydratePageList` merges the
+page JSON verbatim and renames nothing. The same file already reads `badgeList` at lines 461
+and 565, so only the card renderer is on the old spelling.
+
+#34 The `photo` fragment drops a photo's GPS caption. GettingLost's photo block took
+`data-lat`/`data-lng` and rendered a DMS caption linking to Google Maps; the fragment takes
+the filename only. `destinations/lakes/echo-lake.html` has the one call that used it —
+49.984331, -125.413606 on the third photo — and now shows the picture with no caption.

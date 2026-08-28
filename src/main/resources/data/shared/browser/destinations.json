@@ -124,10 +124,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/amor-lake"
+		"file": "/destinations/lakes/amor-lake"
 	},
 	{
-		"file": "destinations/rec-sites/amor-lake-rec0174"
+		"file": "/destinations/rec-sites/amor-lake-rec0174"
 	},
 	{
 		"name": "Amor Lake North (rec-site)",
@@ -488,10 +488,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/beavertail-lake"
+		"file": "/destinations/lakes/beavertail-lake"
 	},
 	{
-		"file": "destinations/rec-sites/beavertail-lake-dayuse"
+		"file": "/destinations/rec-sites/beavertail-lake-dayuse"
 	},
 	{
 		"name": "Bedrock City (rec-site)",
@@ -1521,7 +1521,7 @@
 		}
 	},
 	{
-		"file": "destinations/rec-sites/keogh-lake-rec16077"
+		"file": "/destinations/rec-sites/keogh-lake-rec16077"
 	},
 	{
 		"name": "Cobble Hill (rec-site)",
@@ -1807,10 +1807,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/echo-lake"
+		"file": "/destinations/lakes/echo-lake"
 	},
 	{
-		"file": "destinations/rec-sites/echo-lake-dayuse"
+		"file": "/destinations/rec-sites/echo-lake-dayuse"
 	},
 	{
 		"name": "Elk Bay (rec-site)",
@@ -1895,7 +1895,7 @@
 		}
 	},
 	{
-		"file": "destinations/parks/elk-falls-quinsam-campground"
+		"file": "/destinations/parks/elk-falls-quinsam-campground"
 	},
 	{
 		"name": "Father & Son Lake (rec-site)",
@@ -2496,7 +2496,7 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/gosling-lake"
+		"file": "/destinations/lakes/gosling-lake"
 	},
 	{
 		"name": "Gosling Lake (rec-site)",
@@ -3164,7 +3164,7 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/keogh-lake"
+		"file": "/destinations/lakes/keogh-lake"
 	},
 	{
 		"name": "Kinsol Trestle Trail (rec-site)",
@@ -4399,10 +4399,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/mohun-lake"
+		"file": "/destinations/lakes/mohun-lake"
 	},
 	{
-		"file": "destinations/rec-sites/mohun-lake-rec0184"
+		"file": "/destinations/rec-sites/mohun-lake-rec0184"
 	},
 	{
 		"name": "Montague Creek (rec-site)",
@@ -4487,10 +4487,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/morton-lake"
+		"file": "/destinations/lakes/morton-lake"
 	},
 	{
-		"file": "destinations/parks/morton-lake-park"
+		"file": "/destinations/parks/morton-lake-park"
 	},
 	{
 		"name": "Mountainaire Campground",
@@ -4590,10 +4590,10 @@
 		]
 	},
 	{
-		"file": "destinations/lakes/muchalat-lake"
+		"file": "/destinations/lakes/muchalat-lake"
 	},
 	{
-		"file": "destinations/rec-sites/muchalat-lake-rec0258"
+		"file": "/destinations/rec-sites/muchalat-lake-rec0258"
 	},
 	{
 		"name": "Musgrave Point (in Sansum Narrows) (rec-site)",
@@ -5303,7 +5303,7 @@
 		}
 	},
 	{
-		"file": "destinations/campgrounds/pacific-playgrounds-resort"
+		"file": "/destinations/campgrounds/pacific-playgrounds-resort"
 	},
 	{
 		"name": "Pacific Yew (rec-site)",
@@ -6046,7 +6046,7 @@
 		]
 	},
 	{
-		"file": "destinations/parks/rathtrevor-beach-park"
+		"file": "/destinations/parks/rathtrevor-beach-park"
 	},
 	{
 		"name": "Riverbend Resort",
@@ -6169,10 +6169,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/roberts-lake"
+		"file": "/destinations/lakes/roberts-lake"
 	},
 	{
-		"file": "destinations/rec-sites/roberts-lake-rec0191"
+		"file": "/destinations/rec-sites/roberts-lake-rec0191"
 	},
 	{
 		"name": "Rondalyn Resort",
@@ -6255,7 +6255,7 @@
 		}
 	},
 	{
-		"file": "destinations/campgrounds/salmon-point-resort"
+		"file": "/destinations/campgrounds/salmon-point-resort"
 	},
 	{
 		"name": "Saratoga Beach Resort",
@@ -7022,10 +7022,10 @@
 		}
 	},
 	{
-		"file": "destinations/lakes/sproat-lake"
+		"file": "/destinations/lakes/sproat-lake"
 	},
 	{
-		"file": "destinations/parks/sproat-lake-provincial-park"
+		"file": "/destinations/parks/sproat-lake-provincial-park"
 	},
 	{
 		"name": "Spruce Bay (rec-site)",
@@ -8160,7 +8160,7 @@
 		}
 	},
 	{
-		"file": "destinations/rec-sites/twin-lake-rec0185"
+		"file": "/destinations/rec-sites/twin-lake-rec0185"
 	},
 	{
 		"name": "Ucluelet Campground",
