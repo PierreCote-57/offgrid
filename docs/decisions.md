@@ -97,7 +97,7 @@ The host tag on an include is a placeholder and nothing else: `th:replace` disca
 emits the fragment in its place, so `<div>` renders identically to any other name.
 
 Every script the site has is loaded on every page. Each one is inert where it is not used —
-`gl-constants.js` and `map.js` only register on `window.GL`, and `lightbox.js` and
+`gl-constants.js` and `google-map.js` only register on `window.GL`, and `lightbox.js` and
 `browser.js` return immediately when the element they look for is absent. So there is one
 script list, in one file, and a page that adds a block needing a script declares nothing.
 
@@ -772,9 +772,9 @@ vocabulary derived from the filtered list deletes the choices you need to widen 
 the one place a card, a map pin and the table's View link read it, so they cannot disagree.
 
 `gl-constants.js` holds the vocabularies — `TAG_COLORS`, `DESTINATION_TYPES`, `LINK_TYPES`,
-`ROAD_COLORS`, `ROAD_RANK`, `NON_DRIVE_LEG_TYPES` — because the browser is the only reader and
-putting them in Java would mean inventing a way to ship them out again. `map.js` is a stub
-(#27); the map view builds the real `mapObject` and hands it over.
+`ROAD_COLORS`, `ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `MAP_CONFIG`, `PIN_ICONS` — because the
+browser is the only reader and putting them in Java would mean inventing a way to ship them
+out again. The map view builds the real `mapObject` and hands it to `google-map.js`.
 
 **The table does not break out of the page column.** GettingLost forced `width:1180px` with
 negative side margins to escape a 900px content cap; `main` here is 1024 wide, which leaves 976
@@ -897,3 +897,35 @@ second back link to name.
 `GALLERY_NAMES` duplicated the `title` of every entry in `datasets.json`, because a page that
 is not the gallery had no reason to fetch that file for three words. On the server the titles
 are already being read, so the copy has no purpose left.
+
+## 2026-08-28 — Drawing a map: one drawer, several builders
+
+**`drawMap(box, mapObject)` is the whole interface**, defined in `google-map.js` —
+renamed from `map.js` so it pairs with `google-map.html` the way `browser.js` pairs with
+`browser.html`.
+
+**No scanner.** Nothing sweeps the document for map boxes. `google-map.html` emits, per
+`map()` call, a script whose own `DOMContentLoaded` listener builds that map's `mapObject`
+and calls `drawMap` — so a page with two maps has two independent scripts and nothing
+coordinating them. Thymeleaf already holds the map entry when it writes the block; a scanner
+would only put that in an attribute for something else to read back and re-parse.
+
+**Two concepts that were being confused as one.** Drawing is global and lives once;
+*preparing* a `mapObject` is local and lives wherever the data happens to be. The fragment
+builds one out of the page JSON at render time; `browser.js` builds one out of hydrated rows
+after a fetch, which is why it cannot carry an inline script and calls `drawMap` directly.
+Same function, same parameter, two builders with nothing in common.
+
+**No `galleries` parameter.** GettingLost passed `photoGalleries` in because a pin's `img`
+could be the reference `"galleryKey/itemId"`, resolved by `resolvePinMedia` *inside* the
+drawer. Offgrid's pins carry a bare name (`"img": "IMG_0499"`), and the builder turns it into
+a `/image/` URL before the pin ever reaches `drawMap` — the same way `url` arrives as a ready
+href rather than a reference. Resolution belongs to whoever builds the mapObject.
+
+**The page states the map's size on its own div, and keeps it with `th:insert`** (2026-08-29).
+Google fills the container it is given, so some box has to state a width and a height. The
+page writes `<div style="width:47%;height:200px;float:right" th:insert="…map('road')">`, and
+`.gl-mapbox` is `width/height:100%` so the fragment's div fills that box. `th:replace` would
+discard the div and the size with it. Nothing is passed through the fragment call, and float
+and margin are stated the same way — GettingLost's `[data-block-type="googleMap"]` house rule
+has no equivalent here, because the page that wants a map is the page that says how big.

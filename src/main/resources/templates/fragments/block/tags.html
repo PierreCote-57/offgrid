@@ -12,7 +12,7 @@
 	colour is not written here — offgrid.js paints it from the one palette in gl-constants.js.
 	Nothing renders at all when there is nothing to say.
 -->
-<div xmlns:th="http://www.thymeleaf.org"
+<div xmlns:th="http://www.thymeleaf.org" class="gl-tags"
 	 th:if="${pageData.tags != null and (!#lists.isEmpty(pageData.tags.badgeList) or !#lists.isEmpty(pageData.tags.keywordList))}">
 
 	<div class="gl-tagrow" th:if="${!#lists.isEmpty(pageData.tags.badgeList)}">
@@ -25,7 +25,7 @@
 
 	<div class="gl-tagrow-keywords" th:if="${!#lists.isEmpty(pageData.tags.keywordList)}">
 		<div class="gl-tagrow-group">
-			<span class="gl-tag gl-plain" th:each="keyword : ${#lists.sort(pageData.tags.keywordList)}"
+			<span class="gl-tag" data-tag="plain" th:each="keyword : ${#lists.sort(pageData.tags.keywordList)}"
 				  th:text="${keyword}">keyword</span>
 		</div>
 	</div>

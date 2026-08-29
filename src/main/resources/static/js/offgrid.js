@@ -20,6 +20,10 @@
 	 * Fill every pill under root — the whole document when no root is given. Markup built
 	 * after load passes the element it just filled.
 	 *
+	 * The selector is the CLASS. gl-tag is what a pill IS; data-tag only says which colour
+	 * to give it. Selecting on the attribute meant a pill that arrived without one was
+	 * skipped in silence, and looked right only for as long as the page behind it did.
+	 *
 	 * data-tag is an OPEN vocabulary: a word the palette does not know gets the fallback, so
 	 * a new badge is visible the day it is authored. data-road is CLOSED: an unknown value is
 	 * a data error, and the badge goes away rather than showing uncoloured.
@@ -27,10 +31,14 @@
 	window.GL.paintTags = function (root) {
 		var scope = root || document;
 
-		var pillList = scope.querySelectorAll("[data-tag]");
+		var pillList = scope.querySelectorAll(".gl-tag");
 		for (var i = 0; i < pillList.length; i++) {
 			var pill = pillList[i];
 			var word = pill.getAttribute("data-tag");
+			if (!word) {
+				console.error('[offgrid] A gl-tag with no data-tag: "' + pill.textContent +
+					'" — painted from the fallback.');
+			}
 			var tagColors = window.GL.TAG_COLORS[word] || window.GL.TAG_FALLBACK;
 			pill.style.background = tagColors.bg;
 			pill.style.color = tagColors.text;

@@ -13,5 +13,7 @@ public enum MapIcon
 	@SerializedName("tent")			TENT,
 	@SerializedName("campground")	CAMPGROUND,
 	@SerializedName("picnic")		PICNIC,
-	@SerializedName("park")			PARK
+	@SerializedName("park")			PARK,
+	@SerializedName("home")			HOME,
+	@SerializedName("outhouse")		OUTHOUSE
 }

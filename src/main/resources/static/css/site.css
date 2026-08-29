@@ -1046,6 +1046,12 @@ a.gl-photo-link {
    of pinned to the corners of an image: badges LEFT, road badge RIGHT, keywords BELOW. Only
    the containers are new — .gl-tag is the pill in both places, which is what keeps a card
    and a page from drifting apart. */
+/* The block owns the space after itself: either row can be the last one, so the gap is
+   written once on the wrapper instead of twice on the rows. */
+.gl-tags {
+	margin-bottom: 1rem;
+}
+
 .gl-tagrow {
 	display: flex;
 	justify-content: space-between;
@@ -1064,12 +1070,11 @@ a.gl-photo-link {
 	margin-top: 0.4rem;
 }
 
-/* A vocabulary with no colour of its own. The border does the work the fill does on a
-   coloured pill, so it still reads as a pill. */
-.gl-tag.gl-plain {
-	background: var(--paper);
-	color: var(--text);
-	border: 1px solid var(--rule);
+/* A vocabulary with no colour of its own. Its fill and its ink come from TAG_COLORS like
+   every other pill's; only the border is left here, because .gl-tag's white one is invisible
+   against a white pill and an outline is what still makes this one read as a pill. */
+.gl-tag[data-tag="plain"] {
+	border-color: var(--rule);
 }
 
 /* A measurement, not a vocabulary word — no pill. */
@@ -1093,4 +1098,30 @@ a.gl-photo-link {
 	display: inline-block;
 	color: var(--text);
 	text-decoration: none;
+}
+
+/* Maps. GL.drawMap gives every map the same two children — the map and the live centre/zoom
+   caption under it — and touches no box property at all: the size is stated by whoever wrote
+   the box, and .gl-mapbox fills it. The flex column is what splits that height, so the
+   caption takes its own line out of the box rather than being added on underneath it.
+   The caption reserves its line before it has any text, so Google sizes the map once against
+   a box that already allows for it and never redraws into a box that shrank underneath. */
+.gl-mapbox {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+}
+
+.gl-map {
+	flex: 1;
+	min-height: 0;
+}
+
+.gl-map-caption {
+	flex: none;
+	min-height: 1.4em;
+	margin: 0.4rem 0 0;
+	text-align: center;
+	font-size: 0.9rem;
 }

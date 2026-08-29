@@ -14,12 +14,15 @@
 	// other scripts that add to it.
 	window.GL = window.GL || {};
 
-	// Tag-chip colours, keyed by the badge word.
+	// Tag-chip colours, keyed by the badge word. "plain" is not a badge word: it is the
+	// keyword pill's key. White is a colour like any other and belongs in here, so the pill
+	// carries its own background instead of borrowing whatever it happens to sit on.
 	window.GL.TAG_COLORS = {
 		camping: { bg: "rgba(31, 158, 117, 0.88)", text: "#E1F5EE" },
 		fishing: { bg: "rgba(55, 138, 221, 0.88)", text: "#E6F1FB" },
 		hiking:  { bg: "rgba(216, 90, 48, 0.88)",  text: "#FAECE7" },
-		picnic:  { bg: "rgba(186, 117, 23, 0.88)", text: "#FAEEDA" }
+		picnic:  { bg: "rgba(186, 117, 23, 0.88)", text: "#FAEEDA" },
+		plain:   { bg: "#ffffff",                  text: "#243027" }
 	};
 	window.GL.TAG_FALLBACK = { bg: "rgba(95, 94, 90, 0.88)", text: "#F1EFE8" };
 
@@ -88,4 +91,99 @@
 	 * walk vs hike is about footing, not distance: walk is an improved surface, hike is trail.
 	 */
 	window.GL.NON_DRIVE_LEG_TYPES = ["walk", "hike", "boat"];
+
+	/*
+	 * The Google Maps setup every map on the site is drawn with. The API key is a BROWSER
+	 * key: it ships in this file because it has to reach Google from the visitor's page, and
+	 * it is restricted by referrer at Google rather than by hiding it here.
+	 *
+	 * mapZoom is the fallback for a mapObject that states no zoom of its own.
+	 */
+	window.GL.MAP_CONFIG = {
+		mapApiKey: "AIzaSyBHN5E9rVPW6wqbMXEzFE5nDc-TH58gKQ8",
+		mapZoom: 13,
+		mapTypeId: "roadmap",
+		mapStyles: []
+	};
+
+	/*
+	 * Map-marker figures, keyed by a pin's icon word — the MapIcon vocabulary. Each is a
+	 * standalone 48x48 SVG (xmlns is required for data-URI use) with the figure centred by
+	 * translate(24,24), so google-map.js anchors every pin at (24,24) whichever figure it is.
+	 * A word with no figure here falls back to Google's own marker.
+	 */
+	window.GL.PIN_ICONS = {
+		lake:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24) scale(0.82)">' +
+					'<circle cx="0" cy="0" r="24" fill="#2b7fbf"/>' +
+					'<g fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round">' +
+						'<path d="M-12,-7 q4,-5 8,0 t8,0 t8,0"/>' +
+						'<path d="M-12,0 q4,-5 8,0 t8,0 t8,0"/>' +
+						'<path d="M-12,7 q4,-5 8,0 t8,0 t8,0"/>' +
+					'</g>' +
+				'</g>' +
+			'</svg>',
+		tent:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)">' +
+					'<polygon points="0,-20 -16,11 16,11" fill="#9a6b3f"/>' +
+					'<polygon points="-5,11 5,11 0,-4" fill="#cda876"/>' +
+				'</g>' +
+			'</svg>',
+		campground:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)">' +
+					'<rect x="-16" y="-10" width="28" height="17" rx="3" fill="#d98324"/>' +
+					'<rect x="-12" y="-6" width="7" height="7" rx="1" fill="#f2b877"/>' +
+					'<line x1="12" y1="2" x2="18" y2="4" stroke="#d98324" stroke-width="2.6" stroke-linecap="round"/>' +
+					'<circle cx="-8" cy="9" r="3.6" fill="#d98324"/>' +
+					'<circle cx="6" cy="9" r="3.6" fill="#d98324"/>' +
+				'</g>' +
+			'</svg>',
+		picnic:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)" stroke="#c0504d" stroke-linecap="round" fill="none">' +
+					'<line x1="-13" y1="-6" x2="13" y2="-6" stroke-width="4.5"/>' +
+					'<line x1="-8" y1="-6" x2="-16" y2="13" stroke-width="3.5"/>' +
+					'<line x1="8" y1="-6" x2="16" y2="13" stroke-width="3.5"/>' +
+					'<line x1="-19" y1="7" x2="19" y2="7" stroke-width="3.5"/>' +
+				'</g>' +
+			'</svg>',
+		park:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)">' +
+					'<polygon points="0,-18 -11,-4 11,-4" fill="#3f9a54"/>' +
+					'<polygon points="0,-11 -14,7 14,7" fill="#3f9a54"/>' +
+					'<rect x="-2.5" y="7" width="5" height="8" fill="#3f9a54"/>' +
+				'</g>' +
+			'</svg>',
+		home:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)">' +
+					'<polygon points="0,-19 -19,-4 19,-4" fill="#465868"/>' +
+					'<rect x="-15" y="-4" width="30" height="20" rx="1.5" fill="#5f7488"/>' +
+					'<rect x="-10" y="1" width="20" height="15" rx="1" fill="#e6ecf1"/>' +
+					'<g stroke="#9caebf" stroke-width="1.5">' +
+						'<line x1="-10" y1="6" x2="10" y2="6"/>' +
+						'<line x1="-10" y1="11" x2="10" y2="11"/>' +
+					'</g>' +
+				'</g>' +
+			'</svg>',
+		outhouse:
+			'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">' +
+				'<g transform="translate(24,24)" stroke-linecap="round" stroke-linejoin="round">' +
+					'<polyline points="-20,-4 0,-17 20,-4" fill="none" stroke="#37692a" stroke-width="5.2"/>' +
+					'<rect x="-16.5" y="-6" width="4.6" height="27" rx="2.3" fill="#37692a"/>' +
+					'<rect x="11.9" y="-6" width="4.6" height="27" rx="2.3" fill="#37692a"/>' +
+					'<rect x="-11" y="-4" width="11" height="24" fill="#ecd6a6"/>' +
+					'<rect x="0" y="-4" width="11" height="24" fill="#b98243"/>' +
+					'<line x1="0" y1="-4" x2="0" y2="20" stroke="#8a6a3a" stroke-width="1"/>' +
+					'<rect x="-8.5" y="0" width="6.2" height="6.2" rx="1.3" fill="#7fb0e0"/>' +
+					'<circle cx="3" cy="9" r="1.4" fill="#5a3d1e"/>' +
+					'<rect x="-16.5" y="18.5" width="4.6" height="3.4" rx="1.3" fill="#2b5320"/>' +
+					'<rect x="11.9" y="18.5" width="4.6" height="3.4" rx="1.3" fill="#2b5320"/>' +
+				'</g>' +
+			'</svg>'
+	};
 })();

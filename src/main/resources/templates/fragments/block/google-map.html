@@ -1,7 +1,7 @@
 <!--
 	One map on the page, named by the caller: map('road') draws pageData.googleMap["road"].
 
-	The entry crosses to JavaScript as JSON on the div; map.js parses it and hands it to
+	The entry crosses to JavaScript as JSON on the div; google-map.js parses it and hands it to
 	GL.drawMap. It travels whole rather than as one attribute per field because pinList is a
 	list of objects, which has no honest spelling as a flat attribute.
 
@@ -22,7 +22,8 @@
 	<div th:if="${mapEntry != null}" class="gl-mapbox"
 		 th:attr="data-map=${mapEntry}"></div>
 
-	<div th:unless="${mapEntry != null}" class="block-unavailable"
+	<div th:unless="${mapEntry != null}"
+		 class="block-unavailable"
 		 th:text="'Map &quot;' + ${mapName} + '&quot; unavailable'">Map unavailable</div>
 
 </th:block>

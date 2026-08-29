@@ -15,6 +15,17 @@
 			"costCad": 0.0,
 			"nextDueKm": 123200,
 			"nextDueDate": null
+		},
+		{
+			"date": "2026-08-28",
+			"odometerKm": 1234,
+			"shopName": "Van Toys",
+			"shopUrl": "https://vantoys.ca",
+			"workName": "Upgrade batteries to 2x206 Ah Lithium (+Orion XS)",
+			"workUrl": "van-2026-08-28.pdf",
+			"costCad": 0.0,
+			"nextDueKm": 0,
+			"nextDueDate": null
 		}
 	],
 	"noteList": [
@@ -27,6 +38,13 @@
 						"Camera recall. <br />",
 						"Low occasional beep, visible on diagnostics<br />",
 						"Inquire about oil change"
+					]
+				},
+				{
+					"name": "Week of Aug 21-28, 2026",
+					"description": [
+						"Van toys: Upgrade AGM battery (300Ah) to Lithium (2 x 206 Ah).",
+						"Also upgrade electronics appropriately."
 					]
 				},
 				{

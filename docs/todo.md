@@ -100,10 +100,11 @@ the two fixes are the missing route and the missing files.
 item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
 Decide which word the site uses in a URL before either name is public.
 
-#27 `GL.drawMap` is a stub — `static/js/map.js` writes "Map goes here" into its container.
-The browser page's map view already builds the real `mapObject` (`{lat, lng, zoom, pinList}`,
-pins shaped like `Place`), so the map session is the drawing and the pin vocabulary, not the
-data.
+#27 `fragments/block/google-map.html` does not build a `mapObject`. `data-map` is written with
+`th:attr="data-map=${mapEntry}"`, which renders the object's `toString()`, and nothing on a
+destination page calls `drawMap`. `GL.drawMap` and the browser page's builder are done; this
+is the third piece — see `docs/decisions.md`, 2026-08-28, "Drawing a map". A page sizes its
+own map on the div it wraps the fragment in, with `th:insert` so that div survives.
 
 #29 `data/shared/browser/browser.json` has an empty `name`, so the browser page's `<h1>` is
 blank and its tab reads `— Going offgrid`. Every other page's name comes from its JSON.
@@ -146,28 +147,24 @@ and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
 
-#36 The four park pages carry the `campground` block with nothing behind it.
+#36 Two park pages carry the `campground` block with nothing behind it.
 
 `fragments/block/campground.html` is implemented: one row of links out of
 `campgroundData.referenceList` — the homepage shown as the word "Website", then map, then
-reservation — which is all `gettinglost.jst:753` ever drew. The two campground pages have the
-data for it.
+reservation — which is all `gettinglost.jst:753` ever drew. The four pages under
+`campgrounds/` have the data for it.
 
-The four parks do not: their JSON has no `campgroundData`, so the block renders nothing
-there. `parks` binds to `CampSitePage` rather than `AreaPage` — temporary, and only so the
-expression resolves; on `AreaPage` there is no such getter and the page cannot render at all.
-Ruled CONTENT (2026-08-28): either the campground is its own place rather than the park it
-sits on, or the park is filed as something it is not. GettingLost's park JSON does carry it —
-operator, siteCount, amenities and three links each — so the data exists and the conversion
-did not bring it across.
+`morton-lake-park` and `sproat-lake-provincial-park` do not: they carry no `campgroundData`,
+so the block renders nothing there. The ruling that separates a campground from the park it
+sits on (2026-08-28) has been applied to Elk Falls and Rathtrevor, which moved to
+`campgrounds/`; these two are the ones it has not been applied to.
 
 `CampgroundData` also carries `amenityList`, `operator` and `siteCount`, none of which the
 GettingLost block ever drew.
 
-#38 `parks` binds to `CampSitePage`, temporarily. `OffgridController.getPageDataClass` was
-changed 2026-08-28 so the four park pages could render at all: they carry the campground
-block, and `AreaPage` has no `campgroundData` getter for the expression to resolve against.
-`docs/decisions.md` (2026-08-25, the page hierarchy) files a park as `AreaPage`, so the code
-and the decision now disagree. Settling it is the same question as #36 — whether a campground
-inside a park is its own place — and whichever way that goes, one of the two has to change.
-
+#38 `parks` binds to `CampSitePage`, temporarily.
+`OffgridController.getPageDataClass` was changed 2026-08-28 so the park pages could render at
+all: they carry the campground block, and `AreaPage` has no `campgroundData` getter for the
+expression to resolve against. `docs/decisions.md` (2026-08-25, the page hierarchy) files a
+park as `AreaPage`, so the code and the decision now disagree. Same question as #36 — a park
+that is only a park has no campground data to reach for.
