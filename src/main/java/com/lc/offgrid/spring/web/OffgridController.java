@@ -1,5 +1,6 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.offgrid.pojo.page.AreaPage;
 import com.lc.offgrid.pojo.page.CampSitePage;
 import com.lc.offgrid.pojo.page.DestinationPage;
 import com.lc.offgrid.pojo.page.LakePage;
@@ -42,6 +43,22 @@ public class OffgridController extends BaseWebController
 		return service;
 	}
 
+	private Class<? extends PageData> getPageDataClass(String type)
+	{
+		Class<? extends PageData> pageDataClass = switch (type)
+		{
+			case "howto" -> PageData.class;
+			case "checklist" -> PageData.class;
+			case "maintenance" -> MaintenancePage.class;
+			case "lakes" -> LakePage.class;
+			case "parks" -> AreaPage.class;
+			case "rec-sites" -> CampSitePage.class;
+			case "campgrounds" -> CampSitePage.class;
+			default -> DestinationPage.class;
+		};
+		return  pageDataClass;
+	}
+
 	@GetMapping("/")
 	public String home(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
@@ -56,20 +73,6 @@ public class OffgridController extends BaseWebController
 		String path = String.format("/destinations/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
 		return processRequest(request, response, model, () -> getService().processPage(model, path, clazz));
-	}
-
-	private Class<? extends PageData> getPageDataClass(String type)
-	{
-		Class<? extends PageData> pageDataClass = switch (type)
-		{
-			case "howto" -> PageData.class;
-			case "checklist" -> PageData.class;
-			case "maintenance" -> MaintenancePage.class;
-			case "lakes" -> LakePage.class;
-			case "campsite" -> CampSitePage.class;
-			default -> DestinationPage.class;
-		};
-		return  pageDataClass;
 	}
 
 	@GetMapping("/hardware/{name}")

@@ -1895,7 +1895,7 @@
 		}
 	},
 	{
-		"file": "/destinations/parks/elk-falls-quinsam-campground"
+		"file": "/destinations/campgrounds/elk-falls-quinsam-campground"
 	},
 	{
 		"name": "Father & Son Lake (rec-site)",
@@ -6046,7 +6046,7 @@
 		]
 	},
 	{
-		"file": "/destinations/parks/rathtrevor-beach-park"
+		"file": "/destinations/campgrounds/rathtrevor-beach-park-campground"
 	},
 	{
 		"name": "Riverbend Resort",

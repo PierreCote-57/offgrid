@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Beavertail Lake (day-use)</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div>
+		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<p style="margin-top:0;">
+			First observation: The road is full of large potholes.
+			I strongly recommend not going on a street care,
+			not even an AWD with street suspension and tires.
+		</p>
+	</div>
+
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('photos')}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

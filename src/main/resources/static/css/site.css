@@ -1077,3 +1077,20 @@ a.gl-photo-link {
 	font-size: 11px;
 	color: var(--faded);
 }
+
+/* Every link a campground carries, in one row. The separator is drawn between the links
+   rather than written into the markup, so the row closes up on its own when a place has
+   only two of the three. It is punctuation, not part of either link, so it takes the page's
+   ink and none of the link's decoration. */
+.gl-linkrow {
+	font-size: 1.1rem;
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+}
+
+.gl-linkrow a:not(:first-of-type)::before {
+	content: "\00a0\00b7\00a0 ";
+	display: inline-block;
+	color: var(--text);
+	text-decoration: none;
+}

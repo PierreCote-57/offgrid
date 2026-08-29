@@ -1,11 +1,10 @@
 <!--
 	The way back to the gallery the page was reached from.
 
-	The href is not written here, because it depends on where the visitor came from and only
-	the browser knows that. offgrid.js fills it: the referrer verbatim when the visitor
-	arrived from the browser page, so the whole context comes back — dataset, view and every
-	filter — and otherwise the query passed in here, which names the gallery this page
-	belongs to. That query is the one the menu link for that gallery uses.
+	Resolved on the server, so the link is in the page as it arrives: backQuery is the query
+	the gallery is restored with, and PageTitle is what that gallery is called.
 -->
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="back(fallbackQuery)"
-	 class="gl-dest-back" th:attr="data-fallback=${fallbackQuery}"></div>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="back()" class="gl-dest-back">
+	<a th:href="'/shared/browser?' + ${backQuery}"
+	   th:text="'← Back to ' + ${backName}" href="">← Back</a>
+</div>

@@ -1,2 +1,28 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="map(mapName)" class="block-unavailable"
-	 th:text="'Map &quot;' + ${mapName} + '&quot; unavailable'">Map unavailable</div>
+<!--
+	One map on the page, named by the caller: map('road') draws pageData.googleMap["road"].
+
+	The entry crosses to JavaScript as JSON on the div; map.js parses it and hands it to
+	GL.drawMap. It travels whole rather than as one attribute per field because pinList is a
+	list of objects, which has no honest spelling as a flat attribute.
+
+	A name nobody defined renders the unavailable notice, so a misspelled map shows on the
+	page instead of drawing nothing.
+-->
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="map(mapName)"
+		  th:with="mapEntry=${pageData.googleMap != null ? pageData.googleMap.get(mapName) : null}">
+
+	<!--
+		DON'T KNOW: how to get the JSON text here.
+
+		data-map has to carry mapEntry serialized by Gson — the project's serializer, and the
+		one that knows MapIcon's @SerializedName spellings. Thymeleaf has the object but no
+		way to call BaseWebProcessor.getGson() on its own, so something has to put a
+		serializer or a serialized value within reach of this expression.
+	-->
+	<div th:if="${mapEntry != null}" class="gl-mapbox"
+		 th:attr="data-map=${mapEntry}"></div>
+
+	<div th:unless="${mapEntry != null}" class="block-unavailable"
+		 th:text="'Map &quot;' + ${mapName} + '&quot; unavailable'">Map unavailable</div>
+
+</th:block>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Mohun Lake (rec-site)</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div>
+		<details>
+			<summary><h2 style="display:inline;">Road map</h2></summary>
+			<div style="width:100%;height:600px;float:none;">
+				<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+			</div>
+		</details>
+		<p>
+			Visited on April 12, 2021.
+		</p>
+	</div>
+
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('atSite')}"></div>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('onTheWay')}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

@@ -7,7 +7,7 @@
 			"camping"
 		],
 		"typeList": [
-			"park"
+			"campground"
 		],
 		"keywordList": [
 			"Visited"
@@ -22,6 +22,28 @@
 		"lng": -124.269079,
 		"icon": "park",
 		"label": "Parksville"
+	},
+	"campgroundData": {
+		"amenityList": [
+			"beach access"
+		],
+		"referenceList": [
+			{
+				"label": "HomePage",
+				"type": "homepage",
+				"url": "https://bcparks.ca/rathtrevor-beach-park/"
+			},
+			{
+				"label": "Campground",
+				"type": "map",
+				"url": "https://nrs.objectstore.gov.bc.ca/kuwyyf/rathtrevor_beach_park_map_95625a028d.pdf"
+			},
+			{
+				"label": "Reservation",
+				"type": "reservation",
+				"url": "https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483545&mapId=-2147483437&equipmentId=-32768&subEquipmentId=-32765"
+			}
+		]
 	},
 	"googleMap": {
 		"road": {
@@ -91,8 +113,8 @@
 					"label": "The van in our camp site"
 				},
 				{
-					"id": "img_2849GeoPoin",
-					"img": "IMG_2849GeoPoin",
+					"id": "img_2849",
+					"img": "IMG_2849",
 					"label": "Don't feed the bears :)"
 				},
 				{

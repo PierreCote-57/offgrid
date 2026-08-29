@@ -3,6 +3,7 @@ package com.lc.offgrid.spring.web;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicRuntimeException;
+import com.lc.offgrid.misc.QueryUtil;
 import com.lc.offgrid.misc.files.ResourceFileManager;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
@@ -10,7 +11,10 @@ import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.pojo.page.PostPage;
 import com.lc.offgrid.pojo.part.Dataset;
+import com.lc.offgrid.spring.tools.BaseController;
+import com.lc.offgrid.spring.tools.BaseWebController;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
@@ -61,12 +65,19 @@ public class OffgridProcessor extends BaseWebProcessor
 		processDefault(model, pageTitle);
 		model.addAttribute("pageData", pageData);
 
+		// Required by pages accessed from a browser
+		HttpServletRequest request = BaseWebController.PageContext.getPageContext().getRequest();
+		String referrer = request.getHeader("referer");
+		model.addAttribute("backQuery", QueryUtil.extractQueryParam(referrer));
+		model.addAttribute("backName", QueryUtil.extractQueryParamPretty(referrer, "dataset"));
+
 		return path;
 	}
+
 	public String processBrowser(Model model, String path, Class<? extends PageData> clazz, String datasetName)
 	{
 		String answer = processPage(model, path, clazz);
-		// TODO Adjust the page title
+
 		Dataset dataset = findDataset(datasetName);
 		if (null != dataset)
 		{

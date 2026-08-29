@@ -879,3 +879,21 @@ a format into an object is what that class does, and the method names itself aft
 in `OffgridProcessor` did not move, and `getGson()` delegates as well. The builder settings
 (`setPrettyPrinting`, `disableHtmlEscaping`) came along, so the one `toJson` in `OffgridProcessor`
 writes exactly what it wrote before.
+
+## 2026-08-28 — The back link is built on the server
+
+`Referer` is on the HTTP request, so the server knows where the visitor came from and the
+link is in the page as it arrives. `paintBackLink`, `browserReferrer`, `galleryName`,
+`BROWSER_PATH` and `GALLERY_NAMES` are gone from `offgrid.js`.
+
+The rule it came from: the reason for putting work in the browser has to be something the
+server genuinely cannot know. The referrer was never that.
+
+Two model attributes carry it, `backQuery` and `PageTitle` — the query the gallery is
+restored with, and what that gallery is called. The path is constant, so the fragment writes
+it. The fragment takes no parameter: a page is reached from one gallery, so there is never a
+second back link to name.
+
+`GALLERY_NAMES` duplicated the `title` of every entry in `datasets.json`, because a page that
+is not the gallery had no reason to fetch that file for three words. On the server the titles
+are already being read, so the copy has no purpose left.

@@ -7,14 +7,14 @@ package com.lc.offgrid.pojo.part;
 public class Leg
 {
 	private String	type;
-	private Integer	km;
+	private double km;
 
 	public String getType()
 	{
 		return type;
 	}
 
-	public Integer getKm()
+	public double getKm()
 	{
 		return km;
 	}

@@ -9,18 +9,35 @@
 			"hiking"
 		],
 		"typeList": [
-			"park"
+			"campground"
 		]
-	},
-	"wpSettings": {
-		"published": true,
-		"comments": "open"
 	},
 	"location": {
 		"lat": 50.037009,
 		"lng": -125.295734,
 		"icon": "tent",
 		"label": "Near Campbell River"
+	},
+	"campgroundData": {
+		"amenityList": [
+		],
+		"referenceList": [
+			{
+				"label": "HomePage",
+				"type": "homepage",
+				"url": "https://bcparks.ca/elk-falls-park/"
+			},
+			{
+				"label": "Campground",
+				"type": "map",
+				"url": "https://nrs.objectstore.gov.bc.ca/kuwyyf/elk_falls_quinsam_campground_map_21bba6d02b.pdf"
+			},
+			{
+				"label": "Reservation",
+				"type": "reservation",
+				"url": "https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483545&mapId=-2147483437&equipmentId=-32768&subEquipmentId=-32765"
+			}
+		]
 	},
 	"googleMap": {
 		"road": {

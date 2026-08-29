@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Sproat Lake Provincial Park</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div th:replace="~{fragments/block/campground}"></div>
+
+	<div>
+		<details>
+			<summary><h2 style="display:inline;">Road map</h2></summary>
+			<div style="width:800px;height:500px;float:none;">
+				<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+			</div>
+		</details>
+		<p style="margin-top:0;">
+			Sproat Lake Provincial Park sits on the north shore of Sproat Lake,
+			13&nbsp;km northwest of Port Alberni off Highway&nbsp;4. It has 65 campsites
+			(59 vehicle-accessible and 5 walk-in) plus the Taylor Arm group site, a boat
+			launch, and two swimming areas in the warm lake water. A trail through a
+			highway underpass links the upper campground to the lower campground and
+			beach. At the lake's eastern end, the K'ak'awin (Hectors) petroglyph panel is
+			one of the finest prehistoric rock carvings in British Columbia.
+		</p>
+	</div>
+
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('photos')}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

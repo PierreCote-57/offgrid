@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Sproat Lake</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div>
+		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<p style="margin-top:0;">
+			Sproat Lake is a large, deep lake 13&nbsp;km northwest of Port Alberni on
+			Vancouver Island, reached via Highway&nbsp;4. Its warm water draws swimmers,
+			boaters, water-skiers and anglers, and the K'ak'awin (Hectors) petroglyph
+			panel at its eastern end is one of the finest prehistoric rock carvings in
+			British Columbia.
+		</p>
+	</div>
+
+	<div th:replace="~{fragments/block/fishing-references}"></div>
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('photos')}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

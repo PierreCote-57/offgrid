@@ -22,8 +22,7 @@ and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing se
 
 #7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
 in for the two checklists, the van, the Bronco, the two maintenance pages, the six posts and
-one destination (echo-lake, the pattern for the rest); the six howto pages, the remaining
-destinations and all the images are not.
+all 24 destinations; the six howto pages and all the images are not.
 
 #8 Reading the JSON — `readFile` reads it per request, and the mapping method names the
 class: `PageData` for info and hardware, `MaintenancePage`, `PostPage`. Settled: content
@@ -146,3 +145,29 @@ the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand 
 and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
+
+#36 The four park pages carry the `campground` block with nothing behind it.
+
+`fragments/block/campground.html` is implemented: one row of links out of
+`campgroundData.referenceList` — the homepage shown as the word "Website", then map, then
+reservation — which is all `gettinglost.jst:753` ever drew. The two campground pages have the
+data for it.
+
+The four parks do not: their JSON has no `campgroundData`, so the block renders nothing
+there. `parks` binds to `CampSitePage` rather than `AreaPage` — temporary, and only so the
+expression resolves; on `AreaPage` there is no such getter and the page cannot render at all.
+Ruled CONTENT (2026-08-28): either the campground is its own place rather than the park it
+sits on, or the park is filed as something it is not. GettingLost's park JSON does carry it —
+operator, siteCount, amenities and three links each — so the data exists and the conversion
+did not bring it across.
+
+`CampgroundData` also carries `amenityList`, `operator` and `siteCount`, none of which the
+GettingLost block ever drew.
+
+#38 `parks` binds to `CampSitePage`, temporarily. `OffgridController.getPageDataClass` was
+changed 2026-08-28 so the four park pages could render at all: they carry the campground
+block, and `AreaPage` has no `campgroundData` getter for the expression to resolve against.
+`docs/decisions.md` (2026-08-25, the page hierarchy) files a park as `AreaPage`, so the code
+and the decision now disagree. Settling it is the same question as #36 — whether a campground
+inside a park is its own place — and whichever way that goes, one of the two has to change.
+

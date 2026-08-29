@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Salmon Point Resort</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div th:replace="~{fragments/block/campground}"></div>
+
+	<div>
+		<details>
+			<summary><h2 style="display:inline;">Road map</h2></summary>
+			<div style="width:800px;height:500px;float:none;">
+				<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+			</div>
+		</details>
+		<p style="margin-top:0;">Under construction</p>
+	</div>
+
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

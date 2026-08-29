@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Rathtrevor Beach Provincial Park</h1>
+
+	<div th:replace="~{fragments/block/tags}"></div>
+
+	<div th:replace="~{fragments/block/campground}"></div>
+
+	<div>
+		<p style="margin-top:0;">
+			Beautiful park, standard BC Parks camping sites.
+			The beach does stretch forever at low tide!
+			Much description and reviews available elsewhere
+		</p>
+		<p>
+			Of note: Depending on your site (we were 218), you may
+			need to go past the site turnoff to get to the gatehouse,
+			then make a U-turn to get to your site.
+		</p>
+		<p>
+			As expected, you are on pavement except dirt/gravel road
+			from the turnoff to the campig sites. Everything is
+			well managed: The dirt road is good, there are garbage and
+			recycling bins and clean pit toilets nearby.
+		</p>
+	</div>
+
+	<details>
+		<summary><h2 style="display:inline;">Road map</h2></summary>
+		<div style="width:800px;height:500px;float:none;">
+			<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		</div>
+	</details>
+
+	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('photos')}"></div>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>
