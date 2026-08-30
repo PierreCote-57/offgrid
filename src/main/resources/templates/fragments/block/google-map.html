@@ -1,29 +1,66 @@
 <!--
 	One map on the page, named by the caller: map('road') draws pageData.googleMap["road"].
 
-	The entry crosses to JavaScript as JSON on the div; google-map.js parses it and hands it to
-	GL.drawMap. It travels whole rather than as one attribute per field because pinList is a
-	list of objects, which has no honest spelling as a flat attribute.
+	The caller states the size, on the div it wraps this in, and uses th:insert so that div
+	survives — .gl-mapbox fills whatever box it is given.
 
-	A name nobody defined renders the unavailable notice, so a misspelled map shows on the
-	page instead of drawing nothing.
+	Every call emits its own script: the entry crosses through JavaScript inlining, becomes a
+	mapObject here, and is handed to GL.drawMap. Two maps on a page are two independent
+	scripts, told apart by the map's name.
 -->
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="map(mapName)"
 		  th:with="mapEntry=${pageData.googleMap != null ? pageData.googleMap.get(mapName) : null}">
 
-	<!--
-		DON'T KNOW: how to get the JSON text here.
-
-		data-map has to carry mapEntry serialized by Gson — the project's serializer, and the
-		one that knows MapIcon's @SerializedName spellings. Thymeleaf has the object but no
-		way to call BaseWebProcessor.getGson() on its own, so something has to put a
-		serializer or a serialized value within reach of this expression.
-	-->
 	<div th:if="${mapEntry != null}" class="gl-mapbox"
-		 th:attr="data-map=${mapEntry}"></div>
+		 th:id="'gl-map-' + ${mapName}"></div>
 
-	<div th:unless="${mapEntry != null}"
-		 class="block-unavailable"
-		 th:text="'Map &quot;' + ${mapName} + '&quot; unavailable'">Map unavailable</div>
+	<script th:inline="javascript">
+		/*
+		 * The page's googleMap entry, as the mapObject GL.drawMap draws. The two differ in
+		 * what a pin carries: the entry names a photo ("IMG_0499"), a pin holds the URL that
+		 * shows it, so the name is resolved here rather than inside the drawer.
+		 *
+		 * icon is lower-cased on the way through: PIN_ICONS is keyed by the word a JSON file
+		 * writes, and a serializer that spells the enum constant instead would otherwise miss
+		 * every figure.
+		 */
+		function mapObjectFor(mapEntry) {
+			var pinList = [];
+			var entryPinList = mapEntry.pinList || [];
+			entryPinList.forEach(function (entryPin) {
+				var pin = { lat: entryPin.lat, lng: entryPin.lng };
+				if (entryPin.icon) {
+					pin.icon = entryPin.icon.toLowerCase();
+				}
+				if (entryPin.label) {
+					pin.label = entryPin.label;
+				}
+				if (entryPin.url) {
+					pin.url = entryPin.url;
+				}
+				if (entryPin.img) {
+					pin.img = "/image/" + entryPin.img;
+				}
+				pinList.push(pin);
+			});
+			var mapObject = {
+				lat: mapEntry.lat,
+				lng: mapEntry.lng,
+				zoom: mapEntry.zoom,
+				pinList: pinList
+			};
+			return mapObject;
+		}
+
+		window["renderMap" + [[${mapName}]]] = function () {
+			var mapObject = mapObjectFor([[${mapEntry}]]);
+			var box = document.getElementById("gl-map-" + [[${mapName}]]);
+			window.GL.drawMap(box, mapObject);
+		};
+
+		document.addEventListener("DOMContentLoaded", function () {
+			window["renderMap" + [[${mapName}]]]();
+		});
+	</script>
 
 </th:block>

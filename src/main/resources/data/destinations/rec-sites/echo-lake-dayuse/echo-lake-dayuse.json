@@ -25,7 +25,6 @@
 	},
 	"googleMap": {
 		"road": {
-			"file": "echo-lake-dayuse.html",
 			"zoom": 16
 		}
 	},

@@ -46,9 +46,18 @@
 		]
 	},
 	"googleMap": {
-		"road": {
-			"file": "rathtrevor-beach-park.html",
-			"zoom": 13
+		"road1": {
+			"zoom": 14
+		},
+		"road2": {
+			"zoom": 11,
+			"pinList": [
+				{
+					"icon": "park",
+					"lat": 49.321578,
+					"lng": -124.269079
+				}
+			]
 		}
 	},
 	"noteList": [

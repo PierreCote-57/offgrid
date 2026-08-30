@@ -8,7 +8,8 @@
 	<div th:replace="~{fragments/block/tags}"></div>
 
 	<div>
-		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<div style="width:750px;height:500px;clear:both"
+			 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		<p style="margin-top:0;">
 			Sproat Lake is a large, deep lake 13&nbsp;km northwest of Port Alberni on
 			Vancouver Island, reached via Highway&nbsp;4. Its warm water draws swimmers,

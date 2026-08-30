@@ -21,7 +21,6 @@
 	},
 	"googleMap": {
 		"road": {
-			"file": "morton-lake.html",
 			"zoom": 12
 		}
 	},

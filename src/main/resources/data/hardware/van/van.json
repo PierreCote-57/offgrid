@@ -1,6 +1,6 @@
 {
-	"name": "Van Overview",
-	"featuredImage": "beyond_22d_floorplan_5fx5gqbr8e",
+	"name": "The Van: Coachmen Beyond 22d 2026 on Ford Transit 350HD 2024",
+	"featuredImage": "floorplan",
 	"wpSettings": {
 		"published": true,
 		"comments": "open"
@@ -40,6 +40,16 @@
 					"label": "Top"
 				},
 				{
+					"id": "1",
+					"img": "floorplan",
+					"label": "Floorplan"
+				},
+				{
+					"id": "1",
+					"img": "floorplan-electric",
+					"label": "Floorplan - power points"
+				},
+				{
 					"id": "Tires",
 					"img": "IMG_2814",
 					"label": "Original tires"
@@ -51,7 +61,7 @@
 			"itemList": [
 				{
 					"id": "1",
-					"img": "beyond_22d_floorplan_5fx5gqbr8e",
+					"img": "floorplan",
 					"label": ""
 				},
 				{
@@ -156,5 +166,19 @@
 				}
 			]
 		}
-	}
+	},
+	"noteList": [
+		{
+			"sectionName": "",
+			"itemList": [
+				{
+					"name": "The Beyond",
+					"url": "https://coachmenrv.com/beyond",
+					"description": [
+						"Coachmen's product page for the Beyond."
+					]
+				}
+			]
+		}
+	]
 }

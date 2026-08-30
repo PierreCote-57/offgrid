@@ -8,7 +8,8 @@
 	<div th:replace="~{fragments/block/tags}"></div>
 
 	<div>
-		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<div style="width:750px;height:500px;clear:both"
+			 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		<p style="margin-top:0;">
 			Under construction
 		</p>

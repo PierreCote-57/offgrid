@@ -10,7 +10,8 @@
 	<p style="font-size:46px;font-weight:700;color:red;margin:0;text-align: center">⚠ Active worksite</p>
 
 	<div>
-		<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
+		<div style="width:750px;height:500px;clear:both"
+			 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		<p style="margin-top:0;">Under construction</p>
 	</div>
 

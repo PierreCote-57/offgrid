@@ -25,7 +25,7 @@
 	},
 	"googleMap": {
 		"road": {
-			"file": "beavertail-lake.html"
+			"zoom": 13
 		}
 	},
 	"fishingReferences": {

@@ -29,6 +29,11 @@
 					"id": "12V206P_spec",
 					"img": "12V206P_spec",
 					"label": "12V206P"
+				},
+				{
+					"id": "IMG_2895",
+					"img": "IMG_2895",
+					"label": "Battery display"
 				}
 			]
 		},
@@ -36,5 +41,33 @@
 			"name": "Details images",
 			"itemList": []
 		}
-	}
+	},
+	"noteList": [
+		{
+			"sectionName": "",
+			"itemList": [
+				{
+					"name": "SOK 12V battery manual",
+					"url": "https://www.invertersupply.com/media/data/SOK%20BATTERY%20MANUAL%202(1).pdf",
+					"description": [
+						"Covers the SK12V206, SK12V206H and SK12V206PH \u2014 the manual for the house battery."
+					]
+				},
+				{
+					"name": "Victron Cerbo GX manual",
+					"url": "https://www.victronenergy.com/upload/documents/Cerbo_GX/140558-Ekrano_GX__Venus_GX__Cerbo_GX__Cerbo-S_GX_Manual-pdf-en.pdf",
+					"description": [
+						"The GX device that gathers and displays what the rest of the system reports."
+					]
+				},
+				{
+					"name": "Victron Orion XS manual",
+					"url": "https://www.victronenergy.com/upload/documents/Orion_XS_12-12-50A_DC-DC_battery_charger/124067-Orion_XS_DC-DC_battery_charger-pdf-en.pdf",
+					"description": [
+						"One document for every Orion XS variant \u2014 the DC-DC charger, which reports its own throughput to the Cerbo over VE.Direct."
+					]
+				}
+			]
+		}
+	]
 }

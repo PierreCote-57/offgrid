@@ -11,16 +11,14 @@
 
 	<div>
 		<details>
-			<summary><h2 style="display:inline;">Road map</h2></summary>
-			<div style="width:800px;height:500px;float:none;">
-				<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
-			</div>
+			<summary><h2 class="gl-heading">Road map</h2></summary>
+			<div style="width:750px;height:500px;clear:both"
+			 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		</details>
 		<details>
-			<summary><h2 style="display:inline;">Campground map</h2></summary>
-			<div style="width:800px;height:500px;float:none;">
-				<div th:replace="~{fragments/block/google-map :: map('campground')}"></div>
-			</div>
+			<summary><h2 class="gl-heading">Campground map</h2></summary>
+			<div style="width:750px;height:500px;clear:both"
+			 th:insert="~{fragments/block/google-map :: map('campground')}"></div>
 		</details>
 
 		<p>Blurb goes here</p>

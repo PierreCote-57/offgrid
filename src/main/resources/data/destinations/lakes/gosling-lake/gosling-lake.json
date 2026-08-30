@@ -21,7 +21,7 @@
 	},
 	"googleMap": {
 		"road": {
-			"file": "gosling-lake.html"
+			"zoom": 13
 		}
 	},
 	"fishingReferences": {

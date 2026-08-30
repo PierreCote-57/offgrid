@@ -922,6 +922,15 @@ drawer. Offgrid's pins carry a bare name (`"img": "IMG_0499"`), and the builder 
 a `/image/` URL before the pin ever reaches `drawMap` — the same way `url` arrives as a ready
 href rather than a reference. Resolution belongs to whoever builds the mapObject.
 
+**The entry crosses in the script, not on the div** (2026-08-29). `google-map.html` writes
+`th:inline="javascript"` and reads the entry as `[[${mapEntry}]]`, so Thymeleaf's own
+JavaScript inlining serializes it and no attribute carries JSON. Two consequences of that
+serializer, both handled in the builder: it spells a `MapIcon` by its enum constant, so `icon`
+is lower-cased on the way into a pin; and it knows nothing of `/image/`, so the entry's
+`"IMG_0499"` becomes the URL there too. The script finds its own box by id — the div is
+`gl-map-<mapName>` — and the render function is `window["renderMap" + mapName]`, so two maps
+on a page never collide.
+
 **The page states the map's size on its own div, and keeps it with `th:insert`** (2026-08-29).
 Google fills the container it is given, so some box has to state a width and a height. The
 page writes `<div style="width:47%;height:200px;float:right" th:insert="…map('road')">`, and
@@ -929,3 +938,18 @@ page writes `<div style="width:47%;height:200px;float:right" th:insert="…map('
 discard the div and the size with it. Nothing is passed through the fragment call, and float
 and margin are stated the same way — GettingLost's `[data-block-type="googleMap"]` house rule
 has no equivalent here, because the page that wants a map is the page that says how big.
+
+## 2026-08-29 — `googleMap.file` is gone from the data
+
+A map that pointed at a page's file was GettingLost's way of saying "centre on that place",
+and 19 of the 20 entries pointed at their own page. The 20th, on
+`rathtrevor-beach-park-campground`, pointed at `rathtrevor-beach-park.html`, which is not a
+page in offgrid — so it centred on nothing that exists here.
+
+Every `file` is removed, and the 9 entries that had nothing left but the pointer take
+`"zoom": 13`. The 12 that stated their own zoom keep it. A map now carries a zoom and its
+pins, and the coordinates come from the page's own `location` when the entry has none — which
+is the same answer the self-pointer was giving, without the indirection.
+
+`GoogleMap.file` and `GoogleMap.locationId` stay on the class: the POJO is the shape of the
+file, not a list of the keys today's data happens to write.

@@ -41,7 +41,7 @@
 	},
 	"googleMap": {
 		"road": {
-			"file": "elk-falls-quinsam-campground.html"
+			"zoom": 13
 		}
 	},
 	"noteList": [

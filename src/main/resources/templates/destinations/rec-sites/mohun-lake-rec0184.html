@@ -9,10 +9,9 @@
 
 	<div>
 		<details>
-			<summary><h2 style="display:inline;">Road map</h2></summary>
-			<div style="width:100%;height:600px;float:none;">
-				<div th:replace="~{fragments/block/google-map :: map('road')}"></div>
-			</div>
+			<summary><h2 class="gl-heading">Road map</h2></summary>
+			<div style="width:750px;height:500px;clear:both"
+				 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		</details>
 		<p>
 			Visited on April 12, 2021.

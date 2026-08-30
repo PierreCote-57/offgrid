@@ -41,7 +41,7 @@
 		var script = document.createElement("script");
 		var mapConfig = window.GL.MAP_CONFIG;
 		script.src = "https://maps.googleapis.com/maps/api/js?key=" + mapConfig.mapApiKey +
-			"&callback=__offgridMapsApiInit";
+			"&loading=async&callback=__offgridMapsApiInit";
 		script.async = true;
 		document.head.appendChild(script);
 	}

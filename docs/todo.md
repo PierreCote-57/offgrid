@@ -67,10 +67,6 @@ which is the requirement; the page itself is not fit to look at yet.
 says the same thing and nothing reads it. Decide which is the source. The fragment renders
 tiles only, so if the JSON wins, something else has to put the heading on the page.
 
-#18 The summary headings copied from GettingLost still carry `style="display:inline;"` —
-checklists, van, bronco. `site.css` does it now, so every one of them is dead weight, and
-each new page copied over brings another.
-
 #20 `OffgridImageManager.getImageMetadata` reads the file on every call — no cache. Fine
 while nothing calls it; it is a disk read per request the day something does.
 
@@ -99,12 +95,6 @@ the two fixes are the missing route and the missing files.
 #26 Blog or posts — the folder, the template folder and the route all say `posts`, the menu
 item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
 Decide which word the site uses in a URL before either name is public.
-
-#27 `fragments/block/google-map.html` does not build a `mapObject`. `data-map` is written with
-`th:attr="data-map=${mapEntry}"`, which renders the object's `toString()`, and nothing on a
-destination page calls `drawMap`. `GL.drawMap` and the browser page's builder are done; this
-is the third piece — see `docs/decisions.md`, 2026-08-28, "Drawing a map". A page sizes its
-own map on the div it wraps the fragment in, with `th:insert` so that div survives.
 
 #29 `data/shared/browser/browser.json` has an empty `name`, so the browser page's `<h1>` is
 blank and its tab reads `— Going offgrid`. Every other page's name comes from its JSON.

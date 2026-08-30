@@ -7,10 +7,13 @@ import com.lc.offgrid.misc.QueryUtil;
 import com.lc.offgrid.misc.files.ResourceFileManager;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
+import com.lc.offgrid.pojo.page.DestinationPage;
 import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.pojo.page.PostPage;
 import com.lc.offgrid.pojo.part.Dataset;
+import com.lc.offgrid.pojo.part.GoogleMap;
+import com.lc.offgrid.pojo.part.Point;
 import com.lc.offgrid.spring.tools.BaseController;
 import com.lc.offgrid.spring.tools.BaseWebController;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
@@ -59,7 +62,7 @@ public class OffgridProcessor extends BaseWebProcessor
 	public String processPage(Model model, String path, Class<? extends PageData> clazz)
 	{
 		File jsonFile = getJsonManager().getFile(path);
-		PageData pageData = readFile(jsonFile.getAbsolutePath(), clazz);
+		PageData pageData = readPageJson(path, clazz);
 		String pageTitle = pageData.getName();
 
 		processDefault(model, pageTitle);
@@ -136,6 +139,32 @@ public class OffgridProcessor extends BaseWebProcessor
 
 		ResponseEntity<String> answer = makeResponseOk(MediaType.APPLICATION_JSON, jsonTo);
 		return answer;
+	}
+
+	private <T extends PageData> T readPageJson(String path, Class<T> clazz)
+	{
+		File jsonFile = getJsonManager().getFile(path);
+		T pageData = readFile(jsonFile.getAbsolutePath(), clazz);
+
+		// Hydrate map as needed
+		if (pageData instanceof DestinationPage destinationPage)
+		{
+			Map<String, GoogleMap> map = destinationPage.getGoogleMap();
+			Point point = destinationPage.getLocation();
+			for (GoogleMap googleMap : map.values())
+			{
+				if (null == googleMap.getLat())
+				{
+					googleMap.setLat(point.getLat());
+				}
+				if (null == googleMap.getLng())
+				{
+					googleMap.setLng(point.getLng());
+				}
+			}
+		}
+
+		return pageData;
 	}
 
 	@SuppressWarnings("unchecked")

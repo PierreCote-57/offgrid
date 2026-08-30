@@ -540,9 +540,8 @@ li {
 .block-unavailable {
 	margin: 16px 0;
 	padding: 10px 14px;
-	border: 1px dashed var(--rule);
+	border: 3px solid red;
 	border-radius: 4px;
-	color: var(--faded);
 	font-size: 14px;
 	font-style: italic;
 }
@@ -568,6 +567,7 @@ details {
 }
 
 details > summary {
+	margin-bottom: 12px;
 	cursor: pointer;
 }
 
