@@ -13,16 +13,6 @@ public class OffgridImageManager extends AbstractFileManager
 {
 	private static final ImageMetadataExtractor EXTRACTOR = new ImageMetadataExtractor();
 
-	@Value("${folder.image}")
-	// Initializer for tests. As WEB/bean, it gets from config
-	private String folderImage = "/Users/pierrecote/Pictures/offgrid";
-
-	@Override
-	public String getRootFolder()
-	{
-		return folderImage;
-	}
-
 	@Override
 	public boolean isValid(File file)
 	{

@@ -99,7 +99,7 @@ public class OffgridController extends BaseWebController
 	}
 
 	@GetMapping("/info/{name}")
-	public String useful(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	public String info(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
 		String path = String.format("/info/%1$s", name);
 		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
@@ -143,5 +143,4 @@ public class OffgridController extends BaseWebController
 		String path = String.format("/info/%s", "pi");
 		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
 	}
-
 }

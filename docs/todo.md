@@ -16,9 +16,6 @@ runs the jar, while nothing is invested in it.
 posts link back to `/blog` and a post is served at `/posts/{name}`. Same decision as #26.
 Everything else in the menu is wired and served.
 
-#5 Footer has no "Last modified" — no source decided for the date. `fragments/site/footer.html`
-shows the version, a "Rendered on" timestamp and the render time instead.
-
 #6 MCP controller — not started. `OffgridController` is the only web controller.
 
 #7 Content from GettingLost — the JSON, the HTML and the images are all in. What is left is
@@ -118,9 +115,6 @@ the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand 
 and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
-
-#36 `/info/logging` has data (`data/info/logging/logging.json`) and no template, so the route
-renders nothing. `bronco.json` now links to it from "VHF resource road radio".
 
 #37 Every link in a note list opens in a new tab — `fragments/block/note-list.html` writes
 `target="_blank"` unconditionally, and roughly half the note links are now internal routes.

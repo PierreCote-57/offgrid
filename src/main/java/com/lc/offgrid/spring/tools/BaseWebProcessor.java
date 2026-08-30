@@ -13,6 +13,9 @@ import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicException;
 import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.basics.tools.time.BasicTimer;
+import com.lc.basics.tools.time.DateUtils;
+import com.lc.basics.tools.time.WallClock;
+import com.lc.offgrid.misc.files.FileTools;
 import com.lc.offgrid.spring.tools.BaseWebController.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
@@ -77,7 +80,8 @@ public abstract class BaseWebProcessor
 
 		model.addAttribute("SiteName", m_siteName);
 		model.addAttribute("WelcomeMessage", m_welcomeMessage);
-		model.addAttribute("SiteVersion", m_siteVersion);
+		model.addAttribute("SiteVersion", String.format("%s (%s)", m_siteVersion,
+				WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, FileTools.getLastModified())));
 		model.addAttribute("AdministratorEmail", m_administratorEmail);
 		model.addAttribute("PageName", pageName);
 

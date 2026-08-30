@@ -1,16 +1,25 @@
 package com.lc.offgrid.misc.files;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractFileManager implements InitializingBean
+public class AbstractFileManager implements InitializingBean
 {
 	private final Map<String, File> nameMap = new TreeMap<>();
 
-	abstract public String getRootFolder();
+	@Value("${folder.local}")
+	// Initializer for tests. As WEB/bean, it gets from config
+	private String local_root_folder = "/Users/pierrecote/Pictures/offgrid";
+
+	public String getRootFolder()
+	{
+		return local_root_folder;
+	}
+
 	public boolean isValid(File file)
 	{
 		return true;
@@ -26,6 +35,7 @@ public abstract class AbstractFileManager implements InitializingBean
 		name = name.contains("/")
 				? name.substring(name.lastIndexOf("/")+1)
 				: name;
+		name = name.toLowerCase();
 		return nameMap.get(name);
 	}
 
@@ -43,6 +53,7 @@ public abstract class AbstractFileManager implements InitializingBean
 			{
 				String filename = file.getName();
 				String name = filename.substring(0, filename.lastIndexOf('.'));
+				name = name.toLowerCase();
 				nameMap.put(name, file);
 			}
 		}

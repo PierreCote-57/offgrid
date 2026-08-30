@@ -230,6 +230,66 @@
 		</p>
 	</details>
 
+	<!-- Power access point. flow-root so the floated floorplan is contained: without it the
+	     image hangs below the block and Operation flows up beside it. -->
+	<details style="display:flow-root;">
+		<summary><h2 class="gl-heading">Power access point</h2></summary>
+
+		<div class="gl-photo" style="width:60%;float:left;margin:0 16px 16px 0;"
+			 th:insert="~{fragments/block/photo :: photo('floorplan-electric')}"></div>
+
+		<!-- text-align is inherited, so the table states it once and every cell is bare. -->
+		<table style="margin:0 auto;text-align:center;">
+			<thead>
+			<tr>
+				<th>#</th>
+				<th>All off</th>
+				<th>Engine on</th>
+				<th>Disc. on</th>
+				<th>Inverter on<sup>1</sup></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>1</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>off</td>
+				<td>on</td>
+				<td>off</td>
+				<td>off</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>off</td>
+				<td>off</td>
+				<td>off</td>
+				<td>on</td>
+			</tr>
+			</tbody>
+		</table>
+		<sup>1</sup> Or with shore power
+	</details>
+
 	<!-- Operation -->
 	<details>
 		<summary><h2 class="gl-heading">Operation</h2></summary>

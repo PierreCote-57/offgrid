@@ -15,5 +15,5 @@ BaseWebProcessor:
   siteName: "β-Going offgrid"
 
 folder:
-  image: "/Users/pierrecote/Pictures/offgrid"
+  local: "/Users/pierrecote/Pictures/offgrid"
   data: "/Users/pierrecote/src/github/offgrid"
