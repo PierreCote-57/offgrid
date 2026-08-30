@@ -233,7 +233,7 @@
 			'<a class="gl-gallery-card" href="' + href + '">' +
 			'<div class="gl-gallery-card-img-wrap">' +
 			'<img class="gl-gallery-card-img" src="' + image + '" alt="' + title + '" loading="lazy">' +
-			renderTags((row.tags || {}).badges) +
+			renderTags((row.tags || {}).badgeList) +
 			renderRoad(deriveRoadBadge(row.access)) +
 			"</div>" +
 			'<h3 class="gl-gallery-card-title">' + title + "</h3>" +

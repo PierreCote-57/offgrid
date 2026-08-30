@@ -42,7 +42,7 @@
 			"itemList": [
 				{
 					"name": "Amor Lake (REC0174)",
-					"url": "amor-lake-rec0174.html",
+					"url": "/destinations/rec-sites/amor-lake-rec0174",
 					"description": [
 						"On Getting Lost"
 					]
@@ -56,7 +56,7 @@
 				},
 				{
 					"name": "Twin Lake (REC0185)",
-					"url": "twin-lake-rec0185.html",
+					"url": "/destinations/rec-sites/twin-lake-rec0185",
 					"description": [
 						"On Getting Lost"
 					]

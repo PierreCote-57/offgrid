@@ -51,14 +51,14 @@
 				},
 				{
 					"name": "Amor Lake",
-					"url": "amor-lake.html",
+					"url": "/destinations/lakes/amor-lake",
 					"description": [
 						"On Getting Lost"
 					]
 				},
 				{
 					"name": "Mohun Lake",
-					"url": "mohun-lake.html",
+					"url": "/destinations/lakes/mohun-lake",
 					"description": [
 						"On Getting Lost"
 					]

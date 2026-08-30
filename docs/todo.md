@@ -12,17 +12,18 @@ reset a password against, which looks exactly like this.
 #2 Deploy the skeleton to FullHost — validates that their build node builds this repo and
 runs the jar, while nothing is invested in it.
 
-#4 Menu links go nowhere — Destinations, and Howto and Checklist under Hardware, are
-still `href="#"`. Blog is still `href="#"` and the six posts now link to `/blog`. The van, the Bronco and the three Info items are wired. Van maintenance
-and Bronco maintenance point at `/hardware/maintenance/{name}`, which nothing serves yet.
+#4 Blog is the last dead menu link — `href="#"` in `fragments/site/menu.html`, while the six
+posts link back to `/blog` and a post is served at `/posts/{name}`. Same decision as #26.
+Everything else in the menu is wired and served.
 
-#5 Footer "Last modified" is a placeholder — no source decided for the date.
+#5 Footer has no "Last modified" — no source decided for the date. `fragments/site/footer.html`
+shows the version, a "Rendered on" timestamp and the render time instead.
 
-#6 MCP controller — not started. The Client controller is the only one that exists.
+#6 MCP controller — not started. `OffgridController` is the only web controller.
 
-#7 Content from GettingLost — the JSON is in (56 files) and converted. The HTML content is
-in for the two checklists, the van, the Bronco, the two maintenance pages, the six posts and
-all 24 destinations; the six howto pages and all the images are not.
+#7 Content from GettingLost — the JSON, the HTML and the images are all in. What is left is
+authoring, not porting: `hardware/howto/water.html` is still the placeholder text. The images
+are in the folder `folder.image` names, which is a local path only — see #9.
 
 #8 Reading the JSON — `readFile` reads it per request, and the mapping method names the
 class: `PageData` for info and hardware, `MaintenancePage`, `PostPage`. Settled: content
@@ -59,8 +60,9 @@ in `resources/data` is converted.
 Nothing in `com.lc.offgrid.pojo` maps key names — a file that arrives unconverted binds its
 renamed fields to null rather than failing, so the miss is silent.
 
-#16 A URL that does not resolve lands on the `exception` view. It survives and it logs,
-which is the requirement; the page itself is not fit to look at yet.
+#16 `BaseWebController` returns the view name `exception` when a handler throws, and no
+`exception.html` exists — so the failure renders as the container's own error page rather than
+the site's. A URL that matches no mapping never reaches that catch at all.
 
 #17 A gallery's heading is authored twice — the page writes
 `<h3 class="gl-heading">Listing pictures</h3>` while `photoGalleries.<key>.name` in the JSON
@@ -96,9 +98,6 @@ the two fixes are the missing route and the missing files.
 item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
 Decide which word the site uses in a URL before either name is public.
 
-#29 `data/shared/browser/browser.json` has an empty `name`, so the browser page's `<h1>` is
-blank and its tab reads `— Going offgrid`. Every other page's name comes from its JSON.
-
 #30 The external downloads have no smart accessors. `FeatureGeometry.getCoordinates()` hands
 back a raw `Object`, so nothing answers where a rest stop is without indexing the list itself,
 and a rest stop's nearest town is still prose. The parse for it: 204 of the 219 values of
@@ -106,23 +105,6 @@ and a rest stop's nearest town is still prose. The parse for it: 204 of the 219 
 do not, 8 name no town at all (`2 KM`, `13.256`, `10`, `AT BC/YUKON BORDER`, `TOP OF KOOTENAY
 PASS`, and three ferry terminals).
 
-
-#31 Two spellings of a page pointer now coexist. `shared/browser/destinations.json` carries
-folder paths with no extension (`destinations/rec-sites/echo-lake-dayuse`), while the
-individual page JSONs still carry bare filenames: 22 `file` values across the destination
-pages, one more at `hardware/bronco/bronco.json:222` (`logging.html`), and 17 internal `url`
-values linking a destination to a sibling (`lakes/echo-lake/echo-lake.json:57` ->
-`echo-lake-dayuse.html`). The two Canadian Tire `url` values in `bronco.json` also end in
-`.html` and are external.
-
-#32 Nothing serves a destination page. The gallery card's href is `row.file` verbatim
-(`browser.js:145`), so it is now a relative `destinations/rec-sites/echo-lake-dayuse` against
-`/shared/browser`, and `OffgridController` has no mapping under `/destinations`.
-
-#33 Gallery cards never draw badges. `browser.js:237` reads `(row.tags || {}).badges`, but
-every row carries `tags.badgeList` after the #10 conversion — `hydratePageList` merges the
-page JSON verbatim and renames nothing. The same file already reads `badgeList` at lines 461
-and 565, so only the card renderer is on the old spelling.
 
 #34 The `photo` fragment drops a photo's GPS caption. GettingLost's photo block took
 `data-lat`/`data-lng` and rendered a DMS caption linking to Google Maps; the fragment takes
@@ -137,3 +119,8 @@ and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
 
+#36 `/info/logging` has data (`data/info/logging/logging.json`) and no template, so the route
+renders nothing. `bronco.json` now links to it from "VHF resource road radio".
+
+#37 Every link in a note list opens in a new tab — `fragments/block/note-list.html` writes
+`target="_blank"` unconditionally, and roughly half the note links are now internal routes.

@@ -64,7 +64,7 @@
 				},
 				{
 					"name": "Sproat Lake Provincial Park",
-					"url": "sproat-lake-provincial-park.html",
+					"url": "/destinations/campgrounds/sproat-lake-provincial-park",
 					"description": [
 						"On Getting Lost"
 					]
@@ -76,7 +76,7 @@
 			"itemList": [
 				{
 					"name": "Sproat Lake Provincial Park",
-					"file": "sproat-lake-provincial-park.html",
+					"url": "/destinations/campgrounds/sproat-lake-provincial-park",
 					"description": [
 						"Our page on the park: lakeside camping, boat launch and the K'ak'awin petroglyphs."
 					]

@@ -561,12 +561,15 @@ li {
 	font-weight: 600;
 }
 
-/* A <details> block: the summary is the clickable line, the marker stays the browser's. */
-details {
+/* A <details> block: the summary is the clickable line, the marker stays the browser's.
+   The browser page's filter dropdowns are <details> too, re-skinned from scratch by
+   .gl-lb-dropdown, so they are excluded here and start from the browser default instead of
+   having to undo these. Page content keeps writing a bare <details> and gets this. */
+details:not(.gl-lb-dropdown) {
 	margin: 16px 0;
 }
 
-details > summary {
+details:not(.gl-lb-dropdown) > summary {
 	margin-bottom: 12px;
 	cursor: pointer;
 }

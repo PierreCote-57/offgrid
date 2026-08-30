@@ -219,7 +219,7 @@
 			"itemList": [
 				{
 					"name": "VHF resource road radio",
-					"file": "logging.html",
+					"url": "/info/logging",
 					"description": [
 						"Already owned. Programmed for the Coast and North Island channels — see the logging page for the channel maps."
 					]

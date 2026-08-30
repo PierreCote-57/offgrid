@@ -386,13 +386,11 @@ obsolete — the two posts pointing at locationIds with no page, and the four pa
 carrying `access` and `campgroundData` — and those were removed in a second pass.
 
 **Deleting content is his call, not the migration's.** A pass that renames can run
-unsupervised; a pass that drops a block someone wrote cannot. `actual` in the two van
-maintenance files is still there for that reason (todo #14), as is `wpSettings` in all 52.
+unsupervised; a pass that drops a block someone wrote cannot. A block no class read yet —
+the maintenance records, `wpSettings` — was left where it was for that reason.
 
-One `campground` key survives on purpose: it is the name of a `googleMap` entry in
-`morton-lake-park`, a map of the campground inside the park, not the data block.
-
-Every top-level key in the 52 page files now binds to a class except those two.
+One `campground` key survives on purpose: it is the name of a `googleMap` entry, a map of the
+campground inside a park, not the data block.
 
 ## 2026-08-25 — A URL is the view name
 
@@ -962,10 +960,8 @@ Both pages carry the `campground` block, so both moved from `destinations/parks/
 Rathtrevor took on 2026-08-28: a campground inside a park is a campground page, and the park
 it sits in is a separate subject.
 
-`campgrounds` binds `CampSitePage`, which is where `campgroundData` lives, so the block now
-resolves. Neither page carries that data yet and the block renders nothing until it does.
+`campgrounds` binds `CampSitePage`, which is where `campgroundData` lives, so the block
+resolves whether or not a page carries the data.
 
-No files remain under either `destinations/parks/` folder — the park row in the 2026-08-25
-hierarchy table above counts the data as it stood that day. `parks` still maps to `AreaPage`
-in `OffgridController.getPageDataClass`, which is what that entry decided; a park page with
-no campground in it lands there.
+`parks` still maps to `AreaPage` in `OffgridController.getPageDataClass`, which is what the
+2026-08-25 hierarchy decided; a park with no campground in it lands there.
