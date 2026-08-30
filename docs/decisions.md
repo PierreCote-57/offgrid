@@ -965,3 +965,36 @@ resolves whether or not a page carries the data.
 
 `parks` still maps to `AreaPage` in `OffgridController.getPageDataClass`, which is what the
 2026-08-25 hierarchy decided; a park with no campground in it lands there.
+
+## 2026-08-30 — One link decision, written twice
+
+Every link on the site follows one rule, keyed off the url alone:
+
+    external            -> new tab, rel="noopener"
+    internal /document/ -> new tab
+    internal page       -> this tab, a bare <a href>
+
+`noreferrer` was dropped the same day: `noopener` is the half with a security reason, and
+hiding the referrer only costs the destination its own analytics for sites we are happy to be
+associated with.
+
+The rule is a pure function of the url string, so it is expressed as the OPENING `<a>` TAG
+ONLY, and the caller writes the body and closes it. That is what makes one call serve a text
+link and an image link with no second signature. Thymeleaf's parser does not balance tags —
+`header.html` opens `<body>` and `footer.html` closes it — so a fragment can end mid-element.
+
+    fragments/block/link.html   th:fragment="link(url)"
+    offgrid.js                  window.GL.linkOpenTag(url) -> string
+
+Two implementations, because pages are server-rendered and the browser page assembles its
+rows in JS from `/shared/browser/data/{id}`. A single implementation would need one side to
+stop rendering its own anchors. Rejected on the way: a `link(url, label)` fragment (a text
+parameter cannot carry an `<img>`), a `content` fragment parameter (id selectors do not
+survive `th:each`), and a click-time handler in `offgrid.js` (Pierre: no onLoad, Thymeleaf
+does everything).
+
+For this to hold, a url in the data is a COMPLETE pointer — absolute `http(s)://` or
+site-absolute `/…` — never a name a template wraps a route around. `workUrl` carries
+`/document/…` for that reason, and the booklets moved out of `static/misc/` into the Documents
+folder so they are `/document/` links like any other.
+

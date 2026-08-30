@@ -113,3 +113,11 @@ the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand 
 and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
+
+#39 Two anchors do not go through the link rule. The gallery card in `browser.js` builds its
+own `<a class="gl-gallery-card">` as a string, because `GL.linkOpenTag` returns a tag with no
+slot for a class; and a single-pin map with no photo navigates on marker click with
+`window.location.href` in `google-map.js`, so there is no anchor to carry a target. Both are
+internal page links today, which is the case the rule leaves bare — a `/document/` url in
+either would open in this tab.
+
