@@ -34,6 +34,11 @@
 					"id": "IMG_2895",
 					"img": "IMG_2895",
 					"label": "Battery display"
+				},
+				{
+					"id": "IMG_3787",
+					"img": "IMG_3787",
+					"label": "Voltage -> %"
 				}
 			]
 		},

@@ -137,24 +137,3 @@ and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
 
-#36 Two park pages carry the `campground` block with nothing behind it.
-
-`fragments/block/campground.html` is implemented: one row of links out of
-`campgroundData.referenceList` — the homepage shown as the word "Website", then map, then
-reservation — which is all `gettinglost.jst:753` ever drew. The four pages under
-`campgrounds/` have the data for it.
-
-`morton-lake-park` and `sproat-lake-provincial-park` do not: they carry no `campgroundData`,
-so the block renders nothing there. The ruling that separates a campground from the park it
-sits on (2026-08-28) has been applied to Elk Falls and Rathtrevor, which moved to
-`campgrounds/`; these two are the ones it has not been applied to.
-
-`CampgroundData` also carries `amenityList`, `operator` and `siteCount`, none of which the
-GettingLost block ever drew.
-
-#38 `parks` binds to `CampSitePage`, temporarily.
-`OffgridController.getPageDataClass` was changed 2026-08-28 so the park pages could render at
-all: they carry the campground block, and `AreaPage` has no `campgroundData` getter for the
-expression to resolve against. `docs/decisions.md` (2026-08-25, the page hierarchy) files a
-park as `AreaPage`, so the code and the decision now disagree. Same question as #36 — a park
-that is only a park has no campground data to reach for.

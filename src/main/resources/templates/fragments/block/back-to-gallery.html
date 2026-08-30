@@ -2,7 +2,7 @@
 	The way back to the gallery the page was reached from.
 
 	Resolved on the server, so the link is in the page as it arrives: backQuery is the query
-	the gallery is restored with, and PageTitle is what that gallery is called.
+	the gallery is restored with, and backName is what that gallery is called.
 -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="back()" class="gl-dest-back">
 	<a th:href="'/shared/browser?' + ${backQuery}"

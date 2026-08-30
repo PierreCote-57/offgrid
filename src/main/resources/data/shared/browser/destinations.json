@@ -4490,7 +4490,7 @@
 		"file": "/destinations/lakes/morton-lake"
 	},
 	{
-		"file": "/destinations/parks/morton-lake-park"
+		"file": "/destinations/campgrounds/morton-lake-park"
 	},
 	{
 		"name": "Mountainaire Campground",
@@ -7025,7 +7025,7 @@
 		"file": "/destinations/lakes/sproat-lake"
 	},
 	{
-		"file": "/destinations/parks/sproat-lake-provincial-park"
+		"file": "/destinations/campgrounds/sproat-lake-provincial-park"
 	},
 	{
 		"name": "Spruce Bay (rec-site)",

@@ -26,8 +26,15 @@
 		<div th:replace="~{fragments/block/note-list}"></div>
 	</div>
 
-	<div th:replace="~{fragments/block/photo-gallery :: gallery('atSite')}"></div>
-	<div th:replace="~{fragments/block/photo-gallery :: gallery('onTheWay')}"></div>
+	<details>
+		<summary><h2 class="gl-heading">Campground & lake</h2></summary>
+		<div th:replace="~{fragments/block/photo-gallery :: gallery('atSite')}"></div>
+	</details>
+	<details>
+		<summary><h2 class="gl-heading">On the way</h2></summary>
+		<div th:replace="~{fragments/block/photo-gallery :: gallery('onTheWay')}"></div>
+	</details>
+
 	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
 </main>
 

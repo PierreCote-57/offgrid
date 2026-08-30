@@ -953,3 +953,19 @@ is the same answer the self-pointer was giving, without the indirection.
 
 `GoogleMap.file` and `GoogleMap.locationId` stay on the class: the POJO is the shape of the
 file, not a list of the keys today's data happens to write.
+
+## 2026-08-30 — Morton Lake and Sproat Lake are campgrounds
+
+Both pages carry the `campground` block, so both moved from `destinations/parks/` to
+`destinations/campgrounds/` — templates and data folders — and their two pointers in
+`shared/browser/destinations.json` moved with them. This is the same ruling Elk Falls and
+Rathtrevor took on 2026-08-28: a campground inside a park is a campground page, and the park
+it sits in is a separate subject.
+
+`campgrounds` binds `CampSitePage`, which is where `campgroundData` lives, so the block now
+resolves. Neither page carries that data yet and the block renders nothing until it does.
+
+No files remain under either `destinations/parks/` folder — the park row in the 2026-08-25
+hierarchy table above counts the data as it stood that day. `parks` still maps to `AreaPage`
+in `OffgridController.getPageDataClass`, which is what that entry decided; a park page with
+no campground in it lands there.
