@@ -52,7 +52,7 @@
 	var DATA_URL = "/shared/browser/data/";
 
 	// A booklet is public content the visitor downloads, so it sits beside datasets.json.
-	var BOOKLET_URL = "/shared/browser/";
+	var BOOKLET_URL = "/misc/";
 
 	var VALID_VIEWS = ["table", "grid", "map"];
 
@@ -314,7 +314,7 @@
 		var a = document.createElement("a");
 		a.href = url;
 		a.target = "_blank";
-		a.rel = "noopener noreferrer";
+		a.rel = "noopener";
 		a.textContent = text;
 		if (tip) { a.title = tip; }
 		return a;
@@ -935,8 +935,12 @@
 		var a = document.createElement("a");
 		a.className = "gl-lb-booklet";
 		a.href = BOOKLET_URL + name + ".pdf";
-		a.textContent = "Download booklet (PDF)";
-		a.setAttribute("download", "");
+		a.textContent = "Open booklet (PDF)";
+		// A new tab, so the list keeps its filters while the booklet is read. No `download`
+		// attribute: the static handler serves application/pdf with no Content-Disposition,
+		// so the browser renders it in its own viewer.
+		a.target = "_blank";
+		a.rel = "noopener";
 		return a;
 	}
 

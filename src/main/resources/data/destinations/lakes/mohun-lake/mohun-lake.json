@@ -45,17 +45,11 @@
 			"itemList": [
 				{
 					"name": "Mohun Lake (REC0184)",
-					"url": "/destinations/rec-sites/mohun-lake-rec0184",
-					"description": [
-						"On Getting Lost"
-					]
+					"url": "/destinations/rec-sites/mohun-lake-rec0184"
 				},
 				{
 					"name": "Twin Lake (REC0185)",
-					"url": "/destinations/rec-sites/twin-lake-rec0185",
-					"description": [
-						"On Getting Lost"
-					]
+					"url": "/destinations/rec-sites/twin-lake-rec0185"
 				},
 				{
 					"name": "Sayward Forest Canoe Route",

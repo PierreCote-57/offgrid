@@ -60,10 +60,7 @@
 				},
 				{
 					"name": "Roberts Lake",
-					"url": "/destinations/lakes/roberts-lake",
-					"description": [
-						"On Getting Lost"
-					]
+					"url": "/destinations/lakes/roberts-lake"
 				}
 			]
 		}

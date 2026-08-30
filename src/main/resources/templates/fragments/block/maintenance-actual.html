@@ -25,11 +25,11 @@
 			<td th:text="${entry.odometerKm == null} ? '' : ${#numbers.formatInteger(entry.odometerKm, 1, 'COMMA') + ' km'}">Odometer</td>
 			<td>
 				<a th:if="${entry.shopUrl}" th:href="${entry.shopUrl}" target="_blank"
-				   rel="noopener noreferrer" th:text="${entry.shopName}">Shop</a>
+				   rel="noopener" th:text="${entry.shopName}">Shop</a>
 				<span th:unless="${entry.shopUrl}" th:text="${entry.shopName}">Shop</span>
 			</td>
 			<td>
-				<a th:if="${entry.workUrl}" target="_blank" rel="noopener noreferrer"
+				<a th:if="${entry.workUrl}" target="_blank" rel="noopener"
 				   th:href="@{/document/{documentName}(documentName=${entry.workUrl})}"
 				   th:text="${entry.workName}">Work</a>
 				<span th:unless="${entry.workUrl}" th:text="${entry.workName}">Work</span>

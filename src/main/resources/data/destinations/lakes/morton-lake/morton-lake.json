@@ -41,10 +41,7 @@
 			"itemList": [
 				{
 					"name": "Morton Lake Park",
-					"url": "/destinations/campgrounds/morton-lake-park",
-					"description": [
-						"On Getting Lost"
-					]
+					"url": "/destinations/campgrounds/morton-lake-park"
 				}
 			]
 		},

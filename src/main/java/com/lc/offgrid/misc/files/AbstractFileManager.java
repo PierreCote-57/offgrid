@@ -52,9 +52,12 @@ public class AbstractFileManager implements InitializingBean
 			if (isValid(file))
 			{
 				String filename = file.getName();
-				String name = filename.substring(0, filename.lastIndexOf('.'));
-				name = name.toLowerCase();
-				nameMap.put(name, file);
+				if (filename.contains("."))
+				{
+					String name = filename.substring(0, filename.lastIndexOf('.'));
+					name = name.toLowerCase();
+					nameMap.put(name, file);
+				}
 			}
 		}
 		else // isDirectory

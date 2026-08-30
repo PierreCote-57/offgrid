@@ -51,10 +51,7 @@
 				},
 				{
 					"name": "Keogh Lake",
-					"url": "/destinations/lakes/keogh-lake",
-					"description": [
-						"On Getting Lost"
-					]
+					"url": "/destinations/lakes/keogh-lake"
 				}
 			]
 		}

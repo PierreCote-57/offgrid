@@ -16,13 +16,13 @@
    th:if="${pageData.campgroundData != null}">
 	<a th:each="reference : ${pageData.campgroundData.referenceList}"
 	   th:if="${reference.type != null and reference.type.name() == 'HOMEPAGE'}"
-	   th:href="${reference.url}" target="_blank" rel="noopener noreferrer">Website</a>
+	   th:href="${reference.url}" target="_blank" rel="noopener">Website</a>
 	<a th:each="reference : ${pageData.campgroundData.referenceList}"
 	   th:if="${reference.type != null and reference.type.name() == 'MAP'}"
 	   th:href="${reference.url}" th:text="${reference.label}"
-	   target="_blank" rel="noopener noreferrer">Campground</a>
+	   target="_blank" rel="noopener">Campground</a>
 	<a th:each="reference : ${pageData.campgroundData.referenceList}"
 	   th:if="${reference.type != null and reference.type.name() == 'RESERVATION'}"
 	   th:href="${reference.url}" th:text="${reference.label}"
-	   target="_blank" rel="noopener noreferrer">Reservation</a>
+	   target="_blank" rel="noopener">Reservation</a>
 </p>

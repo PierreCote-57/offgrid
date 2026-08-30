@@ -4,14 +4,21 @@
 
 		<table>
 			<tbody>
-			<tr th:each="noteItem : ${noteSection.itemList}">
+			<!-- A url starting with / is one of our own routes: it stays in this tab, and when
+			     it carries no description of its own the site's name is the description. -->
+			<tr th:each="noteItem : ${noteSection.itemList}"
+				th:with="internal=${noteItem.url != null and #strings.startsWith(noteItem.url, '/')}">
 				<td class="note-name">
-					<a th:if="${noteItem.url}" th:href="${noteItem.url}" target="_blank"
-					   rel="noopener noreferrer" th:text="${noteItem.name}">Name</a>
+					<a th:if="${noteItem.url}" th:href="${noteItem.url}"
+					   th:attr="target=${internal} ? null : '_blank',
+					            rel=${internal} ? null : 'noopener'"
+					   th:text="${noteItem.name}">Name</a>
 					<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
 				</td>
 				<td class="note-description"
-					th:utext="${#strings.listJoin(noteItem.description, ' ')}">Description</td>
+					th:utext="${internal and noteItem.description == null}
+					          ? |On ${SiteName}|
+					          : ${#strings.listJoin(noteItem.description, ' ')}">Description</td>
 			</tr>
 			</tbody>
 		</table>

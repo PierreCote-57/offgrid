@@ -85,11 +85,9 @@ The sample is the `signage` block in an earlier revision of `_preview/samples.ht
 Standalone cameras do not write `TAG_IMG_DIRECTION`, so any UI built on it needs the absent
 case to be the normal one.
 
-#25 The two maintenance work sheets have no file and no route. `workUrl` in
-`maintenance/van.json` and `maintenance/bronco.json` name `van-2026-08-17.pdf` and
-`bronco-2026-09-19.pdf`; neither is in the repo, and nothing serves documents the way
-`/image/{imageName}` serves images. The record links them at `/document/{documentName}`, so
-the two fixes are the missing route and the missing files.
+#25 The maintenance work sheets have no files. `/document/{documentName}` is served now, off
+`LocalFileManager` (`<folder.local>/Documents`). `workUrl` in `maintenance/van/m-van.json` and
+`maintenance/bronco/m-bronco.json` names three PDFs; none of them is in that folder yet.
 
 #26 Blog or posts — the folder, the template folder and the route all say `posts`, the menu
 item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
@@ -115,6 +113,3 @@ the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand 
 and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
 derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
 `browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
-
-#37 Every link in a note list opens in a new tab — `fragments/block/note-list.html` writes
-`target="_blank"` unconditionally, and roughly half the note links are now internal routes.

@@ -4,6 +4,7 @@ import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.offgrid.misc.QueryUtil;
+import com.lc.offgrid.misc.files.LocalFileManager;
 import com.lc.offgrid.misc.files.ResourceFileManager;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
 import com.lc.offgrid.misc.imaging.OffgridImageManager;
@@ -29,6 +30,8 @@ import org.springframework.ui.Model;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +52,9 @@ public class OffgridProcessor extends BaseWebProcessor
 	@Autowired
 	private ResourceFileManager.JsonResourceFileManager jsonManager ;
 
+	@Autowired
+	private LocalFileManager documentManager;
+
 	public OffgridImageManager getImageManager()
 	{
 		return imageManager;
@@ -57,6 +63,11 @@ public class OffgridProcessor extends BaseWebProcessor
 	public ResourceFileManager.JsonResourceFileManager getJsonManager()
 	{
 		return jsonManager;
+	}
+
+	public LocalFileManager getDocumentManager()
+	{
+		return documentManager;
 	}
 
 	public String processPage(Model model, String path, Class<? extends PageData> clazz)
@@ -113,6 +124,44 @@ public class OffgridProcessor extends BaseWebProcessor
 			getLogger().error("Unable to locate image %s", imageName);
 			return makeResponseNotFound();
 		}
+	}
+
+	/**
+	 * The bytes of one document, read from the document folder, which sits outside the resource
+	 * tree. The content type comes from the file itself, so any kind of document is answered as
+	 * what it is. A name with no file behind it answers 404 rather than an error page.
+	 */
+	public ResponseEntity<Resource> processDocument(String documentName)
+	{
+		try
+		{
+			LocalFileManager manager = getDocumentManager();
+			File documentFile = manager.getFile(documentName);
+			FileSystemResource documentResource = new FileSystemResource(documentFile);
+			MediaType mediaType = readMediaType(documentFile);
+
+			ResponseEntity<Resource> answer = makeResponseOk(mediaType, documentResource);
+			return answer;
+		}
+		catch (Exception e)
+		{
+			getLogger().error("Unable to locate document %s", documentName);
+			return makeResponseNotFound();
+		}
+	}
+
+	/**
+	 * The content type of a file, as the file system reports it. A type it cannot name is
+	 * answered as bytes.
+	 */
+	private MediaType readMediaType(File file) throws IOException
+	{
+		Path path = file.toPath();
+		String contentType = Files.probeContentType(path);
+		MediaType mediaType = null == contentType
+				? MediaType.APPLICATION_OCTET_STREAM
+				: MediaType.parseMediaType(contentType);
+		return mediaType;
 	}
 
 	/**

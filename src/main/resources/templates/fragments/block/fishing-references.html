@@ -28,7 +28,7 @@
 				<span th:if="${#lists.isEmpty(fishing?.lakeChartList)}">NA</span>
 				<span th:each="chart, iter : ${fishing?.lakeChartList}">
 					<br th:if="${!iter.first}">
-					<a th:href="${chart.url}" target="_blank" rel="noopener noreferrer"
+					<a th:href="${chart.url}" target="_blank" rel="noopener"
 					   th:text="${chart.name}">Chart</a>
 				</span>
 			</td>
@@ -39,7 +39,7 @@
 				<span th:if="${#strings.isEmpty(fishing?.stockingName)}">NA</span>
 				<a th:unless="${#strings.isEmpty(fishing?.stockingName)}"
 				   th:href="${stockingUrl + #uris.escapeQueryParam(fishing.stockingName)}"
-				   target="_blank" rel="noopener noreferrer">Go Fish BC</a>
+				   target="_blank" rel="noopener">Go Fish BC</a>
 			</td>
 		</tr>
 		</tbody>

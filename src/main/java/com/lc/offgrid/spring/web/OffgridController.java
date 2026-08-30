@@ -137,6 +137,12 @@ public class OffgridController extends BaseWebController
 		return getService().processImage(imageName);
 	}
 
+	@GetMapping("/document/{documentName}")
+	public ResponseEntity<Resource> document(@PathVariable String documentName)
+	{
+		return getService().processDocument(documentName);
+	}
+
 	@GetMapping(value = {"/pi"}, produces = "text/html")
 	public String pi(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
