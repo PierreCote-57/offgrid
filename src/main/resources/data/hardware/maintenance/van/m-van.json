@@ -11,7 +11,7 @@
 			"shopName": "Marshall Ford",
 			"shopUrl": "https://www.stevemarshallfordcampbellriver.com",
 			"workName": "Recall, beep (probably) and oil change",
-			"workUrl": "van-2026-08-17",
+			"workUrl": "/document/van-2026-08-17",
 			"costCad": 0.0,
 			"nextDueKm": 123200,
 			"nextDueDate": null
@@ -22,7 +22,7 @@
 			"shopName": "Van Toys",
 			"shopUrl": "https://vantoys.ca",
 			"workName": "Upgrade batteries to 2x206 Ah Lithium (+Orion XS)",
-			"workUrl": "van-2026-08-28",
+			"workUrl": "/document/van-2026-08-28",
 			"costCad": 0.0,
 			"nextDueKm": 0,
 			"nextDueDate": null

@@ -24,14 +24,13 @@
 			<td th:text="${entry.date}">Date</td>
 			<td th:text="${entry.odometerKm == null} ? '' : ${#numbers.formatInteger(entry.odometerKm, 1, 'COMMA') + ' km'}">Odometer</td>
 			<td>
-				<a th:if="${entry.shopUrl}" th:href="${entry.shopUrl}" target="_blank"
-				   rel="noopener" th:text="${entry.shopName}">Shop</a>
+				<th:block th:if="${entry.shopUrl}"><span
+						th:replace="~{fragments/block/link :: link(${entry.shopUrl})}"></span>[[${entry.shopName}]]</a></th:block>
 				<span th:unless="${entry.shopUrl}" th:text="${entry.shopName}">Shop</span>
 			</td>
 			<td>
-				<a th:if="${entry.workUrl}" target="_blank" rel="noopener"
-				   th:href="@{/document/{documentName}(documentName=${entry.workUrl})}"
-				   th:text="${entry.workName}">Work</a>
+				<th:block th:if="${entry.workUrl}"><span
+						th:replace="~{fragments/block/link :: link(${entry.workUrl})}"></span>[[${entry.workName}]]</a></th:block>
 				<span th:unless="${entry.workUrl}" th:text="${entry.workName}">Work</span>
 			</td>
 			<td th:text="${entry.costCad == null} ? '' : ${'$' + #numbers.formatDecimal(entry.costCad, 1, 'COMMA', 2, 'POINT')}">Cost</td>

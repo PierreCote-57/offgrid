@@ -6,23 +6,27 @@
 	label — it always reads "Website".
 
 	A link with no url renders as plain text: a reservation that says how booking works, with
-	nothing to click, is a real entry. Thymeleaf drops an attribute whose value is null, which
-	is exactly that.
+	nothing to click, is a real entry. That is the th:unless branch on each of the three — the
+	link fragment takes a url and cannot be handed a null.
 
 	The separator lives in site.css, so the row reads the same whichever of the three a place
 	has. Nothing renders at all when the page carries no campgroundData.
 -->
 <p xmlns:th="http://www.thymeleaf.org" class="gl-linkrow"
    th:if="${pageData.campgroundData != null}">
-	<a th:each="reference : ${pageData.campgroundData.referenceList}"
-	   th:if="${reference.type != null and reference.type.name() == 'HOMEPAGE'}"
-	   th:href="${reference.url}" target="_blank" rel="noopener">Website</a>
-	<a th:each="reference : ${pageData.campgroundData.referenceList}"
-	   th:if="${reference.type != null and reference.type.name() == 'MAP'}"
-	   th:href="${reference.url}" th:text="${reference.label}"
-	   target="_blank" rel="noopener">Campground</a>
-	<a th:each="reference : ${pageData.campgroundData.referenceList}"
-	   th:if="${reference.type != null and reference.type.name() == 'RESERVATION'}"
-	   th:href="${reference.url}" th:text="${reference.label}"
-	   target="_blank" rel="noopener">Reservation</a>
+	<th:block th:each="reference : ${pageData.campgroundData.referenceList}"
+			  th:if="${reference.type != null and reference.type.name() == 'HOMEPAGE'}"><th:block
+			th:if="${reference.url}"><span
+			th:replace="~{fragments/block/link :: link(${reference.url})}"></span>Website</a></th:block><span
+			th:unless="${reference.url}">Website</span></th:block>
+	<th:block th:each="reference : ${pageData.campgroundData.referenceList}"
+			  th:if="${reference.type != null and reference.type.name() == 'MAP'}"><th:block
+			th:if="${reference.url}"><span
+			th:replace="~{fragments/block/link :: link(${reference.url})}"></span>[[${reference.label}]]</a></th:block><span
+			th:unless="${reference.url}" th:text="${reference.label}">Campground</span></th:block>
+	<th:block th:each="reference : ${pageData.campgroundData.referenceList}"
+			  th:if="${reference.type != null and reference.type.name() == 'RESERVATION'}"><th:block
+			th:if="${reference.url}"><span
+			th:replace="~{fragments/block/link :: link(${reference.url})}"></span>[[${reference.label}]]</a></th:block><span
+			th:unless="${reference.url}" th:text="${reference.label}">Reservation</span></th:block>
 </p>

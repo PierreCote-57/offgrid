@@ -4,15 +4,13 @@
 
 		<table>
 			<tbody>
-			<!-- A url starting with / is one of our own routes: it stays in this tab, and when
-			     it carries no description of its own the site's name is the description. -->
+			<!-- A url starting with / is one of our own routes: when it carries no description
+			     of its own, the site's name is the description. -->
 			<tr th:each="noteItem : ${noteSection.itemList}"
 				th:with="internal=${noteItem.url != null and #strings.startsWith(noteItem.url, '/')}">
 				<td class="note-name">
-					<a th:if="${noteItem.url}" th:href="${noteItem.url}"
-					   th:attr="target=${internal} ? null : '_blank',
-					            rel=${internal} ? null : 'noopener'"
-					   th:text="${noteItem.name}">Name</a>
+					<th:block th:if="${noteItem.url}"><span
+						th:replace="~{fragments/block/link :: link(${noteItem.url})}"></span>[[${noteItem.name}]]</a></th:block>
 					<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
 				</td>
 				<td class="note-description"

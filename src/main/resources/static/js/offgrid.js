@@ -59,6 +59,36 @@
 		}
 	};
 
+	/*
+	 * The site's ONE link decision, as the opening <a> tag only — the twin of the
+	 * fragments/block/link.html fragment, same input and same output. The caller writes
+	 * whatever goes between the tags and closes it.
+	 *
+	 *   external            -> new tab, rel=noopener
+	 *   internal /document/ -> new tab, no rel (it is our own file)
+	 *   internal page       -> this tab, bare anchor
+	 */
+	window.GL.linkOpenTag = function (url) {
+		var external = url.charAt(0) !== "/";
+		var newTab = external || url.indexOf("/document/") === 0;
+
+		var openTag = '<a href="' + escapeAttr(url) + '"';
+		if (newTab) { openTag += ' target="_blank"'; }
+		if (external) { openTag += ' rel="noopener"'; }
+		openTag += ">";
+		return openTag;
+	};
+
+	// Minimal attribute escaping for a value going into a quoted attribute.
+	function escapeAttr(value) {
+		var escaped = String(value)
+			.replace(/&/g, "&amp;")
+			.replace(/"/g, "&quot;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;");
+		return escaped;
+	}
+
 	document.addEventListener("DOMContentLoaded", function () {
 		window.GL.paintTags();
 	});

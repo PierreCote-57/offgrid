@@ -52,7 +52,7 @@
 	var DATA_URL = "/shared/browser/data/";
 
 	// A booklet is public content the visitor downloads, so it sits beside datasets.json.
-	var BOOKLET_URL = "/misc/";
+	var BOOKLET_URL = "/document/";
 
 	var VALID_VIEWS = ["table", "grid", "map"];
 
@@ -300,21 +300,13 @@
 		return cell;
 	}
 
-	// A page on this site, same tab.
-	function internalLink(href, text, tip) {
-		var a = document.createElement("a");
-		a.href = href;
-		a.textContent = text;
-		if (tip) { a.title = tip; }
-		return a;
-	}
-
-	// External link — new tab, safe rel.
-	function externalLink(url, text, tip) {
-		var a = document.createElement("a");
-		a.href = url;
-		a.target = "_blank";
-		a.rel = "noopener";
+	// One anchor, whatever the url is. GL.linkOpenTag owns the whole target/rel decision —
+	// the same one fragments/block/link.html makes on a server-rendered page — and hands back
+	// the opening tag; the text and the title are this file's business.
+	function linkTo(url, text, tip) {
+		var holder = document.createElement("div");
+		holder.innerHTML = window.GL.linkOpenTag(url) + "</a>";
+		var a = holder.firstChild;
 		a.textContent = text;
 		if (tip) { a.title = tip; }
 		return a;
@@ -327,7 +319,7 @@
 			var text = cellText(entry.label) || fallback || "";
 			if (i > 0) { cell.appendChild(document.createElement("br")); }
 			if (entry.url && text) {
-				cell.appendChild(externalLink(entry.url, text, tip));
+				cell.appendChild(linkTo(entry.url, text, tip));
 			} else {
 				cell.appendChild(document.createTextNode(text));
 			}
@@ -339,20 +331,20 @@
 		if (field === "name") {
 			var home = homepageUrl(place);
 			if (home) {
-				cell.appendChild(externalLink(home, cellText(place.name), "Open the destination's web site"));
+				cell.appendChild(linkTo(home, cellText(place.name), "Open the destination's web site"));
 			} else {
 				cell.textContent = cellText(place.name);
 			}
 		} else if (field === "on_lost") {
 			var href = pageHref(place);
 			if (href) {
-				cell.appendChild(internalLink(href, "View", "Open the page on this web site"));
+				cell.appendChild(linkTo(href, "View", "Open the page on this web site"));
 			}
 		} else if (field === "location") {
 			var loc = place.location || {};
 			var label = cellText(loc.label);
 			if (loc.lat != null && loc.lng != null && label) {
-				cell.appendChild(externalLink(
+				cell.appendChild(linkTo(
 					"https://www.google.com/maps/search/?api=1&query=" + loc.lat + "," + loc.lng,
 					label,
 					"Open in Google Maps"
@@ -919,8 +911,8 @@
 		return input;
 	}
 
-	// Download link for a dataset's companion booklet PDF, e.g. ?booklet=howto -> howto.pdf.
-	// The parameter names the BOOKLET, not the file; the .pdf and the path are this builder's
+	// Link to a dataset's companion booklet PDF, e.g. ?booklet=howto -> /document/howto.
+	// The parameter names the BOOKLET, not the file; the /document/ path is this builder's
 	// business.
 	//
 	// No parameter, NO BUTTON — returning nothing is a normal outcome, the same way a filter
@@ -932,15 +924,10 @@
 		var name = known.params.get("booklet");
 
 		if (!name) { return null; }
-		var a = document.createElement("a");
+		// A booklet is one of our own documents, so linkTo gives it the new tab every
+		// /document/ link gets, and the list keeps its filters while it is read.
+		var a = linkTo(BOOKLET_URL + name, "Open booklet (PDF)");
 		a.className = "gl-lb-booklet";
-		a.href = BOOKLET_URL + name + ".pdf";
-		a.textContent = "Open booklet (PDF)";
-		// A new tab, so the list keeps its filters while the booklet is read. No `download`
-		// attribute: the static handler serves application/pdf with no Content-Disposition,
-		// so the browser renders it in its own viewer.
-		a.target = "_blank";
-		a.rel = "noopener";
 		return a;
 	}
 

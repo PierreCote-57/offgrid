@@ -69,8 +69,9 @@
 	 * url keeps both: the photo still opens, and it is the link.
 	 */
 	function pinLink(url, child) {
-		var link = document.createElement("a");
-		link.href = url;
+		var holder = document.createElement("div");
+		holder.innerHTML = window.GL.linkOpenTag(url) + "</a>";
+		var link = holder.firstChild;
 		link.appendChild(child);
 		return link;
 	}
