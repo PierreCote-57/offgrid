@@ -551,6 +551,14 @@ nothing beyond that — no friendly wording, no guess at what they meant, no rec
 The concrete instance: a parameterized route matches any name in its shape, so
 `/info/useful-anything` reaches `readFile`, throws, and is caught into the `exception`
 view. That is the correct outcome, not a hole to plug.
+
+`templates/exception.html` was written 2026-08-31 and is the site's own page: a fixed
+sentence saying nothing was changed, the menu to leave by, and `errorMessage` in the
+`.message-error` strip for whoever is diagnosing it. `BaseWebController` sets `PageName` in
+the catch so the heading and the tab have something to read. A failure landing before
+`processDefault` runs still leaves the rest of the chrome empty, which is accepted until it
+is seen.
+
 ## 2026-08-25 — The hardware pages, and the photo blocks
 
 `/hardware/{name}` serves the van and the Bronco. Two singleton pages rather than a folder of
@@ -1095,3 +1103,21 @@ GettingLost renderer did.
 **`Leg.km` is a `Double`.** With a primitive, a leg whose JSON states no km was
 indistinguishable from a leg measured at zero, and the JS derivation already treats the first
 as a data error — unpaved asserts a measured tail. The Java side can now see the difference.
+
+## 2026-08-31 — The JSON ships inside the jar, beside its HTML
+
+The page data is a resource like the template it belongs to. `resources/data/` mirrors
+`resources/templates/`, both are packaged into the fat jar, and content reaches the server the
+way the code does. Nothing sits on disk beside the jar and nothing is mounted.
+
+This closes the question the *Content lives in the repo* entry left open. A data file is not a
+separate kind of thing to be deployed on its own terms — it belongs where its HTML belongs.
+
+## 2026-08-31 — A blog is composed of posts
+
+Both words are right, and they name different things. The blog is the collection: one page,
+at `/blog`, and the menu item that points at it. A post is one item in it, served at
+`/posts/{name}`, authored under `templates/posts/` with its data under `data/posts/`.
+
+So there was never a word to choose between. The folder, the template folder and the route say
+`posts` because that is what they hold; the menu says Blog because that is what it opens.

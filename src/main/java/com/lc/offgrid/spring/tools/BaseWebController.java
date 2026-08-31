@@ -80,6 +80,7 @@ public class BaseWebController extends BaseController
 			String		message		= buildFailureMessage(servletRequest, "Failed to process request");
 			getLogger().error(exception, "%s", message);
 
+			model.addAttribute("PageName", "Something went wrong");
 			model.addAttribute("errorMessage", message);
 
 			return "exception";

@@ -1,2 +1,21 @@
-<span xmlns:th="http://www.thymeleaf.org" th:fragment="ref(photoId)" class="block-unavailable-inline"
-	  th:text="'image unavailable: ' + ${photoId}">image unavailable</span>
+<!--
+	An inline "see this picture" reference, written in the prose as gallery/id.
+
+	The link text is the gallery item's own label, never a string typed here, so renaming a
+	caption in the JSON renames every reference to it. The href is the id photo-gallery writes
+	on the figure, which is what makes the two halves land on each other.
+
+	A gallery name or an id that resolves to nothing says so in place, rather than rendering
+	an anchor that goes nowhere.
+-->
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="ref(photoId)"
+		  th:with="galleryName=${#strings.substringBefore(photoId, '/')},
+				   itemId=${#strings.substringAfter(photoId, '/')}">
+	<th:block th:with="gallery=${pageData.photoGalleries == null ? null : pageData.photoGalleries.get(galleryName)},
+					   item=${gallery == null or gallery.itemList == null ? null : gallery.itemList.^[id == #vars.itemId]}">
+		<a th:if="${item != null}" th:href="'#gl-photo-' + ${galleryName} + '-' + ${itemId}"
+		   th:text="${item.label} ?: ${itemId}" href="">label</a>
+		<span th:if="${item == null}" class="block-unavailable-inline"
+			  th:text="'image unavailable: ' + ${photoId}">image unavailable</span>
+	</th:block>
+</th:block>

@@ -27,6 +27,10 @@ public class OffgridImageManager extends AbstractFileManager
 		}
 	}
 
+	/**
+	 * The image's metadata, read from the file each time. There is no cache, so a caller that
+	 * asks per request reads the disk per request.
+	 */
 	public ImageMetadata getImageMetadata(String name)
 	{
 		File file = getFile(name);
