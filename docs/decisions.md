@@ -223,7 +223,8 @@ value rather than an absence.
 The argument for Jackson was that it costs no new dependency, against two lines of mapper
 configuration. That was the closer call and it was made the other way. Everything else was
 a wash: six annotations either way (`@SerializedName` vs `@JsonProperty`), both sets deleted
-by the rename pass in todo #10.
+by the rename pass — the table is in *Standing rule — convert every JSON file brought in
+from GettingLost*, below.
 
 `PageDataJacksonReadTest` is kept as the worked comparison — the same files, the same
 records, read by Jackson — so the choice can be re-examined without reconstructing it.
@@ -268,10 +269,31 @@ was buying nothing and costing a permanent disagreement between what a data file
 what the Java says.
 
 The cost accepted: while both sites run, an offgrid file no longer diffs cleanly against its
-GettingLost original, so the rename table in todo #10 is what verifies a copy instead.
+GettingLost original, so the rename table below is what verifies a copy instead.
 
 `MapIcon` still carries `@SerializedName`, on its constants. That maps enum *values*, not
 key names, and is unaffected.
+
+### Standing rule — convert every JSON file brought in from GettingLost
+
+GettingLost keeps the old spellings and its own consumers still read them; offgrid does not.
+The conversion happens on the way in, as part of the copy, never afterwards.
+
+    badges      -> badgeList          keywords  -> keywordList
+    types       -> typeList           legs      -> legList
+    notes       -> noteList           amenities -> amenityList
+    list        -> itemList           haversine -> haversineList
+    items       -> itemList           location_id -> locationId
+    displayName -> label
+
+    campground  -> campgroundData
+    links       -> campgroundData.referenceList   (moves inside, not just renamed)
+    location.zoom -> the googleMap entries that have none of their own
+    tags: []    -> the key is deleted
+    categories  -> deleted when empty
+
+Because nothing maps key names, a file that arrives unconverted binds its renamed fields to
+null rather than failing, so the miss is silent.
 
 ## 2026-08-25 — A location is a place, not a map
 
@@ -327,6 +349,10 @@ PageData            name, featuredImage, excerpt, tags, noteList,
     CampSitePage    access, campgroundData
 ```
 
+**Superseded 2026-08-31** — `AreaPage` is gone, `access` sits on `DestinationPage`, and
+`CampSitePage` is spelled `CampsitePage`. See *A destination has an access, or it does not*
+below. Everything else here still holds.
+
 Every page class carries the `Page` suffix. `PageData` does not: it is the base, and it is
 also the class a page with nothing special uses.
 
@@ -348,6 +374,13 @@ wearing a park tag. That is the thing being corrected.
 **An `AreaPage` has extent, not an address.** A lake and a park are arrived at somewhere along
 their edge, so there is no single spot to drive to and no `access` block. A `CampSitePage` is a
 spot: you drive to it and stop.
+
+An area can hold several of those spots — a lake with two rec sites, reached by different
+roads — and they do not share one access. So the absence of `access` on an `AreaPage` is not a
+field left unfilled; there is no single answer for the page to give.
+
+**Superseded 2026-08-31.** The observation about areas holding several spots survives; making
+it a class was the part that did not.
 
 **`Site` and `CampSitePage` were collapsed into one class.** A day-use rec site and a camping rec
 site are different in real life, but nothing in the data distinguishes them — `tags.types`
@@ -375,10 +408,10 @@ unlisted value to null silently.
 ## 2026-08-25 — The data pass ran
 
 All 56 JSON files in `resources/data` were converted in one pass, the registry's 190 entries
-included. The rename table is in todo #10; the structural moves were `links` into
-`campgroundData.referenceList`, `location.zoom` onto the googleMap entries that had none of
-their own, `tags: []` deleted from the 8 van files, empty `categories` deleted from the 6
-posts, and four posts' `googleMap` becoming `relatedDestinationList`.
+included. The rename table is under *No key mapping in the POJOs*; the structural moves were
+`links` into `campgroundData.referenceList`, `location.zoom` onto the googleMap entries that
+had none of their own, `tags: []` deleted from the 8 van files, empty `categories` deleted
+from the 6 posts, and four posts' `googleMap` becoming `relatedDestinationList`.
 
 Two rounds, deliberately. The first pass renamed and moved but deleted nothing that had
 content in it, and reported what it had left behind. Pierre then ruled which of those were
@@ -394,14 +427,17 @@ campground inside a park, not the data block.
 
 ## 2026-08-25 — A URL is the view name
 
-`/about/useful-links` renders `templates/about/useful-links.html`, whose data folder is
-`data/about/useful-links/`. The URL, the view name and the mirror path are the same string,
+`/info/useful-links` renders `templates/info/useful-links.html`, whose data folder is
+`data/info/useful-links/`. The URL, the view name and the mirror path are the same string,
 so adding a page is a template, a `@GetMapping` and a `process*` method — nothing else to
 keep in step. Where a parameterized route already covers the shape, it is a template and its
 folder, and there is no Java to write at all.
 
-The three Info pages are the first to use it. `/about` is a heading, the header and the
+The three Info pages are the first to use it. `/info/about` is a heading, the header and the
 footer, and nothing else; the two Useful pages render their `noteList`.
+
+The segment was `about` when this was written and became `info` the same day, folder and
+route together — the rule is what matters here, and it did not change.
 
 ## 2026-08-25 — A block fragment takes a parameter when the page has to say which
 
@@ -513,7 +549,7 @@ must not corrupt anything and it must not die silently. It owes the person who t
 nothing beyond that — no friendly wording, no guess at what they meant, no recovery path.
 
 The concrete instance: a parameterized route matches any name in its shape, so
-`/about/useful-anything` reaches `readFile`, throws, and is caught into the `exception`
+`/info/useful-anything` reaches `readFile`, throws, and is caught into the `exception`
 view. That is the correct outcome, not a hole to plug.
 ## 2026-08-25 — The hardware pages, and the photo blocks
 
@@ -960,11 +996,11 @@ Both pages carry the `campground` block, so both moved from `destinations/parks/
 Rathtrevor took on 2026-08-28: a campground inside a park is a campground page, and the park
 it sits in is a separate subject.
 
-`campgrounds` binds `CampSitePage`, which is where `campgroundData` lives, so the block
+`campgrounds` binds the campsite class, which is where `campgroundData` lives, so the block
 resolves whether or not a page carries the data.
 
-`parks` still maps to `AreaPage` in `OffgridController.getPageDataClass`, which is what the
-2026-08-25 hierarchy decided; a park with no campground in it lands there.
+`parks` had its own class at the time. It binds `DestinationPage` since 2026-08-31; a park
+with no campground in it lands there.
 
 ## 2026-08-30 — One link decision, written twice
 
@@ -998,3 +1034,64 @@ site-absolute `/…` — never a name a template wraps a route around. `workUrl`
 `/document/…` for that reason, and the booklets moved out of `static/misc/` into the Documents
 folder so they are `/document/` links like any other.
 
+**Two anchors are built without calling it, and that is fine.** The gallery card in
+`browser.js` writes its own `<a class="gl-gallery-card">`, and a map pin with a url and no
+photo navigates on marker click with `window.location.href` in `google-map.js`. A card always
+points at an offgrid page, which is the bare-anchor case; the rule would add nothing. If a url
+ever needs a new tab in either place, that is a content matter, not a defect in these two.
+
+## 2026-08-31 — A photo carries no coordinates
+
+GettingLost's photo block took `data-lat`/`data-lng` and, when both were present, drew a
+DMS caption under the picture linking to `google.com/maps?q=lat,lng`.
+`fragments/block/photo` takes the filename and nothing else.
+
+Dropped deliberately: whether a picture says where it was taken is the content author's
+choice, and the choice is no. The one page that used it is `destinations/lakes/echo-lake`.
+
+Recorded because the absence looks like a porting gap when offgrid is read against
+GettingLost, and it is not one.
+
+## 2026-08-31 — A destination has an access, or it does not
+
+```
+PageData            name, featuredImage, excerpt, tags, noteList,
+                    photoGalleries, relatedDestinationList
+  MaintenancePage   actualList
+  PostPage          date
+  DestinationPage   location, googleMap, access
+    LakePage        fishingReferences
+    CampsitePage    campgroundData
+```
+
+`AreaPage` is gone and `access` moved up to `DestinationPage`. A class was the wrong place to
+say that a lake or a park has no single spot to drive to: that is a fact about one place, and
+the page leaves the field null. `parks` binds `DestinationPage`, a lake adds fishing, a
+campsite adds its campground data, and nothing else separates them.
+
+The registry always read this way — a row in `shared/browser/destinations.json` is a plain
+map, and a row without `access` is simply a row without it. The Java tree was the only place
+the distinction was structural.
+
+`CampSitePage` became `CampsitePage`: campsite is one word.
+
+**The road badge is derived in Java.** `Access.getRoadLimitingLeg()` answers with one `Leg`:
+back country as soon as a leg leaves the van, otherwise the hardest drive surface in
+`ROAD_RANK` order, and pavement when `legList` is empty. Its km is every leg of that same kind
+added together — potholes 3, dirt 5, potholes 2, dirt 1 gives potholes 5 — and null for
+pavement. The leg is built, not picked out of the list, because pavement and back country are
+not surfaces any leg names.
+
+It has to be Java: `ROAD_RANK` and `NON_DRIVE_LEG_TYPES` live in `gl-constants.js` and
+Thymeleaf cannot read them. So the vocabulary and the derivation now exist twice, in `Access`
+for server-rendered pages and in `browser.js` for the gallery cards the browser assembles —
+the same split the link rule carries, for the same reason.
+
+`fragments/block/tags.html` reads that one leg, writes `data-road` with no colour, and
+`GL.paintTags` finishes it from the one palette. The tag row now draws when there are badges
+**or** a road, with an empty left group when there are no badges, which is what the
+GettingLost renderer did.
+
+**`Leg.km` is a `Double`.** With a primitive, a leg whose JSON states no km was
+indistinguishable from a leg measured at zero, and the JS derivation already treats the first
+as a data error — unpaved asserts a measured tail. The Java side can now see the difference.

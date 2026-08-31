@@ -5,7 +5,7 @@ import com.lc.offgrid.pojo.part.FishingReferences;
 /**
  * An area of water. The province publishes fishing data about it.
  */
-public class LakePage extends AreaPage
+public class LakePage extends DestinationPage
 {
 	private FishingReferences	fishingReferences;
 

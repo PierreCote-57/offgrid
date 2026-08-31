@@ -1,7 +1,6 @@
 package com.lc.offgrid.spring.web;
 
-import com.lc.offgrid.pojo.page.AreaPage;
-import com.lc.offgrid.pojo.page.CampSitePage;
+import com.lc.offgrid.pojo.page.CampsitePage;
 import com.lc.offgrid.pojo.page.DestinationPage;
 import com.lc.offgrid.pojo.page.LakePage;
 import com.lc.offgrid.pojo.page.MaintenancePage;
@@ -51,9 +50,9 @@ public class OffgridController extends BaseWebController
 			case "checklist" -> PageData.class;
 			case "maintenance" -> MaintenancePage.class;
 			case "lakes" -> LakePage.class;
-			case "parks" -> AreaPage.class;
-			case "rec-sites" -> CampSitePage.class;
-			case "campgrounds" -> CampSitePage.class;
+			case "parks" -> DestinationPage.class;
+			case "rec-sites" -> CampsitePage.class;
+			case "campgrounds" -> CampsitePage.class;
 			default -> DestinationPage.class;
 		};
 		return  pageDataClass;

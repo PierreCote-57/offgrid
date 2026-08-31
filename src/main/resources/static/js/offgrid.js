@@ -27,11 +27,14 @@
 	 * data-tag is an OPEN vocabulary: a word the palette does not know gets the fallback, so
 	 * a new badge is visible the day it is authored. data-road is CLOSED: an unknown value is
 	 * a data error, and the badge goes away rather than showing uncoloured.
+	 *
+	 * A road badge on a page IS a gl-tag — it sits in the tag row and wears the pill shape —
+	 * so the first pass leaves anything carrying data-road to the second.
 	 */
 	window.GL.paintTags = function (root) {
 		var scope = root || document;
 
-		var pillList = scope.querySelectorAll(".gl-tag");
+		var pillList = scope.querySelectorAll(".gl-tag:not([data-road])");
 		for (var i = 0; i < pillList.length; i++) {
 			var pill = pillList[i];
 			var word = pill.getAttribute("data-tag");

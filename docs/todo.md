@@ -1,6 +1,13 @@
 # Todo
 
+**next id: 41**
+
 Parked work. Side issues found mid-task land here rather than derailing the task.
+
+Ids are permanent and never reused. The list is never renumbered — a deleted entry leaves a
+gap, and that is correct, because an id has to still resolve when it is cited later. Take the
+next id from the header above and increment it. This numbering is independent of the one in
+`~/Claude/todo.md`.
 
 #1 FullHost account — signed up, but locked out. The password reset sends nothing to the
 address that verified the account, and FullHost has no phone support. The way in is a guest
@@ -25,7 +32,7 @@ are in the folder `folder.image` names, which is a local path only — see #9.
 #8 Reading the JSON — `readFile` reads it per request, and the mapping method names the
 class: `PageData` for info and hardware, `MaintenancePage`, `PostPage`. Settled: content
 lives in the repo; `resources/data/` mirrors `resources/templates/`, a folder per template
-that needs data; seven page classes and eighteen parts under `com.lc.offgrid.pojo`. Still
+that needs data; a class per page kind and the parts under `com.lc.offgrid.pojo`. Still
 open: whether the data rides inside the jar or on disk beside it, and whether the
 destinations — where one folder holds several kinds — can be served the same way, since a
 single `/destinations/{folder}/{name}` cannot name a class the way the hardware routes do.
@@ -36,35 +43,15 @@ they live in the folder `folder.image` names, outside the resource tree, and are
 through `/image/{imageName}`. What is still open is how that folder gets onto the server,
 which the local profile does not answer.
 
-#10 **Standing rule — convert every JSON file brought in from GettingLost.** GettingLost
-keeps the old spellings and its own consumers still read them; offgrid does not. The
-conversion happens on the way in, as part of the copy, never afterwards. Everything already
-in `resources/data` is converted.
-
-    badges      -> badgeList          keywords  -> keywordList
-    types       -> typeList           legs      -> legList
-    notes       -> noteList           amenities -> amenityList
-    list        -> itemList           haversine -> haversineList
-    items       -> itemList           location_id -> locationId
-    displayName -> label
-
-    campground  -> campgroundData
-    links       -> campgroundData.referenceList   (moves inside, not just renamed)
-    location.zoom -> the googleMap entries that have none of their own
-    tags: []    -> the key is deleted
-    categories  -> deleted when empty
-
-Nothing in `com.lc.offgrid.pojo` maps key names — a file that arrives unconverted binds its
-renamed fields to null rather than failing, so the miss is silent.
-
 #16 `BaseWebController` returns the view name `exception` when a handler throws, and no
 `exception.html` exists — so the failure renders as the container's own error page rather than
 the site's. A URL that matches no mapping never reaches that catch at all.
 
-#17 A gallery's heading is authored twice — the page writes
-`<h3 class="gl-heading">Listing pictures</h3>` while `photoGalleries.<key>.name` in the JSON
-says the same thing and nothing reads it. Decide which is the source. The fragment renders
-tiles only, so if the JSON wins, something else has to put the heading on the page.
+#17 A gallery's heading is authored twice — `templates/hardware/van.html` and
+`templates/hardware/bronco.html` each write `<summary><h2 class="gl-heading">…</h2></summary>`
+above the gallery call, while `photoGalleries.<key>.name` in the JSON says the same thing and
+nothing reads it. Decide which is the source. The fragment renders tiles only, so if the JSON
+wins, something else has to put the heading on the page.
 
 #20 `OffgridImageManager.getImageMetadata` reads the file on every call — no cache. Fine
 while nothing calls it; it is a disk read per request the day something does.
@@ -86,8 +73,9 @@ Standalone cameras do not write `TAG_IMG_DIRECTION`, so any UI built on it needs
 case to be the normal one.
 
 #25 The maintenance work sheets have no files. `/document/{documentName}` is served now, off
-`LocalFileManager` (`<folder.local>/Documents`). `workUrl` in `maintenance/van/m-van.json` and
-`maintenance/bronco/m-bronco.json` names three PDFs; none of them is in that folder yet.
+`LocalFileManager` (`<folder.local>/Documents`). `workUrl` in
+`resources/data/hardware/maintenance/van/m-van.json` and `.../bronco/m-bronco.json` names
+three PDFs; none of them is in that folder yet.
 
 #26 Blog or posts — the folder, the template folder and the route all say `posts`, the menu
 item says Blog, and the six posts link back to `/blog`. A post is served at `/posts/{name}`.
@@ -99,25 +87,3 @@ and a rest stop's nearest town is still prose. The parse for it: 204 of the 219 
 `DISTANCE_FROM_MUNICIPALITY` read as `<distance> KM <direction> OF|FROM <town>`; of the 15 that
 do not, 8 name no town at all (`2 KM`, `13.256`, `10`, `AT BC/YUKON BORDER`, `TOP OF KOOTENAY
 PASS`, and three ferry terminals).
-
-
-#34 The `photo` fragment drops a photo's GPS caption. GettingLost's photo block took
-`data-lat`/`data-lng` and rendered a DMS caption linking to Google Maps; the fragment takes
-the filename only. `destinations/lakes/echo-lake.html` has the one call that used it —
-49.984331, -125.413606 on the third photo — and now shows the picture with no caption.
-
-#35 The tags row has no road badge. GettingLost drew badges LEFT and the road badge RIGHT,
-derived from `access.legList` — worst leg type wins the word, every leg of that type sums to
-the km. `PageData` has no `access` and `OffgridController.destination` binds `PageData`, so
-the fragment cannot reach it; `fragments/block/tags.html` leaves the right-hand group empty
-and `.gl-tagrow-km` is in `site.css` with nothing writing it. The vocabulary and the
-derivation exist in `gl-constants.js` (`ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `ROAD_COLORS`) and
-`browser.js:166` (`deriveRoadBadge`), which is what the gallery cards already use.
-
-#39 Two anchors do not go through the link rule. The gallery card in `browser.js` builds its
-own `<a class="gl-gallery-card">` as a string, because `GL.linkOpenTag` returns a tag with no
-slot for a class; and a single-pin map with no photo navigates on marker click with
-`window.location.href` in `google-map.js`, so there is no anchor to carry a target. Both are
-internal page links today, which is the case the rule leaves bare — a `/document/` url in
-either would open in this tab.
-

@@ -2,31 +2,49 @@
 	The page's own vocabularies, the ones the browser filters on.
 
 		badgeList    LEFT    what you would do there      (closed, coloured)
+		road         RIGHT   what it costs you to get there (closed, coloured, + km)
 		keywordList  BELOW   everything else              (open, plain)
 
-	typeList is deliberately absent: it filters, and the page already says what kind of
-	place it is. The right-hand group is the road badge's place; it stays empty until the
-	page class carries `access`.
+	Left and right are two different kinds of fact, so they read as two things rather than one
+	long row. typeList is deliberately absent: it filters, and the page already says what kind
+	of place it is.
+
+	The road word is not derived here — Access.getRoadLimitingLeg() walks the legs and answers
+	with one leg, so the template never sees a list. A destination reached along its edge has
+	no access at all, and the right-hand group is then empty.
 
 	The pill is one class here and on a gallery card, so the two cannot drift apart. The
 	colour is not written here — offgrid.js paints it from the one palette in gl-constants.js.
 	Nothing renders at all when there is nothing to say.
 -->
-<div xmlns:th="http://www.thymeleaf.org" class="gl-tags"
-	 th:if="${pageData.tags != null and (!#lists.isEmpty(pageData.tags.badgeList) or !#lists.isEmpty(pageData.tags.keywordList))}">
+<th:block xmlns:th="http://www.thymeleaf.org" th:with="roadLeg=${pageData.access?.roadLimitingLeg}">
+	<div class="gl-tags"
+		 th:if="${roadLeg != null or (pageData.tags != null and (!#lists.isEmpty(pageData.tags.badgeList) or !#lists.isEmpty(pageData.tags.keywordList)))}">
 
-	<div class="gl-tagrow" th:if="${!#lists.isEmpty(pageData.tags.badgeList)}">
-		<div class="gl-tagrow-group">
-			<span class="gl-tag" th:each="badge : ${#lists.sort(pageData.tags.badgeList)}"
-				  th:attr="data-tag=${badge}" th:text="${badge}">badge</span>
+		<div class="gl-tagrow"
+			 th:if="${roadLeg != null or (pageData.tags != null and !#lists.isEmpty(pageData.tags.badgeList))}">
+			<div class="gl-tagrow-group">
+				<th:block th:if="${pageData.tags != null and !#lists.isEmpty(pageData.tags.badgeList)}">
+					<span class="gl-tag" th:each="badge : ${#lists.sort(pageData.tags.badgeList)}"
+						  th:attr="data-tag=${badge}" th:text="${badge}">badge</span>
+				</th:block>
+			</div>
+			<div class="gl-tagrow-group">
+				<span th:if="${roadLeg != null}" class="gl-tag"
+					  th:attr="data-road=${roadLeg.type}"
+					  th:text="${#strings.replace(roadLeg.type, '_', ' ')}">road</span>
+				<span th:if="${roadLeg?.km != null}" class="gl-tagrow-km"
+					  th:with="wholeKm=${roadLeg.km == roadLeg.km.longValue()}"
+					  th:text="${wholeKm ? roadLeg.km.longValue() : roadLeg.km} + ' km'">5 km</span>
+			</div>
 		</div>
-		<div class="gl-tagrow-group"></div>
-	</div>
 
-	<div class="gl-tagrow-keywords" th:if="${!#lists.isEmpty(pageData.tags.keywordList)}">
-		<div class="gl-tagrow-group">
-			<span class="gl-tag" data-tag="plain" th:each="keyword : ${#lists.sort(pageData.tags.keywordList)}"
-				  th:text="${keyword}">keyword</span>
+		<div class="gl-tagrow-keywords"
+			 th:if="${pageData.tags != null and !#lists.isEmpty(pageData.tags.keywordList)}">
+			<div class="gl-tagrow-group">
+				<span class="gl-tag" data-tag="plain" th:each="keyword : ${#lists.sort(pageData.tags.keywordList)}"
+					  th:text="${keyword}">keyword</span>
+			</div>
 		</div>
 	</div>
-</div>
+</th:block>
