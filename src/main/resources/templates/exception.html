@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Something went wrong</h1>
+
+	<p>
+		That page did not come back. Nothing was changed, and the rest of the site is fine —
+		the menu above goes anywhere from here.
+	</p>
+
+	<!--
+		BaseWebController puts errorMessage on the model before it returns this view. It is
+		here for whoever is diagnosing the failure, not for the reader, so it sits below the
+		sentence that answers the reader's question.
+	-->
+	<div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>
