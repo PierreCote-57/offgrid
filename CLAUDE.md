@@ -16,6 +16,15 @@ here in full and are not repeated below.
 - **[docs/decisions.md](docs/decisions.md)** — what was decided and why. Read it before
   proposing a change to the stack, the build, or the deployment path.
 - **[docs/todo.md](docs/todo.md)** — parked work. Side issues found mid-task go here.
+- **`docs/skills/`** — procedures to FOLLOW, not background to read. Treat a file there
+  exactly as if it were an installed skill: when Pierre asks for the thing its frontmatter
+  `description` covers, open it and do what it says. They live in `docs/` and not in
+  `.claude/skills/` deliberately — everything under `docs/` is freely editable, so a skill
+  can be tuned mid-session without a permission round trip.
+  - [docs/skills/SolarSystemChart.md](docs/skills/SolarSystemChart.md) — draw the solar
+    system, planet positions computed for a date.
+  - [docs/skills/SolarSystemRiseSet.md](docs/skills/SolarSystemRiseSet.md) — rise, transit
+    and set times for an observer and a date.
 
 There is no `docs/README.md` index. Add one the day `docs/` stops being scannable at a
 glance, not before.
