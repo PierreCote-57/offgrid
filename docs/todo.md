@@ -51,12 +51,6 @@ three PDFs; none of them is in that folder yet.
 loopback and nothing else can; on FullHost it is on the open internet, unauthenticated, and
 every tool answers anyone who posts to it.
 
-#43 Give `Leg` a `LegType` enum beside its String. The String stays as the JSON writes it, so
-an unlisted surface is never lost; the enum is a non-JSON member with a getter, null until the
-first call, and `UNKNOWN` for a word the vocabulary does not carry. Members are `ROAD_RANK`'s
-five, `NON_DRIVE_LEG_TYPES`' three, `PAVEMENT` and `BACK_COUNTRY` — the last two because
-`Access.getRoadLimitingLeg` builds legs of those types itself and no data file names them.
-
 #45 Finish the request id in `McpMessage`. It is an `Object`, and MCP's own Gson reads an
 integral one as a Long, so a client's `7` is answered as `7`. Two ends are not covered:
 `McpAnswer.id` is null on a parse error and Gson drops a null field unless the builder says

@@ -9,15 +9,15 @@ import java.util.TreeMap;
  */
 public class Access
 {
-	/** Drive surfaces, easiest first. The one furthest along this list wins the badge. */
-	public static final List<String>	ROAD_RANK			= List.of("unpaved", "dirt", "potholes", "sharp_rock", "rugged");
+	/**
+	 * Drive surfaces, easiest first. The one furthest along this list wins the badge. The order
+	 * follows the van, not the road, so another vehicle reorders it here and nothing else moves.
+	 */
+	public static final List<RoadType>	ROAD_RANK			= List.of(RoadType.UNPAVED, RoadType.DIRT,
+			RoadType.POTHOLES, RoadType.SHARP_ROCK, RoadType.RUGGED);
 
 	/** Leg types where you are no longer in the van. Any one of them decides the whole approach. */
-	public static final List<String>	NON_DRIVE_LEG_TYPES	= List.of("walk", "hike", "boat");
-
-	public static final String			UNPAVED				= "unpaved";
-	public static final String			PAVEMENT			= "pavement";
-	public static final String			BACK_COUNTRY		= "back_country";
+	public static final List<RoadType>	NON_DRIVE_LEG_TYPES	= List.of(RoadType.WALK, RoadType.HIKE, RoadType.BOAT);
 
 	private TreeMap<String, Integer>	haversineMap;
 	private List<Leg>					legList;
@@ -55,28 +55,28 @@ public class Access
 		}
 		if (legList.isEmpty())
 		{
-			Leg pavementLeg = new Leg(PAVEMENT, null);
+			Leg pavementLeg = new Leg(RoadType.PAVEMENT, null);
 			return pavementLeg;
 		}
 
 		int worstRank = -1;
 		for (Leg leg : legList)
 		{
-			String type = leg.getType();
+			RoadType type = leg.getType();
 			boolean nonDrive = NON_DRIVE_LEG_TYPES.contains(type);
 			int driveRank = ROAD_RANK.indexOf(type);
 			if (!nonDrive && driveRank < 0)
 			{
 				continue;
 			}
-			if (UNPAVED.equals(type) && !isMeasured(leg))
+			if (RoadType.UNPAVED == type && !isMeasured(leg))
 			{
 				continue;
 			}
 			if (nonDrive)
 			{
 				Double backCountryKm = sumKm(NON_DRIVE_LEG_TYPES);
-				Leg backCountryLeg = new Leg(BACK_COUNTRY, backCountryKm);
+				Leg backCountryLeg = new Leg(RoadType.BACK_COUNTRY, backCountryKm);
 				return backCountryLeg;
 			}
 			if (driveRank > worstRank)
@@ -90,20 +90,20 @@ public class Access
 			return null;
 		}
 
-		String worstType = ROAD_RANK.get(worstRank);
-		List<String> wantedList = List.of(worstType);
+		RoadType worstType = ROAD_RANK.get(worstRank);
+		List<RoadType> wantedList = List.of(worstType);
 		Double worstKm = sumKm(wantedList);
 		Leg limitingLeg = new Leg(worstType, worstKm);
 		return limitingLeg;
 	}
 
 	/** The km of every leg whose type is one of the wanted ones, or null when they add to nothing. */
-	private Double sumKm(List<String> wantedList)
+	private Double sumKm(List<RoadType> wantedList)
 	{
 		double total = 0;
 		for (Leg leg : legList)
 		{
-			String type = leg.getType();
+			RoadType type = leg.getType();
 			if (!wantedList.contains(type))
 			{
 				continue;

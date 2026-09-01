@@ -49,10 +49,10 @@ public class OffgridController extends BaseWebController
 			case "howto" -> PageData.class;
 			case "checklist" -> PageData.class;
 			case "maintenance" -> MaintenancePage.class;
-			case "lakes" -> LakePage.class;
-			case "parks" -> DestinationPage.class;
-			case "rec-sites" -> CampsitePage.class;
-			case "campgrounds" -> CampsitePage.class;
+			case "lake" -> LakePage.class;
+			case "park" -> DestinationPage.class;
+			case "rec-site" -> CampsitePage.class;
+			case "campground" -> CampsitePage.class;
 			default -> DestinationPage.class;
 		};
 		return  pageDataClass;

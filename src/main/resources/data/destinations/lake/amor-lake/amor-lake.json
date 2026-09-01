@@ -37,7 +37,7 @@
 		"Destinations": [
 			{
 				"name": "Amor Lake (REC0174)",
-				"url": "/destinations/rec-sites/amor-lake-rec0174"
+				"url": "/destinations/rec-site/amor-lake-rec0174"
 			},
 			{
 				"name": "Amor Lake",
@@ -48,7 +48,7 @@
 			},
 			{
 				"name": "Twin Lake (REC0185)",
-				"url": "/destinations/rec-sites/twin-lake-rec0185"
+				"url": "/destinations/rec-site/twin-lake-rec0185"
 			},
 			{
 				"name": "Lak La More",

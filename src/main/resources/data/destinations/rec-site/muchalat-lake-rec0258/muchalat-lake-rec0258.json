@@ -1,5 +1,5 @@
 {
-	"name": "Clint Beek (rec-site)",
+	"name": "Muchalat Lake (rec-site)",
 	"featuredImage": "under-construction",
 	"excerpt": "Under construction",
 	"tags": {
@@ -13,8 +13,8 @@
 		"comments": "open"
 	},
 	"location": {
-		"lat": 50.49391,
-		"lng": -127.172186,
+		"lat": 49.873601,
+		"lng": -126.162778,
 		"icon": "tent"
 	},
 	"googleMap": {
@@ -24,23 +24,23 @@
 	},
 	"access": {
 		"haversineMap": {
-			"Campbell River": 145,
-			"Nanaimo": 275,
-			"Victoria": 360
+			"Campbell River": 70,
+			"Nanaimo": 180,
+			"Victoria": 260
 		}
 	},
 	"noteMap": {
 		"Further readings": [
 			{
-				"name": "Clint Beek (REC16077)",
-				"url": "https://www.sitesandtrailsbc.ca/resource/REC16077",
+				"name": "Muchalat Lake (REC0258)",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC0258",
 				"description": [
 					"Sites & Trails BC"
 				]
 			},
 			{
-				"name": "Keogh Lake",
-				"url": "/destinations/lakes/keogh-lake"
+				"name": "Muchalat Lake",
+				"url": "/destinations/lake/muchalat-lake"
 			}
 		]
 	},

@@ -1,12 +1,14 @@
 package com.lc.offgrid.pojo.part;
 
+import java.time.LocalDate;
+
 /**
  * One visit to a shop: what was done, where, what it cost, and what it sets up next. A field
  * with nothing behind it stays null and its cell is left empty.
  */
 public class MaintenanceEntry
 {
-	private String		date;
+	private LocalDate	date;
 	private Integer		odometerKm;
 	private String		shopName;
 	private String		shopUrl;
@@ -14,9 +16,9 @@ public class MaintenanceEntry
 	private String		workUrl;
 	private Double		costCad;
 	private Integer		nextDueKm;
-	private String		nextDueDate;
+	private LocalDate	nextDueDate;
 
-	public String getDate()
+	public LocalDate getDate()
 	{
 		return date;
 	}
@@ -56,7 +58,7 @@ public class MaintenanceEntry
 		return nextDueKm;
 	}
 
-	public String getNextDueDate()
+	public LocalDate getNextDueDate()
 	{
 		return nextDueDate;
 	}

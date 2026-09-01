@@ -1280,3 +1280,35 @@ nothing answers to.
 The browser dataset carries the same shapes as the page files — inline or through a `file`
 pointer, both are read by the same template — so it was migrated with them, and `browser.js`
 reads `haversineMap` by town instead of scanning for it.
+
+## 2026-09-01 — One vocabulary per thing, and the vocabulary is an enum
+
+Four closed vocabularies were Strings, and each is now an enum carrying `@SerializedName`, so
+the JSON keeps the word it always wrote: `RoadType` on `Leg.type`, `DestinationType` on
+`Tags.typeList`, `Badge` on `Tags.badgeList`. `keywordList` stays a `List<String>` — it is the
+open one, and that is the whole distinction between it and the other two.
+
+`RoadType` carries ten constants: the five drive surfaces a leg may be authored as, the three
+ways of leaving the van, and `PAVEMENT` and `BACK_COUNTRY`, which `Access.getRoadLimitingLeg`
+derives and no data file ever writes.
+
+**The severity ranking is not the enum's order.** It follows the van, not the road, so
+`ROAD_RANK` stays a `List<RoadType>` in `Access` where another vehicle reorders it in one
+place. Reading it off `ordinal()` would have buried a vehicle's configuration in a type.
+
+**The URL segment went singular**, so the type word and the route are one vocabulary rather
+than two: `/destinations/lake/echo-lake`, and `lakes`, `rec-sites` and `campgrounds` were
+renamed to their singular under both `data/destinations/` and `templates/destinations/`, with
+every link and every `file` pointer rewritten. Nothing outside the repo pointed at the old
+ones. `park` still has no folder — it is a type with no page yet, not a missing one.
+
+A template renders the word, never the constant: both palettes in `gl-constants.js` are keyed
+by what the JSON writes, so `tags.html` lower-cases the constant once into `badgeWord` and
+`roadWord`. `SHARP_ROCK` reaching `data-road` would have painted nothing.
+
+**Dates are dates.** `MaintenanceEntry.date` and `nextDueDate` are `LocalDate`; `PostPage.date`
+is a `LocalDateTime`, because a post happened at a time of day and a shop visit did not. The
+data already carried both shapes correctly and needed no migration. Gson has no opinion about
+`java.time`, so `LocalDateAdapter` and `LocalDateTimeAdapter` sit beside the shared Gson in
+`BaseFileHandler` and read and write the ISO text. A post's dateline now prints `T21:00`
+rather than `T21:00:00`, which is what `LocalDateTime` prints.

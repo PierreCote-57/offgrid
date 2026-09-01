@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,6 +35,8 @@ public class BaseFileHandler
 	private static final Gson	GSON							=
 			new GsonBuilder().setPrettyPrinting()
 					.disableHtmlEscaping()
+					.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+					.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
 					.create();
 
 	public static final String	SETTING_PREFIX					= BaseFileHandler.class.getName();

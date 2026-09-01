@@ -1,5 +1,5 @@
 {
-	"name": "Amor Lake (rec-site)",
+	"name": "Twin Lake (rec-site)",
 	"featuredImage": "under-construction",
 	"excerpt": "Under construction",
 	"tags": {
@@ -13,8 +13,8 @@
 		"comments": "open"
 	},
 	"location": {
-		"lat": 50.157993,
-		"lng": -125.580808,
+		"lat": 50.174991,
+		"lng": -125.517853,
 		"icon": "tent"
 	},
 	"googleMap": {
@@ -24,7 +24,7 @@
 	},
 	"access": {
 		"haversineMap": {
-			"Campbell River": 30,
+			"Campbell River": 25,
 			"Nanaimo": 160,
 			"Victoria": 250
 		}
@@ -32,15 +32,19 @@
 	"noteMap": {
 		"Further readings": [
 			{
-				"name": "Amor Lake (REC0174)",
-				"url": "https://www.sitesandtrailsbc.ca/resource/REC0174",
+				"name": "Twin Lake (REC0185)",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC0185",
 				"description": [
 					"Sites & Trails BC"
 				]
 			},
 			{
 				"name": "Amor Lake",
-				"url": "/destinations/lakes/amor-lake"
+				"url": "/destinations/lake/amor-lake"
+			},
+			{
+				"name": "Mohun Lake",
+				"url": "/destinations/lake/mohun-lake"
 			}
 		]
 	},

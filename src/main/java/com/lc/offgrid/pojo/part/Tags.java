@@ -8,16 +8,16 @@ import java.util.List;
  */
 public class Tags
 {
-	private List<String>	badgeList;
-	private List<String>	typeList;
-	private List<String>	keywordList;
+	private List<Badge>				badgeList;
+	private List<DestinationType>	typeList;
+	private List<String>			keywordList;
 
-	public List<String> getBadgeList()
+	public List<Badge> getBadgeList()
 	{
 		return badgeList;
 	}
 
-	public List<String> getTypeList()
+	public List<DestinationType> getTypeList()
 	{
 		return typeList;
 	}
