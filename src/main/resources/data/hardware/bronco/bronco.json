@@ -6,280 +6,244 @@
 	},
 	"photoGalleries": {
 		"listing-pictures": {
-			"name": "Listing Pictures",
-			"itemList": [
-				{
-					"id": "1",
-					"img": "Ford-Bronco_Sport-2026-1",
-					"label": ""
-				},
-				{
-					"id": "2",
-					"img": "Ford-Bronco_Sport-2026-2",
-					"label": ""
-				},
-				{
-					"id": "3",
-					"img": "Ford-Bronco_Sport-2026-3",
-					"label": ""
-				},
-				{
-					"id": "4",
-					"img": "Ford-Bronco_Sport-2026-4",
-					"label": ""
-				},
-				{
-					"id": "5",
-					"img": "Ford-Bronco_Sport-2026-5",
-					"label": ""
-				},
-				{
-					"id": "6",
-					"img": "Ford-Bronco_Sport-2026-6",
-					"label": ""
-				},
-				{
-					"id": "7",
-					"img": "Ford-Bronco_Sport-2026-7",
-					"label": ""
-				},
-				{
-					"id": "8",
-					"img": "Ford-Bronco_Sport-2026-8",
-					"label": ""
-				},
-				{
-					"id": "9",
-					"img": "Ford-Bronco_Sport-2026-9",
-					"label": ""
-				},
-				{
-					"id": "10",
-					"img": "Ford-Bronco_Sport-2026-10",
-					"label": ""
-				},
-				{
-					"id": "11",
-					"img": "Ford-Bronco_Sport-2026-11",
-					"label": ""
-				},
-				{
-					"id": "12",
-					"img": "Ford-Bronco_Sport-2026-12",
-					"label": ""
-				},
-				{
-					"id": "13",
-					"img": "Ford-Bronco_Sport-2026-13",
-					"label": ""
-				},
-				{
-					"id": "14",
-					"img": "Ford-Bronco_Sport-2026-14",
-					"label": ""
-				},
-				{
-					"id": "15",
-					"img": "Ford-Bronco_Sport-2026-15",
-					"label": ""
-				},
-				{
-					"id": "16",
-					"img": "Ford-Bronco_Sport-2026-16",
-					"label": ""
-				},
-				{
-					"id": "17",
-					"img": "Ford-Bronco_Sport-2026-17",
-					"label": ""
-				},
-				{
-					"id": "18",
-					"img": "Ford-Bronco_Sport-2026-18",
-					"label": ""
-				},
-				{
-					"id": "19",
-					"img": "Ford-Bronco_Sport-2026-19",
-					"label": ""
-				},
-				{
-					"id": "20",
-					"img": "Ford-Bronco_Sport-2026-20",
-					"label": ""
-				},
-				{
-					"id": "21",
-					"img": "Ford-Bronco_Sport-2026-21",
-					"label": ""
-				},
-				{
-					"id": "22",
-					"img": "Ford-Bronco_Sport-2026-22",
-					"label": ""
-				},
-				{
-					"id": "23",
-					"img": "Ford-Bronco_Sport-2026-23",
-					"label": ""
-				},
-				{
-					"id": "24",
-					"img": "Ford-Bronco_Sport-2026-24",
-					"label": ""
-				},
-				{
-					"id": "25",
-					"img": "Ford-Bronco_Sport-2026-25",
-					"label": ""
-				},
-				{
-					"id": "26",
-					"img": "Ford-Bronco_Sport-2026-26",
-					"label": ""
-				},
-				{
-					"id": "27",
-					"img": "Ford-Bronco_Sport-2026-27",
-					"label": ""
-				}
-			]
+			"1": {
+				"img": "Ford-Bronco_Sport-2026-1",
+				"label": ""
+			},
+			"2": {
+				"img": "Ford-Bronco_Sport-2026-2",
+				"label": ""
+			},
+			"3": {
+				"img": "Ford-Bronco_Sport-2026-3",
+				"label": ""
+			},
+			"4": {
+				"img": "Ford-Bronco_Sport-2026-4",
+				"label": ""
+			},
+			"5": {
+				"img": "Ford-Bronco_Sport-2026-5",
+				"label": ""
+			},
+			"6": {
+				"img": "Ford-Bronco_Sport-2026-6",
+				"label": ""
+			},
+			"7": {
+				"img": "Ford-Bronco_Sport-2026-7",
+				"label": ""
+			},
+			"8": {
+				"img": "Ford-Bronco_Sport-2026-8",
+				"label": ""
+			},
+			"9": {
+				"img": "Ford-Bronco_Sport-2026-9",
+				"label": ""
+			},
+			"10": {
+				"img": "Ford-Bronco_Sport-2026-10",
+				"label": ""
+			},
+			"11": {
+				"img": "Ford-Bronco_Sport-2026-11",
+				"label": ""
+			},
+			"12": {
+				"img": "Ford-Bronco_Sport-2026-12",
+				"label": ""
+			},
+			"13": {
+				"img": "Ford-Bronco_Sport-2026-13",
+				"label": ""
+			},
+			"14": {
+				"img": "Ford-Bronco_Sport-2026-14",
+				"label": ""
+			},
+			"15": {
+				"img": "Ford-Bronco_Sport-2026-15",
+				"label": ""
+			},
+			"16": {
+				"img": "Ford-Bronco_Sport-2026-16",
+				"label": ""
+			},
+			"17": {
+				"img": "Ford-Bronco_Sport-2026-17",
+				"label": ""
+			},
+			"18": {
+				"img": "Ford-Bronco_Sport-2026-18",
+				"label": ""
+			},
+			"19": {
+				"img": "Ford-Bronco_Sport-2026-19",
+				"label": ""
+			},
+			"20": {
+				"img": "Ford-Bronco_Sport-2026-20",
+				"label": ""
+			},
+			"21": {
+				"img": "Ford-Bronco_Sport-2026-21",
+				"label": ""
+			},
+			"22": {
+				"img": "Ford-Bronco_Sport-2026-22",
+				"label": ""
+			},
+			"23": {
+				"img": "Ford-Bronco_Sport-2026-23",
+				"label": ""
+			},
+			"24": {
+				"img": "Ford-Bronco_Sport-2026-24",
+				"label": ""
+			},
+			"25": {
+				"img": "Ford-Bronco_Sport-2026-25",
+				"label": ""
+			},
+			"26": {
+				"img": "Ford-Bronco_Sport-2026-26",
+				"label": ""
+			},
+			"27": {
+				"img": "Ford-Bronco_Sport-2026-27",
+				"label": ""
+			}
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Shopping list",
-			"itemList": [
-				{
-					"name": "Slime tire sealant, 24 oz",
-					"description": [
-						"Truck/SUV size for the 235/65R17 tires. One bottle per tire to be treated. Check the chart on the bottle."
-					]
-				},
-				{
-					"name": "Tire plug kit",
-					"description": [
-						"For tread punctures. A plug does nothing for a sidewall cut, which is what FSR gravel actually does."
-					]
-				},
-				{
-					"name": "12V compressor",
-					"description": [
-						"To reinflate after a plug, and to air back up after dropping pressure for washboard."
-					]
-				},
-				{
-					"name": "Tire gauge"
-				},
-				{
-					"name": "MotoMaster Overland Traction Aid, 2-pc",
-					"url": "https://www.canadiantire.ca/en/pdp/motomaster-overland-traction-aid-2-pc-0304238p.html",
-					"description": [
-						"$69.99. 22.75 x 12.5 in each; the two couple together into a single run of about 45 in, with the joint acting as a flex point. Crush tested to 10 tons."
-					]
-				},
-				{
-					"name": "Recovery strap, 2 in x 30 ft",
-					"url": "https://www.canadiantire.ca/en/pdp/motomaster-15-000-lb-recovery-strap-with-loop-ends-commercial-grade-2-in-x-30-ft-0402757p.html",
-					"description": [
-						"15,000 lb is the right size for a 2,182 kg GVWR. Needs a rated recovery point at both ends — this vehicle has no front hooks, so the attachment point is unresolved."
-					]
-				},
-				{
-					"name": "Soft shackle",
-					"description": [
-						"Not carried by Canadian Tire. A steel bow shackle becomes a projectile if something lets go, which is the reason to buy this elsewhere."
-					]
-				},
-				{
-					"name": "Fire extinguisher",
-					"description": [
-						"Check the current BC fire season rules before each trip; requirements change by year and by fire centre."
-					]
-				},
-				{
-					"name": "Folding shovel"
-				},
-				{
-					"name": "Plywood offcut, 12 x 12 in",
-					"description": [
-						"Jack base. The factory scissor jack sinks in gravel. Canadian Tire sells nothing purpose-made for this; 3/4 in plywood beats everything they do sell."
-					]
-				},
-				{
-					"name": "Work gloves"
-				},
-				{
-					"name": "Headlamp"
-				}
-			]
-		},
-		{
-			"sectionName": "What goes in the Bronco",
-			"itemList": [
-				{
-					"name": "VHF resource road radio",
-					"url": "/info/logging",
-					"description": [
-						"Already owned. Programmed for the Coast and North Island channels — see the logging page for the channel maps."
-					]
-				},
-				{
-					"name": "inReach",
-					"url": "https://www.garmin.com/en-CA/account/profile",
-					"description": [
-						"Already owned. Cell coverage ends quickly outside the Campbell River corridor."
-					]
-				},
-				{
-					"name": "First aid kit",
-					"description": [
-						"Already owned."
-					]
-				},
-				{
-					"name": "Gaia, maps downloaded",
-					"description": [
-						"Already owned. Downloaded before leaving, since the data goes away."
-					]
-				},
-				{
-					"name": "Factory spare and jack",
-					"description": [
-						"Stock. The spare is 225/65R17, narrower and lower rated than the 235/65R17 on the ground — good to limp out on, not to drive an FSR on."
-					]
-				},
-				{
-					"name": "Slime, plug kit, compressor, gauge"
-				},
-				{
-					"name": "Plywood jack base"
-				},
-				{
-					"name": "Traction boards",
-					"description": [
-						"With the shovel, this is the self-recovery kit. Dig ahead of the tires, seat the boards, ease on."
-					]
-				},
-				{
-					"name": "Recovery strap and soft shackle",
-					"description": [
-						"Only useful with a second vehicle. On an active FSR a logging truck or another traveller stopping is likely."
-					]
-				},
-				{
-					"name": "Fire extinguisher"
-				},
-				{
-					"name": "Folding shovel"
-				},
-				{
-					"name": "Gloves, headlamp"
-				},
-				{
-					"name": "Water for a night, warm layers"
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Shopping list": [
+			{
+				"name": "Slime tire sealant, 24 oz",
+				"description": [
+					"Truck/SUV size for the 235/65R17 tires. One bottle per tire to be treated. Check the chart on the bottle."
+				]
+			},
+			{
+				"name": "Tire plug kit",
+				"description": [
+					"For tread punctures. A plug does nothing for a sidewall cut, which is what FSR gravel actually does."
+				]
+			},
+			{
+				"name": "12V compressor",
+				"description": [
+					"To reinflate after a plug, and to air back up after dropping pressure for washboard."
+				]
+			},
+			{
+				"name": "Tire gauge"
+			},
+			{
+				"name": "MotoMaster Overland Traction Aid, 2-pc",
+				"url": "https://www.canadiantire.ca/en/pdp/motomaster-overland-traction-aid-2-pc-0304238p.html",
+				"description": [
+					"$69.99. 22.75 x 12.5 in each; the two couple together into a single run of about 45 in, with the joint acting as a flex point. Crush tested to 10 tons."
+				]
+			},
+			{
+				"name": "Recovery strap, 2 in x 30 ft",
+				"url": "https://www.canadiantire.ca/en/pdp/motomaster-15-000-lb-recovery-strap-with-loop-ends-commercial-grade-2-in-x-30-ft-0402757p.html",
+				"description": [
+					"15,000 lb is the right size for a 2,182 kg GVWR. Needs a rated recovery point at both ends — this vehicle has no front hooks, so the attachment point is unresolved."
+				]
+			},
+			{
+				"name": "Soft shackle",
+				"description": [
+					"Not carried by Canadian Tire. A steel bow shackle becomes a projectile if something lets go, which is the reason to buy this elsewhere."
+				]
+			},
+			{
+				"name": "Fire extinguisher",
+				"description": [
+					"Check the current BC fire season rules before each trip; requirements change by year and by fire centre."
+				]
+			},
+			{
+				"name": "Folding shovel"
+			},
+			{
+				"name": "Plywood offcut, 12 x 12 in",
+				"description": [
+					"Jack base. The factory scissor jack sinks in gravel. Canadian Tire sells nothing purpose-made for this; 3/4 in plywood beats everything they do sell."
+				]
+			},
+			{
+				"name": "Work gloves"
+			},
+			{
+				"name": "Headlamp"
+			}
+		],
+		"What goes in the Bronco": [
+			{
+				"name": "VHF resource road radio",
+				"url": "/info/logging",
+				"description": [
+					"Already owned. Programmed for the Coast and North Island channels — see the logging page for the channel maps."
+				]
+			},
+			{
+				"name": "inReach",
+				"url": "https://www.garmin.com/en-CA/account/profile",
+				"description": [
+					"Already owned. Cell coverage ends quickly outside the Campbell River corridor."
+				]
+			},
+			{
+				"name": "First aid kit",
+				"description": [
+					"Already owned."
+				]
+			},
+			{
+				"name": "Gaia, maps downloaded",
+				"description": [
+					"Already owned. Downloaded before leaving, since the data goes away."
+				]
+			},
+			{
+				"name": "Factory spare and jack",
+				"description": [
+					"Stock. The spare is 225/65R17, narrower and lower rated than the 235/65R17 on the ground — good to limp out on, not to drive an FSR on."
+				]
+			},
+			{
+				"name": "Slime, plug kit, compressor, gauge"
+			},
+			{
+				"name": "Plywood jack base"
+			},
+			{
+				"name": "Traction boards",
+				"description": [
+					"With the shovel, this is the self-recovery kit. Dig ahead of the tires, seat the boards, ease on."
+				]
+			},
+			{
+				"name": "Recovery strap and soft shackle",
+				"description": [
+					"Only useful with a second vehicle. On an active FSR a logging truck or another traveller stopping is likely."
+				]
+			},
+			{
+				"name": "Fire extinguisher"
+			},
+			{
+				"name": "Folding shovel"
+			},
+			{
+				"name": "Gloves, headlamp"
+			},
+			{
+				"name": "Water for a night, warm layers"
+			}
+		]
+	}
 }

@@ -279,12 +279,14 @@ key names, and is unaffected.
 GettingLost keeps the old spellings and its own consumers still read them; offgrid does not.
 The conversion happens on the way in, as part of the copy, never afterwards.
 
-    badges      -> badgeList          keywords  -> keywordList
-    types       -> typeList           legs      -> legList
-    notes       -> noteList           amenities -> amenityList
-    list        -> itemList           haversine -> haversineList
-    items       -> itemList           location_id -> locationId
-    displayName -> label
+    badges      -> badgeList          keywords    -> keywordList
+    types       -> typeList           legs        -> legList
+    notes       -> noteMap            amenities   -> amenityList
+    displayName -> label              location_id -> locationId
+
+    haversine   -> haversineMap, keyed by town
+    list, items -> the value inside a map rather than a list of its own: a note block's
+                   entries sit under its heading, a gallery's under each item's id
 
     campground  -> campgroundData
     links       -> campgroundData.referenceList   (moves inside, not just renamed)
@@ -434,7 +436,7 @@ keep in step. Where a parameterized route already covers the shape, it is a temp
 folder, and there is no Java to write at all.
 
 The three Info pages are the first to use it. `/info/about` is a heading, the header and the
-footer, and nothing else; the two Useful pages render their `noteList`.
+footer, and nothing else; the two Useful pages render their `noteMap`.
 
 The segment was `about` when this was written and became `info` the same day, folder and
 route together — the rule is what matters here, and it did not change.
@@ -467,6 +469,10 @@ it does not survive the first part whose members are addressed one at a time.
 
 One fragment for the whole `noteList` block, not one per section. It splits the day
 something renders a section on its own.
+
+**Superseded 2026-09-01.** That day came: `note-list` takes the block's name, like
+`googleMap` and `photoGalleries` — see *A keyed part is a Map* below. Nothing on this page
+is rendered as a whole from the model any more except `maintenance-actual`.
 
 A description is a `List<String>` joined into one flowing cell, and it is rendered with
 `th:utext`. **Corrected 2026-08-26** — it had been one `<p>` per entry, escaped. Both were
@@ -584,6 +590,9 @@ emits its own `<details>` leaves the page unable to see the structure it is prod
 The consequence: the heading is authored in the page rather than taken from the gallery's
 `name` in the JSON, so a gallery that has a heading has it written in two places.
 
+**Corrected 2026-09-01.** The gallery's `name` is gone from the JSON entirely — the page was
+the only place a heading was ever written, and the field nothing read went with the class.
+
 **An image slot renders its filename.** Until #9 settles there is no URL to serve an image
 from, so every photo and every thumbnail shows the filename it wanted. That is the diagnostic
 form — it says which file is missing rather than leaving a hole — and it disappears the day
@@ -594,8 +603,8 @@ see *Images live outside the resource tree* below.
 
 ## 2026-08-25 — The whole page data goes into the model
 
-A handler puts `pageData` in the model, not a field at a time. `model.addAttribute("noteList",
-pageData.getNoteList())` writes *which fields a page has* in a second place, so adding a field
+A handler puts `pageData` in the model, not a field at a time. `model.addAttribute("noteMap",
+pageData.getNoteMap())` writes *which fields a page has* in a second place, so adding a field
 means editing Java to expose something the template already had in hand.
 
 The honest size of the win: three naming sites become two. The template names the field
@@ -739,7 +748,7 @@ list. That work is now split the way the rest of the site is: `MaintenancePage` 
 `site.css` holds every rule the JS used to set inline.
 
 The block reads the model and takes no parameter — a page that wants the record sets
-`actualList`, the same contract `noteList` already has.
+`actualList`.
 
 **The entry is flat.** `shop{name,url}` and `work{name,url}` became `shopName`/`shopUrl` and
 `workName`/`workUrl`, `nextDue{km,date}` became `nextDueKm`/`nextDueDate`, and `odometer_km`
@@ -1063,7 +1072,7 @@ GettingLost, and it is not one.
 ## 2026-08-31 — A destination has an access, or it does not
 
 ```
-PageData            name, featuredImage, excerpt, tags, noteList,
+PageData            name, featuredImage, excerpt, tags, noteMap,
                     photoGalleries, relatedDestinationList
   MaintenancePage   actualList
   PostPage          date
@@ -1239,3 +1248,35 @@ so nobody has to guess which numbers are ours to change.
 **Log levels follow the server, not the client.** A refused session is the server working
 correctly and saying no, so it is INFO. WARN and ERROR are for the server's own trouble.
 
+
+## 2026-09-01 — A keyed part is a Map, and the key is the name
+
+Four parts were a list of objects whose first field was really a key: `haversineList`
+(`{town, km}`), a gallery's `itemList` (`{id, img, label}`), `lakeChartList` (`{name, url}`)
+and `noteList` (`{sectionName, itemList}`). Each is now a map — `haversineMap`,
+`photoGalleries`' inner map, `lakeChartMap`, `noteMap` — and the field that repeated the key
+is gone with it.
+
+So are the classes. `TownDistance`, `LakeChart`, `Gallery` and `NoteSection` held nothing but
+the pair or the collection once the key moved out, and a wrapper around one collection is not
+a class. `GalleryItem` survives on `img` and `label`.
+
+**The field is declared `TreeMap`, not `Map`.** Gson builds the type the field names: a `Map`
+field gets a `LinkedTreeMap`, which is whatever order the author last typed. A small map that
+sorts is predictable, and nothing here reads these in authored order — a gallery and a lake
+chart now render in key order, accepted deliberately.
+
+**A note block's key is its heading**, so the block whose key is empty renders no `<h3>` —
+that is the block sitting inside its own `<details>`, whose `<summary>` is already the
+heading. A map allows one such block per page, which is all any page has needed. If that ever
+bites, it gets revisited then.
+
+`note-list` therefore takes the block's name, and a page carrying several makes several calls
+whose order is the order they appear in. Every existing page was converted call for call, in
+the order its file listed the blocks; after that, order is the author's. `hardware/howto/water`
+called the block with no notes behind it, and the call was dropped rather than given a name
+nothing answers to.
+
+The browser dataset carries the same shapes as the page files — inline or through a `file`
+pointer, both are read by the same template — so it was migrated with them, and `browser.js`
+reads `haversineMap` by town instead of scanning for it.

@@ -5,7 +5,9 @@
 <main>
 	<h1 th:text="${PageName}">TBD</h1>
 
-	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('RV Dealers')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Maintenance Contacts')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Modifications')}"></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

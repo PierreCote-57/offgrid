@@ -15,7 +15,8 @@
 
 	<details>
 		<summary><h2 class="gl-heading">Extras</h2></summary>
-		<div th:replace="~{fragments/block/note-list}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Shopping list')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('What goes in the Bronco')}"></div>
 	</details>
 
 	<details>

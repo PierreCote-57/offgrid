@@ -1,10 +1,10 @@
 package com.lc.offgrid.pojo.page;
 
-import com.lc.offgrid.pojo.part.Gallery;
-import com.lc.offgrid.pojo.part.NoteSection;
+import com.lc.offgrid.pojo.part.GalleryItem;
+import com.lc.offgrid.pojo.part.NoteItem;
 import com.lc.offgrid.pojo.part.Tags;
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * What every page on the site has. Subclasses add what their kind of page needs; a page that
@@ -12,13 +12,13 @@ import java.util.Map;
  */
 public class PageData
 {
-	private String					name;
-	private String					featuredImage;
-	private String					excerpt;
-	private Tags					tags;
-	private List<NoteSection>		noteList;
-	private Map<String, Gallery>	photoGalleries;
-	private List<String>			relatedDestinationList;
+	private String											name;
+	private String											featuredImage;
+	private String											excerpt;
+	private Tags											tags;
+	private TreeMap<String, List<NoteItem>>					noteMap;
+	private TreeMap<String, TreeMap<String, GalleryItem>>	photoGalleries;
+	private List<String>									relatedDestinationList;
 
 	public String getName()
 	{
@@ -40,12 +40,12 @@ public class PageData
 		return tags;
 	}
 
-	public List<NoteSection> getNoteList()
+	public TreeMap<String, List<NoteItem>> getNoteMap()
 	{
-		return noteList;
+		return noteMap;
 	}
 
-	public Map<String, Gallery> getPhotoGalleries()
+	public TreeMap<String, TreeMap<String, GalleryItem>> getPhotoGalleries()
 	{
 		return photoGalleries;
 	}

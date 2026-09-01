@@ -29,20 +29,11 @@
 		}
 	},
 	"access": {
-		"haversineList": [
-			{
-				"town": "Campbell River",
-				"km": 15
-			},
-			{
-				"town": "Nanaimo",
-				"km": 140
-			},
-			{
-				"town": "Victoria",
-				"km": 230
-			}
-		],
+		"haversineMap": {
+			"Campbell River": 15,
+			"Nanaimo": 140,
+			"Victoria": 230
+		},
 		"legList": [
 			{
 				"type": "unpaved",
@@ -50,75 +41,59 @@
 			}
 		]
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Campbell River Fish & Wildlife Association",
-					"url": "https://crfishandwildlifeclub.ca",
-					"description": [
-						"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
-					]
-				}
-			]
-		}
-	],
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Campbell River Fish & Wildlife Association",
+				"url": "https://crfishandwildlifeclub.ca",
+				"description": [
+					"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
+				]
+			}
+		]
+	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "img_0510",
-					"img": "IMG_0510",
-					"label": ""
-				},
-				{
-					"id": "img_0512",
-					"img": "IMG_0512",
-					"label": ""
-				},
-				{
-					"id": "img_0516",
-					"img": "IMG_0516",
-					"label": ""
-				},
-				{
-					"id": "img_0517",
-					"img": "IMG_0517",
-					"label": ""
-				},
-				{
-					"id": "img_0522",
-					"img": "IMG_0522",
-					"label": ""
-				},
-				{
-					"id": "img_0526",
-					"img": "IMG_0526",
-					"label": ""
-				},
-				{
-					"id": "img_0529",
-					"img": "IMG_0529",
-					"label": ""
-				},
-				{
-					"id": "img_0531",
-					"img": "IMG_0531",
-					"label": ""
-				},
-				{
-					"id": "img_0537",
-					"img": "IMG_0537",
-					"label": ""
-				},
-				{
-					"id": "img_0538",
-					"img": "IMG_0538",
-					"label": ""
-				}
-			]
+			"img_0510": {
+				"img": "IMG_0510",
+				"label": ""
+			},
+			"img_0512": {
+				"img": "IMG_0512",
+				"label": ""
+			},
+			"img_0516": {
+				"img": "IMG_0516",
+				"label": ""
+			},
+			"img_0517": {
+				"img": "IMG_0517",
+				"label": ""
+			},
+			"img_0522": {
+				"img": "IMG_0522",
+				"label": ""
+			},
+			"img_0526": {
+				"img": "IMG_0526",
+				"label": ""
+			},
+			"img_0529": {
+				"img": "IMG_0529",
+				"label": ""
+			},
+			"img_0531": {
+				"img": "IMG_0531",
+				"label": ""
+			},
+			"img_0537": {
+				"img": "IMG_0537",
+				"label": ""
+			},
+			"img_0538": {
+				"img": "IMG_0538",
+				"label": ""
+			}
 		}
 	}
 }

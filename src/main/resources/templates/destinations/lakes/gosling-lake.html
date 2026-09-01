@@ -16,7 +16,8 @@
 	</div>
 
 	<div th:replace="~{fragments/block/fishing-references}"></div>
-	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Destinations')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Further readings')}"></div>
 	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
 </main>
 

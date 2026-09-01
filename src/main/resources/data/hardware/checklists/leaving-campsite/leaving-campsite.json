@@ -7,13 +7,7 @@
 		"comments": "open"
 	},
 	"photoGalleries": {
-		"howto": {
-			"name": "How to images",
-			"itemList": []
-		},
-		"details": {
-			"name": "Details images",
-			"itemList": []
-		}
+		"howto": {},
+		"details": {}
 	}
 }

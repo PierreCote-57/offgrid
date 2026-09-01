@@ -30,20 +30,11 @@
 		}
 	},
 	"access": {
-		"haversineList": [
-			{
-				"town": "Campbell River",
-				"km": 20
-			},
-			{
-				"town": "Nanaimo",
-				"km": 145
-			},
-			{
-				"town": "Victoria",
-				"km": 230
-			}
-		],
+		"haversineMap": {
+			"Campbell River": 20,
+			"Nanaimo": 145,
+			"Victoria": 230
+		},
 		"legList": [
 			{
 				"type": "potholes",
@@ -51,106 +42,88 @@
 			}
 		]
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Campbell River Fish & Wildlife Association",
-					"url": "https://crfishandwildlifeclub.ca",
-					"description": [
-						"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
-					]
-				},
-				{
-					"name": "New docks make fishing access easier",
-					"url": "https://www.gofishbc.com/news/news/new-docks-make-fishing-access-easier/",
-					"description": [
-						"Go Fish BC on the new fishing docks — Beavertail's dock was built in 2023."
-					]
-				},
-				{
-					"name": "New kokanee fisheries on Vancouver Island",
-					"url": "https://www.gofishbc.com/learn/fishing-tips/lake-fishing/new-kokanee-fisheries-on-vancouver-island/",
-					"description": [
-						"How kokanee were introduced to Beavertail and nearby lakes."
-					]
-				},
-				{
-					"name": "Go Hiking",
-					"url": "https://gohiking.ca/beavertail-lake/",
-					"description": [
-						"Trail guide, directions, and photos for Beavertail Lake."
-					]
-				}
-			]
-		}
-	],
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Campbell River Fish & Wildlife Association",
+				"url": "https://crfishandwildlifeclub.ca",
+				"description": [
+					"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
+				]
+			},
+			{
+				"name": "New docks make fishing access easier",
+				"url": "https://www.gofishbc.com/news/news/new-docks-make-fishing-access-easier/",
+				"description": [
+					"Go Fish BC on the new fishing docks — Beavertail's dock was built in 2023."
+				]
+			},
+			{
+				"name": "New kokanee fisheries on Vancouver Island",
+				"url": "https://www.gofishbc.com/learn/fishing-tips/lake-fishing/new-kokanee-fisheries-on-vancouver-island/",
+				"description": [
+					"How kokanee were introduced to Beavertail and nearby lakes."
+				]
+			},
+			{
+				"name": "Go Hiking",
+				"url": "https://gohiking.ca/beavertail-lake/",
+				"description": [
+					"Trail guide, directions, and photos for Beavertail Lake."
+				]
+			}
+		]
+	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "img_0863",
-					"img": "IMG_0863",
-					"label": "RR Channel # 3"
-				},
-				{
-					"id": "img_0866",
-					"img": "IMG_0866",
-					"label": "Entrance to the day use site"
-				},
-				{
-					"id": "img_0869",
-					"img": "IMG_0869",
-					"label": "Campbell River Fish & Wildlife Association"
-				},
-				{
-					"id": "img_0873",
-					"img": "IMG_0873",
-					"label": "Boat ramp and fishing dock"
-				},
-				{
-					"id": "img_0871",
-					"img": "IMG_0871",
-					"label": "Boat ramp"
-				},
-				{
-					"id": "img_0870",
-					"img": "IMG_0870",
-					"label": "Path to fishing dock"
-				},
-				{
-					"id": "img_0874",
-					"img": "IMG_0874",
-					"label": "Fishing dock (under construction in June '21)"
-				},
-				{
-					"id": "img_0875",
-					"img": "IMG_0875",
-					"label": "Boat ramp from fishing dock"
-				},
-				{
-					"id": "img_0876",
-					"img": "IMG_0876",
-					"label": "Logs underwater"
-				},
-				{
-					"id": "img_2796",
-					"img": "IMG_2796",
-					"label": "New floating dock and gangway"
-				},
-				{
-					"id": "img_2800",
-					"img": "IMG_2800",
-					"label": "Day use picnic area sign"
-				},
-				{
-					"id": "img_2801",
-					"img": "IMG_2801",
-					"label": "Outhouse"
-				}
-			]
+			"img_0863": {
+				"img": "IMG_0863",
+				"label": "RR Channel # 3"
+			},
+			"img_0866": {
+				"img": "IMG_0866",
+				"label": "Entrance to the day use site"
+			},
+			"img_0869": {
+				"img": "IMG_0869",
+				"label": "Campbell River Fish & Wildlife Association"
+			},
+			"img_0873": {
+				"img": "IMG_0873",
+				"label": "Boat ramp and fishing dock"
+			},
+			"img_0871": {
+				"img": "IMG_0871",
+				"label": "Boat ramp"
+			},
+			"img_0870": {
+				"img": "IMG_0870",
+				"label": "Path to fishing dock"
+			},
+			"img_0874": {
+				"img": "IMG_0874",
+				"label": "Fishing dock (under construction in June '21)"
+			},
+			"img_0875": {
+				"img": "IMG_0875",
+				"label": "Boat ramp from fishing dock"
+			},
+			"img_0876": {
+				"img": "IMG_0876",
+				"label": "Logs underwater"
+			},
+			"img_2796": {
+				"img": "IMG_2796",
+				"label": "New floating dock and gangway"
+			},
+			"img_2800": {
+				"img": "IMG_2800",
+				"label": "Day use picnic area sign"
+			},
+			"img_2801": {
+				"img": "IMG_2801",
+				"label": "Outhouse"
+			}
 		}
 	}
 }

@@ -542,7 +542,14 @@
 	<!-- Supplier documentation -->
 	<details>
 		<summary><h2 class="gl-heading">Supplier documentation</h2></summary>
-		<div th:replace="~{fragments/block/note-list}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Generator')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Inverter (2,000 W Victron)')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Solar panels')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('House battery (Group 8D, 330 Ah AGM)')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Truma CP plus')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Truma Aventa eco + soft start')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Truma Combi G comfort')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Garmin control panel')}"></div>
 	</details>
 	<br/>
 	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>

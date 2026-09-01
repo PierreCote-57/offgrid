@@ -17,23 +17,20 @@
 			"nextDueDate": "2027-02-01"
 		}
 	],
-	"noteList": [
-		{
-			"sectionName": "Scheduled maintenance notes",
-			"itemList": [
-				{
-					"name": "Saturday, September 19, 2026 @ 8;00 AM",
-					"description": [
-						"Just run diagnostic, make sure all is well."
-					]
-				},
-				{
-					"name": "Feb 1, 2027",
-					"description": [
-						"First oil change, pre-paid, every 6 month."
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Scheduled maintenance notes": [
+			{
+				"name": "Saturday, September 19, 2026 @ 8;00 AM",
+				"description": [
+					"Just run diagnostic, make sure all is well."
+				]
+			},
+			{
+				"name": "Feb 1, 2027",
+				"description": [
+					"First oil change, pre-paid, every 6 month."
+				]
+			}
+		]
+	}
 }

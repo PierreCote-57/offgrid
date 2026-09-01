@@ -1,6 +1,7 @@
 package com.lc.offgrid.pojo.part;
 
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * How hard the place is to reach: how far it is from the towns a reader starts from, and what
@@ -18,12 +19,12 @@ public class Access
 	public static final String			PAVEMENT			= "pavement";
 	public static final String			BACK_COUNTRY		= "back_country";
 
-	private List<TownDistance>	haversineList;
-	private List<Leg>			legList;
+	private TreeMap<String, Integer>	haversineMap;
+	private List<Leg>					legList;
 
-	public List<TownDistance> getHaversineList()
+	public TreeMap<String, Integer> getHaversineMap()
 	{
-		return haversineList;
+		return haversineMap;
 	}
 
 	public List<Leg> getLegList()

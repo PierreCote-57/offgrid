@@ -60,78 +60,67 @@
 			]
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Go Hiking — Rathtrevor Park",
-					"url": "https://gohiking.ca/rathtrevor-park/",
-					"description": [
-						"Write-up of the park: the campground, the forest trails and the day-use area."
-					]
-				},
-				{
-					"name": "Go Hiking — Rathtrevor Beach",
-					"url": "https://gohiking.ca/beaches/rathtrevor-beach/",
-					"description": [
-						"The beach itself, and how far the tide goes out."
-					]
-				},
-				{
-					"name": "Camping & RV BC",
-					"url": "https://www.campingrvbc.com/sites/bc/rathtrevor-beach-provincial-park-parksville/",
-					"description": [
-						"Site breakdown and amenities for the campground."
-					]
-				},
-				{
-					"name": "Camping on Vancouver Island (Off Track Travel)",
-					"url": "https://offtracktravel.ca/camping-vancouver-island/#rathtrevor",
-					"description": [
-						"Rathtrevor's entry in the Island campground guide."
-					]
-				},
-				{
-					"name": "Best beaches in BC (Off Track Travel)",
-					"url": "https://offtracktravel.ca/best-beaches-bc-canada/#rathtrevor",
-					"description": [
-						"Rathtrevor Beach as one of the province's best."
-					]
-				}
-			]
-		}
-	],
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Go Hiking — Rathtrevor Park",
+				"url": "https://gohiking.ca/rathtrevor-park/",
+				"description": [
+					"Write-up of the park: the campground, the forest trails and the day-use area."
+				]
+			},
+			{
+				"name": "Go Hiking — Rathtrevor Beach",
+				"url": "https://gohiking.ca/beaches/rathtrevor-beach/",
+				"description": [
+					"The beach itself, and how far the tide goes out."
+				]
+			},
+			{
+				"name": "Camping & RV BC",
+				"url": "https://www.campingrvbc.com/sites/bc/rathtrevor-beach-provincial-park-parksville/",
+				"description": [
+					"Site breakdown and amenities for the campground."
+				]
+			},
+			{
+				"name": "Camping on Vancouver Island (Off Track Travel)",
+				"url": "https://offtracktravel.ca/camping-vancouver-island/#rathtrevor",
+				"description": [
+					"Rathtrevor's entry in the Island campground guide."
+				]
+			},
+			{
+				"name": "Best beaches in BC (Off Track Travel)",
+				"url": "https://offtracktravel.ca/best-beaches-bc-canada/#rathtrevor",
+				"description": [
+					"Rathtrevor Beach as one of the province's best."
+				]
+			}
+		]
+	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "img_2847",
-					"img": "IMG_2847",
-					"label": "The van in our camp site"
-				},
-				{
-					"id": "img_2848",
-					"img": "IMG_2848",
-					"label": "The van in our camp site"
-				},
-				{
-					"id": "img_2850",
-					"img": "IMG_2850",
-					"label": "The van in our camp site"
-				},
-				{
-					"id": "img_2849",
-					"img": "IMG_2849",
-					"label": "Don't feed the bears :)"
-				},
-				{
-					"id": "img_2854",
-					"img": "IMG_2854",
-					"label": "Beautiful beach"
-				}
-			]
+			"img_2847": {
+				"img": "IMG_2847",
+				"label": "The van in our camp site"
+			},
+			"img_2848": {
+				"img": "IMG_2848",
+				"label": "The van in our camp site"
+			},
+			"img_2850": {
+				"img": "IMG_2850",
+				"label": "The van in our camp site"
+			},
+			"img_2849": {
+				"img": "IMG_2849",
+				"label": "Don't feed the bears :)"
+			},
+			"img_2854": {
+				"img": "IMG_2854",
+				"label": "Beautiful beach"
+			}
 		}
 	}
 }

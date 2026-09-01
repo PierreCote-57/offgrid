@@ -28,35 +28,26 @@
 	"fishingReferences": {
 		"bcIdentifier": "00216NIMP",
 		"areaKm2": 0.798,
-		"lakeChartList": [
-			{
-				"name": "BC Bathymetric",
-				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00279001.pdf"
-			}
-		],
+		"lakeChartMap": {
+			"BC Bathymetric": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00279001.pdf"
+		},
 		"stockingName": ""
 	},
-	"noteList": [
-		{
-			"sectionName": "Destinations",
-			"itemList": [
-				{
-					"name": "Clint Beek (REC16077)",
-					"url": "/destinations/rec-sites/keogh-lake-rec16077"
-				}
-			]
-		},
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Reservations (Let's Camp)",
-					"url": "https://letscamp.ca/camps/clint-beek-recreation-site",
-					"description": [
-						"Book an overnight campsite at the Clint Beek Recreation Site."
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Destinations": [
+			{
+				"name": "Clint Beek (REC16077)",
+				"url": "/destinations/rec-sites/keogh-lake-rec16077"
+			}
+		],
+		"Further readings": [
+			{
+				"name": "Reservations (Let's Camp)",
+				"url": "https://letscamp.ca/camps/clint-beek-recreation-site",
+				"description": [
+					"Book an overnight campsite at the Clint Beek Recreation Site."
+				]
+			}
+		]
+	}
 }

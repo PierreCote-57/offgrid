@@ -5,7 +5,14 @@
 <main>
 	<h1 th:text="${PageName}">Useful links</h1>
 
-	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Camping, general information')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Camping reviews')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Camping, reservations')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Where to stay search sites')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Canada')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('British Columbia')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Other province')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Fishing')}"></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

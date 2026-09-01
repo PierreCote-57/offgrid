@@ -17,20 +17,11 @@
 			"label": "Port McNeill, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 275
-				},
-				{
-					"town": "Victoria",
-					"km": 360
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 275,
+				"Victoria": 360
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -57,20 +48,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -98,20 +80,11 @@
 			"label": "Langford, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 215
-				},
-				{
-					"town": "Nanaimo",
-					"km": 85
-				},
-				{
-					"town": "Victoria",
-					"km": 10
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 215,
+				"Nanaimo": 85,
+				"Victoria": 10
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -144,20 +117,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 160,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -185,20 +149,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 160,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -226,20 +181,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -270,20 +216,11 @@
 			"label": "Alberni Inlet, outside Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 65
-				},
-				{
-					"town": "Victoria",
-					"km": 140
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 65,
+				"Victoria": 140
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -313,16 +250,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free"
+				}
+			]
+		}
 	},
 	{
 		"name": "Avatar Grove Hiking Trails (rec-site)",
@@ -339,20 +273,11 @@
 			"label": "Port Renfrew"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 70
-				},
-				{
-					"town": "Victoria",
-					"km": 80
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 70,
+				"Victoria": 80
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -380,20 +305,11 @@
 			"label": "Chemainus, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 60
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 30,
+				"Victoria": 60
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -420,20 +336,11 @@
 			"label": "Cowichan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 155
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 75
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 155,
+				"Nanaimo": 40,
+				"Victoria": 75
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -461,20 +368,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 160
-				},
-				{
-					"town": "Nanaimo",
-					"km": 290
-				},
-				{
-					"town": "Victoria",
-					"km": 375
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 160,
+				"Nanaimo": 290,
+				"Victoria": 375
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -508,20 +406,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -549,20 +438,11 @@
 			"label": "Tofino, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 110
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 110,
+				"Nanaimo": 145,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -589,20 +469,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 15
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 230
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 15,
+				"Nanaimo": 145,
+				"Victoria": 230
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -630,20 +501,11 @@
 			"label": "Bella Coola Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 265
-				},
-				{
-					"town": "Nanaimo",
-					"km": 395
-				},
-				{
-					"town": "Victoria",
-					"km": 485
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 265,
+				"Nanaimo": 395,
+				"Victoria": 485
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -671,20 +533,11 @@
 			"label": "Backroads toward Nahmint Lake, near Sproat Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 100
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 145
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 100,
+				"Nanaimo": 80,
+				"Victoria": 145
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -708,16 +561,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free"
+				}
+			]
+		}
 	},
 	{
 		"name": "Blackies Beach (rec-site)",
@@ -734,20 +584,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 150
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 80,
+				"Victoria": 150
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -775,20 +616,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 165,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -816,20 +648,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 125
-				},
-				{
-					"town": "Nanaimo",
-					"km": 255
-				},
-				{
-					"town": "Victoria",
-					"km": 340
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 125,
+				"Nanaimo": 255,
+				"Victoria": 340
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -857,20 +680,11 @@
 			"label": "Shawnigan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 190
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 35
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 190,
+				"Nanaimo": 60,
+				"Victoria": 35
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -898,20 +712,11 @@
 			"label": "Nanaimo, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 1
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 1,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -938,20 +743,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -979,20 +775,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 160,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1020,20 +807,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1061,20 +839,11 @@
 			"label": "Campbell River, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 15
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 15,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"siteCount": 60,
@@ -1107,20 +876,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 15
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 15,
+				"Nanaimo": 145,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1148,20 +908,11 @@
 			"label": "Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 130
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 40,
+				"Victoria": 130
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1188,20 +939,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1229,20 +971,11 @@
 			"label": "Tofino"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 105
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 105,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1270,20 +1003,11 @@
 			"label": "Comox, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 45
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 180
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 45,
+				"Nanaimo": 90,
+				"Victoria": 180
+			}
 		},
 		"campgroundData": {
 			"siteCount": 62,
@@ -1308,16 +1032,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservations required; no drop-ins; bookable up to a year ahead"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservations required; no drop-ins; bookable up to a year ahead"
+				}
+			]
+		}
 	},
 	{
 		"name": "Cedar Grove RV Park & Campground",
@@ -1334,20 +1055,11 @@
 			"label": "Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 130
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 40,
+				"Victoria": 130
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1374,20 +1086,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 255
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 165,
+				"Victoria": 255
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1415,20 +1118,11 @@
 			"label": "Malahat, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 205
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 20
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 205,
+				"Nanaimo": 75,
+				"Victoria": 20
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1455,20 +1149,11 @@
 			"label": "Chemainus, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 60
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 30,
+				"Victoria": 60
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1495,20 +1180,11 @@
 			"label": "Port Alberni, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 65
-				},
-				{
-					"town": "Victoria",
-					"km": 140
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 65,
+				"Victoria": 140
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1538,20 +1214,11 @@
 			"label": "Duncan"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 190
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 35
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 190,
+				"Nanaimo": 60,
+				"Victoria": 35
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1579,20 +1246,11 @@
 			"label": "Chemainus, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 35
-				},
-				{
-					"town": "Victoria",
-					"km": 60
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 35,
+				"Victoria": 60
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1619,20 +1277,11 @@
 			"label": "Tofino, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 110
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 110,
+				"Nanaimo": 145,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1659,20 +1308,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 270
-				},
-				{
-					"town": "Victoria",
-					"km": 355
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 270,
+				"Victoria": 355
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1700,20 +1340,11 @@
 			"label": "Bowser, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 75
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 150
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 75,
+				"Nanaimo": 60,
+				"Victoria": 150
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1740,20 +1371,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1781,20 +1403,11 @@
 			"label": "Campbell River, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 1
-				},
-				{
-					"town": "Nanaimo",
-					"km": 130
-				},
-				{
-					"town": "Victoria",
-					"km": 220
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 1,
+				"Nanaimo": 130,
+				"Victoria": 220
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -1827,20 +1440,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 255
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 165,
+				"Victoria": 255
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1868,20 +1472,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 60
-				},
-				{
-					"town": "Nanaimo",
-					"km": 190
-				},
-				{
-					"town": "Victoria",
-					"km": 280
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 60,
+				"Nanaimo": 190,
+				"Victoria": 280
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1912,20 +1507,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 110
-				},
-				{
-					"town": "Nanaimo",
-					"km": 50
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 110,
+				"Nanaimo": 50,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1953,20 +1539,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -1994,20 +1571,11 @@
 			"label": "Sayward, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 65
-				},
-				{
-					"town": "Nanaimo",
-					"km": 200
-				},
-				{
-					"town": "Victoria",
-					"km": 285
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 65,
+				"Nanaimo": 200,
+				"Victoria": 285
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2034,20 +1602,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 65
-				},
-				{
-					"town": "Victoria",
-					"km": 110
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 65,
+				"Victoria": 110
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2075,20 +1634,11 @@
 			"label": "Victoria, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 225
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 1
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 225,
+				"Nanaimo": 90,
+				"Victoria": 1
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2115,20 +1665,11 @@
 			"label": "Between Sooke and Jordan River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 205
-				},
-				{
-					"town": "Nanaimo",
-					"km": 85
-				},
-				{
-					"town": "Victoria",
-					"km": 45
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 205,
+				"Nanaimo": 85,
+				"Victoria": 45
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -2144,16 +1685,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable"
+				}
+			]
+		}
 	},
 	{
 		"name": "Fry Narrows (rec-site)",
@@ -2170,20 +1708,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2211,20 +1740,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2252,20 +1772,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2293,20 +1804,11 @@
 			"label": "Port Hardy"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 185
-				},
-				{
-					"town": "Nanaimo",
-					"km": 315
-				},
-				{
-					"town": "Victoria",
-					"km": 400
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 185,
+				"Nanaimo": 315,
+				"Victoria": 400
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2334,20 +1836,11 @@
 			"label": "16 km NW of Victoria, Trans-Canada Hwy"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 210
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 15
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 210,
+				"Nanaimo": 80,
+				"Victoria": 15
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -2379,16 +1872,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable in peak season with some first-come-first-served sites; winter camping FCFS with limited services"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable in peak season with some first-come-first-served sites; winter camping FCFS with limited services"
+				}
+			]
+		}
 	},
 	{
 		"name": "Gordon Bay Provincial Park",
@@ -2405,20 +1895,11 @@
 			"label": "Cowichan Lake, north of Duncan"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 150
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 75
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 150,
+				"Nanaimo": 40,
+				"Victoria": 75
+			}
 		},
 		"campgroundData": {
 			"operator": "K2 Park Services Ltd.",
@@ -2443,16 +1924,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "123 of 126 sites reservable; limited winter FCFS at reduced rate"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "123 of 126 sites reservable; limited winter FCFS at reduced rate"
+				}
+			]
+		}
 	},
 	{
 		"name": "Gosling Bay (rec-site)",
@@ -2469,20 +1947,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2513,20 +1982,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2554,20 +2014,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2595,20 +2046,11 @@
 			"label": "Ucluelet, BC (Long Beach area)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 120,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"operator": "Parks Canada (federal, not BC provincial)",
@@ -2642,20 +2084,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 140
-				},
-				{
-					"town": "Nanaimo",
-					"km": 275
-				},
-				{
-					"town": "Victoria",
-					"km": 365
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 140,
+				"Nanaimo": 275,
+				"Victoria": 365
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2683,20 +2116,11 @@
 			"label": "Sointula, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 275
-				},
-				{
-					"town": "Victoria",
-					"km": 360
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 275,
+				"Victoria": 360
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2723,20 +2147,11 @@
 			"label": "Port Renfrew"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 170
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 70
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 170,
+				"Nanaimo": 60,
+				"Victoria": 70
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -2764,20 +2179,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2804,20 +2210,11 @@
 			"label": "near Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 85
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 145
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 85,
+				"Nanaimo": 60,
+				"Victoria": 145
+			}
 		},
 		"campgroundData": {
 			"operator": "Regional District of Nanaimo (RDN)",
@@ -2859,20 +2256,11 @@
 			"label": "Saanich Peninsula, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 205
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 20
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 205,
+				"Nanaimo": 75,
+				"Victoria": 20
+			}
 		},
 		"campgroundData": {
 			"operator": "Capital Regional District (CRD)",
@@ -2906,20 +2294,11 @@
 			"label": "Ucluelet, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 120,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2946,20 +2325,11 @@
 			"label": "Nanaimo, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 1
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 1,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -2986,20 +2356,11 @@
 			"label": "Jordan River, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 195
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 45
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 195,
+				"Nanaimo": 75,
+				"Victoria": 45
+			}
 		},
 		"campgroundData": {
 			"operator": "Capital Regional District (CRD)",
@@ -3033,20 +2394,11 @@
 			"label": "Southwest Vancouver Island, Juan de Fuca coast"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 180
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 75
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 180,
+				"Nanaimo": 80,
+				"Victoria": 75
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -3070,16 +2422,13 @@
 				"text": "vehicle-accessible + walk-in"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Nearly all sites reservable; 1 site FCFS"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Nearly all sites reservable; 1 site FCFS"
+				}
+			]
+		}
 	},
 	{
 		"name": "Junction Pool (rec-site)",
@@ -3096,20 +2445,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 85
-				},
-				{
-					"town": "Nanaimo",
-					"km": 220
-				},
-				{
-					"town": "Victoria",
-					"km": 305
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 85,
+				"Nanaimo": 220,
+				"Victoria": 305
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3137,20 +2477,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 115
-				},
-				{
-					"town": "Nanaimo",
-					"km": 250
-				},
-				{
-					"town": "Victoria",
-					"km": 335
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 115,
+				"Nanaimo": 250,
+				"Victoria": 335
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3181,20 +2512,11 @@
 			"label": "Shawnigan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 190
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 35
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 190,
+				"Nanaimo": 60,
+				"Victoria": 35
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3222,20 +2544,11 @@
 			"label": "Nitinaht"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 140
-				},
-				{
-					"town": "Nanaimo",
-					"km": 70
-				},
-				{
-					"town": "Victoria",
-					"km": 105
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 140,
+				"Nanaimo": 70,
+				"Victoria": 105
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3263,20 +2576,11 @@
 			"label": "near Winter Harbour, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 205
-				},
-				{
-					"town": "Nanaimo",
-					"km": 330
-				},
-				{
-					"town": "Victoria",
-					"km": 410
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 205,
+				"Nanaimo": 330,
+				"Victoria": 410
+			}
 		},
 		"campgroundData": {
 			"operator": "Regional District of Mount Waddington",
@@ -3319,20 +2623,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 115
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 110
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 115,
+				"Nanaimo": 40,
+				"Victoria": 110
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3360,20 +2655,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 160,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3401,20 +2687,11 @@
 			"label": "Leiner River, near Tahsis"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 100
-				},
-				{
-					"town": "Nanaimo",
-					"km": 210
-				},
-				{
-					"town": "Victoria",
-					"km": 290
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 100,
+				"Nanaimo": 210,
+				"Victoria": 290
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3433,16 +2710,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served"
+				}
+			]
+		}
 	},
 	{
 		"name": "Link River Regional Park Campground",
@@ -3459,20 +2733,11 @@
 			"label": "near Port Alice, BC (Alice Lake)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 290
-				},
-				{
-					"town": "Victoria",
-					"km": 370
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 290,
+				"Victoria": 370
+			}
 		},
 		"campgroundData": {
 			"operator": "Regional District of Mount Waddington",
@@ -3511,20 +2776,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3552,20 +2808,11 @@
 			"label": "Between Parksville/Qualicum and Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 90
-				},
-				{
-					"town": "Nanaimo",
-					"km": 55
-				},
-				{
-					"town": "Victoria",
-					"km": 135
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 90,
+				"Nanaimo": 55,
+				"Victoria": 135
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -3580,16 +2827,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable"
+				}
+			]
+		}
 	},
 	{
 		"name": "Living Forest Oceanside Campground",
@@ -3606,20 +2850,11 @@
 			"label": "Nanaimo, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 1
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 1,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -3646,20 +2881,11 @@
 			"label": "~20 min drive from Port Renfrew"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 175
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 80
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 175,
+				"Nanaimo": 75,
+				"Victoria": 80
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3688,16 +2914,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Just over half reservable (60-day rolling window), remainder first-come-first-served; $20/night"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Just over half reservable (60-day rolling window), remainder first-come-first-served; $20/night"
+				}
+			]
+		}
 	},
 	{
 		"name": "Long Point (rec-site)",
@@ -3714,20 +2937,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3755,20 +2969,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3796,20 +3001,11 @@
 			"label": "Bella Coola Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 280
-				},
-				{
-					"town": "Nanaimo",
-					"km": 405
-				},
-				{
-					"town": "Victoria",
-					"km": 495
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 280,
+				"Nanaimo": 405,
+				"Victoria": 495
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3837,20 +3033,11 @@
 			"label": "Campbell Lake, near Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 15
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 15,
+				"Nanaimo": 145,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "Quality Recreation Ltd.",
@@ -3877,16 +3064,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable; open April 1–Oct 12"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable; open April 1–Oct 12"
+				}
+			]
+		}
 	},
 	{
 		"name": "Lower Nimpkish Lake Park",
@@ -3903,20 +3087,11 @@
 			"label": "Lower Nimpkish River, Nimpkish Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 140
-				},
-				{
-					"town": "Nanaimo",
-					"km": 270
-				},
-				{
-					"town": "Victoria",
-					"km": 350
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 140,
+				"Nanaimo": 270,
+				"Victoria": 350
+			}
 		},
 		"footnotes": [
 			{
@@ -3953,20 +3128,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 70
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 165
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 70,
+				"Nanaimo": 90,
+				"Victoria": 165
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -3994,20 +3160,11 @@
 			"label": "40 min drive from Port McNeill, adjacent to Marble River Provincial Park"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 170
-				},
-				{
-					"town": "Nanaimo",
-					"km": 300
-				},
-				{
-					"town": "Victoria",
-					"km": 380
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 170,
+				"Nanaimo": 300,
+				"Victoria": 380
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4031,16 +3188,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free; closed September–May (gated)"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free; closed September–May (gated)"
+				}
+			]
+		}
 	},
 	{
 		"name": "Maynard Lake (rec-site)",
@@ -4057,20 +3211,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 270
-				},
-				{
-					"town": "Victoria",
-					"km": 355
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 270,
+				"Victoria": 355
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4098,20 +3243,11 @@
 			"label": "Bella Coola Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 275
-				},
-				{
-					"town": "Nanaimo",
-					"km": 395
-				},
-				{
-					"town": "Victoria",
-					"km": 485
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 275,
+				"Nanaimo": 395,
+				"Victoria": 485
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4139,20 +3275,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4180,20 +3307,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 255
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 165,
+				"Victoria": 255
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4221,20 +3339,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 45
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 45,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4262,20 +3371,11 @@
 			"label": "Black Creek, between Campbell River and Courtenay"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 115
-				},
-				{
-					"town": "Victoria",
-					"km": 200
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 115,
+				"Victoria": 200
+			}
 		},
 		"campgroundData": {
 			"operator": "Quality Recreation Ltd.",
@@ -4305,16 +3405,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable; open March 20–Oct 31, winter camping March 1–19 & Nov 1–30"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable; open March 20–Oct 31, winter camping March 1–19 & Nov 1–30"
+				}
+			]
+		}
 	},
 	{
 		"name": "Mohun Beach (rec-site)",
@@ -4331,20 +3428,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4372,20 +3460,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 155,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4419,20 +3498,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 75
-				},
-				{
-					"town": "Nanaimo",
-					"km": 210
-				},
-				{
-					"town": "Victoria",
-					"km": 295
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 75,
+				"Nanaimo": 210,
+				"Victoria": 295
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4460,20 +3530,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 130
-				},
-				{
-					"town": "Nanaimo",
-					"km": 265
-				},
-				{
-					"town": "Victoria",
-					"km": 355
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 130,
+				"Nanaimo": 265,
+				"Victoria": 355
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4507,20 +3568,11 @@
 			"label": "Nanaimo, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 1
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 1,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -4547,20 +3599,11 @@
 			"label": "Sayward Forest Canoe Route, between Amor Lake and Surprise Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 160,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4578,16 +3621,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free"
+				}
+			]
+		}
 	},
 	{
 		"file": "/destinations/lakes/muchalat-lake"
@@ -4610,20 +3650,11 @@
 			"label": "Saltspring Island"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 190
-				},
-				{
-					"town": "Nanaimo",
-					"km": 55
-				},
-				{
-					"town": "Victoria",
-					"km": 35
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 190,
+				"Nanaimo": 55,
+				"Victoria": 35
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4651,20 +3682,11 @@
 			"label": "En route to/from Cape Scott Provincial Park, North Island"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 200
-				},
-				{
-					"town": "Nanaimo",
-					"km": 325
-				},
-				{
-					"town": "Victoria",
-					"km": 410
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 200,
+				"Nanaimo": 325,
+				"Victoria": 410
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4686,16 +3708,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free"
+				}
+			]
+		}
 	},
 	{
 		"name": "Nahwitti River Trail (rec-site)",
@@ -4712,20 +3731,11 @@
 			"label": "Port Hardy"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 195
-				},
-				{
-					"town": "Nanaimo",
-					"km": 325
-				},
-				{
-					"town": "Victoria",
-					"km": 410
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 195,
+				"Nanaimo": 325,
+				"Victoria": 410
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4753,20 +3763,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 100
-				},
-				{
-					"town": "Nanaimo",
-					"km": 230
-				},
-				{
-					"town": "Victoria",
-					"km": 320
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 100,
+				"Nanaimo": 230,
+				"Victoria": 320
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4794,20 +3795,11 @@
 			"label": "Nanoose Bay, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 115
-				},
-				{
-					"town": "Nanaimo",
-					"km": 20
-				},
-				{
-					"town": "Victoria",
-					"km": 110
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 115,
+				"Nanaimo": 20,
+				"Victoria": 110
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -4834,20 +3826,11 @@
 			"label": "Nimpkish Lake, Nimpkish Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 130
-				},
-				{
-					"town": "Nanaimo",
-					"km": 255
-				},
-				{
-					"town": "Victoria",
-					"km": 340
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 130,
+				"Nanaimo": 255,
+				"Victoria": 340
+			}
 		},
 		"footnotes": [
 			{
@@ -4884,20 +3867,11 @@
 			"label": "Nitinaht Lake, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 105
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 75,
+				"Victoria": 105
+			}
 		},
 		"campgroundData": {
 			"operator": "Ditidaht First Nation (operating since 2006)",
@@ -4935,20 +3909,11 @@
 			"label": "Nitinaht"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 140
-				},
-				{
-					"town": "Nanaimo",
-					"km": 65
-				},
-				{
-					"town": "Victoria",
-					"km": 105
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 140,
+				"Nanaimo": 65,
+				"Victoria": 105
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -4976,20 +3941,11 @@
 			"label": "Cowichan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 140
-				},
-				{
-					"town": "Nanaimo",
-					"km": 45
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 140,
+				"Nanaimo": 45,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5017,20 +3973,11 @@
 			"label": "Bella Coola Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 260
-				},
-				{
-					"town": "Nanaimo",
-					"km": 380
-				},
-				{
-					"town": "Victoria",
-					"km": 475
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 260,
+				"Nanaimo": 380,
+				"Victoria": 475
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5058,20 +4005,11 @@
 			"label": "Saanichton, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 210
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 20
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 210,
+				"Nanaimo": 75,
+				"Victoria": 20
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5098,20 +4036,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 240
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 150,
+				"Victoria": 240
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5139,20 +4068,11 @@
 			"label": "Crofton, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 175
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 50
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 175,
+				"Nanaimo": 40,
+				"Victoria": 50
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5179,20 +4099,11 @@
 			"label": "Port Renfrew, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 175
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 80
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 175,
+				"Nanaimo": 75,
+				"Victoria": 80
+			}
 		},
 		"campgroundData": {
 			"operator": "Pacheedaht First Nation",
@@ -5226,20 +4137,11 @@
 			"label": "Bamfield, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 95
-				},
-				{
-					"town": "Victoria",
-					"km": 140
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 95,
+				"Victoria": 140
+			}
 		},
 		"campgroundData": {
 			"operator": "Huu-ay-aht First Nations",
@@ -5277,20 +4179,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5320,20 +4213,11 @@
 			"label": "Mohun Lake, Sayward Canoe Route, north of Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5366,16 +4250,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served"
+				}
+			]
+		}
 	},
 	{
 		"name": "Paradise Sea-Side Resort",
@@ -5392,20 +4273,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5432,20 +4304,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5472,20 +4335,11 @@
 			"label": "Metchosin, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 220
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 15
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 220,
+				"Nanaimo": 90,
+				"Victoria": 15
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5512,20 +4366,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5553,20 +4398,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 170
-				},
-				{
-					"town": "Victoria",
-					"km": 260
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 170,
+				"Victoria": 260
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5594,20 +4430,11 @@
 			"label": "Cowichan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 85
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 40,
+				"Victoria": 85
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5635,20 +4462,11 @@
 			"label": "Port Hardy, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 180
-				},
-				{
-					"town": "Nanaimo",
-					"km": 310
-				},
-				{
-					"town": "Victoria",
-					"km": 390
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 180,
+				"Nanaimo": 310,
+				"Victoria": 390
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5675,20 +4493,11 @@
 			"label": "Port Alice, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 165
-				},
-				{
-					"town": "Nanaimo",
-					"km": 290
-				},
-				{
-					"town": "Victoria",
-					"km": 370
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 165,
+				"Nanaimo": 290,
+				"Victoria": 370
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -5715,20 +4524,11 @@
 			"label": "4624 Condensory Rd, Courtenay, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 95
-				},
-				{
-					"town": "Victoria",
-					"km": 185
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 95,
+				"Victoria": 185
+			}
 		},
 		"campgroundData": {
 			"operator": "Commercial RV campground owned and operated by the K'ómoks First Nation",
@@ -5768,20 +4568,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5809,20 +4600,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 170
-				},
-				{
-					"town": "Victoria",
-					"km": 260
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 170,
+				"Victoria": 260
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5850,20 +4632,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 175
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 175,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5891,20 +4664,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 255
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 165,
+				"Victoria": 255
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5932,20 +4696,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 170
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 170,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -5973,20 +4728,11 @@
 			"label": "Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 130
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 40,
+				"Victoria": 130
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6013,20 +4759,11 @@
 			"label": "Bowser, BC (near Qualicum Beach)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 75
-				},
-				{
-					"town": "Nanaimo",
-					"km": 60
-				},
-				{
-					"town": "Victoria",
-					"km": 150
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 75,
+				"Nanaimo": 60,
+				"Victoria": 150
+			}
 		},
 		"campgroundData": {
 			"operator": "Qualicum First Nation",
@@ -6063,20 +4800,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6103,20 +4831,11 @@
 			"label": "Duncan, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 180
-				},
-				{
-					"town": "Nanaimo",
-					"km": 45
-				},
-				{
-					"town": "Victoria",
-					"km": 45
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 180,
+				"Nanaimo": 45,
+				"Victoria": 45
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6143,20 +4862,11 @@
 			"label": "Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 130
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 40,
+				"Victoria": 130
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6189,20 +4899,11 @@
 			"label": "Ladysmith, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 155
-				},
-				{
-					"town": "Nanaimo",
-					"km": 20
-				},
-				{
-					"town": "Victoria",
-					"km": 70
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 155,
+				"Nanaimo": 20,
+				"Victoria": 70
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6229,20 +4930,11 @@
 			"label": "Victoria, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 225
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 1
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 225,
+				"Nanaimo": 90,
+				"Victoria": 1
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6272,20 +4964,11 @@
 			"label": "Black Creek, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 115
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 115,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"amenityList": [
@@ -6319,20 +5002,11 @@
 			"label": "Schoen Lake, near Woss"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 75
-				},
-				{
-					"town": "Nanaimo",
-					"km": 200
-				},
-				{
-					"town": "Victoria",
-					"km": 285
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 75,
+				"Nanaimo": 200,
+				"Victoria": 285
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6343,16 +5017,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served"
+				}
+			]
+		}
 	},
 	{
 		"name": "Scout Beach (rec-site)",
@@ -6369,20 +5040,11 @@
 			"label": "Great Central Lake, near Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 75
-				},
-				{
-					"town": "Nanaimo",
-					"km": 100
-				},
-				{
-					"town": "Victoria",
-					"km": 175
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 75,
+				"Nanaimo": 100,
+				"Victoria": 175
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -6407,16 +5069,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served, free"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served, free"
+				}
+			]
+		}
 	},
 	{
 		"name": "Seagull Bay (rec-site)",
@@ -6433,20 +5092,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 155
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 155,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -6474,20 +5124,11 @@
 			"label": "Courtenay, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 100
-				},
-				{
-					"town": "Victoria",
-					"km": 185
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 100,
+				"Victoria": 185
+			}
 		},
 		"campgroundData": {
 			"siteCount": 150,
@@ -6530,20 +5171,11 @@
 			"label": "Tahsis, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 100
-				},
-				{
-					"town": "Nanaimo",
-					"km": 215
-				},
-				{
-					"town": "Victoria",
-					"km": 290
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 100,
+				"Nanaimo": 215,
+				"Victoria": 290
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6570,20 +5202,11 @@
 			"label": "Ucluelet, BC (Toquaht Bay, 13km gravel off Hwy 4)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 120,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"operator": "Toquaht First Nation",
@@ -6621,20 +5244,11 @@
 			"label": "Qualicum Beach, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 95
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 130
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 95,
+				"Nanaimo": 40,
+				"Victoria": 130
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6661,20 +5275,11 @@
 			"label": "Campbell River, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 10
-				},
-				{
-					"town": "Nanaimo",
-					"km": 125
-				},
-				{
-					"town": "Victoria",
-					"km": 215
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 10,
+				"Nanaimo": 125,
+				"Victoria": 215
+			}
 		},
 		"campgroundData": {
 			"siteCount": 50,
@@ -6709,20 +5314,11 @@
 			"label": "Duncan"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 170
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 55
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 170,
+				"Nanaimo": 40,
+				"Victoria": 55
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -6750,20 +5346,11 @@
 			"label": "Lantzville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 15
-				},
-				{
-					"town": "Victoria",
-					"km": 105
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 15,
+				"Victoria": 105
+			}
 		},
 		"campgroundData": {
 			"operator": "Snaw-Naw-as First Nation",
@@ -6797,20 +5384,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 85
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 165
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 85,
+				"Nanaimo": 90,
+				"Victoria": 165
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -6838,20 +5416,11 @@
 			"label": "Sooke, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 205
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 30
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 205,
+				"Nanaimo": 80,
+				"Victoria": 30
+			}
 		},
 		"campgroundData": {
 			"operator": "Managed by CRD, operated by T'Sou-ke Nation",
@@ -6890,20 +5459,11 @@
 			"label": "Sooke, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 215
-				},
-				{
-					"town": "Nanaimo",
-					"km": 90
-				},
-				{
-					"town": "Victoria",
-					"km": 25
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 215,
+				"Nanaimo": 90,
+				"Victoria": 25
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -6930,20 +5490,11 @@
 			"label": "Black Creek, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 20
-				},
-				{
-					"town": "Nanaimo",
-					"km": 115
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 20,
+				"Nanaimo": 115,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"siteCount": 122,
@@ -6969,16 +5520,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable online (Campspot)"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable online (Campspot)"
+				}
+			]
+		}
 	},
 	{
 		"name": "Spring Beach (rec-site)",
@@ -6995,20 +5543,11 @@
 			"label": "Cowichan Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 155
-				},
-				{
-					"town": "Nanaimo",
-					"km": 40
-				},
-				{
-					"town": "Victoria",
-					"km": 70
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 155,
+				"Nanaimo": 40,
+				"Victoria": 70
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7042,20 +5581,11 @@
 			"label": "Port Alice"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 155
-				},
-				{
-					"town": "Nanaimo",
-					"km": 280
-				},
-				{
-					"town": "Victoria",
-					"km": 360
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 155,
+				"Nanaimo": 280,
+				"Victoria": 360
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7083,20 +5613,11 @@
 			"label": "Near Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 80
-				},
-				{
-					"town": "Nanaimo",
-					"km": 75
-				},
-				{
-					"town": "Victoria",
-					"km": 155
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 80,
+				"Nanaimo": 75,
+				"Victoria": 155
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -7112,16 +5633,13 @@
 				}
 			]
 		},
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservable"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservable"
+				}
+			]
+		}
 	},
 	{
 		"name": "Stamp River Trail (rec-site)",
@@ -7138,20 +5656,11 @@
 			"label": "Port Alberni"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 80
-				},
-				{
-					"town": "Nanaimo",
-					"km": 70
-				},
-				{
-					"town": "Victoria",
-					"km": 150
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 80,
+				"Nanaimo": 70,
+				"Victoria": 150
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7179,20 +5688,11 @@
 			"label": "Gold River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 65
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 245
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 65,
+				"Nanaimo": 165,
+				"Victoria": 245
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7220,20 +5720,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 255
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 165,
+				"Victoria": 255
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7261,20 +5752,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 165
-				},
-				{
-					"town": "Victoria",
-					"km": 260
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 165,
+				"Victoria": 260
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7302,20 +5784,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 35
-				},
-				{
-					"town": "Nanaimo",
-					"km": 170
-				},
-				{
-					"town": "Victoria",
-					"km": 260
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 35,
+				"Nanaimo": 170,
+				"Victoria": 260
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7343,20 +5816,11 @@
 			"label": "Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 25
-				},
-				{
-					"town": "Nanaimo",
-					"km": 160
-				},
-				{
-					"town": "Victoria",
-					"km": 250
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 25,
+				"Nanaimo": 160,
+				"Victoria": 250
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7384,20 +5848,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 55
-				},
-				{
-					"town": "Nanaimo",
-					"km": 180
-				},
-				{
-					"town": "Victoria",
-					"km": 265
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 55,
+				"Nanaimo": 180,
+				"Victoria": 265
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7425,20 +5880,11 @@
 			"label": "Highway 28, ~48 km west of Campbell River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 130
-				},
-				{
-					"town": "Victoria",
-					"km": 215
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 130,
+				"Victoria": 215
+			}
 		},
 		"campgroundData": {
 			"operator": "BC Parks",
@@ -7476,16 +5922,13 @@
 				"text": "Back-country camping allowed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Reservation-only in recent seasons; unreserved sites revert to first-come-first-served nightly"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Reservation-only in recent seasons; unreserved sites revert to first-come-first-served nightly"
+				}
+			]
+		}
 	},
 	{
 		"name": "Strathcona Provincial Park — Ralph River Campground",
@@ -7502,20 +5945,11 @@
 			"label": "35 km south of Buttle Lake along Buttle Lake (Western Mines) Road"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 45
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 45,
+				"Nanaimo": 120,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"operator": "BC Parks",
@@ -7572,20 +6006,11 @@
 			"label": "Port Hardy, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 180
-				},
-				{
-					"town": "Nanaimo",
-					"km": 310
-				},
-				{
-					"town": "Victoria",
-					"km": 390
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 180,
+				"Nanaimo": 310,
+				"Victoria": 390
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -7612,20 +6037,11 @@
 			"label": "Tofino, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 110
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 110,
+				"Nanaimo": 145,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -7652,20 +6068,11 @@
 			"label": "Ucluelet, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 120,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -7692,20 +6099,11 @@
 			"label": "Parksville, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 30
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 30,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -7732,20 +6130,11 @@
 			"label": "Jordan River"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 195
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 50
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 195,
+				"Nanaimo": 80,
+				"Victoria": 50
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7773,20 +6162,11 @@
 			"label": "West of Sproat Lake"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 85
-				},
-				{
-					"town": "Nanaimo",
-					"km": 80
-				},
-				{
-					"town": "Victoria",
-					"km": 155
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 85,
+				"Nanaimo": 80,
+				"Victoria": 155
+			}
 		},
 		"campgroundData": {
 			"operator": "RLC Park Services",
@@ -7809,16 +6189,13 @@
 				"text": "group sites"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "Group sites reservable"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "Group sites reservable"
+				}
+			]
+		}
 	},
 	{
 		"name": "Telegraph Cove Marina & RV Park",
@@ -7835,20 +6212,11 @@
 			"label": "Telegraph Cove, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 125
-				},
-				{
-					"town": "Nanaimo",
-					"km": 260
-				},
-				{
-					"town": "Victoria",
-					"km": 345
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 125,
+				"Nanaimo": 260,
+				"Victoria": 345
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -7875,20 +6243,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 150
-				},
-				{
-					"town": "Nanaimo",
-					"km": 275
-				},
-				{
-					"town": "Victoria",
-					"km": 360
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 150,
+				"Nanaimo": 275,
+				"Victoria": 360
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -7916,20 +6275,11 @@
 			"label": "Campbell River, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 1
-				},
-				{
-					"town": "Nanaimo",
-					"km": 135
-				},
-				{
-					"town": "Victoria",
-					"km": 225
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 1,
+				"Nanaimo": 135,
+				"Victoria": 225
+			}
 		},
 		"campgroundData": {
 			"amenityList": [
@@ -7964,20 +6314,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 60
-				},
-				{
-					"town": "Nanaimo",
-					"km": 190
-				},
-				{
-					"town": "Victoria",
-					"km": 280
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 60,
+				"Nanaimo": 190,
+				"Victoria": 280
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8005,20 +6346,11 @@
 			"label": "Errington, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 35
-				},
-				{
-					"town": "Victoria",
-					"km": 120
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 35,
+				"Victoria": 120
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -8045,20 +6377,11 @@
 			"label": "Tofino, BC (near MacKenzie Beach)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 110
-				},
-				{
-					"town": "Nanaimo",
-					"km": 145
-				},
-				{
-					"town": "Victoria",
-					"km": 205
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 110,
+				"Nanaimo": 145,
+				"Victoria": 205
+			}
 		},
 		"campgroundData": {
 			"operator": "Tla-o-qui-aht First Nation",
@@ -8092,20 +6415,11 @@
 			"label": "Sayward"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 105
-				},
-				{
-					"town": "Nanaimo",
-					"km": 235
-				},
-				{
-					"town": "Victoria",
-					"km": 320
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 105,
+				"Nanaimo": 235,
+				"Victoria": 320
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8133,20 +6447,11 @@
 			"label": "Port McNeill"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 155
-				},
-				{
-					"town": "Nanaimo",
-					"km": 290
-				},
-				{
-					"town": "Victoria",
-					"km": 375
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 155,
+				"Nanaimo": 290,
+				"Victoria": 375
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8177,20 +6482,11 @@
 			"label": "Ucluelet, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 120
-				},
-				{
-					"town": "Nanaimo",
-					"km": 120
-				},
-				{
-					"town": "Victoria",
-					"km": 170
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 120,
+				"Nanaimo": 120,
+				"Victoria": 170
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -8217,20 +6513,11 @@
 			"label": "Upper Campbell Lake, near Strathcona Park"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 30
-				},
-				{
-					"town": "Nanaimo",
-					"km": 150
-				},
-				{
-					"town": "Victoria",
-					"km": 235
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 30,
+				"Nanaimo": 150,
+				"Victoria": 235
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8256,16 +6543,13 @@
 				"text": "Preliminary, to be confirmed"
 			}
 		],
-		"noteList": [
-			{
-				"sectionName": "Reservation notes",
-				"itemList": [
-					{
-						"name": "First-come-first-served; max stay 14 nights"
-					}
-				]
-			}
-		]
+		"noteMap": {
+			"Reservation notes": [
+				{
+					"name": "First-come-first-served; max stay 14 nights"
+				}
+			]
+		}
 	},
 	{
 		"name": "Vernon Lake (rec-site)",
@@ -8282,20 +6566,11 @@
 			"label": "Woss"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 85
-				},
-				{
-					"town": "Nanaimo",
-					"km": 205
-				},
-				{
-					"town": "Victoria",
-					"km": 285
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 85,
+				"Nanaimo": 205,
+				"Victoria": 285
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8323,20 +6598,11 @@
 			"label": "Nanaimo, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 135
-				},
-				{
-					"town": "Nanaimo",
-					"km": 1
-				},
-				{
-					"town": "Victoria",
-					"km": 90
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 135,
+				"Nanaimo": 1,
+				"Victoria": 90
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -8363,20 +6629,11 @@
 			"label": "Sayward, BC"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 65
-				},
-				{
-					"town": "Nanaimo",
-					"km": 200
-				},
-				{
-					"town": "Victoria",
-					"km": 285
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 65,
+				"Nanaimo": 200,
+				"Victoria": 285
+			}
 		},
 		"campgroundData": {
 			"referenceList": [
@@ -8403,20 +6660,11 @@
 			"label": "Courtenay"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 40
-				},
-				{
-					"town": "Nanaimo",
-					"km": 100
-				},
-				{
-					"town": "Victoria",
-					"km": 185
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 40,
+				"Nanaimo": 100,
+				"Victoria": 185
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8444,20 +6692,11 @@
 			"label": "Nimpkish Lake, Nimpkish Valley"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 125
-				},
-				{
-					"town": "Nanaimo",
-					"km": 250
-				},
-				{
-					"town": "Victoria",
-					"km": 335
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 125,
+				"Nanaimo": 250,
+				"Victoria": 335
+			}
 		},
 		"footnotes": [
 			{
@@ -8490,20 +6729,11 @@
 			"label": "Woss"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 100
-				},
-				{
-					"town": "Nanaimo",
-					"km": 225
-				},
-				{
-					"town": "Victoria",
-					"km": 310
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 100,
+				"Nanaimo": 225,
+				"Victoria": 310
+			}
 		},
 		"campgroundData": {
 			"operator": "RSTBC",
@@ -8531,20 +6761,11 @@
 			"label": "Cedar, BC (near Nanaimo)"
 		},
 		"access": {
-			"haversineList": [
-				{
-					"town": "Campbell River",
-					"km": 145
-				},
-				{
-					"town": "Nanaimo",
-					"km": 15
-				},
-				{
-					"town": "Victoria",
-					"km": 80
-				}
-			]
+			"haversineMap": {
+				"Campbell River": 145,
+				"Nanaimo": 15,
+				"Victoria": 80
+			}
 		},
 		"campgroundData": {
 			"referenceList": [

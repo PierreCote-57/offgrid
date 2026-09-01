@@ -25,10 +25,10 @@
 		<tr>
 			<td class="gl-fishing-label">Lake chart</td>
 			<td class="gl-fishing-value">
-				<span th:if="${#lists.isEmpty(fishing?.lakeChartList)}">NA</span>
-				<span th:each="chart, iter : ${fishing?.lakeChartList}">
+				<span th:if="${#maps.isEmpty(fishing?.lakeChartMap)}">NA</span>
+				<span th:each="chart, iter : ${fishing?.lakeChartMap}">
 					<br th:if="${!iter.first}">
-					<span th:replace="~{fragments/block/link :: link(${chart.url})}"></span>[[${chart.name}]]</a>
+					<span th:replace="~{fragments/block/link :: link(${chart.value})}"></span>[[${chart.key}]]</a>
 				</span>
 			</td>
 		</tr>

@@ -8,28 +8,19 @@
 	},
 	"photoGalleries": {
 		"howto": {
-			"name": "How to images",
-			"itemList": [
-				{
-					"id": "van-side-view",
-					"img": "IMG_2771-labelled",
-					"label": "Side view of the van"
-				},
-				{
-					"id": "dump-station",
-					"img": "IMG_2790",
-					"label": "Sewage controls on the van"
-				},
-				{
-					"id": "dump-water",
-					"img": "IMG_2774",
-					"label": "Water connections"
-				}
-			]
+			"van-side-view": {
+				"img": "IMG_2771-labelled",
+				"label": "Side view of the van"
+			},
+			"dump-station": {
+				"img": "IMG_2790",
+				"label": "Sewage controls on the van"
+			},
+			"dump-water": {
+				"img": "IMG_2774",
+				"label": "Water connections"
+			}
 		},
-		"details": {
-			"name": "Details images",
-			"itemList": []
-		}
+		"details": {}
 	}
 }

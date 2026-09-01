@@ -8,23 +8,15 @@
 	},
 	"photoGalleries": {
 		"howto": {
-			"name": "How to images",
-			"itemList": [
-				{
-					"id": "van-side-view",
-					"img": "IMG_2771-labelled",
-					"label": "Side view of the van"
-				},
-				{
-					"id": "water-hookup",
-					"img": "IMG_2774",
-					"label": "Water connections"
-				}
-			]
+			"van-side-view": {
+				"img": "IMG_2771-labelled",
+				"label": "Side view of the van"
+			},
+			"water-hookup": {
+				"img": "IMG_2774",
+				"label": "Water connections"
+			}
 		},
-		"details": {
-			"name": "Details images",
-			"itemList": []
-		}
+		"details": {}
 	}
 }

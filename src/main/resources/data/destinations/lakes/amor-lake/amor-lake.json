@@ -28,88 +28,79 @@
 	"fishingReferences": {
 		"bcIdentifier": "00324SALM",
 		"areaKm2": 3.145,
-		"lakeChartList": [
-			{
-				"name": "BC Bathymetric",
-				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00228201.pdf"
-			}
-		],
+		"lakeChartMap": {
+			"BC Bathymetric": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00228201.pdf"
+		},
 		"stockingName": ""
 	},
-	"noteList": [
-		{
-			"sectionName": "Destinations",
-			"itemList": [
-				{
-					"name": "Amor Lake (REC0174)",
-					"url": "/destinations/rec-sites/amor-lake-rec0174"
-				},
-				{
-					"name": "Amor Lake",
-					"url": "https://en.wikipedia.org/wiki/Amor_Lake",
-					"description": [
-						"Wikipedia"
-					]
-				},
-				{
-					"name": "Twin Lake (REC0185)",
-					"url": "/destinations/rec-sites/twin-lake-rec0185"
-				},
-				{
-					"name": "Lak La More",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC3046",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Mr.Canoehead",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC3067",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Amor Lake North",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC6322",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Sterling Island Rec.Site",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC6423",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Amor West",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC6622",
-					"description": [
-						"Sites & Trails BC"
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Wikipedia",
-					"url": "https://en.wikipedia.org/wiki/Amor_Lake",
-					"description": [
-						"Wikipedia"
-					]
-				},
-				{
-					"name": "Go Hiking",
-					"url": "https://gohiking.ca/amor-lake/",
-					"description": [
-						"Trail guide, directions, and photos for Amor Lake."
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Destinations": [
+			{
+				"name": "Amor Lake (REC0174)",
+				"url": "/destinations/rec-sites/amor-lake-rec0174"
+			},
+			{
+				"name": "Amor Lake",
+				"url": "https://en.wikipedia.org/wiki/Amor_Lake",
+				"description": [
+					"Wikipedia"
+				]
+			},
+			{
+				"name": "Twin Lake (REC0185)",
+				"url": "/destinations/rec-sites/twin-lake-rec0185"
+			},
+			{
+				"name": "Lak La More",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC3046",
+				"description": [
+					"Sites & Trails BC"
+				]
+			},
+			{
+				"name": "Mr.Canoehead",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC3067",
+				"description": [
+					"Sites & Trails BC"
+				]
+			},
+			{
+				"name": "Amor Lake North",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC6322",
+				"description": [
+					"Sites & Trails BC"
+				]
+			},
+			{
+				"name": "Sterling Island Rec.Site",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC6423",
+				"description": [
+					"Sites & Trails BC"
+				]
+			},
+			{
+				"name": "Amor West",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC6622",
+				"description": [
+					"Sites & Trails BC"
+				]
+			}
+		],
+		"Further readings": [
+			{
+				"name": "Wikipedia",
+				"url": "https://en.wikipedia.org/wiki/Amor_Lake",
+				"description": [
+					"Wikipedia"
+				]
+			},
+			{
+				"name": "Go Hiking",
+				"url": "https://gohiking.ca/amor-lake/",
+				"description": [
+					"Trail guide, directions, and photos for Amor Lake."
+				]
+			}
+		]
+	}
 }

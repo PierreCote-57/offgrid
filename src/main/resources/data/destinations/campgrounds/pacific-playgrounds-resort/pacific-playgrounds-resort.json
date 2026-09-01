@@ -30,20 +30,11 @@
 		}
 	},
 	"access": {
-		"haversineList": [
-			{
-				"town": "Campbell River",
-				"km": 20
-			},
-			{
-				"town": "Nanaimo",
-				"km": 115
-			},
-			{
-				"town": "Victoria",
-				"km": 205
-			}
-		],
+		"haversineMap": {
+			"Campbell River": 20,
+			"Nanaimo": 115,
+			"Victoria": 205
+		},
 		"legList": []
 	},
 	"campgroundData": {
@@ -75,80 +66,64 @@
 	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "img_2822",
-					"img": "IMG_2822",
-					"label": ""
-				},
-				{
-					"id": "img_2823",
-					"img": "IMG_2823",
-					"label": ""
-				},
-				{
-					"id": "img_2824",
-					"img": "IMG_2824",
-					"label": ""
-				},
-				{
-					"id": "img_2826",
-					"img": "IMG_2826",
-					"label": ""
-				},
-				{
-					"id": "img_2827",
-					"img": "IMG_2827",
-					"label": ""
-				},
-				{
-					"id": "img_2828",
-					"img": "IMG_2828",
-					"label": ""
-				},
-				{
-					"id": "img_2829",
-					"img": "IMG_2829",
-					"label": ""
-				},
-				{
-					"id": "img_2830",
-					"img": "IMG_2830",
-					"label": ""
-				},
-				{
-					"id": "img_2831",
-					"img": "IMG_2831",
-					"label": ""
-				},
-				{
-					"id": "img_2832",
-					"img": "IMG_2832",
-					"label": ""
-				}
-			]
+			"img_2822": {
+				"img": "IMG_2822",
+				"label": ""
+			},
+			"img_2823": {
+				"img": "IMG_2823",
+				"label": ""
+			},
+			"img_2824": {
+				"img": "IMG_2824",
+				"label": ""
+			},
+			"img_2826": {
+				"img": "IMG_2826",
+				"label": ""
+			},
+			"img_2827": {
+				"img": "IMG_2827",
+				"label": ""
+			},
+			"img_2828": {
+				"img": "IMG_2828",
+				"label": ""
+			},
+			"img_2829": {
+				"img": "IMG_2829",
+				"label": ""
+			},
+			"img_2830": {
+				"img": "IMG_2830",
+				"label": ""
+			},
+			"img_2831": {
+				"img": "IMG_2831",
+				"label": ""
+			},
+			"img_2832": {
+				"img": "IMG_2832",
+				"label": ""
+			}
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "GoRVing Canada",
-					"url": "https://gorving.ca/campground/pacific-playgrounds-oceanside-resort/",
-					"description": [
-						"Campground Profile"
-					]
-				},
-				{
-					"name": "Camping & RV BC",
-					"url": "https://www.campingrvbc.com/sites/bc/pacific-playgrounds-oceanside-resort-black-creek/",
-					"description": [
-						"Campground Profile"
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "GoRVing Canada",
+				"url": "https://gorving.ca/campground/pacific-playgrounds-oceanside-resort/",
+				"description": [
+					"Campground Profile"
+				]
+			},
+			{
+				"name": "Camping & RV BC",
+				"url": "https://www.campingrvbc.com/sites/bc/pacific-playgrounds-oceanside-resort-black-creek/",
+				"description": [
+					"Campground Profile"
+				]
+			}
+		]
+	}
 }

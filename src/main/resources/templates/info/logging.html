@@ -34,7 +34,10 @@
 		that is not necessarily correct.
 	</p>
 
-	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Logging information')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Radio information')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Road conditions')}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Recreation sites')}"></div>
 
 	<div th:replace="~{fragments/block/photo-gallery :: gallery('logging')}"></div>
 </main>

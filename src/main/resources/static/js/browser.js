@@ -277,11 +277,9 @@
 
 	function campbellRiverKm(place) {
 		var access = place.access || {};
-		var townList = access.haversineList || [];
-		for (var i = 0; i < townList.length; i++) {
-			if (townList[i] && townList[i].town === "Campbell River") { return townList[i].km; }
-		}
-		return null;
+		var townMap = access.haversineMap || {};
+		var km = townMap["Campbell River"];
+		return km === undefined ? null : km;
 	}
 
 	// Missing values render as an empty cell; arrays join with ", ".

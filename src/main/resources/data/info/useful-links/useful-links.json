@@ -1,282 +1,258 @@
 {
 	"name": "Useful Links",
-	"noteList": [
-		{
-			"sectionName": "Camping, general information",
-			"itemList": [
-				{
-					"name": "Coachmen Beyond",
-					"url": "https://forestriverinc.help/#/coachmenrv/guide/2026/3842-beyond/browse",
-					"description": [
-						"Index to all the manuals and videos."
-					]
-				},
-				{
-					"name": "The Campers Code",
-					"url": "https://www.camperscode.com/",
-					"description": [
-						"A straightforward guide to responsible backcountry camping.",
-						" Worth reading before your first trip and revisiting occasionally after."
-					]
-				},
-				{
-					"name": "Rules & Etiquette",
-					"url": "https://www2.gov.bc.ca/gov/content/sports-culture/recreation/camping-hiking/sites-trails/planning/rules",
-					"description": [
-						"The Province’s rules and etiquette for recreation sites and trails.",
-						"Worth a read before heading into the backcountry."
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Camping reviews",
-			"itemList": [
-				{
-					"name": "Go Hiking",
-					"url": "https://gohiking.ca/",
-					"description": [
-						"Trail guides and lake write-ups across BC, with directions and photos."
-					]
-				},
-				{
-					"name": "Off track travel",
-					"url": "https://offtracktravel.ca",
-					"description": [
-						"A guide to the campsites and van life."
-					]
-				},
-				{
-					"name": "Vancouver Island Camping",
-					"url": "https://www.vancouverislandcamping.net/category/vancouver-island//",
-					"description": [
-						"Vancouver Island Camping provides first-hand campground information, camping guides and campground walk-through videos for campers exploring Vancouver Island, British Columbia."
-					]
-				},
-				{
-					"name": "Camping & RV BC",
-					"url": "https://www.campingrvbc.com/",
-					"description": [
-						"Per-site listings for BC campgrounds, RV parks and provincial park campgrounds,",
-						"with amenities, site counts and photos."
-					]
-				},
-				{
-					"name": "Explore BC Parks",
-					"url": "https://explorebcparks.ca/",
-					"description": [
-						"Quality Recreation, the company contracted to operate a number of BC provincial parks.",
-						"Per-park pages with campground and facility details."
-					]
-				},
-				{
-					"name": "GoRVing Canada",
-					"url": "https://gorving.ca/",
-					"description": [
-						"Campground directory aimed at RVers, with a page per campground."
-					]
-				},
-				{
-					"name": "Travel British Columbia",
-					"url": "https://www.travel-british-columbia.com/",
-					"description": [
-						"Accommodation directory covering campgrounds, RV parks, resorts and lodges across BC."
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Camping, reservations",
-			"itemList": [
-				{
-					"name": "BC Parks Reservations",
-					"url": "https://camping.bcparks.ca/",
-					"description": [
-						"Book campsites for BC provincial parks online."
-					]
-				},
-				{
-					"name": "Canada Parks Reservations",
-					"url": "https://reservation.pc.gc.ca",
-					"description": [
-						"Reserve your campsite in a Canadian park"
-					]
-				},
-				{
-					"name": "Campspot",
-					"url": "https://www.campspot.com/",
-					"description": [
-						"A campground search and booking platform covering campgrounds,",
-						"RV parks, and glamping sites across North America."
-					]
-				},
-				{
-					"name": "Mosaic Forest Campsites",
-					"url": "https://www.mosaiccampsites.com",
-					"description": [
-						"Reservations for compsites on their properties"
-					]
-				},
-				{
-					"name": "VI Camping",
-					"url": "https://www.vicamping.com/",
-					"description": [
-						"Per-campsite pages and online booking for a set of Vancouver Island campsites."
-					]
-				},
-				{
-					"name": "Let's Camp",
-					"url": "https://letscamp.ca/",
-					"description": [
-						"Booking platform for BC recreation sites and small campgrounds."
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Where to stay search sites",
-			"itemList": [
-				{
-					"name": "HipCamp",
-					"url": "https://www.hipcamp.com/en-CA",
-					"description": [
-						"Find an interesting location where you can stay"
-					]
-				},
-				{
-					"name": "Compendium",
-					"url": "https://campendium.com",
-					"description": [
-						"Standard campground search"
-					]
-				},
-				{
-					"name": "Outdoorsy",
-					"url": "https://ca.outdoorsy.com/",
-					"description": [
-						"Seems to know availability! Also appears to be USA only."
-					]
-				},
-				{
-					"name": "iOverlander",
-					"url": "https://ioverlander.com/",
-					"description": [
-						"Allows filtering on map, shows dump stations (20,575 in Canada)"
-					]
-				},
-				{
-					"name": "Park4Night",
-					"url": "https://park4night.com/en",
-					"description": [
-						"Interesting, has 'The responsible traveller's charter'"
-					]
-				},
-				{
-					"name": "Harvest hosts",
-					"url": "https://www.harvesthosts.com/",
-					"description": [
-						"Free stay at interesting locations (Winery, farms, ...)"
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Canada",
-			"itemList": [
-				{
-					"name": "Canada Parks",
-					"url": "https://parks.canada.ca",
-					"description": [
-						"Tons of information about the parks and camping in general."
-					]
-				},
-				{
-					"name": "Canada Parks Reservations",
-					"url": "https://reservation.pc.gc.ca",
-					"description": [
-						"Reserve your campsite in a Canadian park"
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "British Columbia",
-			"itemList": [
-				{
-					"name": "BC Parks",
-					"url": "https://bcparks.ca/",
-					"description": [
-						"Description of the parks."
-					]
-				},
-				{
-					"name": "BC Parks Reservations",
-					"url": "https://camping.bcparks.ca/",
-					"description": [
-						"Book campsites for BC provincial parks online."
-					]
-				},
-				{
-					"name": "BC Sites and Trails",
-					"url": "https://www.sitesandtrailsbc.ca/search?view=list",
-					"description": [
-						"Official BC directory of recreation sites and trails. Search by area to find camping, boat launches, and day-use sites near your destination."
-					]
-				},
-				{
-					"name": "BC Bathymetric Lake Maps",
-					"url": "https://a100.gov.bc.ca/pub/fidq/viewBathymetricMaps.do",
-					"description": [
-						"Depth charts for lakes across the province. Useful for understanding where fish hold and how to approach a lake you haven’t fished before."
-					]
-				},
-				{
-					"name": "Drive BC",
-					"url": "https://www.drivebc.ca/?pan=-124.54973412027462%2C49.64955191300723&zoom=7.562177654260315",
-					"description": [
-						"Everything about the roads, from closures, to road conditions to rest stops."
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Other province",
-			"itemList": [
-				{
-					"name": "Camping in Alberta Parks",
-					"url": "https://www.albertaparks.ca/albertaparks-ca/visit-our-parks/camping-in-alberta-parks/",
-					"description": [
-						"Beautiful rockies"
-					]
-				},
-				{
-					"name": "New Foundland and Labrador",
-					"url": "https://www.newfoundlandlabrador.com",
-					"description": [
-						"The island at the other end of Canada"
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Fishing",
-			"itemList": [
-				{
-					"name": "Freshwater Fisheries Society of BC",
-					"url": "https://www.gofishbc.com",
-					"description": [
-						"Stocking data, regulations, and how-to guides for freshwater fishing across BC.",
-						"Their lake-by-lake stocking reports are handy for planning where to go."
-					]
-				},
-				{
-					"name": "Campbell River Fish & Wildlife Association",
-					"url": "https://crfishandwildlifeclub.ca",
-					"description": [
-						"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Camping, general information": [
+			{
+				"name": "Coachmen Beyond",
+				"url": "https://forestriverinc.help/#/coachmenrv/guide/2026/3842-beyond/browse",
+				"description": [
+					"Index to all the manuals and videos."
+				]
+			},
+			{
+				"name": "The Campers Code",
+				"url": "https://www.camperscode.com/",
+				"description": [
+					"A straightforward guide to responsible backcountry camping.",
+					" Worth reading before your first trip and revisiting occasionally after."
+				]
+			},
+			{
+				"name": "Rules & Etiquette",
+				"url": "https://www2.gov.bc.ca/gov/content/sports-culture/recreation/camping-hiking/sites-trails/planning/rules",
+				"description": [
+					"The Province’s rules and etiquette for recreation sites and trails.",
+					"Worth a read before heading into the backcountry."
+				]
+			}
+		],
+		"Camping reviews": [
+			{
+				"name": "Go Hiking",
+				"url": "https://gohiking.ca/",
+				"description": [
+					"Trail guides and lake write-ups across BC, with directions and photos."
+				]
+			},
+			{
+				"name": "Off track travel",
+				"url": "https://offtracktravel.ca",
+				"description": [
+					"A guide to the campsites and van life."
+				]
+			},
+			{
+				"name": "Vancouver Island Camping",
+				"url": "https://www.vancouverislandcamping.net/category/vancouver-island//",
+				"description": [
+					"Vancouver Island Camping provides first-hand campground information, camping guides and campground walk-through videos for campers exploring Vancouver Island, British Columbia."
+				]
+			},
+			{
+				"name": "Camping & RV BC",
+				"url": "https://www.campingrvbc.com/",
+				"description": [
+					"Per-site listings for BC campgrounds, RV parks and provincial park campgrounds,",
+					"with amenities, site counts and photos."
+				]
+			},
+			{
+				"name": "Explore BC Parks",
+				"url": "https://explorebcparks.ca/",
+				"description": [
+					"Quality Recreation, the company contracted to operate a number of BC provincial parks.",
+					"Per-park pages with campground and facility details."
+				]
+			},
+			{
+				"name": "GoRVing Canada",
+				"url": "https://gorving.ca/",
+				"description": [
+					"Campground directory aimed at RVers, with a page per campground."
+				]
+			},
+			{
+				"name": "Travel British Columbia",
+				"url": "https://www.travel-british-columbia.com/",
+				"description": [
+					"Accommodation directory covering campgrounds, RV parks, resorts and lodges across BC."
+				]
+			}
+		],
+		"Camping, reservations": [
+			{
+				"name": "BC Parks Reservations",
+				"url": "https://camping.bcparks.ca/",
+				"description": [
+					"Book campsites for BC provincial parks online."
+				]
+			},
+			{
+				"name": "Canada Parks Reservations",
+				"url": "https://reservation.pc.gc.ca",
+				"description": [
+					"Reserve your campsite in a Canadian park"
+				]
+			},
+			{
+				"name": "Campspot",
+				"url": "https://www.campspot.com/",
+				"description": [
+					"A campground search and booking platform covering campgrounds,",
+					"RV parks, and glamping sites across North America."
+				]
+			},
+			{
+				"name": "Mosaic Forest Campsites",
+				"url": "https://www.mosaiccampsites.com",
+				"description": [
+					"Reservations for compsites on their properties"
+				]
+			},
+			{
+				"name": "VI Camping",
+				"url": "https://www.vicamping.com/",
+				"description": [
+					"Per-campsite pages and online booking for a set of Vancouver Island campsites."
+				]
+			},
+			{
+				"name": "Let's Camp",
+				"url": "https://letscamp.ca/",
+				"description": [
+					"Booking platform for BC recreation sites and small campgrounds."
+				]
+			}
+		],
+		"Where to stay search sites": [
+			{
+				"name": "HipCamp",
+				"url": "https://www.hipcamp.com/en-CA",
+				"description": [
+					"Find an interesting location where you can stay"
+				]
+			},
+			{
+				"name": "Compendium",
+				"url": "https://campendium.com",
+				"description": [
+					"Standard campground search"
+				]
+			},
+			{
+				"name": "Outdoorsy",
+				"url": "https://ca.outdoorsy.com/",
+				"description": [
+					"Seems to know availability! Also appears to be USA only."
+				]
+			},
+			{
+				"name": "iOverlander",
+				"url": "https://ioverlander.com/",
+				"description": [
+					"Allows filtering on map, shows dump stations (20,575 in Canada)"
+				]
+			},
+			{
+				"name": "Park4Night",
+				"url": "https://park4night.com/en",
+				"description": [
+					"Interesting, has 'The responsible traveller's charter'"
+				]
+			},
+			{
+				"name": "Harvest hosts",
+				"url": "https://www.harvesthosts.com/",
+				"description": [
+					"Free stay at interesting locations (Winery, farms, ...)"
+				]
+			}
+		],
+		"Canada": [
+			{
+				"name": "Canada Parks",
+				"url": "https://parks.canada.ca",
+				"description": [
+					"Tons of information about the parks and camping in general."
+				]
+			},
+			{
+				"name": "Canada Parks Reservations",
+				"url": "https://reservation.pc.gc.ca",
+				"description": [
+					"Reserve your campsite in a Canadian park"
+				]
+			}
+		],
+		"British Columbia": [
+			{
+				"name": "BC Parks",
+				"url": "https://bcparks.ca/",
+				"description": [
+					"Description of the parks."
+				]
+			},
+			{
+				"name": "BC Parks Reservations",
+				"url": "https://camping.bcparks.ca/",
+				"description": [
+					"Book campsites for BC provincial parks online."
+				]
+			},
+			{
+				"name": "BC Sites and Trails",
+				"url": "https://www.sitesandtrailsbc.ca/search?view=list",
+				"description": [
+					"Official BC directory of recreation sites and trails. Search by area to find camping, boat launches, and day-use sites near your destination."
+				]
+			},
+			{
+				"name": "BC Bathymetric Lake Maps",
+				"url": "https://a100.gov.bc.ca/pub/fidq/viewBathymetricMaps.do",
+				"description": [
+					"Depth charts for lakes across the province. Useful for understanding where fish hold and how to approach a lake you haven’t fished before."
+				]
+			},
+			{
+				"name": "Drive BC",
+				"url": "https://www.drivebc.ca/?pan=-124.54973412027462%2C49.64955191300723&zoom=7.562177654260315",
+				"description": [
+					"Everything about the roads, from closures, to road conditions to rest stops."
+				]
+			}
+		],
+		"Other province": [
+			{
+				"name": "Camping in Alberta Parks",
+				"url": "https://www.albertaparks.ca/albertaparks-ca/visit-our-parks/camping-in-alberta-parks/",
+				"description": [
+					"Beautiful rockies"
+				]
+			},
+			{
+				"name": "New Foundland and Labrador",
+				"url": "https://www.newfoundlandlabrador.com",
+				"description": [
+					"The island at the other end of Canada"
+				]
+			}
+		],
+		"Fishing": [
+			{
+				"name": "Freshwater Fisheries Society of BC",
+				"url": "https://www.gofishbc.com",
+				"description": [
+					"Stocking data, regulations, and how-to guides for freshwater fishing across BC.",
+					"Their lake-by-lake stocking reports are handy for planning where to go."
+				]
+			},
+			{
+				"name": "Campbell River Fish & Wildlife Association",
+				"url": "https://crfishandwildlifeclub.ca",
+				"description": [
+					"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
+				]
+			}
+		]
+	}
 }

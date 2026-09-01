@@ -23,49 +23,33 @@
 		}
 	},
 	"access": {
-		"haversineList": [
+		"haversineMap": {
+			"Campbell River": 70,
+			"Nanaimo": 180,
+			"Victoria": 260
+		}
+	},
+	"noteMap": {
+		"Further readings": [
 			{
-				"town": "Campbell River",
-				"km": 70
+				"name": "Muchalat Lake (REC0258)",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC0258",
+				"description": [
+					"Sites & Trails BC"
+				]
 			},
 			{
-				"town": "Nanaimo",
-				"km": 180
-			},
-			{
-				"town": "Victoria",
-				"km": 260
+				"name": "Muchalat Lake",
+				"url": "/destinations/lakes/muchalat-lake"
 			}
 		]
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Muchalat Lake (REC0258)",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC0258",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Muchalat Lake",
-					"url": "/destinations/lakes/muchalat-lake"
-				}
-			]
-		}
-	],
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "under-construction",
-					"img": "under-construction",
-					"label": "Under construction"
-				}
-			]
+			"under-construction": {
+				"img": "under-construction",
+				"label": "Under construction"
+			}
 		}
 	}
 }

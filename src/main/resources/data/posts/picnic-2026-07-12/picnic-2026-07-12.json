@@ -14,40 +14,31 @@
 	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "img_0874",
-					"img": "IMG_0874",
-					"label": "Fishing dock (under construction in June '21)"
-				},
-				{
-					"id": "img_2796",
-					"img": "IMG_2796",
-					"label": "New floating dock and gangway"
-				},
-				{
-					"id": "img_2801",
-					"img": "IMG_2801",
-					"label": "Outhouse"
-				}
-			]
+			"img_0874": {
+				"img": "IMG_0874",
+				"label": "Fishing dock (under construction in June '21)"
+			},
+			"img_2796": {
+				"img": "IMG_2796",
+				"label": "New floating dock and gangway"
+			},
+			"img_2801": {
+				"img": "IMG_2801",
+				"label": "Outhouse"
+			}
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Campbell River Fish & Wildlife Association",
-					"url": "https://crfishandwildlifeclub.ca",
-					"description": [
-						"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
-					]
-				}
-			]
-		}
-	],
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Campbell River Fish & Wildlife Association",
+				"url": "https://crfishandwildlifeclub.ca",
+				"description": [
+					"Working to serve our community in all aspects of fish and wildlife conservation and outdoor activities."
+				]
+			}
+		]
+	},
 	"relatedDestinationList": [
 		"beavertail-lake-dayuse.html"
 	]

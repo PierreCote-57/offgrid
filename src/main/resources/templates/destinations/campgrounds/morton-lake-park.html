@@ -23,7 +23,8 @@
 
 		<p>Blurb goes here</p>
 
-		<div th:replace="~{fragments/block/note-list}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Additional information')}"></div>
+		<div th:replace="~{fragments/block/note-list :: notes('Further readings')}"></div>
 	</div>
 
 	<details>

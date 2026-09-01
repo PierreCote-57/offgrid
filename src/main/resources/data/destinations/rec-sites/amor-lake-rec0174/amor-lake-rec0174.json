@@ -23,49 +23,33 @@
 		}
 	},
 	"access": {
-		"haversineList": [
+		"haversineMap": {
+			"Campbell River": 30,
+			"Nanaimo": 160,
+			"Victoria": 250
+		}
+	},
+	"noteMap": {
+		"Further readings": [
 			{
-				"town": "Campbell River",
-				"km": 30
+				"name": "Amor Lake (REC0174)",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC0174",
+				"description": [
+					"Sites & Trails BC"
+				]
 			},
 			{
-				"town": "Nanaimo",
-				"km": 160
-			},
-			{
-				"town": "Victoria",
-				"km": 250
+				"name": "Amor Lake",
+				"url": "/destinations/lakes/amor-lake"
 			}
 		]
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Amor Lake (REC0174)",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC0174",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Amor Lake",
-					"url": "/destinations/lakes/amor-lake"
-				}
-			]
-		}
-	],
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "under-construction",
-					"img": "under-construction",
-					"label": "Under construction"
-				}
-			]
+			"under-construction": {
+				"img": "under-construction",
+				"label": "Under construction"
+			}
 		}
 	}
 }

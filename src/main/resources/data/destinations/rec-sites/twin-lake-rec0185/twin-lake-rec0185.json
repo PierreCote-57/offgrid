@@ -23,53 +23,37 @@
 		}
 	},
 	"access": {
-		"haversineList": [
+		"haversineMap": {
+			"Campbell River": 25,
+			"Nanaimo": 160,
+			"Victoria": 250
+		}
+	},
+	"noteMap": {
+		"Further readings": [
 			{
-				"town": "Campbell River",
-				"km": 25
+				"name": "Twin Lake (REC0185)",
+				"url": "https://www.sitesandtrailsbc.ca/resource/REC0185",
+				"description": [
+					"Sites & Trails BC"
+				]
 			},
 			{
-				"town": "Nanaimo",
-				"km": 160
+				"name": "Amor Lake",
+				"url": "/destinations/lakes/amor-lake"
 			},
 			{
-				"town": "Victoria",
-				"km": 250
+				"name": "Mohun Lake",
+				"url": "/destinations/lakes/mohun-lake"
 			}
 		]
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Twin Lake (REC0185)",
-					"url": "https://www.sitesandtrailsbc.ca/resource/REC0185",
-					"description": [
-						"Sites & Trails BC"
-					]
-				},
-				{
-					"name": "Amor Lake",
-					"url": "/destinations/lakes/amor-lake"
-				},
-				{
-					"name": "Mohun Lake",
-					"url": "/destinations/lakes/mohun-lake"
-				}
-			]
-		}
-	],
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "under-construction",
-					"img": "under-construction",
-					"label": "Under construction"
-				}
-			]
+			"under-construction": {
+				"img": "under-construction",
+				"label": "Under construction"
+			}
 		}
 	}
 }

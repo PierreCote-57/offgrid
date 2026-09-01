@@ -27,37 +27,30 @@
 			"zoom": 14
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Sproat Lake Provincial Park (Camping RV BC)",
-					"url": "https://www.campingrvbc.com/sites/bc/sproat-lake-provincial-park-port-alberni/",
-					"description": [
-						"Site breakdown and amenities: flush toilets, showers, boat launch and beach."
-					]
-				},
-				{
-					"name": "Nanaimo to Tofino road trip (Off Track Travel)",
-					"url": "https://offtracktravel.ca/nanaimo-to-tofino-road-trip/#sproat-lake",
-					"description": [
-						"Sproat Lake as a stop on the Highway 4 drive across Vancouver Island."
-					]
-				}
-			]
-		}
-	],
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Sproat Lake Provincial Park (Camping RV BC)",
+				"url": "https://www.campingrvbc.com/sites/bc/sproat-lake-provincial-park-port-alberni/",
+				"description": [
+					"Site breakdown and amenities: flush toilets, showers, boat launch and beach."
+				]
+			},
+			{
+				"name": "Nanaimo to Tofino road trip (Off Track Travel)",
+				"url": "https://offtracktravel.ca/nanaimo-to-tofino-road-trip/#sproat-lake",
+				"description": [
+					"Sproat Lake as a stop on the Highway 4 drive across Vancouver Island."
+				]
+			}
+		]
+	},
 	"photoGalleries": {
 		"photos": {
-			"name": "Photos",
-			"itemList": [
-				{
-					"id": "under-construction",
-					"img": "under-construction",
-					"label": "Under construction"
-				}
-			]
+			"under-construction": {
+				"img": "under-construction",
+				"label": "Under construction"
+			}
 		}
 	}
 }

@@ -8,24 +8,16 @@
 	},
 	"photoGalleries": {
 		"howto": {
-			"name": "How to images",
-			"itemList": [
-				{
-					"id": "campers-code",
-					"img": "CampersCode_CampfireIllustration",
-					"label": "Camper's Code"
-				}
-			]
+			"campers-code": {
+				"img": "CampersCode_CampfireIllustration",
+				"label": "Camper's Code"
+			}
 		},
 		"details": {
-			"name": "Details images",
-			"itemList": [
-				{
-					"id": "campers-code",
-					"img": "CampersCode_CampfireIllustration",
-					"label": "Camper's Code"
-				}
-			]
+			"campers-code": {
+				"img": "CampersCode_CampfireIllustration",
+				"label": "Camper's Code"
+			}
 		}
 	}
 }

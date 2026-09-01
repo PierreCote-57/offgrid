@@ -27,27 +27,18 @@
 	"fishingReferences": {
 		"bcIdentifier": "00517SALM",
 		"areaKm2": 0.211,
-		"lakeChartList": [
-			{
-				"name": "BC Bathymetric (1977)",
-				"url": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00294301.pdf"
-			}
-		],
+		"lakeChartMap": {
+			"BC Bathymetric (1977)": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00294301.pdf"
+		},
 		"stockingName": ""
 	},
-	"noteList": [
-		{
-			"sectionName": "Destinations",
-			"itemList": [
-				{
-					"name": "Morton Lake Park",
-					"url": "/destinations/campgrounds/morton-lake-park"
-				}
-			]
-		},
-		{
-			"sectionName": "Further readings",
-			"itemList": []
-		}
-	]
+	"noteMap": {
+		"Destinations": [
+			{
+				"name": "Morton Lake Park",
+				"url": "/destinations/campgrounds/morton-lake-park"
+			}
+		],
+		"Further readings": []
+	}
 }

@@ -119,7 +119,7 @@ li {
 	line-height: 1.55;
 }
 
-/* A noteList: one heading and one two-column table per section, the entry's name in the
+/* A note block: one heading and one two-column table, the entry's name in the
    narrow column and its description beside it. The description's lines are joined into
    flowing text — a line in the data is a wrap, not a break — and they are the author's own
    HTML, so it is the author's job for it to be valid. */

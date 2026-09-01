@@ -84,230 +84,180 @@
 	},
 	"photoGalleries": {
 		"atSite": {
-			"name": "At the rec site",
-			"itemList": [
-				{
-					"id": "img_0566",
-					"img": "IMG_0566",
-					"label": "img_0566"
-				},
-				{
-					"id": "img_0568",
-					"img": "IMG_0568",
-					"label": "img_0568"
-				},
-				{
-					"id": "img_0570",
-					"img": "IMG_0570",
-					"label": "img_0570"
-				},
-				{
-					"id": "img_0571",
-					"img": "IMG_0571",
-					"label": "img_0571"
-				},
-				{
-					"id": "img_0577",
-					"img": "IMG_0577",
-					"label": "img_0577"
-				},
-				{
-					"id": "img_0578",
-					"img": "IMG_0578",
-					"label": "img_0578"
-				},
-				{
-					"id": "img_0579",
-					"img": "IMG_0579",
-					"label": "img_0579"
-				},
-				{
-					"id": "img_0580",
-					"img": "IMG_0580",
-					"label": "img_0580"
-				},
-				{
-					"id": "img_0581",
-					"img": "IMG_0581",
-					"label": "img_0581"
-				},
-				{
-					"id": "img_0582",
-					"img": "IMG_0582",
-					"label": "img_0582"
-				},
-				{
-					"id": "img_0583",
-					"img": "IMG_0583",
-					"label": "img_0583"
-				},
-				{
-					"id": "img_0584",
-					"img": "IMG_0584",
-					"label": "img_0584"
-				},
-				{
-					"id": "img_0585",
-					"img": "IMG_0585",
-					"label": "img_0585"
-				},
-				{
-					"id": "img_0586",
-					"img": "IMG_0586",
-					"label": "img_0586"
-				},
-				{
-					"id": "img_0587",
-					"img": "IMG_0587",
-					"label": "img_0587"
-				},
-				{
-					"id": "img_0588",
-					"img": "IMG_0588",
-					"label": "img_0588"
-				},
-				{
-					"id": "img_0589",
-					"img": "IMG_0589",
-					"label": "img_0589"
-				},
-				{
-					"id": "img_0590",
-					"img": "IMG_0590",
-					"label": "img_0590"
-				},
-				{
-					"id": "img_0591",
-					"img": "IMG_0591",
-					"label": "img_0591"
-				},
-				{
-					"id": "img_0592",
-					"img": "IMG_0592",
-					"label": "img_0592"
-				},
-				{
-					"id": "img_0593",
-					"img": "IMG_0593",
-					"label": "img_0593"
-				}
-			]
+			"img_0566": {
+				"img": "IMG_0566",
+				"label": "img_0566"
+			},
+			"img_0568": {
+				"img": "IMG_0568",
+				"label": "img_0568"
+			},
+			"img_0570": {
+				"img": "IMG_0570",
+				"label": "img_0570"
+			},
+			"img_0571": {
+				"img": "IMG_0571",
+				"label": "img_0571"
+			},
+			"img_0577": {
+				"img": "IMG_0577",
+				"label": "img_0577"
+			},
+			"img_0578": {
+				"img": "IMG_0578",
+				"label": "img_0578"
+			},
+			"img_0579": {
+				"img": "IMG_0579",
+				"label": "img_0579"
+			},
+			"img_0580": {
+				"img": "IMG_0580",
+				"label": "img_0580"
+			},
+			"img_0581": {
+				"img": "IMG_0581",
+				"label": "img_0581"
+			},
+			"img_0582": {
+				"img": "IMG_0582",
+				"label": "img_0582"
+			},
+			"img_0583": {
+				"img": "IMG_0583",
+				"label": "img_0583"
+			},
+			"img_0584": {
+				"img": "IMG_0584",
+				"label": "img_0584"
+			},
+			"img_0585": {
+				"img": "IMG_0585",
+				"label": "img_0585"
+			},
+			"img_0586": {
+				"img": "IMG_0586",
+				"label": "img_0586"
+			},
+			"img_0587": {
+				"img": "IMG_0587",
+				"label": "img_0587"
+			},
+			"img_0588": {
+				"img": "IMG_0588",
+				"label": "img_0588"
+			},
+			"img_0589": {
+				"img": "IMG_0589",
+				"label": "img_0589"
+			},
+			"img_0590": {
+				"img": "IMG_0590",
+				"label": "img_0590"
+			},
+			"img_0591": {
+				"img": "IMG_0591",
+				"label": "img_0591"
+			},
+			"img_0592": {
+				"img": "IMG_0592",
+				"label": "img_0592"
+			},
+			"img_0593": {
+				"img": "IMG_0593",
+				"label": "img_0593"
+			}
 		},
 		"onTheWay": {
-			"name": "On the way",
-			"itemList": [
-				{
-					"id": "img_0499",
-					"img": "IMG_0499",
-					"label": "img_0499"
-				},
-				{
-					"id": "img_0501",
-					"img": "IMG_0501",
-					"label": "img_0501"
-				},
-				{
-					"id": "img_0554",
-					"img": "IMG_0554",
-					"label": "img_0554"
-				},
-				{
-					"id": "img_0555",
-					"img": "IMG_0555",
-					"label": "img_0555"
-				},
-				{
-					"id": "img_0558",
-					"img": "IMG_0558",
-					"label": "img_0558"
-				},
-				{
-					"id": "img_0561",
-					"img": "IMG_0561",
-					"label": "img_0561"
-				},
-				{
-					"id": "img_0563",
-					"img": "IMG_0563",
-					"label": "img_0563"
-				},
-				{
-					"id": "img_0594",
-					"img": "IMG_0594",
-					"label": "img_0594"
-				},
-				{
-					"id": "img_0599",
-					"img": "IMG_0599",
-					"label": "img_0599"
-				},
-				{
-					"id": "img_0601",
-					"img": "IMG_0601",
-					"label": "img_0601"
-				},
-				{
-					"id": "img_0602",
-					"img": "IMG_0602",
-					"label": "img_0602"
-				},
-				{
-					"id": "img_0603",
-					"img": "IMG_0603",
-					"label": "img_0603"
-				},
-				{
-					"id": "img_0604",
-					"img": "IMG_0604",
-					"label": "img_0604"
-				},
-				{
-					"id": "img_0605",
-					"img": "IMG_0605",
-					"label": "img_0605"
-				},
-				{
-					"id": "img_0606",
-					"img": "IMG_0606",
-					"label": "img_0606"
-				},
-				{
-					"id": "img_0607",
-					"img": "IMG_0607",
-					"label": "img_0607"
-				},
-				{
-					"id": "img_0608",
-					"img": "IMG_0608",
-					"label": "img_0608"
-				}
-			]
+			"img_0499": {
+				"img": "IMG_0499",
+				"label": "img_0499"
+			},
+			"img_0501": {
+				"img": "IMG_0501",
+				"label": "img_0501"
+			},
+			"img_0554": {
+				"img": "IMG_0554",
+				"label": "img_0554"
+			},
+			"img_0555": {
+				"img": "IMG_0555",
+				"label": "img_0555"
+			},
+			"img_0558": {
+				"img": "IMG_0558",
+				"label": "img_0558"
+			},
+			"img_0561": {
+				"img": "IMG_0561",
+				"label": "img_0561"
+			},
+			"img_0563": {
+				"img": "IMG_0563",
+				"label": "img_0563"
+			},
+			"img_0594": {
+				"img": "IMG_0594",
+				"label": "img_0594"
+			},
+			"img_0599": {
+				"img": "IMG_0599",
+				"label": "img_0599"
+			},
+			"img_0601": {
+				"img": "IMG_0601",
+				"label": "img_0601"
+			},
+			"img_0602": {
+				"img": "IMG_0602",
+				"label": "img_0602"
+			},
+			"img_0603": {
+				"img": "IMG_0603",
+				"label": "img_0603"
+			},
+			"img_0604": {
+				"img": "IMG_0604",
+				"label": "img_0604"
+			},
+			"img_0605": {
+				"img": "IMG_0605",
+				"label": "img_0605"
+			},
+			"img_0606": {
+				"img": "IMG_0606",
+				"label": "img_0606"
+			},
+			"img_0607": {
+				"img": "IMG_0607",
+				"label": "img_0607"
+			},
+			"img_0608": {
+				"img": "IMG_0608",
+				"label": "img_0608"
+			}
 		}
 	},
-	"noteList": [
-		{
-			"sectionName": "Additional information",
-			"itemList": [
-				{
-					"name": "Availability",
-					"url": null,
-					"description": [
-						"Reservable; open April 30–Sept 27 plus year-round winter camping"
-					]
-				}
-			]
-		},
-		{
-			"sectionName": "Further readings",
-			"itemList": [
-				{
-					"name": "Explore BC Parks",
-					"url": "https://explorebcparks.ca/morton-lake-provincial-park/",
-					"description": [
-						"General review site"
-					]
-				}
-			]
-		}
-	]
+	"noteMap": {
+		"Additional information": [
+			{
+				"name": "Availability",
+				"url": null,
+				"description": [
+					"Reservable; open April 30–Sept 27 plus year-round winter camping"
+				]
+			}
+		],
+		"Further readings": [
+			{
+				"name": "Explore BC Parks",
+				"url": "https://explorebcparks.ca/morton-lake-provincial-park/",
+				"description": [
+					"General review site"
+				]
+			}
+		]
+	}
 }

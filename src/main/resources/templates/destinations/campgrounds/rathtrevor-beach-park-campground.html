@@ -38,7 +38,7 @@
 			 th:insert="~{fragments/block/google-map :: map('road2')}"></div>
 	</details>
 
-	<div th:replace="~{fragments/block/note-list}"></div>
+	<div th:replace="~{fragments/block/note-list :: notes('Further readings')}"></div>
 	<div th:replace="~{fragments/block/photo-gallery :: gallery('photos')}"></div>
 	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
 </main>

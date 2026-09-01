@@ -1,6 +1,6 @@
 package com.lc.offgrid.pojo.part;
 
-import java.util.List;
+import java.util.TreeMap;
 
 /**
  * What the province publishes about a lake: its identifier in the fisheries registry, its
@@ -8,10 +8,10 @@ import java.util.List;
  */
 public class FishingReferences
 {
-	private String			bcIdentifier;
-	private Double			areaKm2;
-	private List<LakeChart>	lakeChartList;
-	private String			stockingName;
+	private String					bcIdentifier;
+	private Double					areaKm2;
+	private TreeMap<String, String>	lakeChartMap;
+	private String					stockingName;
 
 	public String getBcIdentifier()
 	{
@@ -23,9 +23,9 @@ public class FishingReferences
 		return areaKm2;
 	}
 
-	public List<LakeChart> getLakeChartList()
+	public TreeMap<String, String> getLakeChartMap()
 	{
-		return lakeChartList;
+		return lakeChartMap;
 	}
 
 	public String getStockingName()

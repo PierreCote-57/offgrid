@@ -12,7 +12,7 @@
 		  th:with="galleryName=${#strings.substringBefore(photoId, '/')},
 				   itemId=${#strings.substringAfter(photoId, '/')}">
 	<th:block th:with="gallery=${pageData.photoGalleries == null ? null : pageData.photoGalleries.get(galleryName)},
-					   item=${gallery == null or gallery.itemList == null ? null : gallery.itemList.^[id == #vars.itemId]}">
+					   item=${gallery == null ? null : gallery.get(itemId)}">
 		<a th:if="${item != null}" th:href="'#gl-photo-' + ${galleryName} + '-' + ${itemId}"
 		   th:text="${item.label} ?: ${itemId}" href="">label</a>
 		<span th:if="${item == null}" class="block-unavailable-inline"
