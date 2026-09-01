@@ -1121,3 +1121,121 @@ at `/blog`, and the menu item that points at it. A post is one item in it, serve
 
 So there was never a word to choose between. The folder, the template folder and the route say
 `posts` because that is what they hold; the menu says Blog because that is what it opens.
+
+## 2026-08-31 — The MCP endpoint is hand-rolled
+
+Three ways in, and they are layers rather than alternatives: write the protocol, take the MCP
+Java SDK, or take the Spring AI starter, which wraps the SDK and fills its tool registry from
+annotations.
+
+Hand-rolled wins because the surface is small — one URL answering POST, GET and DELETE, and a
+switch over `initialize`, `notifications/initialized`, `ping`, `tools/list` and `tools/call` —
+and because it keeps the shape the site already has: a controller that routes, a processor that
+speaks the protocol, and a third class that knows the content. Nothing about the protocol is
+hidden from Pierre, and the cost accepted is that a revision of the specification is ours to
+follow.
+
+`McpOffgrid` is that third class, and it holds what the server *is* — the name, the version and
+the instructions `initialize` publishes. What the server can be *asked* is one class per tool.
+
+**Sessions are kept, and the id is the processor's to mint.** Stateless would do for read-only
+answers, but the customer is on the road and what he told the server a moment ago — where he is,
+above all — is worth remembering for the length of a conversation. `McpOffgrid.initialize`
+answers what the server *is*; the id, the session map and the 404 on an id nobody knows belong
+to the protocol, so they stay in `McpProcessor`.
+
+The session is the client application's, not the chat window's: Claude Desktop initializes its
+servers when the app starts and every conversation in it rides that one session. Nothing in a
+tool call carries a conversation id, so per-conversation memory would have to be a parameter the
+model fills in.
+
+## 2026-09-01 — A tool is a class, and the framework is what it never sees
+
+Writing a new tool is writing one class: extend `AbstractMcpTool`, name yourself and your
+arguments in the constructor, name the class the arguments arrive as, and answer with the text
+the model reads. It is a `@Component`, so Spring hands every one of them to `McpProcessor`, which
+keys them by the name they publish — nothing is registered and no list is edited.
+
+A tool declares an argument by calling `addEnumArgument` or `addTextArgument`, and the base class
+builds the `McpTool` and its JSON Schema. The rejected alternative was a tool returning its own
+entry as a JSON string: that moves protocol knowledge *into* the tool — the author now writes
+`type`, `properties` and `enum` by hand with no compiler — and puts JSON back in the middle of the
+code. The cost of the way taken is that an argument is described twice, once in the
+`addArgument` call and once as a field of the tool's arguments class.
+
+`ping` and `notifications/initialized` are the protocol asking whether the server is alive, so
+`McpProcessor` answers them itself. They were in `McpOffgrid` only because that class had become
+everything that was not an envelope.
+
+**`pojo/mcp` is split three ways, so it is clear which classes a new tool touches.** `wire/` is
+every shape that goes on the wire, `server/` is what only this server uses — `McpErrorCode` beside
+`wire/McpError` is the pair that names the difference — and `tool/` is what a tool author works
+in. The folder is `wire` rather than `external` because `external` already means a supplier's
+data in this repo.
+
+## 2026-09-01 — The customer's state is a property bag
+
+A tool that answers by where the customer is needs the state the session holds, and `McpOffgrid`
+was forbidden to see a session — so the state had nowhere to be read. What a tool is handed is
+`McpCustomer`: the state alone, never the session, so the id and the stream stay with the
+protocol.
+
+It is a bag of keys rather than a class of typed fields because the tools are not all going to be
+in this jar. Two jars cannot each add a field to one class, and neither can subclass the other's.
+Field *order* is not the reason — Java resolves a field by name, not by offset — the reason is
+that there is one class and two owners.
+
+Typed accessors are what keep the casts out of the tools. A jar's accessors go in a class of its
+own that holds the customer and reads its own keys back typed; a subclass of `McpCustomer` would
+not do, since the processor mints the instance and two jars would fight over which subclass it is.
+A key is named for the tool that writes it, so two jars choosing the same word do not silently
+share one slot.
+
+## 2026-08-31 — MCP works in Java objects, Gson only at the edge
+
+Neither `McpProcessor` nor `McpOffgrid` handles a `JsonObject`. They read and build Java
+objects; Gson turns a message into one on the way in and back into JSON on the way out, and
+that is the only place it appears.
+
+The classes are in `pojo/mcp/`, one per shape the specification names, and the wire key wins
+where it disagrees with a Java name — `@SerializedName("enum")` over `enumList`, `"tools"`
+over `toolList`. A tool's own arguments are not the protocol's to describe, so they stay a
+`Map<String, Object>` on `McpParams` and are read by name.
+
+**MCP builds its own Gson.** JSON-RPC requires the answer's `id` to be identical to the
+request's, and the client chooses whether that id is a string or a number. The shared
+`BaseFileHandler` Gson parses every number as a Double, so a client's `7` would be echoed as
+`7.0` and it would never match the call it made. Built with
+`ToNumberPolicy.LONG_OR_DOUBLE`, an integral id stays integral. Its own instance also keeps
+`setPrettyPrinting` off the wire.
+
+## 2026-08-31 — One error, one place: McpErrorCode decides the whole refusal
+
+Every way the server says no goes through `McpErrorCode`. The constant carries three things
+that used to be decided apart: the JSON-RPC number, the HTTP status it answers under, and how
+the response is built. A rejection at a call site is one line, and no call site picks a status
+any more.
+
+That last part is why the enum exists. `McpProcessor` had a helper per status and an int per
+call, and two answers ended up 200 that the transport requires to be 400. The split the enum
+now holds: input the server cannot accept at all — not JSON, not JSON-RPC 2.0, no method, no
+session header — is 400, while a request that reached its method and failed is a 200 carrying
+the error in its body, because the transport did carry it. A session id the server does not
+hold is 404, and that status is load-bearing: the specification has the client start a new
+session on 404 and nothing else.
+
+**A refusal with no body fits any handler.** The GET that opens the stream and the DELETE that
+ends the session carry no JSON-RPC message, so there is nothing for an error body to answer.
+Those constants — `SESSION_NOT_FOUND_STREAM`, `SESSION_NOT_FOUND_END`, `STREAM_TAKEN` —
+override `makeResponse` and answer the status alone. Spring declares `build()` as
+`<T> ResponseEntity<T>`, so a body-less response is honestly generic and a handler returning
+`ResponseEntity<SseEmitter>` or `ResponseEntity<Void>` keeps its own signature with no cast.
+The base `makeResponse`, which does carry a String body, is the only one that casts.
+
+Codes outside JSON-RPC's five are marked for what they are: what the MCP SDK recommends inside
+the server range, and what this server named itself. The two are separate sections in the file,
+so nobody has to guess which numbers are ours to change.
+
+**Log levels follow the server, not the client.** A refused session is the server working
+correctly and saying no, so it is INFO. WARN and ERROR are for the server's own trouble.
+
