@@ -1362,4 +1362,31 @@ which is not applied to the fields of an object parameter — spring-ai#2866. An
 publishes its constant names, so a vocabulary reaching a tool needs `@JsonProperty` for the
 word the site writes, beside the `@SerializedName` Gson already reads.
 
-Not decided here: which Spring AI version, and how `/mcp` is protected — #42 in `docs/todo.md`.
+The version is 2.0.1, pinned in `pom.xml` beside the other pinned dependency rather than
+through the Spring AI BOM: it is the line built against Spring Boot 4.1.1, which its own
+pom names. 1.1.8 is the Boot 3.5 line.
+
+Not decided here: how `/mcp` is protected — #42 in `docs/todo.md`.
+
+## 2026-09-01 — The first MCP pass, and the property that has to be stated
+
+Everything new lives in `com.lc.offgrid.mcp`, one class per thing published, and every answer
+is hard-coded — the pass exists to show what the framework looks like and what adding a tool
+costs, not to answer anything. Each method's javadoc names where its real answer comes from.
+
+**An image is addressed by a URI template, not a fixed URI.** `offgrid://image` reads back the
+file names and `offgrid://image/{fileName}` reads back one image, which is the shape the
+domain has: there is no "the sample image", there is a set. The cost, seen in the run: a
+template is published under `resources/templates/list` rather than `resources/list`, and a
+client that lists only resources does not show it — reading a matching URI still works.
+
+**`spring.ai.mcp.server.protocol` must be written out even though `STREAMABLE` is the
+properties class's own default.** `McpServerAutoConfiguration.EnabledStreamableServerCondition`
+is a `@ConditionalOnProperty` with `matchIfMissing = false`, so it reads the environment and
+never sees the Java default. Absent property, no transport is installed and `/mcp` answers 404
+while the site keeps serving normally — which is exactly what it did.
+
+A tool method returning a String gets no output schema and answers as text: `SyncMcpToolProvider`
+skips schema generation for simple value types. An argument is a `@McpToolParam` on a plain
+parameter; the object-parameter case, where the description has to ride on Jackson, is what
+spring-ai#2866 is about.

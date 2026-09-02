@@ -24,10 +24,10 @@ next id from the header above and increment it. This numbering is independent of
 `href="#"` for Blog, while the six posts already link back to `/blog` and a post is served at
 `/posts/{name}`. Everything else in the menu is wired and served.
 
-#6 Design the tools the MCP server offers, and answer them from the data. The hand-rolled
-server was removed on 2026-09-01 and nothing serves `/mcp` today; what it proved out was two
-tools, `hello` and `destination-count`, and the count was a stated 25 rather than a count of
-anything.
+#6 Answer the MCP tools and resources from the data. Spring AI serves `/mcp` now, and every
+answer under `com.lc.offgrid.mcp` is hard-coded: the image list and the image itself, the
+worst road in to a destination, and what the van and the Bronco are due for. Each one names
+in its javadoc where the real answer comes from.
 
 #7 Author `templates/hardware/howto/water.html` — it is still the placeholder text the port
 left behind. Everything else that came from GettingLost is in.
