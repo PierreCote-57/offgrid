@@ -11,11 +11,26 @@ import java.util.List;
  */
 public class Dataset
 {
-	private String			id;
-	private String			file;
-	private String			title;
+	/**
+	 * A control the browser page can offer for a dataset. The list on a dataset names which of
+	 * them it shows, and in which order.
+	 */
+	public enum DatasetOption
+	{
+		@SerializedName("view")		VIEW,
+		@SerializedName("types")	TYPES,
+		@SerializedName("keywords")	KEYWORDS,
+		@SerializedName("badges")	BADGES,
+		@SerializedName("access")	ACCESS,
+		@SerializedName("search")	SEARCH,
+		@SerializedName("booklet")	BOOKLET
+	}
+
+	private String				id;
+	private String				file;
+	private String				title;
 	@SerializedName("options")
-	private List<String>	optionList;
+	private List<DatasetOption>	optionList;
 
 	public String getId()
 	{
@@ -32,7 +47,7 @@ public class Dataset
 		return title;
 	}
 
-	public List<String> getOptionList()
+	public List<DatasetOption> getOptionList()
 	{
 		return optionList;
 	}

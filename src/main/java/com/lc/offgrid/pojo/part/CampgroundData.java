@@ -1,5 +1,7 @@
 package com.lc.offgrid.pojo.part;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,16 @@ import java.util.List;
  */
 public class CampgroundData
 {
+	/**
+	 * What an external reference is for.
+	 */
+	public enum ReferenceType
+	{
+		@SerializedName("homepage")		HOMEPAGE,
+		@SerializedName("map")			MAP,
+		@SerializedName("reservation")	RESERVATION
+	}
+
 	private List<String>	amenityList;
 	private String			operator;
 	private Integer			siteCount;
@@ -31,5 +43,30 @@ public class CampgroundData
 	public List<Reference> getReferenceList()
 	{
 		return referenceList;
+	}
+
+	/**
+	 * An external page about the place, published by whoever runs it.
+	 */
+	public static class Reference
+	{
+		private String			label;
+		private ReferenceType	type;
+		private String			url;
+
+		public String getLabel()
+		{
+			return label;
+		}
+
+		public ReferenceType getType()
+		{
+			return type;
+		}
+
+		public String getUrl()
+		{
+			return url;
+		}
 	}
 }

@@ -335,9 +335,9 @@ The pointer fields are `file` and `locationId` as two nullable fields rather tha
 
 ## 2026-08-25 — Two packages: page and part
 
-`com.lc.offgrid.pojo.page` holds the six page classes; `com.lc.offgrid.pojo.part` holds the
-seventeen blocks they are built from. A page class is something a URL resolves to. A part is
-never a page on its own.
+`com.lc.offgrid.pojo.page` holds the page classes; `com.lc.offgrid.pojo.part` holds the blocks
+they are built from. A page class is something a URL resolves to. A part is never a page on
+its own.
 
 ## 2026-08-25 — The page hierarchy
 
@@ -1132,6 +1132,9 @@ So there was never a word to choose between. The folder, the template folder and
 `posts` because that is what they hold; the menu says Blog because that is what it opens.
 
 ## 2026-08-31 — The MCP endpoint is hand-rolled
+**Superseded 2026-09-01.** The hand-rolled server is gone — see *The MCP server is Spring
+AI's, not ours* below. What follows is the record of what it did.
+
 
 Three ways in, and they are layers rather than alternatives: write the protocol, take the MCP
 Java SDK, or take the Spring AI starter, which wraps the SDK and fills its tool registry from
@@ -1159,6 +1162,9 @@ tool call carries a conversation id, so per-conversation memory would have to be
 model fills in.
 
 ## 2026-09-01 — A tool is a class, and the framework is what it never sees
+**Superseded 2026-09-01.** The hand-rolled server is gone — see *The MCP server is Spring
+AI's, not ours* below. What follows is the record of what it did.
+
 
 Writing a new tool is writing one class: extend `AbstractMcpTool`, name yourself and your
 arguments in the constructor, name the class the arguments arrive as, and answer with the text
@@ -1201,6 +1207,9 @@ A key is named for the tool that writes it, so two jars choosing the same word d
 share one slot.
 
 ## 2026-08-31 — MCP works in Java objects, Gson only at the edge
+**Superseded 2026-09-01.** The hand-rolled server is gone — see *The MCP server is Spring
+AI's, not ours* below. What follows is the record of what it did.
+
 
 Neither `McpProcessor` nor `McpOffgrid` handles a `JsonObject`. They read and build Java
 objects; Gson turns a message into one on the way in and back into JSON on the way out, and
@@ -1219,6 +1228,9 @@ request's, and the client chooses whether that id is a string or a number. The s
 `setPrettyPrinting` off the wire.
 
 ## 2026-08-31 — One error, one place: McpErrorCode decides the whole refusal
+**Superseded 2026-09-01.** The hand-rolled server is gone — see *The MCP server is Spring
+AI's, not ours* below. What follows is the record of what it did.
+
 
 Every way the server says no goes through `McpErrorCode`. The constant carries three things
 that used to be decided apart: the JSON-RPC number, the HTTP status it answers under, and how
@@ -1312,3 +1324,42 @@ data already carried both shapes correctly and needed no migration. Gson has no 
 `java.time`, so `LocalDateAdapter` and `LocalDateTimeAdapter` sit beside the shared Gson in
 `BaseFileHandler` and read and write the ISO text. A post's dateline now prints `T21:00`
 rather than `T21:00:00`, which is what `LocalDateTime` prints.
+
+## 2026-09-01 — A vocabulary with one owner lives inside it
+
+A part used by exactly one other part is a nested type of it, not a file of its own:
+`Access.RoadType` and `Access.Leg`, `Place.MapIcon`, `Tags.Badge` and `Tags.DestinationType`,
+`CampgroundData.Reference` and `CampgroundData.ReferenceType`, `Dataset.DatasetOption`. The
+shape was already there in `FeatureGeometry.GeometryType`. `part` went from eighteen files to
+eleven, and nothing outside Java names any of them — no `T(...)` in a template, no qualified
+name in the data — so the move is invisible to everything but an import.
+
+`Reference` and `ReferenceType` are both first-level members of `CampgroundData` rather than
+the type nesting inside `Reference`, which would have read three deep for no gain.
+
+**The boundary is the `part` package.** `GalleryItem`, `NoteItem`, `Tags`, `CampgroundData`,
+`FishingReferences` and `MaintenanceEntry` each have one owner too, but that owner is a page
+class. Following the rule there would move every block into `page` and empty `part`, so it
+stops at the package line: a part nests inside a part, never inside a page.
+
+## 2026-09-01 — The MCP server is Spring AI's, not ours
+
+The hand-rolled endpoint was deleted. Spring AI's MCP server starter carries the transport,
+the sessions, the JSON-RPC envelopes, the protocol errors and the `tools/list` publishing —
+every one of which we had written by hand — and generates a tool's input schema from the
+method it annotates. What survives is what was ours to begin with: what each tool knows, and
+the customer's state.
+
+The four entries above are the record of that implementation and read as history. *The
+customer's state is a property bag* is the one that still describes something to build: the
+session belongs to the library now, so the customer is looked up by session id rather than
+handed to a tool with its call.
+
+**What made the switch worth it was the schema.** A tool's arguments are a class, and the
+schema comes from the class rather than from a constructor that declares each argument by
+hand. Field descriptions ride on Jackson's `@JsonPropertyDescription`, not `@McpToolParam`,
+which is not applied to the fields of an object parameter — spring-ai#2866. An enum argument
+publishes its constant names, so a vocabulary reaching a tool needs `@JsonProperty` for the
+word the site writes, beside the `@SerializedName` Gson already reads.
+
+Not decided here: which Spring AI version, and how `/mcp` is protected — #42 in `docs/todo.md`.

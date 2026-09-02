@@ -1,5 +1,7 @@
 package com.lc.offgrid.pojo.part;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.TreeMap;
 
@@ -9,6 +11,32 @@ import java.util.TreeMap;
  */
 public class Access
 {
+	/**
+	 * What a stretch of the approach road is, as the road badge names it. The five drive
+	 * surfaces a leg may be authored as, the three ways of getting there without the van, and
+	 * the two the data never writes: PAVEMENT, which is what an empty leg list means, and
+	 * BACK_COUNTRY, which getRoadLimitingLeg derives as soon as one leg leaves the van.
+	 *
+	 * The severity ranking is not this enum's order — it belongs to the vehicle, so it lives
+	 * in ROAD_RANK where a different van can reorder it.
+	 */
+	public enum RoadType
+	{
+		@SerializedName("pavement")		PAVEMENT,
+
+		@SerializedName("unpaved")		UNPAVED,
+		@SerializedName("dirt")			DIRT,
+		@SerializedName("potholes")		POTHOLES,
+		@SerializedName("sharp_rock")	SHARP_ROCK,
+		@SerializedName("rugged")		RUGGED,
+
+		@SerializedName("walk")			WALK,
+		@SerializedName("hike")			HIKE,
+		@SerializedName("boat")			BOAT,
+
+		@SerializedName("back_country")	BACK_COUNTRY
+	}
+
 	/**
 	 * Drive surfaces, easiest first. The one furthest along this list wins the badge. The order
 	 * follows the van, not the road, so another vehicle reorders it here and nothing else moves.
@@ -125,5 +153,37 @@ public class Access
 		Double km = leg.getKm();
 		boolean measured = null != km && km > 0;
 		return measured;
+	}
+
+	/**
+	 * A stretch of the approach road and what it is like.
+	 *
+	 * km is a Double so that a leg with no distance stated stays different from a leg measured
+	 * at zero: unpaved asserts a measured tail, and a null says nobody has measured it yet.
+	 */
+	public static class Leg
+	{
+		private RoadType	type;
+		private Double		km;
+
+		public Leg()
+		{
+		}
+
+		public Leg(RoadType legType, Double legKm)
+		{
+			type = legType;
+			km = legKm;
+		}
+
+		public RoadType getType()
+		{
+			return type;
+		}
+
+		public Double getKm()
+		{
+			return km;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 48**
+**next id: 49**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -24,19 +24,13 @@ next id from the header above and increment it. This numbering is independent of
 `href="#"` for Blog, while the six posts already link back to `/blog` and a post is served at
 `/posts/{name}`. Everything else in the menu is wired and served.
 
-#6 Design the tools the MCP endpoint offers, and answer them from the data. The endpoint,
-the protocol and the session handling are in; the only tools behind it are `hello` and
-`destination-count`, and the count is a stated 25 rather than a count of anything.
+#6 Design the tools the MCP server offers, and answer them from the data. The hand-rolled
+server was removed on 2026-09-01 and nothing serves `/mcp` today; what it proved out was two
+tools, `hello` and `destination-count`, and the count was a stated 25 rather than a count of
+anything.
 
 #7 Author `templates/hardware/howto/water.html` — it is still the placeholder text the port
 left behind. Everything else that came from GettingLost is in.
-
-#17 The `photo-gallery` port dropped the gallery heading. GettingLost's `photoGallery`
-renderer in `gettinglost.jst` treats `photoGalleries.<key>.name` as required, builds the
-`gl-heading` from it, and can wrap heading and grid in `<details><summary>` itself. The
-offgrid fragment renders tiles only, so `templates/hardware/van.html` and
-`templates/hardware/bronco.html` type the same words into their own `<summary>` and nothing
-reads the JSON's `name`. The JSON was always the source.
 
 #22 A thumbnail and its lightbox load the same file. GettingLost split them — a small
 Photon URL for the grid, the 1920 cap for the overlay — and offgrid has one URL per image,
@@ -47,23 +41,22 @@ so the grid pulls full-size originals. This is where a resize seam goes.
 `resources/data/hardware/maintenance/van/m-van.json` and `.../bronco/m-bronco.json` names
 three PDFs; none of them is in that folder yet.
 
-#42 Decide how `/mcp` is protected before it is deployed. Locally the client reaches it over
-loopback and nothing else can; on FullHost it is on the open internet, unauthenticated, and
-every tool answers anyone who posts to it.
+#42 Decide how `/mcp` is protected before it is deployed. Locally a client reaches it over
+loopback and nothing else can; on FullHost it is on the open internet, and a tool answers
+anyone who posts to it. The question outlives the implementation — it has to be answered for
+whatever serves `/mcp`, not for the server that was removed.
 
-#45 Finish the request id in `McpMessage`. It is an `Object`, and MCP's own Gson reads an
-integral one as a Long, so a client's `7` is answered as `7`. Two ends are not covered:
-`McpAnswer.id` is null on a parse error and Gson drops a null field unless the builder says
-`serializeNulls()`, which would then write `"error": null` on every successful answer; and
-nothing rejects an id that is neither a string nor a number, which the specification forbids.
-
-#46 Answer 400 to an `MCP-Protocol-Version` this server does not speak. The 2025-06-18
-transport has the client send that header on every request after initialize, and has the
-server refuse a version it does not support. `McpProcessor.processMessage` passes it into
-`McpSession.markUsed` and never looks at it, so a client on a revision we do not answer is
-served as though it were on ours.
-
-#47 Nothing ever drops an MCP session. `McpProcessor.getSessionMap()` grows one entry per
-initialize and loses one only when the client sends DELETE, which a client that crashes or
-walks out of signal never does. `McpSession` already records `getTimeUsedMS`, so what is
-missing is who sweeps, how often, and how long a session with no stream on it is kept.
+#48 Build the info page "The sky above you" — the solar system chart with the rise/set table
+below it. On hold as of 2026-09-01. The two skills in `docs/skills/` port to Java with no
+runtime dependency on Claude: the shared core is the JPL element table, the Kepler solve and
+`helio()`, with the rise/set version keeping the `z` the chart discards. The proposed split
+is astronomy math under `com.lc.basics.tools.astronomy` (a `Body` enum carrying each planet's
+twelve elements and its own horizon altitude) and the screen-coordinate work — orbit radii,
+dot radii, label placement, arrowheads — under `com.lc.offgrid`, with the template drawing
+what it is handed. Decided: the observer defaults to the 50th parallel marker in Campbell
+River with `America/Vancouver`, and JS upgrades it from the browser — the timezone from
+`Intl.DateTimeFormat().resolvedOptions().timeZone` synchronously, the coordinates from
+`navigator.geolocation` behind its permission prompt, with `navigator.permissions.query` used
+first so a visitor who already granted it is never prompted again. Open: chart rule 5 ends
+with "look at the result and override where it reads badly", which the server cannot do, so
+crowded dates can render two labels visually stacked.

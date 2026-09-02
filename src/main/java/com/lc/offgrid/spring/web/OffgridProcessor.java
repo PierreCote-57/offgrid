@@ -72,7 +72,6 @@ public class OffgridProcessor extends BaseWebProcessor
 
 	public String processPage(Model model, String path, Class<? extends PageData> clazz)
 	{
-		File jsonFile = getJsonManager().getFile(path);
 		PageData pageData = readPageJson(path, clazz);
 		String pageTitle = pageData.getName();
 
