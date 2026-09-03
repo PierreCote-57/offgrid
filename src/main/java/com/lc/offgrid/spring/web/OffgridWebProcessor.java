@@ -67,10 +67,10 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	public String processPage(Model model, String path, Class<? extends PageData> clazz)
 	{
+		processDefault(model, path);
 		PageData pageData = readPageJson(path, clazz);
-		String pageTitle = pageData.getName();
 
-		processDefault(model, pageTitle);
+		model.addAttribute("PageName", pageData.getName());
 		model.addAttribute("pageData", pageData);
 
 		// Required by pages accessed from a browser
