@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--
+	The container's error dispatch renders this one, and that dispatch runs without a
+	processor: none of the model attributes the site fragments read are set, so this page
+	carries its own head and stands on its own. Boot supplies status, error, path and,
+	when server.error.include-message allows it, message.
+-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Something went wrong</title>
+	<link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+
+<div class="message message-error" th:if="${message}" th:text="${message}"></div>
+
+<main>
+	<h1 th:text="${error}">Not Found</h1>
+
+	<p>
+		That address did not come back. Nothing was changed, and the rest of the site is fine.
+	</p>
+
+	<p>
+		<span th:text="'Status: ' + ${status}"></span><br />
+		<span th:if="${path}" th:text="'Asked for: ' + ${path}"></span>
+	</p>
+
+	<p><a th:href="@{/}">Back to the site</a></p>
+</main>
+
+</body>
+</html>

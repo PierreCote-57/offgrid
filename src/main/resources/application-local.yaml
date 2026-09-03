@@ -18,3 +18,8 @@ folder:
   local: "/Users/pierrecote/Pictures/offgrid"
   data: "/Users/pierrecote/src/github/offgrid"
   log: "/Users/pierrecote/Working/Offgrid/logs"
+
+# The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.
+server:
+  error:
+    include-message: always

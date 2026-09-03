@@ -60,3 +60,13 @@ River with `America/Vancouver`, and JS upgrades it from the browser — the time
 first so a visitor who already granted it is never prompted again. Open: chart rule 5 ends
 with "look at the result and override where it reads badly", which the server cannot do, so
 crowded dates can render two labels visually stacked.
+
+#49 Lower the log level in the two 404 catches of `OffgridWebProcessor` — a missing image
+(line 118) and a missing document (line 142) are logged ERROR, but the server is fine and
+answers 404, which is INFO by the ladder in `working-with-pierre.md`.
+
+#50 Give `error.html` the site header and footer. It stands alone today because the error
+dispatch renders with no processor, so `Timer` is absent and the footer's
+`${Timer.elapsedTime}` would throw. An `ErrorController` on `/error` that calls
+`processDefault` before returning the view fixes it; decide then whether `exception.html` is
+still a separate page or the same one.

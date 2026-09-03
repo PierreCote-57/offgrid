@@ -25,8 +25,10 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,7 +99,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	/**
 	 * The bytes of one image, read from the image folder, which sits outside the resource tree.
-	 * A name with no file behind it answers 404 rather than an error page.
+	 * A name with no file behind it throws, and the error dispatch answers 404 with error.html.
 	 */
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
@@ -116,14 +118,15 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		catch (Exception e)
 		{
 			getLogger().error("Unable to locate image %s", imageName);
-			return makeResponseNotFound();
+			throw makeNotFound("Unable to locate image %s", imageName);
 		}
 	}
 
 	/**
 	 * The bytes of one document, read from the document folder, which sits outside the resource
 	 * tree. The content type comes from the file itself, so any kind of document is answered as
-	 * what it is. A name with no file behind it answers 404 rather than an error page.
+	 * what it is. A name with no file behind it throws, and the error dispatch answers 404 with
+	 * error.html.
 	 */
 	public ResponseEntity<Resource> processDocument(String documentName)
 	{
@@ -140,7 +143,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		catch (Exception e)
 		{
 			getLogger().error("Unable to locate document %s", documentName);
-			return makeResponseNotFound();
+			throw makeNotFound("Unable to locate document %s", documentName);
 		}
 	}
 
@@ -160,7 +163,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	/**
 	 * The rows of one dataset, as JSON, for the browser page. datasets.json maps the id to
-	 * the file that holds them; an id nobody defined answers 404 rather than an error page.
+	 * the file that holds them; an id nobody defined throws, and the error dispatch answers 404
+	 * with error.html.
 	 *
 	 * The file is answered as it stands. Resolving a row's pointers into the row itself is
 	 * this method's job to come.
@@ -171,7 +175,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		if (null == dataset)
 		{
 			getLogger().error("Unknown dataset: %s", id);
-			return makeResponseNotFound();
+			throw makeNotFound("Unknown dataset: %s", id);
 		}
 
 		String fileName = String.format("data/shared/browser/%s", dataset.getFile());
@@ -261,8 +265,14 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		ResponseEntity<T> answer = builder.body(response);
 		return answer;
 	}
-	private <T> ResponseEntity<T> makeResponseNotFound()
+	/**
+	 * The exception a caller throws to answer 404. The reason travels to error.html when
+	 * server.error.include-message allows it, so it is written for whoever reads that page.
+	 */
+	private ResponseStatusException makeNotFound(String format, Object ... args)
 	{
-		return ResponseEntity.notFound().build();
+		String message = String.format(format, args);
+		ResponseStatusException answer = new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+		return answer;
 	}
 }

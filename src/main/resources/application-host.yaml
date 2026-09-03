@@ -17,3 +17,9 @@ BaseWebProcessor:
 folder:
   local: "/Users/pierrecote/Pictures/offgrid"
   data: "/Users/pierrecote/src/github/offgrid"
+
+# The reason on a thrown ResponseStatusException reaches error.html only when the request
+# carries message=true, so a visitor never reads one and a diagnosis still can.
+server:
+  error:
+    include-message: on-param
