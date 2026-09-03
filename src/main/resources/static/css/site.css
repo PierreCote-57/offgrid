@@ -1128,3 +1128,170 @@ a.gl-photo-link {
 	text-align: center;
 	font-size: 0.9rem;
 }
+
+/* ---- the chat page -------------------------------------------------------------------
+   The log grows downward and the input row stays put underneath it, always on screen: the
+   log is the only thing that scrolls.
+
+   The page's own height, handed down: body is capped below, main takes what is left of it,
+   and each level passes that down to the log. min-height:0 at every level is what lets a
+   flex item shrink below its content — without it the log grows and the page goes long
+   again. */
+/* The one page whose height is CAPPED rather than floored. Everywhere else body is
+   min-height:100vh and grows with its content; main's flex:1 then has no free space to
+   receive, so it took its content's height and the log grew with it instead of scrolling.
+   :has keeps the cap to this page. dvh rather than vh so a phone's collapsing browser bar
+   does not push the input row off screen. */
+body:has(.gl-chat-page) {
+	height: 100dvh;
+}
+
+.gl-chat-page {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+/* Narrower than the page. The two sides sit against opposite edges of this box, so the
+   narrower it is the less eye travel there is between a question and its answer. */
+.gl-chat {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	gap: 16px;
+	width: 100%;
+	max-width: 640px;
+	margin-inline: auto;
+}
+
+/* The log is a box before it holds anything: the border and the 260px floor are what say
+   where the conversation will appear. White over the page's paper, with the same shadow the
+   menu and the filter panel use, so it reads as a surface above the page rather than a
+   region of it. The floor wins on a short viewport, and there the page scrolls again. */
+.gl-chat-log {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 260px;
+	overflow-y: auto;
+	padding: 14px;
+	background: #fff;
+	border: 1px solid var(--rule);
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	box-sizing: border-box;
+	scrollbar-gutter: stable;
+}
+
+/* macOS hides an overlay scrollbar until you are already scrolling, which leaves no sign
+   that there is anything above the top of the log. Styling the pseudo-elements is what asks
+   WebKit for the classic bar that is always there while the content overflows; the gutter
+   above reserves its width from the start, so nothing shifts when it appears. */
+.gl-chat-log::-webkit-scrollbar {
+	width: 10px;
+}
+
+.gl-chat-log::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.gl-chat-log::-webkit-scrollbar-thumb {
+	background: var(--rule);
+	border: 2px solid #fff;
+	border-radius: 5px;
+}
+
+.gl-chat-log::-webkit-scrollbar-thumb:hover {
+	background: var(--faded);
+}
+
+/* A bubble is sized by its text and never by the column, up to a readable line. The side it
+   takes comes from the role, below. */
+.gl-chat-bubble {
+	max-width: 72%;
+	padding: 5px 10px;
+	border-radius: 12px;
+	border: 1px solid var(--rule);
+	line-height: 1.45;
+}
+
+/* An exchange is a question and the answer under it, and they meet: the answer's top edge
+   is the question's bottom edge, so the eye crosses from one to the other without hunting.
+   The space in the log is BETWEEN exchanges, which is the margin below. */
+.gl-chat-assistant + .gl-chat-user {
+	margin-top: 16px;
+}
+
+.gl-chat-user {
+	align-self: flex-end;
+	background: var(--brand-soft);
+	border-color: var(--brand-soft);
+}
+
+/* Off-white, not white: the log itself is white now, and an answer has to be visible
+   against it the way the visitor's line is. */
+.gl-chat-assistant {
+	align-self: flex-start;
+	background: #f3f5f3;
+}
+
+.gl-chat-text {
+	white-space: pre-wrap;
+}
+
+/* Under the bubble it belongs to: the wall clock on the visitor's line, the server's own
+   duration on the answer. Each follows its bubble's edge. */
+.gl-chat-timing {
+	margin-top: 4px;
+	font-size: 0.8rem;
+	color: var(--faded);
+}
+
+.gl-chat-user .gl-chat-timing {
+	text-align: right;
+}
+
+.gl-chat-waiting {
+	color: var(--faded);
+}
+
+.gl-chat-error {
+	color: var(--error-deep);
+	background: var(--error-soft);
+	border: 1px solid var(--error);
+	border-radius: 8px;
+	padding: 8px 12px;
+}
+
+.gl-chat-input {
+	display: flex;
+	gap: 8px;
+}
+
+.gl-chat-input input {
+	flex: 1;
+	min-width: 0;
+	padding: 10px 12px;
+	font: inherit;
+	color: var(--text);
+	background: #fff;
+	border: 1px solid var(--rule);
+	border-radius: 8px;
+}
+
+.gl-chat-input button {
+	padding: 10px 18px;
+	font: inherit;
+	color: var(--bar-text);
+	background: var(--brand);
+	border: 1px solid var(--brand);
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.gl-chat-input button:disabled,
+.gl-chat-input input:disabled {
+	opacity: 0.6;
+	cursor: default;
+}

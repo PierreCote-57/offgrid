@@ -8,21 +8,9 @@
 	},
 	"photoGalleries": {
 		"howto": {
-			"12V206H_img": {
-				"img": "12V206H_img",
-				"label": "12V206H"
-			},
-			"12V206H_spec": {
-				"img": "12V206H_spec",
-				"label": "12V206H"
-			},
-			"12V206P_img": {
-				"img": "12V206P_img",
-				"label": "12V206P"
-			},
 			"12V206P_spec": {
-				"img": "12V206P_spec",
-				"label": "12V206P"
+				"img": "12V206PH_spec",
+				"label": "12V206PH"
 			},
 			"IMG_2895": {
 				"img": "IMG_2895",

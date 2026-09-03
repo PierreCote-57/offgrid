@@ -1,7 +1,7 @@
 # offgrid — chat page, first pass
 
-Session notes, 2026-09-02. Nothing built yet. Drop into `docs/todo.md` as entry **#49**
-(next id in that file is 49) or keep as scratch.
+Session notes, 2026-09-02. The first pass is built; the reasoning is in
+`docs/decisions.md` under "The chat page, and the REST controller it arrives on".
 
 Repo: `PierreCote-57/offgrid`. The GettingLost branch this session was handed
 (`claude/afgren-chat-window-k9b1iw`) is the wrong repo for this work — point Claude at
@@ -17,7 +17,7 @@ Long term the answer comes from an LLM with access to the site's own tools.
 
 ## Settled
 
-1. **Page under Info** — `/info/chat`. `OffgridController.info()` already maps
+1. **Page under Info** — `/info/chat`. `OffgridWebController.info()` already maps
    `/info/{name}`, so the page needs no Java at all: a template and its JSON, plus one `<li>`
    in the menu.
 2. **`static/js/chat.js`** — `Alpine.data("chat", …)`, listed in `header.html` *after*
@@ -27,19 +27,11 @@ Long term the answer comes from an LLM with access to the site's own tools.
    small underneath. `RestBaseAnswer` already carries it, so it costs nothing, and it is the
    visible proof the reply came from the server rather than from the page. Without it a JS
    bug that never calls the server looks exactly like success.
-4. **`OffgridRestController`, peer of `OffgridController`** in `spring/web` — the site's REST
+4. **`OffgridRestController`, peer of `OffgridWebController`** in `spring/web` — the site's REST
    controller, of which chat is the first endpoint. Not a chat-specific class.
-
-## Open
-
-- **The wire contract.** Whole transcript each turn (`{"messages":[{role,text},…]}`, server
-  stateless, echo ignores all but the last, pass two hands the same array to the model) or
-  just the last message (`{"message":"…"}`, smallest thing that works, but pass two then needs
-  either a contract change or server-side session state). Parked deliberately — decide at the
-  end, once the rest is settled.
-- **What backs `OffgridRestController`.** A new `OffgridRestProcessor` peer, or
-  `OffgridProcessor` gains the method. The existing processor already answers non-view things
-  (`processImage`, `processBrowserData`), so REST work is not foreign to it.
+5. **`OffgridRestProcessor`, peer of `OffgridWebProcessor`** — backs the REST controller.
+6. **The whole transcript on the wire**, `{"messageList":[{"role","text"},…]}`, server
+   stateless. `role` is an enum carrying its wire spelling on `@JsonProperty`.
 
 ## Files the first pass touches
 
@@ -52,15 +44,17 @@ Long term the answer comes from an LLM with access to the site's own tools.
 | `resources/templates/fragments/site/header.html` | `chat.js` in the script list |
 | `resources/static/css/site.css` | `.gl-chat-log`, bubbles, input row |
 | `java/…/spring/web/OffgridRestController.java` | `@RestController`, one `@PostMapping`, body delegates through `BaseRestController.processRequest` |
-| `java/…/spring/web/ChatRequest.java`, `ChatAnswer.java` | `ChatAnswer extends RestBaseAnswer` |
-| the processor | per the open question above |
+| `java/…/pojo/chat/ChatRequest.java`, `ChatMessage.java`, `ChatAnswer.java` | `ChatAnswer extends RestBaseAnswer` |
+| `java/…/spring/web/OffgridRestProcessor.java` | peer of `OffgridWebProcessor`, backs the REST controller |
 | `docs/decisions.md` | why the REST controller is a peer, why the echo shows timing |
 
 ## Three things that will bite otherwise
 
-**Script order.** `alpine.min.js` and `chat.js` are both `defer`, so they execute in document
-order, both before `DOMContentLoaded`. That means `document.addEventListener("alpine:init", …)`
-in `chat.js` works — but only while `chat.js` is listed after Alpine in `header.html`.
+**Script order.** `chat.js` has to be listed BEFORE `alpine.min.js` in `header.html`.
+Alpine's last line is `queueMicrotask(() => Alpine.start())`, and microtasks drain between
+deferred scripts, so `alpine:init` has already fired by the time any script listed after
+Alpine executes. Listed after, `Alpine.data("chat", …)` never registers, `x-data="chat"`
+resolves to nothing, and the page looks right with a dead Send button.
 
 **Two serializers.** `@RestController` answers through Jackson, which is what
 `RestBaseAnswer`'s `@JsonIgnore` already assumes. The processors read files with Gson. Both

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main class="gl-chat-page">
+	<h1 th:text="${PageName}">Chat</h1>
+
+	<div class="gl-chat" x-data="chat">
+		<div class="gl-chat-log" x-ref="log">
+			<template x-for="(message, index) in messageList" :key="index">
+				<div class="gl-chat-bubble" :class="'gl-chat-' + message.role">
+					<div class="gl-chat-text" x-text="message.text"></div>
+					<div class="gl-chat-timing" x-show="message.timeText"
+						 x-text="message.timeText"></div>
+					<div class="gl-chat-timing" x-show="message.durationText"
+						 x-text="'answered in ' + message.durationText"></div>
+				</div>
+			</template>
+			<div class="gl-chat-bubble gl-chat-assistant gl-chat-waiting" x-show="busy">…</div>
+		</div>
+
+		<div class="gl-chat-error" x-show="error" x-text="error" x-cloak></div>
+
+		<div class="gl-chat-input">
+			<input type="text" x-model="draft" :disabled="busy" placeholder="Say something"
+				   @keydown.enter="send()">
+			<button type="button" :disabled="busy" @click="send()">Send</button>
+		</div>
+	</div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

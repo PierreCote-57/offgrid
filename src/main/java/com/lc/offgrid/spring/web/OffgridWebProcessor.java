@@ -39,13 +39,8 @@ import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class OffgridProcessor extends BaseWebProcessor
+public class OffgridWebProcessor extends BaseWebProcessor
 {
-	private static final BasicLogger	LOGGER			= BasicLogger.getLogger(OffgridProcessor.class);
-
-	/** Temporary: every image request answers with this one file, whatever name was asked for. */
-	private static final String			FIXED_IMAGE		= "IMG_0627.JPG";
-
 	@Autowired
 	private OffgridImageManager imageManager;
 

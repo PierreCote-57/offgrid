@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping({"/", "/admin"})
-public class OffgridController extends BaseWebController
+public class OffgridWebController extends BaseWebController
 {
 	@Autowired
 	private BeanFactory beanFactory;
@@ -34,9 +34,9 @@ public class OffgridController extends BaseWebController
 	{
 		return beanFactory;
 	}
-	public OffgridProcessor getProcessor()
+	public OffgridWebProcessor getProcessor()
 	{
-		return getBeanFactory().getBean(OffgridProcessor.class);
+		return getBeanFactory().getBean(OffgridWebProcessor.class);
 	}
 
 	private Class<? extends PageData> getPageDataClass(String type)
