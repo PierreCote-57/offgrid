@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10t] %-5level %-25logger{1} - %msg%n"
+					disableAnsi="false"/>
+<!--
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10t] %-5level %-25logger{1} - %msg%n"/>
+-->
+		</Console>
+
+		<!-- The file the running site is read from afterwards. folder.log is a profile
+		     property, and spring: is Boot's own lookup into the Spring environment. -->
+		<RollingFile name="File"
+				fileName="${spring:folder.log}/app/offgrid-app.log"
+				filePattern="${spring:folder.log}/app/offgrid-app-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10t] %-5level %-25logger{1} - %msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
+
+		<!-- One row per page view, in its own folder, tab separated: time, address, method,
+		     path, view, milliseconds. A rolling file has nowhere to put a header row, so the
+		     column names belong to whatever reads it. &#9; is a character reference because
+		     XML normalizes a literal tab in an attribute to a space. -->
+		<RollingFile name="Visits"
+				fileName="${spring:folder.log}/visit/offgrid-visit.tsv"
+				filePattern="${spring:folder.log}/visit/offgrid-visit-%d{yyyy-MM-dd}-%i.tsv.gz">
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<!-- The acceptor logs an ERROR for each connection whose peer is already gone when
+		     the socket options are applied. Nothing of ours is on that stack. -->
+		<Logger name="org.apache.tomcat.util.net.NioEndpoint" level="off"/>
+
+		<!-- additivity="false" keeps the visit rows out of the server log and off the
+		     console: this logger reaches its own appender and no other. -->
+		<Logger name="offgrid.visit" level="info" additivity="false">
+			<AppenderRef ref="Visits" />
+		</Logger>
+
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+<!--
+		<Logger name="com.lc.bc.LibraryLocalTests" level="info"/>
+-->
+	</Loggers>
+
+</Configuration>

@@ -24,14 +24,21 @@ public class BasicLogger
 	{
 		m_logger = LogManager.getLogger(clazz);
 	}
+	private BasicLogger(String name)
+	{
+		m_logger = LogManager.getLogger(name);
+	}
 
 	public synchronized static BasicLogger getLogger(Class clazz)
 	{
-		String				name		= clazz.getName();
-		BasicLogger logger		= LOGGER_MAP.get(name);
-		if (null == logger)
+		return getLogger(clazz.getName());
+	}
+	public synchronized static BasicLogger getLogger(String name)
+	{
+		BasicLogger logger = LOGGER_MAP.get(name);
+		if (logger == null)
 		{
-			logger = new BasicLogger(clazz);
+			logger = new BasicLogger(name);
 			LOGGER_MAP.put(name, logger);
 		}
 		return logger;

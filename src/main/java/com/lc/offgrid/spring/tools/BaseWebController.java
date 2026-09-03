@@ -40,6 +40,8 @@ public class BaseWebController extends BaseController
 		Model model,
 		Supplier<String> supplier)
 	{
+		long startTime = System.nanoTime();
+
 		if (null == PageContext.getPageContext())
 		{
 			PageContext.create(servletRequest, servletRequest.getParameterMap(), servletResponse, model);
@@ -73,6 +75,8 @@ public class BaseWebController extends BaseController
 				servletRequest.getSession().removeAttribute("WarningMessages");
 				servletRequest.getSession().removeAttribute("ErrorMessages");
 			}
+			logVisit(servletRequest, answer, startTime);
+
 			return	answer;
 		}
 		catch (Exception exception)
@@ -83,12 +87,36 @@ public class BaseWebController extends BaseController
 			model.addAttribute("PageName", "Something went wrong");
 			model.addAttribute("errorMessage", message);
 
+			logVisit(servletRequest, "exception", startTime);
+
 			return "exception";
 		}
 		finally
 		{
 			PageContext.clearContext();
 		}
+	}
+
+	/**
+	 * Writes the one row this request leaves in the visit log: who asked, what they asked
+	 * for, what was served them, and how long it took. Tab separated, and the appender puts
+	 * the time in front of it.
+	 */
+	protected void logVisit(HttpServletRequest servletRequest, String viewName, long startTime)
+	{
+		long		elapsedNs		= System.nanoTime() - startTime;
+		double		elapsedMs		= elapsedNs / 1000000.;
+		String		method			= servletRequest.getMethod();
+		String		path			= servletRequest.getRequestURI();
+		String		queryString		= servletRequest.getQueryString();
+		if (null != queryString)
+		{
+			path = String.format("%1$s?%2$s", path, queryString);
+		}
+		String		remoteAddress	= servletRequest.getRemoteAddr();
+
+		getVisitLogger().info("%1$s\t%2$s\t%3$s\t%4$s\t%5$.1f",
+				remoteAddress, method, path, viewName, elapsedMs);
 	}
 
 	protected String getRedirectPath(HttpServletRequest request)

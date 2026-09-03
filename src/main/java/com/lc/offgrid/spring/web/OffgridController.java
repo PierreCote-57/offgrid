@@ -28,18 +28,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class OffgridController extends BaseWebController
 {
 	@Autowired
-	private OffgridProcessor service;
-
-	@Autowired
 	private BeanFactory beanFactory;
 
 	public BeanFactory getBeanFactory()
 	{
 		return beanFactory;
 	}
-	public OffgridProcessor getService()
+	public OffgridProcessor getProcessor()
 	{
-		return service;
+		return getBeanFactory().getBean(OffgridProcessor.class);
 	}
 
 	private Class<? extends PageData> getPageDataClass(String type)
@@ -62,7 +59,7 @@ public class OffgridController extends BaseWebController
 	public String home(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
 		String path = String.format("/index");
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/destinations/{type}/{name}")
@@ -71,7 +68,7 @@ public class OffgridController extends BaseWebController
 	{
 		String path = String.format("/destinations/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, clazz));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}
 
 	@GetMapping("/hardware/{name}")
@@ -79,7 +76,7 @@ public class OffgridController extends BaseWebController
 			@PathVariable String name)
 	{
 		String path = String.format("/hardware/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 	@GetMapping("/hardware/{type}/{name}")
 	public String hardwareType(HttpServletRequest request, HttpServletResponse response, Model model,
@@ -87,21 +84,21 @@ public class OffgridController extends BaseWebController
 	{
 		String path = String.format("/hardware/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, clazz));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}
 
 	@GetMapping("/posts/{name}")
 	public String post(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
 		String path = String.format("/post/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PostPage.class));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PostPage.class));
 	}
 
 	@GetMapping("/info/{name}")
 	public String info(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
 		String path = String.format("/info/%1$s", name);
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 
 	@GetMapping("/shared/browser")
@@ -109,7 +106,7 @@ public class OffgridController extends BaseWebController
 			@RequestParam String dataset)
 	{
 		String path = String.format("/shared/%1$s", "browser");
-		return processRequest(request, response, model, () -> getService().processBrowser(model, path, PageData.class, dataset));
+		return processRequest(request, response, model, () -> getProcessor().processBrowser(model, path, PageData.class, dataset));
 	}
 
 	/**
@@ -123,7 +120,7 @@ public class OffgridController extends BaseWebController
 	@GetMapping("/shared/browser/data/{id}")
 	public ResponseEntity<String> browserData(@PathVariable String id)
 	{
-		return getService().processBrowserData(id);
+		return getProcessor().processBrowserData(id);
 	}
 
 	/**
@@ -133,19 +130,19 @@ public class OffgridController extends BaseWebController
 	@GetMapping("/image/{imageName}")
 	public ResponseEntity<Resource> image(@PathVariable String imageName)
 	{
-		return getService().processImage(imageName);
+		return getProcessor().processImage(imageName);
 	}
 
 	@GetMapping("/document/{documentName}")
 	public ResponseEntity<Resource> document(@PathVariable String documentName)
 	{
-		return getService().processDocument(documentName);
+		return getProcessor().processDocument(documentName);
 	}
 
 	@GetMapping(value = {"/pi"}, produces = "text/html")
 	public String pi(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
 		String path = String.format("/info/%s", "pi");
-		return processRequest(request, response, model, () -> getService().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 }

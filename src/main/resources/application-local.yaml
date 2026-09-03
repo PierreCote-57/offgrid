@@ -17,3 +17,4 @@ BaseWebProcessor:
 folder:
   local: "/Users/pierrecote/Pictures/offgrid"
   data: "/Users/pierrecote/src/github/offgrid"
+  log: "/Users/pierrecote/Working/Offgrid/logs"

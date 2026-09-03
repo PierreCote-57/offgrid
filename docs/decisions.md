@@ -1390,3 +1390,49 @@ A tool method returning a String gets no output schema and answers as text: `Syn
 skips schema generation for simple value types. An argument is a `@McpToolParam` on a plain
 parameter; the object-parameter case, where the description has to ride on Jackson, is what
 spring-ai#2866 is about.
+
+
+## 2026-09-02 — Logging: Log4j2, two files, and one row per page view
+
+**The stack is Log4j2, not Logback.** `log4j2.xml` had been sitting in `src/main/resources`
+doing nothing: `spring-boot-starter-logging` binds Logback, and `log4j-to-slf4j` routes the
+Log4j2 API calls `BasicLogger` makes into it, so the file was read by nobody. Making it live
+took `spring-boot-starter-log4j2` plus an exclusion of `spring-boot-starter-logging` on every
+starter that pulls it — the four Boot ones and `spring-ai-starter-mcp-server-webmvc`, which
+brings `spring-boot-starter-web` and with it the whole logging starter again.
+
+**The file has to be named `log4j2-spring.xml`.** `${spring:folder.log}` is Boot's own lookup
+(`SpringEnvironmentLookup`, plugin name `spring`), and it needs the Environment attached to
+the LoggerContext, which Boot only does for the `-spring` name. Under the plain name Log4j2
+finds the file first, at the first logger call, and the lookup throws.
+
+**Where the files go is a profile property, `folder.log`, beside `folder.local` and
+`folder.data`.** Locally that is `~/Working/Offgrid/logs`, holding `app/` and `visit/`. The
+host value waits for FullHost — #1 in `docs/todo.md`.
+
+**The visit log is its own file, its own logger and its own format.** One row per page view,
+written by `logVisit` in `BaseWebController.processRequest`, on the logger `offgrid.visit`
+with `additivity="false"` so nothing else lands in it and it lands nowhere else. Tab
+separated rather than comma, because a comma is legal inside a query string and a tab is not,
+which is also why the file is `.tsv`: time, address, method, path, view, milliseconds. A
+rolling file has nowhere to put a header row, so the column names belong to whatever reads
+it. Rejected: Tomcat's access log valve, which is one property and would have logged every
+asset request alongside the page views, and cannot know the view name.
+
+Its duration measures the model build, not the render — `logVisit` runs before the controller
+returns and Thymeleaf renders after that. Accepted as such rather than moving the timing into
+a filter.
+
+**`org.apache.tomcat.util.net.NioEndpoint` is off.** Its acceptor logs an ERROR with a
+`SocketException: Invalid argument` for each connection whose peer is already gone when the
+socket options are applied — Tomcat calls `setSoLinger` on every accepted socket because
+`AbstractProtocol`'s constructor sets `connectionLinger` to -1, so no configuration turns the
+call off. Nothing of ours is on that stack and no request is lost.
+
+**A prototype processor has to be asked for, not injected.** `OffgridProcessor` is
+`@Scope("prototype")`, but an `@Autowired` field on the singleton controller is built once at
+startup, so one instance was serving every request — carrying `m_model`, the message lists and
+the timer the footer prints, which made that timer read as process uptime. The controller now
+calls `getBeanFactory().getBean(OffgridProcessor.class)` per request. That also restored the
+`"Done processing"` checkpoint, which had never run: the constructor registers the processor
+with the `PageContext`, and at startup there was none.

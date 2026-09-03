@@ -15,9 +15,20 @@ public class BaseController
 {
 	private static final BasicLogger LOGGER		= BasicLogger.getLogger(BaseController.class);
 
+	/**
+	 * One row per page view, kept apart from everything else so the file can be analysed on
+	 * its own. The name is what routes it: log4j2-spring.xml gives offgrid.visit its own
+	 * appender and does not let it reach the others.
+	 */
+	private static final BasicLogger VISIT_LOGGER	= BasicLogger.getLogger("offgrid.visit");
+
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
+	}
+	public static BasicLogger getVisitLogger()
+	{
+		return VISIT_LOGGER;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
