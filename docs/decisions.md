@@ -1513,3 +1513,51 @@ Alpine has drawn the bubble scrolls to where the log ended one message ago.
 trip. The LLM behind it, and the in-process tools it would call, are not this pass — the MCP
 server publishes those tools to an outside client and is not the way in for a chat running in
 the same JVM.
+
+## 2026-09-03 — A 404 is thrown, not returned, and the error page renders it
+
+**`ResponseEntity.notFound().build()` was answering nothing.** It writes the status and
+commits the response, which never reaches the container's error dispatch — so the three
+endpoints that bypass `processRequest` (`/image/`, `/document/`, `/shared/browser/data/`)
+put a blank page on the screen. `makeNotFound(format, args)` returns a
+`ResponseStatusException(NOT_FOUND, message)` and each site throws it. The factory hands
+back the exception rather than throwing it itself, so the call site reads `throw` and the
+compiler's flow analysis stays honest — a method declared to return a value that never
+returns makes every caller read `return` on a line that cannot return.
+
+**`templates/error.html` is what the dispatch renders**, and it uses none of the site
+fragments. That dispatch runs without a processor, so `Timer`, `SiteName`, `WelcomeMessage`
+and `SiteVersion` are absent, and the footer's `${Timer.elapsedTime}` would throw — a page
+whose job is to appear when things fail cannot depend on a model nobody set. Giving it the
+header and footer needs an `ErrorController` that calls `processDefault` first; parked as
+todo #50.
+
+**`server.error.include-message` is per profile**: `always` locally, `on-param` on the host.
+Boot's default drops the reason entirely, so a message passed to `ResponseStatusException`
+would never reach the page. `on-param` shows it only for a request carrying `message=true`,
+which keeps an internal exception message off a visitor's screen while a diagnosis can still
+ask for it. The key lives in the profile yamls and not in `application.properties`: both sit
+in the same location, and a key in both makes the winner depend on load order.
+
+**The exception page renders because `processDefault` runs first.** `processPage` used to
+read the page json before calling it, so a failure in the read left `Timer` unset and the
+exception view died mid-render — the whitelabel page, not the site's. `processDefault` now
+runs first and `PageName` is replaced afterwards, by `pageData.getName()` on the way out or
+by `BaseWebController`'s catch on the way to the exception view.
+
+**A row whose `file` pointer will not read is logged and nothing more.** It was briefly an
+`addErrorMessage`, which lands in a processor that dies with the request: the JSON endpoint
+never calls `processDefault`, so no model and no session ever carries it. A broken pointer
+is a content defect in the repo, which the log is the right place for, and the row goes out
+unhydrated with a 200.
+
+**A missing image answers a drawn image, not a 404.** An error page is the wrong answer to
+an `<img>`: the reader gets a broken-image icon and the reason goes nowhere. `/image/` now
+returns an SVG saying "Not found" over the name asked for, at 200 — the status is what makes
+the browser draw it, and nothing on this site reads the status. It is SVG rather than a
+`BufferedImage`: the browser draws the text with its own fonts, so the server needs no fonts
+installed, and the picture scales to whatever box it lands in. Both lines state a
+`textLength`, which is what makes a long name squeeze instead of running past the edge.
+`makeMessageImage(line1, line2)` takes the two lines rather than the failure, so the caller
+owns the word "Not found". `/document/` and `/shared/browser/data/` still throw: those are
+read as pages, where error.html is the right answer.

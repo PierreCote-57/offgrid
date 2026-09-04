@@ -21,6 +21,7 @@ import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.net.URL;
@@ -43,6 +45,22 @@ import java.util.Map;
 @Scope("prototype")
 public class OffgridWebProcessor extends BaseWebProcessor
 {
+	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
+
+	/**
+	 * Two lines of text on the site's paper, in the site's colours. The box is 3:2, the
+	 * shape every thumbnail rule in site.css already reserves. Both lines state a
+	 * textLength, so each one spans the box whatever it says — a long name is squeezed to
+	 * fit rather than running past the edge.
+	 */
+	private static final String MESSAGE_IMAGE_SVG = """
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400" role="img">
+				<rect x="1" y="1" width="598" height="398" fill="#faf7f0" stroke="#d6dfd8" stroke-width="2"/>
+				<text x="300" y="175" text-anchor="middle" textLength="540" lengthAdjust="spacingAndGlyphs" font-family="system-ui, -apple-system, sans-serif" font-size="104" fill="#a02a1f">%1$s</text>
+				<text x="300" y="290" text-anchor="middle" textLength="540" lengthAdjust="spacingAndGlyphs" font-family="system-ui, -apple-system, sans-serif" font-size="52" fill="#243027">%2$s</text>
+			</svg>
+			""";
+
 	@Autowired
 	private OffgridImageManager imageManager;
 
@@ -99,7 +117,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	/**
 	 * The bytes of one image, read from the image folder, which sits outside the resource tree.
-	 * A name with no file behind it throws, and the error dispatch answers 404 with error.html.
+	 * A name with no file behind it answers a drawn image that says so, at 200, so the reason
+	 * appears where the picture would have been rather than as a broken-image icon.
 	 */
 	public ResponseEntity<Resource> processImage(String imageName)
 	{
@@ -118,7 +137,10 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		catch (Exception e)
 		{
 			getLogger().error("Unable to locate image %s", imageName);
-			throw makeNotFound("Unable to locate image %s", imageName);
+
+			Resource messageImage = makeMessageImage("Not found", imageName);
+			ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, messageImage);
+			return answer;
 		}
 	}
 
@@ -265,6 +287,32 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		ResponseEntity<T> answer = builder.body(response);
 		return answer;
 	}
+	/**
+	 * Two lines of text as an image. The browser draws the text with its own fonts, so this
+	 * depends on nothing being installed on the machine that serves it.
+	 */
+	private Resource makeMessageImage(String line1, String line2)
+	{
+		String safeLine1 = escapeXml(line1);
+		String safeLine2 = escapeXml(line2);
+		String svgText = String.format(MESSAGE_IMAGE_SVG, safeLine1, safeLine2);
+		byte[] svgBytes = svgText.getBytes(StandardCharsets.UTF_8);
+
+		ByteArrayResource answer = new ByteArrayResource(svgBytes);
+		return answer;
+	}
+
+	/**
+	 * Text made safe to sit between two SVG tags.
+	 */
+	private String escapeXml(String text)
+	{
+		String noAmpersand = text.replace("&", "&amp;");
+		String noLessThan = noAmpersand.replace("<", "&lt;");
+		String answer = noLessThan.replace(">", "&gt;");
+		return answer;
+	}
+
 	/**
 	 * The exception a caller throws to answer 404. The reason travels to error.html when
 	 * server.error.include-message allows it, so it is written for whoever reads that page.
