@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URL;
 import java.net.URLDecoder;
@@ -42,15 +43,16 @@ public class BaseWebController extends BaseController
 	{
 		long startTime = System.nanoTime();
 
-		if (null == PageContext.getPageContext())
+		PageContext pageContext = PageContext.getPageContext();
+		if (null == pageContext)
 		{
-			PageContext.create(servletRequest, servletRequest.getParameterMap(), servletResponse, model);
+			pageContext = PageContext.create(servletRequest, servletRequest.getParameterMap(), servletResponse, model);
 		}
 
 		try
 		{
 			String				answer			= supplier.get();
-			BaseWebProcessor	processor		= PageContext.getPageContext().getProcessor();
+			BaseWebProcessor	processor		= pageContext.getProcessor();
 			if (null != processor)
 			{
 				processor.getTimer().checkpoint("Done processing");
@@ -78,6 +80,12 @@ public class BaseWebController extends BaseController
 			logVisit(servletRequest, answer, startTime);
 
 			return	answer;
+		}
+		catch (ResponseStatusException exception)
+		{
+			getLogger().info("Failed to serve %s", pageContext.getRequest().getServletPath());
+			logVisit(servletRequest, "404" , startTime);
+			throw exception;
 		}
 		catch (Exception exception)
 		{
@@ -240,9 +248,11 @@ public class BaseWebController extends BaseController
 			m_model = model;
 		}
 
-		public static void create(HttpServletRequest request, Map<String, String[]> parameterMap, HttpServletResponse response, Model model)
+		public static PageContext create(HttpServletRequest request, Map<String, String[]> parameterMap, HttpServletResponse response, Model model)
 		{
-			MAP.put(Thread.currentThread().getId(), new PageContext(request, parameterMap, response, model));
+			PageContext pageContext = new PageContext(request, parameterMap, response, model);
+			MAP.put(Thread.currentThread().getId(), pageContext);
+			return pageContext;
 		}
 		public static PageContext getPageContext()
 		{

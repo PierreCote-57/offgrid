@@ -136,7 +136,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 		catch (Exception e)
 		{
-			getLogger().error("Unable to locate image %s", imageName);
+			getLogger().info("Unable to locate image %s", imageName);
 
 			Resource messageImage = makeMessageImage("Not found", imageName);
 			ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, messageImage);
@@ -164,7 +164,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 		catch (Exception e)
 		{
-			getLogger().error("Unable to locate document %s", documentName);
+			getLogger().info("Unable to locate document %s", documentName);
 			throw makeNotFound("Unable to locate document %s", documentName);
 		}
 	}
@@ -213,6 +213,10 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private <T extends PageData> T readPageJson(String path, Class<T> clazz)
 	{
 		File jsonFile = getJsonManager().getFile(path);
+		if (null == jsonFile)
+		{
+			throw makeNotFound("Unable to locate page: %s", path);
+		}
 		T pageData = readFile(jsonFile.getAbsolutePath(), clazz);
 
 		// Hydrate map as needed
