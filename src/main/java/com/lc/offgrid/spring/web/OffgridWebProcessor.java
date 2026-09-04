@@ -1,21 +1,16 @@
 package com.lc.offgrid.spring.web;
 
 import com.lc.basics.tools.file.BasicFileReader;
-import com.lc.basics.tools.logging.BasicLogger;
-import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.offgrid.misc.QueryUtil;
-import com.lc.offgrid.misc.files.LocalFileManager;
-import com.lc.offgrid.misc.files.ResourceFileManager;
+import com.lc.offgrid.misc.files.AbstractFileManager;
+import com.lc.offgrid.misc.files.LocalFileManager.*;
+import com.lc.offgrid.misc.files.ResourceFileManager.*;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
-import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import com.lc.offgrid.pojo.page.DestinationPage;
-import com.lc.offgrid.pojo.page.MaintenancePage;
 import com.lc.offgrid.pojo.page.PageData;
-import com.lc.offgrid.pojo.page.PostPage;
 import com.lc.offgrid.pojo.part.Dataset;
 import com.lc.offgrid.pojo.part.GoogleMap;
 import com.lc.offgrid.pojo.part.Point;
-import com.lc.offgrid.spring.tools.BaseController;
 import com.lc.offgrid.spring.tools.BaseWebController;
 import com.lc.offgrid.spring.tools.BaseWebProcessor;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,8 +31,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,25 +55,25 @@ public class OffgridWebProcessor extends BaseWebProcessor
 			""";
 
 	@Autowired
-	private OffgridImageManager imageManager;
+	private JsonResourceFileManager jsonManager ;
 
 	@Autowired
-	private ResourceFileManager.JsonResourceFileManager jsonManager ;
+	private ImageFileManager imageManager;
 
 	@Autowired
-	private LocalFileManager documentManager;
+	private DocumentFileManager documentManager;
 
-	public OffgridImageManager getImageManager()
+	public ImageFileManager getImageManager()
 	{
 		return imageManager;
 	}
 
-	public ResourceFileManager.JsonResourceFileManager getJsonManager()
+	public AbstractFileManager getJsonManager()
 	{
 		return jsonManager;
 	}
 
-	public LocalFileManager getDocumentManager()
+	public AbstractFileManager getDocumentManager()
 	{
 		return documentManager;
 	}
@@ -125,7 +118,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 //		imageName = FIXED_IMAGE;
 		try
 		{
-			OffgridImageManager manager = getImageManager();
+			ImageFileManager manager = getImageManager();
 			ImageMetadata metadata = manager.getImageMetadata(imageName);
 			File imageFile = metadata.getFile();
 			FileSystemResource imageResource = new FileSystemResource(imageFile);
@@ -154,7 +147,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	{
 		try
 		{
-			LocalFileManager manager = getDocumentManager();
+			AbstractFileManager manager = getDocumentManager();
 			File documentFile = manager.getFile(documentName);
 			FileSystemResource documentResource = new FileSystemResource(documentFile);
 			MediaType mediaType = readMediaType(documentFile);
@@ -187,7 +180,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	 * The rows of one dataset, as JSON, for the browser page. datasets.json maps the id to
 	 * the file that holds them; an id nobody defined throws, and the error dispatch answers 404
 	 * with error.html.
-	 *
 	 * The file is answered as it stands. Resolving a row's pointers into the row itself is
 	 * this method's job to come.
 	 */

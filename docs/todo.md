@@ -36,11 +36,6 @@ left behind. Everything else that came from GettingLost is in.
 Photon URL for the grid, the 1920 cap for the overlay — and offgrid has one URL per image,
 so the grid pulls full-size originals. This is where a resize seam goes.
 
-#25 The maintenance work sheets have no files. `/document/{documentName}` is served now, off
-`LocalFileManager` (`<folder.local>/Documents`). `workUrl` in
-`resources/data/hardware/maintenance/van/m-van.json` and `.../bronco/m-bronco.json` names
-three PDFs; none of them is in that folder yet.
-
 #42 Decide how `/mcp` is protected before it is deployed. Locally a client reaches it over
 loopback and nothing else can; on FullHost it is on the open internet, and a tool answers
 anyone who posts to it. The question outlives the implementation — it has to be answered for
@@ -60,9 +55,3 @@ River with `America/Vancouver`, and JS upgrades it from the browser — the time
 first so a visitor who already granted it is never prompted again. Open: chart rule 5 ends
 with "look at the result and override where it reads badly", which the server cannot do, so
 crowded dates can render two labels visually stacked.
-
-#50 Give `error.html` the site header and footer. It stands alone today because the error
-dispatch renders with no processor, so `Timer` is absent and the footer's
-`${Timer.elapsedTime}` would throw. An `ErrorController` on `/error` that calls
-`processDefault` before returning the view fixes it; decide then whether `exception.html` is
-still a separate page or the same one.

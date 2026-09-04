@@ -1529,8 +1529,9 @@ returns makes every caller read `return` on a line that cannot return.
 fragments. That dispatch runs without a processor, so `Timer`, `SiteName`, `WelcomeMessage`
 and `SiteVersion` are absent, and the footer's `${Timer.elapsedTime}` would throw — a page
 whose job is to appear when things fail cannot depend on a model nobody set. Giving it the
-header and footer needs an `ErrorController` that calls `processDefault` first; parked as
-todo #50.
+header and footer would need an `ErrorController` that calls `processDefault` first, and
+that is deliberately not done: it would make the page that appears when things are broken
+depend on something having worked. The link home is the part that matters.
 
 **`server.error.include-message` is per profile**: `always` locally, `on-param` on the host.
 Boot's default drops the reason entirely, so a message passed to `ResponseStatusException`
@@ -1561,3 +1562,21 @@ installed, and the picture scales to whatever box it lands in. Both lines state 
 `makeMessageImage(line1, line2)` takes the two lines rather than the failure, so the caller
 owns the word "Not found". `/document/` and `/shared/browser/data/` still throw: those are
 read as pages, where error.html is the right answer.
+
+**`processRequest` lets a `ResponseStatusException` through.** Its `catch (Exception)` would
+otherwise turn a deliberate 404 into the exception page at status 200, with the thrower's
+message replaced by "Failed to process request" — the reason a page URL with no json behind
+it needed both a null check in `readPageJson` and a rethrow ahead of the general catch. That
+path logs INFO and writes its own visit-log row, so a not-found is not missing from the log
+and is not dressed as a server failure.
+
+**A defect in a json file this repo owns is left to land on the exception page.** A missing
+`location` under a `googleMap`, a `datasets.json` that will not parse, an entry in it with no
+`id`: each gives the reader "Something went wrong" and puts the exception, the method, the
+full URL and the parameters in the log. Guarding them would trade a stack trace pointing at
+the line for a message that says less. The browser page needs no guard either — `fetchJson`
+already reports the URL and the status where the list would be, and its page render reads
+`datasets.json` first, so a broken file stops the page before the data call is ever made.
+
+**A missing file is logged INFO in the processor.** The server did not fail; it answered, with
+a placeholder image or a 404. WARN is for the server's own trouble, which this is not.

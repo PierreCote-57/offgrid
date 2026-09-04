@@ -1,10 +1,10 @@
 package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
+import com.lc.offgrid.misc.files.LocalFileManager.*;
 import com.lc.offgrid.misc.geography.GeoComparator;
 import com.lc.offgrid.misc.geography.point.LatLonPoint;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
-import com.lc.offgrid.misc.imaging.OffgridImageManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -29,7 +29,7 @@ public class ImageManagerTests extends AbstractTests
 	@Test
 	public void testImageLoad() throws Exception
 	{
-		OffgridImageManager manager = new OffgridImageManager();
+		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
 		Map<String, File> nameMap	= manager.getNameMap();
@@ -51,7 +51,7 @@ public class ImageManagerTests extends AbstractTests
 	public void testImageFile(
 			String name, boolean expectSuccess) throws Exception
 	{
-		OffgridImageManager manager = new OffgridImageManager();
+		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
 		boolean isSuccess;
@@ -81,7 +81,7 @@ public class ImageManagerTests extends AbstractTests
 	public void testImageMetadata(
 			String name, boolean expectSuccess) throws Exception
 	{
-		OffgridImageManager manager = new OffgridImageManager();
+		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
 		boolean isSuccess;
@@ -100,7 +100,7 @@ public class ImageManagerTests extends AbstractTests
 	@Test
 	public void testLatLng() throws Exception
 	{
-		OffgridImageManager manager = new OffgridImageManager();
+		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
 		Map<String, File> nameMap	= manager.getNameMap();
@@ -134,7 +134,7 @@ public class ImageManagerTests extends AbstractTests
 	public void testImageDistance(
 			String name1, String name2, double expectded) throws Exception
 	{
-		OffgridImageManager manager = new OffgridImageManager();
+		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
 		ImageMetadata metadata1 = manager.getImageMetadata(name1);

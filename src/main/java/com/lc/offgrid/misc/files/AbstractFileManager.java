@@ -1,29 +1,22 @@
 package com.lc.offgrid.misc.files;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class AbstractFileManager implements InitializingBean
+public abstract class AbstractFileManager implements InitializingBean
 {
 	private final Map<String, File> nameMap = new TreeMap<>();
-
-	@Value("${folder.local}")
-	// Initializer for tests. As WEB/bean, it gets from config
-	private String local_root_folder = "/Users/pierrecote/Pictures/offgrid";
-
-	public String getRootFolder()
-	{
-		return local_root_folder;
-	}
 
 	public boolean isValid(File file)
 	{
 		return true;
 	}
+
+	abstract public String getRootFolder();
+
 
 	public Map<String, File> getNameMap()
 	{

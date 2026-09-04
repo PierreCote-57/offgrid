@@ -15,8 +15,7 @@ BaseWebProcessor:
   siteName: "β-Going offgrid"
 
 folder:
-  local: "/Users/pierrecote/Pictures/offgrid"
-  data: "/Users/pierrecote/src/github/offgrid"
+  local: "/Users/pierrecote/Working/offgrid"
   log: "/Users/pierrecote/Working/Offgrid/logs"
 
 # The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.

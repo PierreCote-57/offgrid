@@ -14,8 +14,8 @@
 		<!-- The file the running site is read from afterwards. folder.log is a profile
 		     property, and spring: is Boot's own lookup into the Spring environment. -->
 		<RollingFile name="File"
-				fileName="${spring:folder.log}/app/offgrid-app.log"
-				filePattern="${spring:folder.log}/app/offgrid-app-%d{yyyy-MM-dd}-%i.log.gz">
+				fileName="${spring:folder.local}/logs/app/offgrid-app.log"
+				filePattern="${spring:folder.local}/logs/app/offgrid-app-%d{yyyy-MM-dd}-%i.log.gz">
 			<PatternLayout
 					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10t] %-5level %-25logger{1} - %msg%n"/>
 			<Policies>
@@ -30,8 +30,8 @@
 		     column names belong to whatever reads it. &#9; is a character reference because
 		     XML normalizes a literal tab in an attribute to a space. -->
 		<RollingFile name="Visits"
-				fileName="${spring:folder.log}/visit/offgrid-visit.tsv"
-				filePattern="${spring:folder.log}/visit/offgrid-visit-%d{yyyy-MM-dd}-%i.tsv.gz">
+				fileName="${spring:folder.local}/logs/visit/offgrid-visit.tsv"
+				filePattern="${spring:folder.local}/logs/visit/offgrid-visit-%d{yyyy-MM-dd}-%i.tsv.gz">
 			<PatternLayout
 					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
 			<Policies>

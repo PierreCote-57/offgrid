@@ -12,19 +12,19 @@
 			"shopUrl": "https://www.stevemarshallfordcampbellriver.com",
 			"workName": "Recall, beep (probably) and oil change",
 			"workUrl": "/document/van-2026-08-17",
-			"costCad": 0.0,
-			"nextDueKm": 123200,
-			"nextDueDate": null
+			"costCad": 113.61,
+			"nextDueKm": 8000,
+			"nextDueDate": "2027-03-01"
 		},
 		{
 			"date": "2026-08-28",
-			"odometerKm": 1234,
+			"odometerKm": 1391,
 			"shopName": "Van Toys",
 			"shopUrl": "https://vantoys.ca",
 			"workName": "Upgrade batteries to 2x206 Ah Lithium (+Orion XS)",
 			"workUrl": "/document/INVOICE_1151_from_Van_Toys",
-			"costCad": 0.0,
-			"nextDueKm": 0,
+			"costCad": 3245.76,
+			"nextDueKm": null,
 			"nextDueDate": null
 		}
 	],
