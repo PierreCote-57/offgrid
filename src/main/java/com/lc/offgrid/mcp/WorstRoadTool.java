@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * What the road in to one destination is like at its worst.
- *
- * The answer is hard-coded for now. The real one is the limiting leg of that destination's
- * access, which Access.getRoadLimitingLeg already builds.
  */
 @Component
 public class WorstRoadTool

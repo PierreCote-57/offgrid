@@ -9,7 +9,7 @@
 	"use strict";
 
 	var overlay = null;
-	var imgEl, captionEl, counterEl, prevBtn, nextBtn, closeBtn;
+	var imgEl, captionEl, hiresLink, counterEl, prevBtn, nextBtn, closeBtn;
 	var entryList = [];
 	var index = 0;
 	var lastFocus = null;
@@ -35,11 +35,18 @@
 		captionEl = document.createElement("figcaption");
 		captionEl.className = "gl-lightbox-caption";
 
+		hiresLink = document.createElement("a");
+		hiresLink.className = "gl-lightbox-hires";
+		hiresLink.target = "_blank";
+		hiresLink.rel = "noopener";
+		hiresLink.textContent = "Full size";
+
 		counterEl = document.createElement("div");
 		counterEl.className = "gl-lightbox-counter";
 
 		figure.appendChild(imgEl);
 		figure.appendChild(captionEl);
+		figure.appendChild(hiresLink);
 
 		overlay.appendChild(closeBtn);
 		overlay.appendChild(prevBtn);
@@ -82,6 +89,7 @@
 		var entry = entryList[index];
 		imgEl.src = entry.src;
 		imgEl.alt = entry.caption;
+		hiresLink.href = entry.hires;
 		captionEl.textContent = entry.caption;
 		captionEl.style.display = entry.caption ? "block" : "none";
 
@@ -128,8 +136,16 @@
 		return linkList;
 	}
 
+	/**
+	 * The two URLs one link answers. The overlay shows the medium, which is sized for a screen
+	 * rather than for a print, and the full-size link under it points at the large.
+	 */
 	function entryOf(link) {
-		var entry = { src: link.href, caption: link.getAttribute("data-caption") || "" };
+		var entry = {
+			src: link.href + "?size=medium",
+			hires: link.href + "?size=large",
+			caption: link.getAttribute("data-caption") || ""
+		};
 		return entry;
 	}
 

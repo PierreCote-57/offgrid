@@ -5,7 +5,7 @@
 			th:id="'gl-photo-' + ${galleryName} + '-' + ${itemId}">
 		<a data-lightbox th:href="@{/image/{imageName}(imageName=${item.img})}"
 		   th:attr="data-caption=${item.label}" href="">
-			<img th:src="@{/image/{imageName}(imageName=${item.img})}"
+			<img th:src="@{/image/{imageName}(imageName=${item.img}, size='small')}"
 				 th:alt="${item.label}" src="" alt="">
 		</a>
 		<figcaption th:text="${item.label}">Caption</figcaption>

@@ -1,6 +1,7 @@
 package com.lc.offgrid.misc.files;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,6 +10,12 @@ import java.io.File;
 public class FileTools implements InitializingBean
 {
 	private static FileTools INSTANCE;
+
+	@Autowired
+	private LocalFileManager.ImageFileManager imageManager;
+
+	@Autowired
+	private LocalFileManager.DocumentFileManager documentManager;
 
 	private long lastModifiedTime;
 
@@ -30,8 +37,8 @@ public class FileTools implements InitializingBean
 		processPath(new ResourceFileManager("/"));
 
 		// Process everything in the data folder
-		processPath(new LocalFileManager("/documents"));
-		processPath(new LocalFileManager("/images"));
+		processPath(imageManager);
+		processPath(documentManager);
 	}
 
 	// Walks the path to determine most recent lastModifiedTime

@@ -695,6 +695,14 @@ main tbody tr:last-child td {
 	text-align: center;
 }
 
+.gl-lightbox-hires {
+	align-self: stretch;
+	margin-top: 0.5rem;
+	color: #ddd;
+	font-size: 0.85rem;
+	text-align: right;
+}
+
 .gl-lightbox-counter {
 	position: absolute;
 	top: 1rem;

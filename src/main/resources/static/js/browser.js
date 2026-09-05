@@ -149,7 +149,7 @@
 	}
 
 	function imageUrl(name) {
-		var url = IMAGE_URL + encodeURIComponent(name || PLACEHOLDER_IMAGE);
+		var url = IMAGE_URL + encodeURIComponent(name || PLACEHOLDER_IMAGE) + "?size=small";
 		return url;
 	}
 

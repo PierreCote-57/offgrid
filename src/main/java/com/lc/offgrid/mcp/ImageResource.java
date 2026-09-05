@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * The images this server hands to a client, published as MCP resources.
- *
- * Both answers are hard-coded for now. The real ones come from the image folder, which is
- * named by folder.image and sits outside the resource tree.
  */
 @Component
 public class ImageResource

@@ -6,6 +6,7 @@ import com.lc.offgrid.misc.files.AbstractFileManager;
 import com.lc.offgrid.misc.files.LocalFileManager.*;
 import com.lc.offgrid.misc.files.ResourceFileManager.*;
 import com.lc.offgrid.misc.imaging.ImageMetadata;
+import com.lc.offgrid.misc.imaging.ImageSize;
 import com.lc.offgrid.pojo.page.DestinationPage;
 import com.lc.offgrid.pojo.page.PageData;
 import com.lc.offgrid.pojo.part.Dataset;
@@ -113,7 +114,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	 * A name with no file behind it answers a drawn image that says so, at 200, so the reason
 	 * appears where the picture would have been rather than as a broken-image icon.
 	 */
-	public ResponseEntity<Resource> processImage(String imageName)
+	public ResponseEntity<Resource> processImage(String imageName, ImageSize imageSize)
 	{
 //		imageName = FIXED_IMAGE;
 		try

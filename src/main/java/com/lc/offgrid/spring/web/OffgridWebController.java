@@ -1,5 +1,6 @@
 package com.lc.offgrid.spring.web;
 
+import com.lc.offgrid.misc.imaging.ImageSize;
 import com.lc.offgrid.pojo.page.CampsitePage;
 import com.lc.offgrid.pojo.page.DestinationPage;
 import com.lc.offgrid.pojo.page.LakePage;
@@ -128,9 +129,10 @@ public class OffgridWebController extends BaseWebController
 	 * name, so it goes to the processor directly instead of through processRequest.
 	 */
 	@GetMapping("/image/{imageName}")
-	public ResponseEntity<Resource> image(@PathVariable String imageName)
+	public ResponseEntity<Resource> image(@PathVariable String imageName, @RequestParam(required = false) String size)
 	{
-		return getProcessor().processImage(imageName);
+		ImageSize imageSize = ImageSize.of(size);
+		return getProcessor().processImage(imageName, imageSize);
 	}
 
 	@GetMapping("/document/{documentName}")

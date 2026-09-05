@@ -16,7 +16,6 @@ BaseWebProcessor:
 
 folder:
   local: "/Users/pierrecote/Working/offgrid"
-  log: "/Users/pierrecote/Working/Offgrid/logs"
 
 # The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.
 server:

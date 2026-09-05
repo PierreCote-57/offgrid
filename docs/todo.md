@@ -16,9 +16,13 @@ next id from the header above and increment it. This numbering is independent of
    logging in. Worth asking whether the account was ever fully provisioned — a signup that
    stalled after email verification leaves no client record to reset against.
  - Deploy the skeleton, to prove their build node builds this repo and runs the jar while
-   nothing is invested in it.
- - Get the image folder onto the server. The folder `folder.image` names lives outside the
-   resource tree and has no delivery path; JSON and HTML arrive by push and rebuild.
+   nothing is invested in it. Check what `getClass().getResource("/")` answers inside the
+   packaged jar — `ResourceFileManager` builds its root from it and `pom.xml` names no
+   packaging, so the build is a Boot fat jar while the IDE runs off a directory.
+ - Get the images and the documents onto the server. `folder.local` names the app's own root
+   on the machine, holding `images/`, `documents/` and `logs/`; the first two live outside
+   the resource tree and have no delivery path, while JSON and HTML arrive by push and
+   rebuild.
 
 #4 Build the blog listing and wire the menu. `fragments/site/menu.html` still has
 `href="#"` for Blog, while the six posts already link back to `/blog` and a post is served at
@@ -26,15 +30,20 @@ next id from the header above and increment it. This numbering is independent of
 
 #6 Answer the MCP tools and resources from the data. Spring AI serves `/mcp` now, and every
 answer under `com.lc.offgrid.mcp` is hard-coded: the image list and the image itself, the
-worst road in to a destination, and what the van and the Bronco are due for. Each one names
-in its javadoc where the real answer comes from.
+worst road in to a destination, and what the van and the Bronco are due for. The real
+answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
+still outstanding in `m-van.json` and `m-bronco.json`.
 
 #7 Author `templates/hardware/howto/water.html` — it is still the placeholder text the port
 left behind. Everything else that came from GettingLost is in.
 
-#22 A thumbnail and its lightbox load the same file. GettingLost split them — a small
-Photon URL for the grid, the 1920 cap for the overlay — and offgrid has one URL per image,
-so the grid pulls full-size originals. This is where a resize seam goes.
+#22 Make `/image/{imageName}` honour the `size` it is handed. The callers name it now and
+`ImageSize.of` parses it, but `processImage` still answers the native file whatever it is
+asked for. What is left: the pixel width behind Small and Medium, how a derived file is made
+and cached to disk, and what happens when a native image is smaller than the size asked for.
+Open with it: whether Large stays the native file or becomes a cap with the native above it —
+the lightbox's "Full size" link asks for Large, so a cap is what gives that link something the
+overlay is not already showing.
 
 #42 Decide how `/mcp` is protected before it is deployed. Locally a client reaches it over
 loopback and nothing else can; on FullHost it is on the open internet, and a tool answers

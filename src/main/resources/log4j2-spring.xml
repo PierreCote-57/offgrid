@@ -11,7 +11,7 @@
 -->
 		</Console>
 
-		<!-- The file the running site is read from afterwards. folder.log is a profile
+		<!-- The file the running site is read from afterwards. folder.local is a profile
 		     property, and spring: is Boot's own lookup into the Spring environment. -->
 		<RollingFile name="File"
 				fileName="${spring:folder.local}/logs/app/offgrid-app.log"

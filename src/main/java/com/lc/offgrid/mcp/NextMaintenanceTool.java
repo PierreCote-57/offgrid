@@ -5,9 +5,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * What each vehicle is due for next.
- *
- * The answer is hard-coded for now. The real one is the earliest entry still outstanding in
- * m-van.json and m-bronco.json.
  */
 @Component
 public class NextMaintenanceTool
