@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 49**
+**next id: 50**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -64,3 +64,9 @@ River with `America/Vancouver`, and JS upgrades it from the browser — the time
 first so a visitor who already granted it is never prompted again. Open: chart rule 5 ends
 with "look at the result and override where it reads badly", which the server cannot do, so
 crowded dates can render two labels visually stacked.
+
+#49 Fix `README.md`'s Layout table. It names the package
+`src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
+predates `src/main/resources/data`, the profile yamls beside `application.properties`, and
+the `folder.local` root holding `images/`, `documents/` and `logs/`. Read the whole table
+against the tree rather than fixing the one row.

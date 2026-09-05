@@ -1,0 +1,127 @@
+# Decisions — APIs
+
+What was decided and why. Rationale has no other master — the repo shows *what* the code
+is, never *why* it is that.
+
+The endpoints that answer JSON to a program rather than HTML to a browser: `/mcp` and
+`/rest`.
+
+## 2026-09-01 — The MCP server is Spring AI's, not ours
+
+The hand-rolled endpoint was deleted. Spring AI's MCP server starter carries the transport,
+the sessions, the JSON-RPC envelopes, the protocol errors and the `tools/list` publishing —
+every one of which we had written by hand — and generates a tool's input schema from the
+method it annotates. What survives is what was ours to begin with: what each tool knows.
+
+**What made the switch worth it was the schema.** A tool's arguments are a class, and the
+schema comes from the class rather than from a constructor that declares each argument by
+hand. Field descriptions ride on Jackson's `@JsonPropertyDescription`, not `@McpToolParam`,
+which is not applied to the fields of an object parameter — spring-ai#2866. An enum argument
+publishes its constant names, so a vocabulary reaching a tool needs `@JsonProperty` for the
+word the site writes, beside the `@SerializedName` Gson already reads.
+
+The version is 2.0.1, pinned in `pom.xml` beside the other pinned dependency rather than
+through the Spring AI BOM: it is the line built against Spring Boot 4.1.1, which its own
+pom names. 1.1.8 is the Boot 3.5 line.
+
+Not decided here: how `/mcp` is protected — #42 in `docs/todo.md`.
+
+## 2026-09-01 — The first MCP pass, and the property that has to be stated
+
+Everything new lives in `com.lc.offgrid.mcp`, one class per thing published, and every answer
+is hard-coded — the pass exists to show what the framework looks like and what adding a tool
+costs, not to answer anything. Where the real answers come from is #6 in `docs/todo.md`.
+
+**An image is addressed by a URI template, not a fixed URI.** `offgrid://image` reads back the
+file names and `offgrid://image/{fileName}` reads back one image, which is the shape the
+domain has: there is no "the sample image", there is a set. The cost, seen in the run: a
+template is published under `resources/templates/list` rather than `resources/list`, and a
+client that lists only resources does not show it — reading a matching URI still works.
+
+**`spring.ai.mcp.server.protocol` must be written out even though `STREAMABLE` is the
+properties class's own default.** `McpServerAutoConfiguration.EnabledStreamableServerCondition`
+is a `@ConditionalOnProperty` with `matchIfMissing = false`, so it reads the environment and
+never sees the Java default. Absent property, no transport is installed and `/mcp` answers 404
+while the site keeps serving normally — which is exactly what it did.
+
+A tool method returning a String gets no output schema and answers as text: `SyncMcpToolProvider`
+skips schema generation for simple value types. An argument is a `@McpToolParam` on a plain
+parameter; the object-parameter case, where the description has to ride on Jackson, is what
+spring-ai#2866 is about.
+
+## 2026-09-02 — The chat page, and the REST controller it arrives on
+
+**`OffgridRestController` is the site's REST controller, not the chat's.** It is a peer of
+`OffgridWebController` in `spring/web` — same shape, same `getBeanFactory().getBean(...)` per
+request — and answers JSON where the other names a view. Chat is its first endpoint, at
+`/rest/chat`. `OffgridRestProcessor` backs it, a peer of `OffgridWebProcessor` that never
+touches a `Model`. Rejected: putting the method on `OffgridWebProcessor`, which would have made
+a view processor carry work that has no view.
+
+**The page needs no Java.** `/info/chat` is served by the existing `info()` mapping, so it is
+a template, its `chat.json`, and one `<li>` in the Info submenu.
+
+**The whole transcript goes on the wire every turn**, `{"messageList":[{"role","text"},…]}`,
+oldest first. The server keeps nothing between turns: a reload starts a new conversation and
+there is no session state to expire. The echo reads only the last line. Rejected: posting
+just the new message, which is smaller now and buys a contract change or server-side state
+the day an LLM needs the history.
+
+**`role` is an enum, not a string.** Two constants, `USER` and `ASSISTANT`, each carrying its
+wire spelling on a `@JsonProperty` — the same shape as the Gson enums in `pojo/part`, with
+the annotation Jackson reads. An unrecognised role is then a rejected request rather than a
+string that flows on unnoticed.
+
+**The answer shows the server's timing.** `ChatAnswer extends RestBaseAnswer`, so
+`durationText` comes for free and is drawn under the bubble. It is the visible proof the
+reply came from the server: without it a JS bug that never calls the server looks exactly
+like success.
+
+**Both serializers stay.** Jackson answers HTTP, reading getters, which is how a computed
+value like `durationText` reaches the wire; Gson reads the data files, where the fields are
+the file's shape. Switching MVC to Gson was considered and rejected: it would rename the wire
+keys to `RestBaseAnswer`'s `m_`-prefixed fields, and Spring AI would keep using Jackson for
+`/mcp` regardless, so there would still be two.
+
+**The wire shapes live in `pojo/chat`, the controller and processor in `spring/web`.**
+`ChatRequest`, `ChatMessage` and `ChatAnswer` are data, so they sit with the other POJOs;
+they are the first ones there annotated for Jackson rather than Gson, because they are the
+only ones that travel over HTTP rather than out of a file.
+
+**`OffgridController` and `OffgridProcessor` gained a `Web`.** With a REST pair beside them
+the bare names said nothing, and the bases they extend were already `BaseWebController` and
+`BaseWebProcessor`. Earlier entries in this file were rewritten to the new names, so every
+name here is one that can be found in the tree.
+
+**`chat.js` is listed BEFORE `alpine.min.js`, and every future `Alpine.data` file must be.**
+Alpine's last line is `queueMicrotask(() => Alpine.start())`, and microtasks drain between
+deferred scripts, so `alpine:init` has already fired by the time a script listed after Alpine
+runs. Registered too late, the component silently does not exist: `x-data="chat"` resolves to
+nothing and the page renders correctly with dead controls. The inline `x-data` objects in
+`menu.html` are unaffected, which is why nothing caught this earlier.
+
+**The chat page is the one page whose height is capped, not floored.** Everywhere else `body`
+is `min-height:100vh` and the page grows with its content. That is why an inner box cannot
+scroll: `main`'s `flex:1` has no free space to receive in an auto-height container, so it
+takes its content's height and the box grows with it. `body:has(.gl-chat-page)` sets
+`height:100dvh`, and `min-height:0` at each level below lets the log shrink and scroll
+instead. On a viewport too short for the log's 260px floor the page scrolls again, accepted
+as the degradation. Rejected: `calc(100vh - …)` on the log, which hard-codes the height of
+the header, the `h1`, the input row and the footer.
+
+**The log is a surface above the page, drawn with the site's existing device** — white fill,
+1px `--rule` border, and `.gl-lb-panel`'s shadow, the same treatment as the menu and the
+filter panel. The answer bubble went off-white so it stays visible against it. macOS hides an
+overlay scrollbar until you scroll, which left no sign there was anything above the top, so
+the log states `::-webkit-scrollbar` and reserves its gutter.
+
+**An exchange is a question and the answer under it, and they meet.** The space in the log is
+between exchanges, not inside one. The visitor's line carries the wall clock, the answer
+carries the server's `durationText` — one timing on each side, and the pair reads as one
+event. `scrollToBottom` runs on `$nextTick` after each push; reading `scrollHeight` before
+Alpine has drawn the bubble scrolls to where the log ended one message ago.
+
+**The first pass answers by repeating the last line back.** What is being proven is the round
+trip. The LLM behind it, and the in-process tools it would call, are not this pass — the MCP
+server publishes those tools to an outside client and is not the way in for a chat running in
+the same JVM.

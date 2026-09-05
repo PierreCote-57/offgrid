@@ -13,8 +13,21 @@ here in full and are not repeated below.
 
 ## 2. Where this project's knowledge lives
 
-- **[docs/decisions.md](docs/decisions.md)** — what was decided and why. Read it before
-  proposing a change to the stack, the build, or the deployment path.
+- **`docs/decisions/`** — what was decided and why, one file per subject. Open the one whose
+  line matches what you are about to touch; do not read the folder.
+  - [site.md](docs/decisions/site.md) — before adding or changing a page, a template, a
+    fragment, a route or a link.
+  - [look.md](docs/decisions/look.md) — before touching `site.css`, a colour, a font, a
+    length or a page texture.
+  - [data.md](docs/decisions/data.md) — before adding or changing anything under
+    `resources/data`, a POJO that reads it, or a vocabulary.
+  - [build.md](docs/decisions/build.md) — before changing the stack, the pom, the build or
+    the deployment path to FullHost.
+  - [apis.md](docs/decisions/apis.md) — before changing `/mcp` or `/rest`.
+  - [local-files.md](docs/decisions/local-files.md) — before touching images, documents, or
+    how anything under `folder.local` is delivered.
+  - [logging-errors.md](docs/decisions/logging-errors.md) — before changing a log line, a log
+    level, or what happens when a request fails.
 - **[docs/todo.md](docs/todo.md)** — parked work. Side issues found mid-task go here.
 - **`docs/skills/`** — procedures to FOLLOW, not background to read. Treat a file there
   exactly as if it were an installed skill: when Pierre asks for the thing its frontmatter
