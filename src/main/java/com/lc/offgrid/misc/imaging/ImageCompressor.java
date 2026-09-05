@@ -20,18 +20,34 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
 /**
- * Makes a smaller copy of one image. The image being worked on is held as state, so the three
- * steps — open, modify, toResource — can be called one at a time, and resize is those three in
- * order.
+ * Makes a smaller copy of one image. The file and the pixels being worked on are held as state,
+ * so the steps — open, modify, then toResource or write — can be called one at a time, and
+ * resize is open, modify and toResource in order.
+ *
+ * One image at a time: a caller works it with its own instance rather than sharing one.
  *
  * @author Pierre
  */
 public class ImageCompressor
 {
-	private BufferedImage image;
+	private File			fileFrom;
+	private BufferedImage	image;
+
+	public File getFileFrom()
+	{
+		return fileFrom;
+	}
+
+	public void setFileFrom(File fileFrom)
+	{
+		this.fileFrom = fileFrom;
+	}
 
 	public BufferedImage getImage()
 	{
@@ -44,7 +60,7 @@ public class ImageCompressor
 	}
 
 	/**
-	 * A copy of one image file, scaled to fit inside the box and written as a JPEG at that
+	 * A copy of one image file, scaled to fit inside the box and answered as JPEG bytes at that
 	 * quality.
 	 */
 	public Resource resize(File fileFrom, int boxWidth, int boxHeight, double quality)
@@ -57,10 +73,10 @@ public class ImageCompressor
 	}
 
 	/**
-	 * The pixels of one image file, which become the image this compressor is working on. A file
-	 * that cannot be read as an image throws.
+	 * Reads the file and takes its pixels as the image being worked on. A file that cannot be
+	 * read as an image throws.
 	 */
-	public BufferedImage open(File fileFrom)
+	public void open(File fileFrom)
 	{
 		BufferedImage openedImage;
 
@@ -78,17 +94,17 @@ public class ImageCompressor
 			throw new BasicRuntimeException("Unable to read image: %s", fileFrom);
 		}
 
+		setFileFrom(fileFrom);
 		setImage(openedImage);
-		return openedImage;
 	}
 
 	/**
-	 * The image scaled to fit inside the box, keeping its aspect ratio. Only one of the two
+	 * Scales the image to fit inside the box, keeping its aspect ratio. Only one of the two
 	 * numbers binds — a landscape shot is held by the width, a portrait one by the height. An
 	 * image already inside the box is left as it is, since enlarging it adds pixels the file
 	 * never carried.
 	 */
-	public BufferedImage modify(int boxWidth, int boxHeight)
+	public void modify(int boxWidth, int boxHeight)
 	{
 		BufferedImage	sourceImage		= getImage();
 		int				sourceWidth		= sourceImage.getWidth();
@@ -99,7 +115,7 @@ public class ImageCompressor
 
 		if (scale >= 1.0)
 		{
-			return sourceImage;
+			return;
 		}
 
 		int				targetWidth		= (int) Math.round(sourceWidth * scale);
@@ -114,7 +130,6 @@ public class ImageCompressor
 		graphics.dispose();
 
 		setImage(targetImage);
-		return targetImage;
 	}
 
 	/**
@@ -149,8 +164,47 @@ public class ImageCompressor
 			writer.dispose();
 		}
 
-		byte[]	byteList	= byteStream.toByteArray();
-		Resource answer		= new ByteArrayResource(byteList);
+		byte[]		byteList	= byteStream.toByteArray();
+		Resource	answer		= new ByteArrayResource(byteList);
+		return answer;
+	}
+
+	/**
+	 * Writes the image to that file, at a quality between 0 and 1, replacing whatever was there.
+	 * Answers the file written.
+	 */
+	public File write(File fileTo, double quality)
+	{
+		Resource resource = toResource(quality);
+
+		try (InputStream inputStream = resource.getInputStream())
+		{
+			Files.copy(inputStream, fileTo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch (Exception e)
+		{
+			throw new BasicRuntimeException(e, "Error writing image: %s", fileTo);
+		}
+
+		return fileTo;
+	}
+
+	/**
+	 * Writes the image beside the file it was opened from, under the same name with the suffix
+	 * on it — IMG_1234.jpg written with "640" becomes IMG_1234-640.jpg. Answers the file written.
+	 */
+	public File write(String suffix, double quality)
+	{
+		File	sourceFile	= getFileFrom();
+		String	sourceName	= sourceFile.getName();
+		int		dotIndex	= sourceName.lastIndexOf('.');
+		String	baseName	= 0 > dotIndex ? sourceName : sourceName.substring(0, dotIndex);
+		String	extension	= 0 > dotIndex ? "" : sourceName.substring(dotIndex);
+		String	targetName	= String.format("%1$s-%2$s%3$s", baseName, suffix, extension);
+		File	targetFolder= sourceFile.getParentFile();
+		File	targetFile	= new File(targetFolder, targetName);
+
+		File answer = write(targetFile, quality);
 		return answer;
 	}
 }
