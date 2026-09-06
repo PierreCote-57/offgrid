@@ -80,9 +80,5 @@ against the tree rather than fixing the one row.
 
 #51 Decide whether the lightbox stays at the Large box. The overlay is capped at 75vh, and
 Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per
-step. Medium's box is the alternative.
-
-#52 Point the lightbox's "Full size" link at the bare image URL. It asks for `?size=large`
-today, while the pattern everywhere else is that no size means the original — which is what a
-modified click on a gallery thumbnail already gets. Agreed 2026-09-04, not yet made. It leaves
-Large with no caller, which is the subject of #51.
+step. Medium's box is the alternative. Since the "Full size" link went to the bare URL on
+2026-09-06, nothing asks for Large at all.

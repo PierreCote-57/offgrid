@@ -138,12 +138,13 @@
 
 	/**
 	 * The two URLs one link answers. The overlay shows the medium, which is sized for a screen
-	 * rather than for a print, and the full-size link under it points at the large.
+	 * rather than for a print, and the full-size link under it points at the native file — the
+	 * link's own href, which states no size.
 	 */
 	function entryOf(link) {
 		var entry = {
 			src: link.href + "?size=medium",
-			hires: link.href + "?size=large",
+			hires: link.href,
 			caption: link.getAttribute("data-caption") || ""
 		};
 		return entry;
