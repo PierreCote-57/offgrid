@@ -112,8 +112,19 @@ Tomcat. With NONE, nothing holds a non-daemon thread, so the JVM exits when `mai
 
 **Two mains in one jar.** Against the build tree either class runs as an ordinary main. Out of
 the repackaged jar the `Main-Class` is Boot's launcher and the `Start-Class` is
-`OffgridApplication`, so the second main is reached through `PropertiesLauncher` with
+`OffgridApplicationWeb`, so the second main is reached through `PropertiesLauncher` with
 `-Dloader.main` — to be validated against Boot 4.1, which moved the loader classes.
+
+The `start-class` property in the pom is what names it. The repackage goal otherwise looks for
+a single main class and fails on two, and the site is the one a plain `java -jar` should get:
+the CLI is the run you have to ask for.
+
+**One test context, all three roots.** `src/test`'s `OffgridTestApplication` scans `common`,
+`webapp` and `cliapp`, so a test reaches any bean whichever launcher owns it in production.
+Two `@SpringBootApplication` classes sit in `com.lc.offgrid`, so a bare `@SpringBootTest` no
+longer finds one configuration by searching upward: every `@SpringBootTest` names its class.
+`OffgridApplicationTests` names `OffgridApplicationWeb`, which is what keeps that test a check
+that the site's own context starts.
 
 ## 2026-09-05 — Mockito is excluded from the test starters
 

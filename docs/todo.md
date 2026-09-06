@@ -78,14 +78,6 @@ predates `src/main/resources/data`, the profile yamls beside `application.proper
 the `folder.local` root holding `images/`, `documents/` and `logs/`. Read the whole table
 against the tree rather than fixing the one row.
 
-#50 Build the CLI. `com.lc.offgrid.OffgridApplicationCLI`, peer of `OffgridApplication`, a
-`@SpringBootApplication` with `scanBasePackages` naming `common` and `cliapp`, setting
-`WebApplicationType.NONE` and adding the `local` profile so `folder.local` resolves; the
-working code goes in `cliapp` as a `@Component` with `ImageFileManager` constructor-injected,
-which `main` takes off the context and calls. `cliapp` is an empty folder today. Neither
-launcher's `scanBasePackages` is written yet — both still run on the default scan, which
-reaches everything, so nothing is broken and nothing is separated either.
-
 #51 Decide whether the lightbox stays at the Large box. The overlay is capped at 75vh, and
 Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per
 step. Medium's box is the alternative.

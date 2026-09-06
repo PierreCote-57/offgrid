@@ -19,7 +19,9 @@ Produces `target/offgrid-0.0.1-SNAPSHOT.jar`, a self-contained fat jar.
 
 Serves on http://localhost:8080.
 
-From IntelliJ: open `pom.xml` as a project, then run `OffgridApplication`.
+From IntelliJ: open `pom.xml` as a project, then run `OffgridApplicationWeb`.
+
+The command-line run is `OffgridApplicationCLI`, the other main in `com.lc.offgrid`.
 
 ## Layout
 

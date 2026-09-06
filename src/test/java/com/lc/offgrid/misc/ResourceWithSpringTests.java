@@ -2,6 +2,7 @@ package com.lc.offgrid.misc;
 
 import com.lc.basics.tools.function.TriFunction;
 import com.lc.offgrid.AbstractTests;
+import com.lc.offgrid.OffgridTestApplication;
 import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.DocumentFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.ImageFileManager;
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * The file managers taken from the Spring context rather than constructed: the root folder is
  * the one the profile states, and afterPropertiesSet has already run on each bean.
  */
-@SpringBootTest
+@SpringBootTest(classes = OffgridTestApplication.class)
 @ActiveProfiles("local")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ResourceWithSpringTests extends AbstractTests
