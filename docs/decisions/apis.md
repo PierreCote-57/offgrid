@@ -52,7 +52,7 @@ spring-ai#2866 is about.
 ## 2026-09-02 — The chat page, and the REST controller it arrives on
 
 **`OffgridRestController` is the site's REST controller, not the chat's.** It is a peer of
-`OffgridWebController` in `spring/web` — same shape, same `getBeanFactory().getBean(...)` per
+`OffgridWebController` in `webapp/spring/site` — same shape, same `getBeanFactory().getBean(...)` per
 request — and answers JSON where the other names a view. Chat is its first endpoint, at
 `/rest/chat`. `OffgridRestProcessor` backs it, a peer of `OffgridWebProcessor` that never
 touches a `Model`. Rejected: putting the method on `OffgridWebProcessor`, which would have made
@@ -83,7 +83,7 @@ the file's shape. Switching MVC to Gson was considered and rejected: it would re
 keys to `RestBaseAnswer`'s `m_`-prefixed fields, and Spring AI would keep using Jackson for
 `/mcp` regardless, so there would still be two.
 
-**The wire shapes live in `pojo/chat`, the controller and processor in `spring/web`.**
+**The wire shapes live in `webapp/pojo/chat`, the controller and processor in `webapp/spring/site`.**
 `ChatRequest`, `ChatMessage` and `ChatAnswer` are data, so they sit with the other POJOs;
 they are the first ones there annotated for Jackson rather than Gson, because they are the
 only ones that travel over HTTP rather than out of a file.

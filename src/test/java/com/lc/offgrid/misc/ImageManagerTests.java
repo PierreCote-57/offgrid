@@ -1,10 +1,9 @@
 package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
-import com.lc.offgrid.misc.files.LocalFileManager.*;
-import com.lc.offgrid.misc.geography.GeoComparator;
-import com.lc.offgrid.misc.geography.point.LatLonPoint;
-import com.lc.offgrid.misc.imaging.ImageMetadata;
+import com.lc.offgrid.common.misc.geography.GeoComparator;
+import com.lc.offgrid.common.misc.geography.point.LatLonPoint;
+import com.lc.offgrid.common.misc.imaging.ImageMetadata;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

@@ -159,7 +159,7 @@ The pointer fields are `file` and `locationId` as two nullable fields rather tha
 
 ## 2026-08-25 — Two packages: page and part
 
-`com.lc.offgrid.pojo.page` holds the page classes; `com.lc.offgrid.pojo.part` holds the blocks
+`com.lc.offgrid.common.pojo.page` holds the page classes; `com.lc.offgrid.common.pojo.part` holds the blocks
 they are built from. A page class is something a URL resolves to. A part is never a page on
 its own.
 
@@ -285,7 +285,7 @@ Four reference downloads live in `resources/external/download/`: `bc_reststop.js
 from OpenStreetMap through Overpass. They are read-only reference data, not content, and no
 page consumes them yet.
 
-**`com.lc.offgrid.pojo.external` is the file and nothing else.** A class there maps a JSON
+**`com.lc.offgrid.common.pojo.external` is the file and nothing else.** A class there maps a JSON
 shape strictly — every key has a home — and interprets nothing. The packages under it are named
 for the supplier, not the subject: `external/bc/reststop`, `external/bc/offramp`,
 `external/overpass/exits`, `external/overpass/amenities`. A re-download changes the mirror and

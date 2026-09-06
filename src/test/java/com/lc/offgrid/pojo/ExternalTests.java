@@ -1,15 +1,15 @@
 package com.lc.offgrid.pojo;
 
 import com.lc.offgrid.AbstractTests;
-import com.lc.offgrid.pojo.external.ExternalManager;
-import com.lc.offgrid.pojo.external.bc.offramp.OfframpFeature;
-import com.lc.offgrid.pojo.external.bc.offramp.OfframpFile;
-import com.lc.offgrid.pojo.external.bc.reststop.RestStopFeature;
-import com.lc.offgrid.pojo.external.bc.reststop.RestStopFile;
-import com.lc.offgrid.pojo.external.overpass.amenities.AmenityElement;
-import com.lc.offgrid.pojo.external.overpass.amenities.AmenityFile;
-import com.lc.offgrid.pojo.external.overpass.exits.ExitElement;
-import com.lc.offgrid.pojo.external.overpass.exits.ExitFile;
+import com.lc.offgrid.common.misc.external.ExternalManager;
+import com.lc.offgrid.common.pojo.external.bc.offramp.OfframpFeature;
+import com.lc.offgrid.common.pojo.external.bc.offramp.OfframpFile;
+import com.lc.offgrid.common.pojo.external.bc.reststop.RestStopFeature;
+import com.lc.offgrid.common.pojo.external.bc.reststop.RestStopFile;
+import com.lc.offgrid.common.pojo.external.overpass.amenities.AmenityElement;
+import com.lc.offgrid.common.pojo.external.overpass.amenities.AmenityFile;
+import com.lc.offgrid.common.pojo.external.overpass.exits.ExitElement;
+import com.lc.offgrid.common.pojo.external.overpass.exits.ExitFile;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

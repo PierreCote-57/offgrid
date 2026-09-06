@@ -2,12 +2,11 @@ package com.lc.offgrid.misc;
 
 import com.lc.basics.tools.function.TriFunction;
 import com.lc.offgrid.AbstractTests;
-import com.lc.offgrid.misc.files.AbstractFileManager;
-import com.lc.offgrid.misc.files.LocalFileManager.DocumentFileManager;
-import com.lc.offgrid.misc.files.LocalFileManager.ImageFileManager;
-import com.lc.offgrid.misc.files.ResourceFileManager.JsonResourceFileManager;
-import com.lc.offgrid.misc.imaging.ImageSize;
-import org.junit.jupiter.api.Test;
+import com.lc.offgrid.common.misc.files.AbstractFileManager;
+import com.lc.offgrid.common.misc.files.LocalFileManager.DocumentFileManager;
+import com.lc.offgrid.common.misc.files.LocalFileManager.ImageFileManager;
+import com.lc.offgrid.common.misc.files.ResourceFileManager.JsonResourceFileManager;
+import com.lc.offgrid.common.misc.imaging.ImageSize;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,9 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

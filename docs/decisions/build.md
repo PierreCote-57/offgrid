@@ -70,7 +70,7 @@ version of every binary forever, which is the one place the repo stops being fre
 
 `OffgridApplication` moved from `com.lc.offgrid.spring` to `com.lc.offgrid`. Component
 scanning starts at the annotated class's own package, so anything outside `spring/` — the
-first case was `misc/imaging` — was never scanned and could not become a bean.
+first case was `common/misc/imaging` — was never scanned and could not become a bean.
 
 `scanBasePackages` would have fixed the one case. Moving the class fixes every future one,
 and the failure it prevents is nasty: an injection error somewhere unrelated to the class
@@ -84,3 +84,42 @@ way the code does. Nothing sits on disk beside the jar and nothing is mounted.
 
 This closes the question the *Content lives in the repo* entry left open. A data file is not a
 separate kind of thing to be deployed on its own terms — it belongs where its HTML belongs.
+
+## 2026-09-05 — Three package roots, two mains
+
+`com.lc.offgrid` holds nothing but the launchers. Below it, `webapp` is what the site needs,
+`cliapp` is what a command-line run needs, and `common` is what both need. Each launcher is a
+`@SpringBootApplication` naming its own `scanBasePackages` — common plus its own — so neither
+scans the package the launchers sit in and neither picks the other up. That is what makes a
+second `@SpringBootApplication` safe: while both were reachable from one scan, a
+`CommandLineRunner` written for the CLI would have fired every time the site started.
+
+This does not repeat the *application class sits at the package root* entry above, it refines
+it. That entry moved the class so the default scan would reach everything; naming the roots
+explicitly costs one line per launcher and buys two contexts that cannot see each other's
+beans. The price it names still stands: naming any root replaces the default, so a root left
+off the list is silently invisible.
+
+**`common` must not import `webapp`.** The direction is the whole point of the split, and it
+is one grep to check. Two classes crossed it on the first pass and both had a better home:
+`readFile` was a filesystem-then-classpath JSON read sitting on `BaseWebProcessor` and moved
+to `BaseFileHandler`, and the chat wire shapes moved into `webapp/pojo` beside the endpoint
+that answers them.
+
+**The web type comes from the classpath, not from the class you launch.** The webmvc starter
+is a compile dependency, so a CLI main that does not set `WebApplicationType.NONE` starts
+Tomcat. With NONE, nothing holds a non-daemon thread, so the JVM exits when `main` returns.
+
+**Two mains in one jar.** Against the build tree either class runs as an ordinary main. Out of
+the repackaged jar the `Main-Class` is Boot's launcher and the `Start-Class` is
+`OffgridApplication`, so the second main is reached through `PropertiesLauncher` with
+`-Dloader.main` — to be validated against Boot 4.1, which moved the loader classes.
+
+## 2026-09-05 — Mockito is excluded from the test starters
+
+No test in `src/test` uses it. It arrived transitively — both `-test` starters pull
+`spring-boot-starter-test`, which carries `mockito-core` and `mockito-junit-jupiter` — and
+announced itself on every run by self-attaching a Byte Buddy agent to the live JVM, which the
+JDK then warned about four times. The exclusion names the whole `org.mockito` group on both
+starters, since either path alone would bring it back.
+

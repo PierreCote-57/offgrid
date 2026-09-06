@@ -1,7 +1,7 @@
 package com.lc.offgrid.pojo;
 
 import com.google.gson.Gson;
-import com.lc.offgrid.pojo.page.PageData;
+import com.lc.offgrid.common.pojo.page.PageData;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

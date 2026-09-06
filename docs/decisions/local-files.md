@@ -58,3 +58,41 @@ overlay's URLs are built — the clicked image and every arrow step — so the s
 wants belongs there and not in the two fragments that write the link. The href being a plain
 image URL is what still works with JavaScript off, and with no size on it that click gets the
 native file.
+
+## 2026-09-05 — The size carries its own box, and the compressor is a workbench
+
+**`ImageSize` holds the pixels.** Each constant is built with the width and height of the box
+an image fits inside — contain, never crop, and never enlarged past what the file carries, so
+only one of the two numbers binds and which one depends on the shot. Nothing outside the enum
+computes a number, and the numbers themselves are in the source rather than repeated here.
+
+The boxes came from measuring the CSS box each caller draws into and doubling it for a retina
+screen. Several callers share a name — a gallery thumbnail, a browser card and a map info
+window are all Small — so a name's box is the largest of the places that use it. `Z`, a single
+largest-dimension number as `sips -Z` takes, was rejected: it overshoots a portrait in a
+landscape box by half again, for pixels no browser draws.
+
+What this buys is bytes on the wire and nothing else. The browser already fits the native file
+into the same box, so no page looks different; the file just stops being megabytes. Bytes track
+stored pixels with no knee anywhere in the range, so every doubling of a box costs four times
+the transfer.
+
+**`ImageCompressor` is a workbench, newed per use, not injected.** It holds the file it opened
+and the pixels it is working on; `open` and `modify` are `void` steps on that state, and only
+`toResource` and `write` produce something new. An earlier draft had the steps both mutate the
+state and return the image, which left a caller unable to tell whether the value it held was
+its own or the compressor's — and `modify` handed back the very object `open` had produced
+whenever the image already fitted. Stateful means it cannot be a shared singleton the way
+`ImageFileManager` is, which is the trade the shape accepts.
+
+**A derived file is named by folder and by suffix, and `makeFileTo` is static.** Deciding where
+a copy lands is separate from making one, so it answers a `File` without opening anything.
+`ImageSize.resize` passes the lower-cased size name as both, putting `van/IMG_1234.jpg` at
+`small/IMG_1234-small.jpg`: the folder alone would collide in `AbstractFileManager`'s name map,
+which keys on the base name across the whole tree and would let a 640px copy answer to the
+native's name. Naming neither throws rather than writing over the original.
+
+**Known gaps in what is built.** `open` uses `ImageIO.read`, which ignores EXIF orientation, so
+a phone portrait comes back sideways. `toResource` always writes JPEG while the suffix form
+keeps the source's extension, so a PNG source would produce JPEG bytes under a `.png` name.
+

@@ -1,9 +1,8 @@
 package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
-import com.lc.offgrid.misc.files.AbstractFileManager;
-import com.lc.offgrid.misc.files.ResourceFileManager;
-import org.junit.jupiter.api.Test;
+import com.lc.offgrid.common.misc.files.AbstractFileManager;
+import com.lc.offgrid.common.misc.files.ResourceFileManager;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
