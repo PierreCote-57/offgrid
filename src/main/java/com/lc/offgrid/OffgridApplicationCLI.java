@@ -1,6 +1,6 @@
 package com.lc.offgrid;
 
-import com.lc.offgrid.cliapp.OffgridCommand;
+import com.lc.offgrid.cliapp.OffgridContainer;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,7 +18,7 @@ public class OffgridApplicationCLI
 		builder.profiles("local");
 
 		ConfigurableApplicationContext	context		= builder.run(args);
-		OffgridCommand					command		= context.getBean(OffgridCommand.class);
+		OffgridContainer command		= context.getBean(OffgridContainer.class);
 		command.execute();
 		context.close();
 	}

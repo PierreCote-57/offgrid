@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
@@ -80,6 +81,12 @@ public class ImageCompressor
 	public void open(File fileFrom)
 	{
 		BufferedImage openedImage;
+		ImageMetadata metadata = ImageMetadataExtractor.getImageMetadata(fileFrom);
+		boolean isLegal = metadata.isLegal();
+		if (!isLegal)
+		{
+			throw new BasicRuntimeException("Illegal image: %s", fileFrom);
+		}
 
 		try
 		{
@@ -92,7 +99,11 @@ public class ImageCompressor
 
 		if (null == openedImage)
 		{
-			throw new BasicRuntimeException("Unable to read image: %s", fileFrom);
+			String message = String.format("Mismatched type for (%s) %s != %s",
+					fileFrom.getName(),
+					metadata.getMediaType(),
+					metadata.getTagMap().get("File Type/Detected File Type Name"));
+			throw new BasicRuntimeException(message);
 		}
 
 		setFileFrom(fileFrom);
@@ -116,7 +127,7 @@ public class ImageCompressor
 
 		if (scale >= 1.0)
 		{
-			return;
+			scale = 1.0;
 		}
 
 		int				targetWidth		= (int) Math.round(sourceWidth * scale);
@@ -158,7 +169,7 @@ public class ImageCompressor
 		}
 		catch (Exception e)
 		{
-			throw new BasicRuntimeException(e, "Error writing image");
+			throw new BasicRuntimeException(e, "Error writing image %s", getFileFrom());
 		}
 		finally
 		{
@@ -176,10 +187,19 @@ public class ImageCompressor
 	 */
 	public File write(File fileTo, double quality)
 	{
-		Resource resource = toResource(quality);
+		Resource resource;
+		try
+		{
+			resource = toResource(quality);
+		}
+		catch (Exception e)
+		{
+			throw new BasicRuntimeException(e, "Error writing image: %s", fileTo);
+		}
 
 		try (InputStream inputStream = resource.getInputStream())
 		{
+			BaseFileHandler.ensureFolder(fileTo.getAbsolutePath());
 			Files.copy(inputStream, fileTo.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 		catch (Exception e)
@@ -188,62 +208,5 @@ public class ImageCompressor
 		}
 
 		return fileTo;
-	}
-
-	/**
-	 * Writes the image next to the file it was opened from, in a peer folder when one is named
-	 * and with the suffix on the name when one is given. Answers the file written.
-	 */
-	public File write(String folder, String nameSuffix, double quality)
-	{
-		File	fileFrom	= getFileFrom();
-		File	fileTo		= makeFileTo(fileFrom, folder, nameSuffix);
-		String	pathTo		= fileTo.getPath();
-
-		BaseFileHandler.ensureFolder(pathTo);
-
-		File answer = write(fileTo, quality);
-		return answer;
-	}
-
-	/**
-	 * Where a derived copy of one file lands: in a peer folder when one is named, keeping the
-	 * source's folder otherwise, and with the suffix hung off the name when one is given, keeping
-	 * the source's name otherwise. /images/van/IMG_1234.jpg with "small" and "small" answers
-	 * /images/small/IMG_1234-small.jpg. Naming neither answers the source file itself, which is
-	 * not a copy, and throws.
-	 */
-	public static File makeFileTo(File fileFrom, String folder, String nameSuffix)
-	{
-		if (null == folder && null == nameSuffix)
-		{
-			throw new BasicRuntimeException("Neither a folder nor a name suffix: %s", fileFrom);
-		}
-
-		String	nameFrom		= fileFrom.getName();
-		File	folderFrom		= fileFrom.getParentFile();
-		File	folderTo		= null == folder
-				? folderFrom
-				: new File(folderFrom.getParentFile(), folder);
-		String	nameTo			= null == nameSuffix
-				? nameFrom
-				: suffixedName(nameFrom, nameSuffix);
-
-		File answer = new File(folderTo, nameTo);
-		return answer;
-	}
-
-	/**
-	 * One filename with the suffix hung off its name — IMG_1234.jpg and "small" make
-	 * IMG_1234-small.jpg. A name carrying no extension keeps none.
-	 */
-	private static String suffixedName(String filename, String nameSuffix)
-	{
-		String	baseName	= BaseFileHandler.extractName(filename);
-		String	extension	= BaseFileHandler.extractExtension(filename);
-		String	answer		= null == extension
-				? String.format("%1$s-%2$s", baseName, nameSuffix)
-				: String.format("%1$s-%2$s.%3$s", baseName, nameSuffix, extension);
-		return answer;
 	}
 }

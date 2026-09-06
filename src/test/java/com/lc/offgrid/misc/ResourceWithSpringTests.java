@@ -80,21 +80,27 @@ public class ResourceWithSpringTests extends AbstractTests
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public Object[][] ImageResizeSource()
 	{
 		TriFunction<ImageSize, File, Double, Object> fn1 =
 				ImageSize::resize;
 		TriFunction<ImageSize, File, Double, Object> fn2 =
-				ImageSize::resize;
-		TriFunction<ImageSize, File, Double, Object>[] fnList =
-				new TriFunction[] {fn1, fn2};
+				ImageSize::toResource;
 
 		List<Object[]> objectList = new ArrayList<>();
 		for (ImageSize size : ImageSize.values())
 		{
 			for (String fnName : new String[] {"resize", "toResource"})
 			{
-				objectList.add(new Object[] {fnName, size, 1.0, fn1});
+				if ("resize".equals(fnName))
+				{
+					objectList.add(new Object[] {fnName, size, 1.0, fn1});
+				}
+				else
+				{
+					objectList.add(new Object[] {fnName, size, 1.0, fn2});
+				}
 			}
 		}
 		return objectList.toArray(new Object[0][]);

@@ -8,6 +8,8 @@ package com.lc.basics.tools.misc;
 
 import com.lc.basics.tools.logging.BasicLogger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
@@ -50,12 +52,24 @@ public class BasicTools
 
 	static		// HOST_NAME
 	{
-		String			hostName;
+		String			hostName = null;
 		String			hostAddress;
+
+		// Safest on mac
+		try {
+			// Executes the macOS command line utility to get the Computer Name
+			Process process = Runtime.getRuntime().exec("scutil --get ComputerName");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			hostName = reader.readLine();
+		} catch (Exception e) {
+			// Try something else
+		}
+
+		// generic
 		try
 		{
 			InetAddress		host		= InetAddress.getLocalHost();
-			hostName	= host.getHostName();
+			hostName	= null == hostName ? host.getHostName() : hostName;
 			hostAddress = host.getHostAddress();
 		}
 		catch (UnknownHostException e)
@@ -67,6 +81,7 @@ public class BasicTools
 			}
 			hostAddress = "127.0.0.1";
 		}
+
 		HOST_NAME = hostName;
 		HOST_ADDRESS = hostAddress;
 	}

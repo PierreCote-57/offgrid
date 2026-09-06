@@ -101,11 +101,6 @@ public class AbstractContainer
 				System.out.println("Please specify a valid action");
 				continue;
 			}
-			if (action.getClass().getName().contains("Exit")
-					|| action.toString().contains("Exit"))
-			{
-				return;
-			}
 			try
 			{
 				EventFormatter.resetTimer();
@@ -115,7 +110,13 @@ public class AbstractContainer
 			catch (Exception exception)
 			{
 				getLogger().error(exception, "Something went wrong");
-				BasicTools.sleepMS(1000);
+//				BasicTools.sleepMS(1000);
+			}
+
+			if (action.getClass().getName().contains("Exit")
+					|| action.toString().contains("Exit"))
+			{
+				return;
 			}
 		}
 	}

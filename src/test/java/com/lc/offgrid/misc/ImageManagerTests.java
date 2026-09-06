@@ -1,6 +1,7 @@
 package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
+import com.lc.offgrid.common.misc.files.LocalFileManager.*;
 import com.lc.offgrid.common.misc.geography.GeoComparator;
 import com.lc.offgrid.common.misc.geography.point.LatLonPoint;
 import com.lc.offgrid.common.misc.imaging.ImageMetadata;
@@ -14,17 +15,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ImageManagerTests extends AbstractTests
 {
-	private static final String[] NAME_LIST =
-			{
-					"awning-control-panel",
-					"DumpStation.jpeg",
-					"IMG_0390",
-			};
-
 	@Test
 	public void testImageLoad() throws Exception
 	{

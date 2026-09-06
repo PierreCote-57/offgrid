@@ -10,6 +10,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * The size a caller asks an image for, and the box that size means. The name rides as the `size`
@@ -78,8 +79,20 @@ public enum ImageSize
 		compressor.open(fileFrom);
 		compressor.modify(getWidth(), getHeight());
 
-		File answer = compressor.write(folder, folder, quality);
+		File fileTo = makeFileTo(fileFrom);
+		File answer = compressor.write(fileTo, quality);
 		return answer;
+	}
+	public File makeFileTo(File fileFrom)
+	{
+		String nameFrom = fileFrom.getAbsolutePath();
+		String nameTemp = nameFrom.replace("_native", name().toLowerCase(Locale.ROOT));
+		nameTemp = nameTemp.replace("native", name().toLowerCase(Locale.ROOT));
+		int index = nameTemp.lastIndexOf('.');
+		String prefix = nameTemp.substring(0, index);
+		String suffix = nameTemp.substring(index + 1);
+		String nameTo = String.format("%s-%s.%s", prefix, name().toLowerCase(Locale.ROOT), "jpg");
+		return new File(nameTo);
 	}
 
 	/**

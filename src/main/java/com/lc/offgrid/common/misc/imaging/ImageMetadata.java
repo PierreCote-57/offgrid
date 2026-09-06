@@ -6,9 +6,11 @@
 
 package com.lc.offgrid.common.misc.imaging;
 
+import com.lc.basics.container.AbstractContainer;
 import com.lc.offgrid.common.misc.geography.point.LatLonPoint;
 import com.lc.offgrid.common.misc.geography.point.LatLonPointPojo;
 import org.springframework.http.MediaType;
+import org.springframework.util.MimeType;
 
 import java.io.File;
 import java.util.Date;
@@ -265,5 +267,19 @@ public class ImageMetadata
 	{
 		LatLonPointPojo ppint = new LatLonPointPojo(getLatitude(), getLongitude());
 		return ppint;
+	}
+
+	public String getDetectedType()
+	{
+		return getTagMap().get("File Type/Detected File Type Name");
+	}
+
+	public boolean isLegal()
+	{
+		MediaType mediaType = getMediaType();
+		String detected = getDetectedType();
+
+		boolean isLegal = mediaType.getSubtype().equalsIgnoreCase(detected);
+		return isLegal;
 	}
 }

@@ -39,7 +39,7 @@ public class ImageMetadataExtractor
 	 * Everything one image file says about itself. A file that cannot be read at all throws; a
 	 * file that simply carries no EXIF answers with an ImageMetadata whose values are empty.
 	 */
-	public ImageMetadata getImageMetadata(File file)
+	public static ImageMetadata getImageMetadata(File file)
 	{
 		Metadata	metadata;
 
@@ -49,7 +49,8 @@ public class ImageMetadataExtractor
 		}
 		catch (Exception e)
 		{
-			throw new BasicRuntimeException(e, "Error reading image metadata: %s", file);
+			// Not an image, e.g. _DS_STORE
+			return null;
 		}
 
 		ImageMetadata answer = new ImageMetadata();
@@ -91,7 +92,7 @@ public class ImageMetadataExtractor
 	 * When the shutter fired, from the EXIF original date, falling back to the file's own EXIF
 	 * date. Null when neither is present.
 	 */
-	private Date dateTakenOf(Metadata metadata)
+	private static Date dateTakenOf(Metadata metadata)
 	{
 		Date				answer			= null;
 		ExifSubIFDDirectory	subDirectory	= metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
@@ -115,7 +116,7 @@ public class ImageMetadataExtractor
 	 * The EXIF orientation, 1 through 8. A file that does not say is reported as normal, since
 	 * that is how a viewer treats it.
 	 */
-	private int orientationOf(Metadata metadata)
+	private static int orientationOf(Metadata metadata)
 	{
 		int	answer = intTag(metadata, ExifIFD0Directory.class, ExifIFD0Directory.TAG_ORIENTATION);
 
@@ -129,7 +130,7 @@ public class ImageMetadataExtractor
 	/**
 	 * Where the picture was taken, null when the file carries no GPS or carries it unset.
 	 */
-	private GeoLocation geoLocationOf(Metadata metadata)
+	private static GeoLocation geoLocationOf(Metadata metadata)
 	{
 		GeoLocation		answer			= null;
 		GpsDirectory	gpsDirectory	= metadata.getFirstDirectoryOfType(GpsDirectory.class);
@@ -149,7 +150,7 @@ public class ImageMetadataExtractor
 	 * Every tag in the file, keyed "Directory/Tag name", with the human-readable description as
 	 * the value. This is the dump — useful to see what a given camera actually wrote.
 	 */
-	private Map<String, String> tagMapOf(Metadata metadata)
+	private static Map<String, String> tagMapOf(Metadata metadata)
 	{
 		Map<String, String> answer = new LinkedHashMap<>();
 
@@ -166,7 +167,7 @@ public class ImageMetadataExtractor
 	/**
 	 * One integer tag out of one directory, 0 when the directory or the tag is absent.
 	 */
-	private <T extends Directory> int intTag(Metadata metadata, Class<T> clazz, int tagType)
+	private static <T extends Directory> int intTag(Metadata metadata, Class<T> clazz, int tagType)
 	{
 		int	answer		= 0;
 		T	directory	= metadata.getFirstDirectoryOfType(clazz);
@@ -181,7 +182,7 @@ public class ImageMetadataExtractor
 	/**
 	 * One string tag out of one directory, null when the directory or the tag is absent.
 	 */
-	private <T extends Directory> String stringTag(Metadata metadata, Class<T> clazz, int tagType)
+	private static <T extends Directory> String stringTag(Metadata metadata, Class<T> clazz, int tagType)
 	{
 		String	answer		= null;
 		T		directory	= metadata.getFirstDirectoryOfType(clazz);
@@ -196,7 +197,7 @@ public class ImageMetadataExtractor
 	/**
 	 * One decimal tag out of one directory, null when the directory or the tag is absent.
 	 */
-	private <T extends Directory> Double doubleTag(Metadata metadata, Class<T> clazz, int tagType)
+	private static <T extends Directory> Double doubleTag(Metadata metadata, Class<T> clazz, int tagType)
 	{
 		Double	answer		= null;
 		T		directory	= metadata.getFirstDirectoryOfType(clazz);
@@ -212,7 +213,7 @@ public class ImageMetadataExtractor
 	 * One whole-number tag out of one directory, null when the directory or the tag is absent.
 	 * This is the nullable twin of intTag, for values where 0 is a real answer.
 	 */
-	private <T extends Directory> Integer integerTag(Metadata metadata, Class<T> clazz, int tagType)
+	private static <T extends Directory> Integer integerTag(Metadata metadata, Class<T> clazz, int tagType)
 	{
 		Integer	answer		= null;
 		T		directory	= metadata.getFirstDirectoryOfType(clazz);
@@ -228,7 +229,7 @@ public class ImageMetadataExtractor
 	 * One tag rendered the way a person reads it — "1/250 sec", "Flash did not fire" — rather
 	 * than the raw stored value. Null when the directory or the tag is absent.
 	 */
-	private <T extends Directory> String descriptionTag(Metadata metadata, Class<T> clazz, int tagType)
+	private static <T extends Directory> String descriptionTag(Metadata metadata, Class<T> clazz, int tagType)
 	{
 		String	answer		= null;
 		T		directory	= metadata.getFirstDirectoryOfType(clazz);
