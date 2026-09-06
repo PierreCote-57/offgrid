@@ -6,6 +6,7 @@
 
 package com.lc.offgrid.misc.imaging;
 
+import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.misc.BasicRuntimeException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -190,21 +191,59 @@ public class ImageCompressor
 	}
 
 	/**
-	 * Writes the image beside the file it was opened from, under the same name with the suffix
-	 * on it — IMG_1234.jpg written with "640" becomes IMG_1234-640.jpg. Answers the file written.
+	 * Writes the image next to the file it was opened from, in a peer folder when one is named
+	 * and with the suffix on the name when one is given. Answers the file written.
 	 */
-	public File write(String suffix, double quality)
+	public File write(String folder, String nameSuffix, double quality)
 	{
-		File	sourceFile	= getFileFrom();
-		String	sourceName	= sourceFile.getName();
-		int		dotIndex	= sourceName.lastIndexOf('.');
-		String	baseName	= 0 > dotIndex ? sourceName : sourceName.substring(0, dotIndex);
-		String	extension	= 0 > dotIndex ? "" : sourceName.substring(dotIndex);
-		String	targetName	= String.format("%1$s-%2$s%3$s", baseName, suffix, extension);
-		File	targetFolder= sourceFile.getParentFile();
-		File	targetFile	= new File(targetFolder, targetName);
+		File	fileFrom	= getFileFrom();
+		File	fileTo		= makeFileTo(fileFrom, folder, nameSuffix);
+		String	pathTo		= fileTo.getPath();
 
-		File answer = write(targetFile, quality);
+		BaseFileHandler.ensureFolder(pathTo);
+
+		File answer = write(fileTo, quality);
+		return answer;
+	}
+
+	/**
+	 * Where a derived copy of one file lands: in a peer folder when one is named, keeping the
+	 * source's folder otherwise, and with the suffix hung off the name when one is given, keeping
+	 * the source's name otherwise. /images/van/IMG_1234.jpg with "small" and "small" answers
+	 * /images/small/IMG_1234-small.jpg. Naming neither answers the source file itself, which is
+	 * not a copy, and throws.
+	 */
+	public static File makeFileTo(File fileFrom, String folder, String nameSuffix)
+	{
+		if (null == folder && null == nameSuffix)
+		{
+			throw new BasicRuntimeException("Neither a folder nor a name suffix: %s", fileFrom);
+		}
+
+		String	nameFrom		= fileFrom.getName();
+		File	folderFrom		= fileFrom.getParentFile();
+		File	folderTo		= null == folder
+				? folderFrom
+				: new File(folderFrom.getParentFile(), folder);
+		String	nameTo			= null == nameSuffix
+				? nameFrom
+				: suffixedName(nameFrom, nameSuffix);
+
+		File answer = new File(folderTo, nameTo);
+		return answer;
+	}
+
+	/**
+	 * One filename with the suffix hung off its name — IMG_1234.jpg and "small" make
+	 * IMG_1234-small.jpg. A name carrying no extension keeps none.
+	 */
+	private static String suffixedName(String filename, String nameSuffix)
+	{
+		String	baseName	= BaseFileHandler.extractName(filename);
+		String	extension	= BaseFileHandler.extractExtension(filename);
+		String	answer		= null == extension
+				? String.format("%1$s-%2$s", baseName, nameSuffix)
+				: String.format("%1$s-%2$s.%3$s", baseName, nameSuffix, extension);
 		return answer;
 	}
 }

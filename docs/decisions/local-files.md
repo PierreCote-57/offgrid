@@ -43,12 +43,15 @@ asks Small — a gallery thumbnail, a browser card, a map info window. A photo s
 page asks Medium. The lightbox asks Medium too, with a "Full size" link under the image, so
 the overlay loads what a screen shows and the original stays one click away.
 
-**A size the enum does not know is null, not a refusal.** The controller takes the parameter
-as a String and calls `ImageSize.of`, which ignores case and answers null for a name it does
-not carry; null reaches the processor as "no size stated". Spring's own String-to-enum
-converter was rejected: it is case-sensitive and turns an unknown value into a 400, and the
-lenient rule would have lived in a `WebMvcConfigurer` on the far side of the app instead of on
-the enum a reader is already looking at.
+**A size the enum does not know is `Native`, not a refusal.** The controller takes the
+parameter as a String and calls `ImageSize.of`, which ignores case and answers `Native` for a
+name it does not carry, and for no name at all — so "no size stated" and "a size nobody
+recognises" both mean the file itself, and the processor never holds a null size. `Native`
+carries a box past any real photograph and overrides `resize` to answer the source file, since
+a copy of it would only be a re-encoding. Spring's own String-to-enum converter was rejected:
+it is case-sensitive and turns an unknown value into a 400, and the lenient rule would have
+lived in a `WebMvcConfigurer` on the far side of the app instead of on the enum a reader is
+already looking at.
 
 **The anchor a lightbox opens from stays bare.** `entryOf` in lightbox.js is the one place the
 overlay's URLs are built — the clicked image and every arrow step — so the size the overlay
