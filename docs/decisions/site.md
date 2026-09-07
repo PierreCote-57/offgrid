@@ -472,3 +472,48 @@ at `/blog`, and the menu item that points at it. A post is one item in it, serve
 
 So there was never a word to choose between. The folder, the template folder and the route say
 `posts` because that is what they hold; the menu says Blog because that is what it opens.
+
+## 2026-09-07 — The sky page
+
+Two server calls, and they answer different things. `/info/sky` renders the page and knows
+about the observer; `/sky/chart.svg` answers one image and does not, because heliocentric
+positions do not depend on where the reader stands. Neither hands the other's data to its
+template.
+
+**The chart is an image at its own URL, not inline SVG.** That is what lets a reader open it on
+its own, which inline markup cannot offer. The cost is real and was accepted: an SVG loaded
+through `<img>` is its own document, so the page's CSS cannot reach inside it and its palette
+lives in the fragment.
+
+**It carries no `<title>` or `<desc>`.** Through `<img>` a browser never exposes them, and
+opened on its own an image is named by its URL — which is what every JPEG on this site already
+does. The `alt` on the page does the accessibility work.
+
+**The width belongs to the template.** The chart fragment takes it as a parameter and calls
+`SkyDataChart.setCanvas(width)`, which answers a map of positions keyed by body name. Nothing
+in `SkyBody` is a length: the two radii are fractions, and the same body drawn at two widths
+has two positions. That is why the page can show a 430 chart beside the table and a 1024 one in
+a `<details>` without a second set of anything.
+
+Thymeleaf renders a template on one thread in document order, so two calls at two widths are
+safe: the first is fully written before the second replaces the map.
+
+**`SkyData` holds only what both renderings share** — the date and the body list.
+`SkyDataChart` adds the canvas and the caption, `SkyDataTable` the observer. The split exists
+because one object serving both meant the table's template saw the drawing and the SVG's saw
+the observer.
+
+**Label placement rejects a candidate that shares a column with a placed label and sits within
+a line height of it.** A box test alone passes two labels that never touch and still read as one
+stacked block; that rule is what replaces the skill's "look at the result and override where it
+reads badly", which a server cannot do. What it cannot fix is two planets in conjunction at a
+small canvas — see `docs/todo.md` #53.
+
+**The place name is reverse geocoded in the browser, through the Maps JavaScript API.** The
+geocoding web service refuses a referrer-restricted key outright, and the site's key is one.
+The server never claims a name it cannot know: the page renders with coordinates, and the name
+is written in when Google answers, or not at all.
+
+Departure from the template-layout decision above: `fragments/block/sky-fragment.html` holds
+two fragments, `table` and `chart`, not one. Pierre's call — they are two halves of one page
+and the file is named for the page, not for either fragment.

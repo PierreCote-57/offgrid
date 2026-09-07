@@ -1,37 +1,46 @@
 package com.lc.offgrid.common.pojo.part;
 
-import com.lc.basics.tools.units.TimeUnits;
-
 /**
- * One body on the sky page: a dot on the chart, and a row in the table. Its orbit is a circle
- * drawn at its parent's dot, so the Moon's circle around Earth is the same thing as Earth's
- * circle around the Sun. The root body has no parent, no orbit and no arrowhead.
+ * One body on the sky page: a dot on the chart, and a row in the table.
  *
- * A body with no rise time is drawn but not tabled.
+ * Nothing here depends on how big the chart is drawn. The two radii are fractions of the
+ * drawing's width, and where the body actually lands is a BodyPosition, which SkyDataChart
+ * works out once it is told a canvas.
  */
 public class SkyBody
 {
+	/*
+	 * 1. Astronomy. Facts about the body, from com.lc.basics.tools.astronomy. Nothing here
+	 * knows there is a picture or a table.
+	 */
 	private String		name;
-	private SkyBody		parent;
-	private double		orbitRadius;
-	private boolean		clockwise;
-
-	private double		dotX;
-	private double		dotY;
-	private double		dotRadius;
-	private String		colourClass;
-
-	private String		labelText;
-	private double		labelX;
-	private double		labelY;
-	private String		labelAnchor;
-
-	private String		arrowheadPoints;
-
 	private Double		orbitPeriod;
+
+	/*
+	 * 2. Calculated table data. Worked out for one date and one observer.
+	 */
 	private String		rises;
 	private String		transit;
 	private String		sets;
+
+	/*
+	 * 3. Fixed chart data. Chosen once and the same on every date and at every size: what the
+	 * body orbits, how far out its circle sits, how big its dot is, what colour, and what its
+	 * label says. Both radii are fractions of the drawing's width, not lengths.
+	 */
+	private SkyBody		parent;
+	private double		orbitFraction;
+	private double		dotFraction;
+	private String		colourClass;
+	private String		labelText;
+
+	/*
+	 * 4. Calculated. The heliocentric longitude for the date, in degrees. It is what turns a
+	 * fraction into a position once there is a canvas.
+	 */
+	private double		longitude;
+
+	// 1. Astronomy
 
 	public String getName()
 	{
@@ -42,126 +51,6 @@ public class SkyBody
 		this.name = name;
 	}
 
-	public SkyBody getParent()
-	{
-		return parent;
-	}
-	public void setParent(SkyBody parent)
-	{
-		this.parent = parent;
-	}
-
-	public double getOrbitRadius()
-	{
-		return orbitRadius;
-	}
-	public void setOrbitRadius(double orbitRadius)
-	{
-		this.orbitRadius = orbitRadius;
-	}
-
-	public boolean isClockwise()
-	{
-		return clockwise;
-	}
-	public void setClockwise(boolean clockwise)
-	{
-		this.clockwise = clockwise;
-	}
-
-	public double getDotX()
-	{
-		return dotX;
-	}
-	public void setDotX(double dotX)
-	{
-		this.dotX = dotX;
-	}
-
-	public double getDotY()
-	{
-		return dotY;
-	}
-	public void setDotY(double dotY)
-	{
-		this.dotY = dotY;
-	}
-
-	public double getDotRadius()
-	{
-		return dotRadius;
-	}
-	public void setDotRadius(double dotRadius)
-	{
-		this.dotRadius = dotRadius;
-	}
-
-	public String getColourClass()
-	{
-		return colourClass;
-	}
-	public void setColourClass(String colourClass)
-	{
-		this.colourClass = colourClass;
-	}
-
-	public String getLabelText()
-	{
-		return labelText;
-	}
-	public void setLabelText(String labelText)
-	{
-		this.labelText = labelText;
-	}
-
-	public double getLabelX()
-	{
-		return labelX;
-	}
-	public void setLabelX(double labelX)
-	{
-		this.labelX = labelX;
-	}
-
-	public double getLabelY()
-	{
-		return labelY;
-	}
-	public void setLabelY(double labelY)
-	{
-		this.labelY = labelY;
-	}
-
-	public String getLabelAnchor()
-	{
-		return labelAnchor;
-	}
-	public void setLabelAnchor(String labelAnchor)
-	{
-		this.labelAnchor = labelAnchor;
-	}
-
-	/**
-	 * The label, set as one thing because its text, its position and its anchor are decided
-	 * together.
-	 */
-	public void setLabel(String labelText, double labelX, double labelY, String labelAnchor)
-	{
-		setLabelText(labelText);
-		setLabelX(labelX);
-		setLabelY(labelY);
-		setLabelAnchor(labelAnchor);
-	}
-
-	public String getArrowheadPoints()
-	{
-		return arrowheadPoints;
-	}
-	public void setArrowheadPoints(String arrowheadPoints)
-	{
-		this.arrowheadPoints = arrowheadPoints;
-	}
-
 	public Double getOrbitPeriod()
 	{
 		return orbitPeriod;
@@ -170,6 +59,8 @@ public class SkyBody
 	{
 		this.orbitPeriod = orbitPeriod;
 	}
+
+	// 2. Calculated table data
 
 	public String getRises()
 	{
@@ -198,18 +89,61 @@ public class SkyBody
 		this.sets = sets;
 	}
 
-	/**
-	 * The orbit period in the largest unit that keeps it above one, or an empty cell for a body
-	 * that orbits nothing.
-	 */
-	public String getOrbitPeriodText()
-	{
-		if (null == getOrbitPeriod())
-		{
-			return "";
-		}
+	// 3. Fixed chart data
 
-		String periodText = TimeUnits.DAY.format(getOrbitPeriod());
-		return periodText;
+	public SkyBody getParent()
+	{
+		return parent;
+	}
+	public void setParent(SkyBody parent)
+	{
+		this.parent = parent;
+	}
+
+	public double getOrbitFraction()
+	{
+		return orbitFraction;
+	}
+	public void setOrbitFraction(double orbitFraction)
+	{
+		this.orbitFraction = orbitFraction;
+	}
+
+	public double getDotFraction()
+	{
+		return dotFraction;
+	}
+	public void setDotFraction(double dotFraction)
+	{
+		this.dotFraction = dotFraction;
+	}
+
+	public String getColourClass()
+	{
+		return colourClass;
+	}
+	public void setColourClass(String colourClass)
+	{
+		this.colourClass = colourClass;
+	}
+
+	public String getLabelText()
+	{
+		return labelText;
+	}
+	public void setLabelText(String labelText)
+	{
+		this.labelText = labelText;
+	}
+
+	// 4. Calculated
+
+	public double getLongitude()
+	{
+		return longitude;
+	}
+	public void setLongitude(double longitude)
+	{
+		this.longitude = longitude;
 	}
 }

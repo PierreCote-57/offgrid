@@ -96,20 +96,32 @@ public class OffgridWebController extends BaseWebController
 	}
 
 	/**
-	 * The sky chart, as an image of its own. It answers bytes rather than a view name, so it
-	 * goes to the processor directly instead of through processRequest.
+	 * The sky page, for an observer. The coordinates are optional, and absent they are the
+	 * 50th parallel marker in Campbell River; they arrive as text so a value that does not
+	 * parse falls back to the marker rather than failing the request.
 	 */
-	@GetMapping("/sky/chart.svg")
-	public ResponseEntity<Resource> skyChart()
-	{
-		return getProcessor().processSkyChart();
-	}
-
 	@GetMapping("/info/sky")
-	public String sky(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String sky(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam(required = false) String latitude,
+			@RequestParam(required = false) String longitude)
 	{
 		String path = String.format("/info/%1$s", "sky");
-		return processRequest(request, response, model, () -> getProcessor().processSky(model, path, PageData.class));
+		return processRequest(request, response, model,
+				() -> getProcessor().processSky(model, path, PageData.class, latitude, longitude));
+	}
+
+	/**
+	 * The sky chart, as an image of its own, drawn at the width asked for. It answers bytes
+	 * rather than a view name, so it goes to the processor directly instead of through
+	 * processRequest.
+	 */
+	@GetMapping("/sky/chart.svg")
+	public ResponseEntity<Resource> skyChart(HttpServletRequest request,
+			@RequestParam(required = false) String width)
+	{
+		ResponseEntity<Resource> response = getProcessor().processSkyChart(width);
+		logVisit(request, "chart-" + width, System.nanoTime());
+		return response;
 	}
 
 	@GetMapping("/info/{name}")

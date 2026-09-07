@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 53**
+**next id: 54**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -57,20 +57,14 @@ loopback and nothing else can; on FullHost it is on the open internet, and a too
 anyone who posts to it. The question outlives the implementation — it has to be answered for
 whatever serves `/mcp`, not for the server that was removed.
 
-#48 Build the info page "The sky above you" — the solar system chart with the rise/set table
-below it. On hold as of 2026-09-01. The two skills in `docs/skills/` port to Java with no
-runtime dependency on Claude: the shared core is the JPL element table, the Kepler solve and
-`helio()`, with the rise/set version keeping the `z` the chart discards. The proposed split
-is astronomy math under `com.lc.basics.tools.astronomy` (a `Body` enum carrying each planet's
-twelve elements and its own horizon altitude) and the screen-coordinate work — orbit radii,
-dot radii, label placement, arrowheads — under `com.lc.offgrid`, with the template drawing
-what it is handed. Decided: the observer defaults to the 50th parallel marker in Campbell
-River with `America/Vancouver`, and JS upgrades it from the browser — the timezone from
-`Intl.DateTimeFormat().resolvedOptions().timeZone` synchronously, the coordinates from
-`navigator.geolocation` behind its permission prompt, with `navigator.permissions.query` used
-first so a visitor who already granted it is never prompted again. Open: chart rule 5 ends
-with "look at the result and override where it reads badly", which the server cannot do, so
-crowded dates can render two labels visually stacked.
+#48 Compute the rise, transit and set times. The page is built and served at `/info/sky`; the
+chart is real, the table is not — `OffgridWebProcessor.PLACEHOLDER_TIMES` is nine hardcoded rows
+that `applyPlaceholderTimes` puts onto the bodies. `docs/skills/SolarSystemRiseSet.md` is the
+spec: sample each body's altitude across the local day and report every crossing of its own
+horizon altitude, which differs per body and is not a detail. `Ephemeris.getHeliocentric` already
+returns the `z` this needs and the chart discards. The observer arrives on `SkyDataTable` —
+latitude, longitude and `ZoneId` — from `/info/sky?latitude=&longitude=`, which the menu link
+fills from `navigator.geolocation`.
 
 #49 Fix `README.md`'s Layout table. It names the package
 `src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
@@ -82,3 +76,14 @@ against the tree rather than fixing the one row.
 Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per
 step. Medium's box is the alternative. Since the "Full size" link went to the bare URL on
 2026-09-06, nothing asks for Large at all.
+
+#53 Low priority. Give a crowded chart label somewhere to go. `SkyDataMaker` tries eight
+positions and takes the first that clears; on days when two planets are in conjunction as seen
+from above, none clears and the two texts print on top of each other. A sweep of 2026-01-01 to
+2028-12-31 hit it on 60 days of 1096, longest run 3 to 23 February 2027 — Mercury/Venus and
+Earth/Mars account for most of them. `_preview/sky-label-placement.html` shows 10 February 2027
+beside a clean date.
+
+It is a width problem, not a placement one: the same sweep at a 1024 canvas fails on no day at
+all, because the orbits scale and the 12px labels do not. `_preview/sky-chart-widths.html` has
+one date drawn at both.

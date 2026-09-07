@@ -3,6 +3,7 @@ package com.lc.offgrid.webapp.spring.site;
 import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.offgrid.common.misc.QueryUtil;
+import com.lc.offgrid.common.misc.sky.SkyDataMaker;
 import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.*;
 import com.lc.offgrid.common.misc.files.ResourceFileManager.*;
@@ -14,7 +15,9 @@ import com.lc.offgrid.common.pojo.part.Dataset;
 import com.lc.offgrid.common.pojo.part.GoogleMap;
 import com.lc.offgrid.common.pojo.part.Point;
 import com.lc.offgrid.common.pojo.part.SkyBody;
-import com.lc.offgrid.common.pojo.part.SkyChart;
+import com.lc.offgrid.common.pojo.part.SkyData;
+import com.lc.offgrid.common.pojo.part.SkyDataChart;
+import com.lc.offgrid.common.pojo.part.SkyDataTable;
 import com.lc.offgrid.webapp.spring.tools.BaseWebController;
 import com.lc.offgrid.webapp.spring.tools.BaseWebProcessor;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +40,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +52,34 @@ public class OffgridWebProcessor extends BaseWebProcessor
 {
 	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
 
-	private static final String SKY_TEMPLATE = "fragments/block/sky";
+	private static final String SKY_TEMPLATE = "fragments/block/sky-fragment";
 	private static final String SKY_CHART_FRAGMENT = "chart";
+
+	/** The 50th parallel marker in Campbell River, until the browser says otherwise. */
+	private static final double SKY_LATITUDE = 50.0;
+	private static final double SKY_LONGITUDE = -125.230450;
+	private static final String SKY_TIME_ZONE = "America/Vancouver";
+
+	/** The chart's width when the caller states none, and the range it will draw at. */
+	private static final String SKY_CHART_CAPTION = "Not to scale";
+	private static final int SKY_CHART_WIDTH = 430;
+	private static final int MINIMUM_CHART_WIDTH = 200;
+	private static final int MAXIMUM_CHART_WIDTH = 2000;
+
+	private static final double MAXIMUM_LATITUDE = 90.0;
+	private static final double MAXIMUM_LONGITUDE = 180.0;
+
+	/** Rise, transit and set, made up, until the astronomy for them is written. */
+	private static final Map<String, String[]> PLACEHOLDER_TIMES = Map.of(
+			"Sun", new String[] {"06:41", "13:32 (46°)", "20:21"},
+			"Moon", new String[] {"22:07", "05:14 (52°)", "13:26"},
+			"Mercury", new String[] {"07:18", "13:55 (44°)", "20:33"},
+			"Venus", new String[] {"05:12", "12:24 (41°)", "19:37"},
+			"Mars", new String[] {"09:04", "15:11 (43°)", "21:19"},
+			"Jupiter", new String[] {"01:47", "09:33 (57°)", "17:20"},
+			"Saturn", new String[] {"19:52", "01:38 (32°)", "07:26"},
+			"Uranus", new String[] {"22:41", "06:12 (61°)", "13:44"},
+			"Neptune", new String[] {"19:33", "01:14 (35°)", "06:57"});
 
 	/**
 	 * Two lines of text on the site's paper, in the site's colours. The box is 3:2, the
@@ -127,20 +157,56 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		return answer;
 	}
 
-	public String processSky(Model model, String path, Class<? extends PageData> clazz)
+	public String processSky(Model model, String path, Class<? extends PageData> clazz,
+			String latitudeText, String longitudeText)
 	{
 		String answer = processPage(model, path, clazz);
 
-		SkyChart skyChart = makeSkyChart();
-		model.addAttribute("skyChart", skyChart);
+		double latitude = readCoordinate(latitudeText, SKY_LATITUDE, MAXIMUM_LATITUDE);
+		double longitude = readCoordinate(longitudeText, SKY_LONGITUDE, MAXIMUM_LONGITUDE);
+
+		SkyDataTable skyTable = makeSkyTable(latitude, longitude);
+		model.addAttribute("skyTable", skyTable);
 
 		return answer;
 	}
 
-	public ResponseEntity<Resource> processSkyChart()
+	/**
+	 * One coordinate off the query string, or the default when it is missing, unparseable or
+	 * off the globe. A hand-edited URL gets the marker back and a page, not an error.
+	 */
+	private double readCoordinate(String text, double defaultValue, double limit)
 	{
-		SkyChart skyChart = makeSkyChart();
-		Resource chartResource = makeChartImage(skyChart);
+		if (null == text || text.isBlank())
+		{
+			return defaultValue;
+		}
+
+		double value;
+		try
+		{
+			value = Double.parseDouble(text.trim());
+		}
+		catch (NumberFormatException failure)
+		{
+			getLogger().info("Sky page: coordinate %s does not parse, using %s", text, defaultValue);
+			return defaultValue;
+		}
+
+		if (value < -limit || value > limit)
+		{
+			getLogger().info("Sky page: coordinate %s is outside %s, using %s", text, limit, defaultValue);
+			return defaultValue;
+		}
+		return value;
+	}
+
+	public ResponseEntity<Resource> processSkyChart(String widthText)
+	{
+		int width = readWidth(widthText);
+
+		SkyDataChart skyChart = makeSkyChart();
+		Resource chartResource = makeChartImage(skyChart, width);
 
 		ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, chartResource);
 		return answer;
@@ -149,10 +215,11 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	/**
 	 * The chart fragment rendered on its own, as the bytes of a standalone SVG document.
 	 */
-	private Resource makeChartImage(SkyChart skyChart)
+	private Resource makeChartImage(SkyDataChart skyChart, int width)
 	{
 		Context context = new Context();
 		context.setVariable("skyChart", skyChart);
+		context.setVariable("width", width);
 
 		String svgText = getTemplateEngine().process(SKY_TEMPLATE, Set.of(SKY_CHART_FRAGMENT), context);
 		byte[] svgBytes = svgText.getBytes(StandardCharsets.UTF_8);
@@ -162,120 +229,100 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	}
 
 	/**
-	 * The chart for 10 September 2026, with made-up rise, transit and set times. Every number
-	 * here is a constant until the astronomy is written.
+	 * A width off the query string, or the default when it is missing, unparseable or outside
+	 * what the drawing is legible at. A hand-edited URL gets a chart, not an error.
 	 */
-	private SkyChart makeSkyChart()
+	private int readWidth(String text)
 	{
-		List<SkyBody> bodyList = new ArrayList<>();
+		if (null == text || text.isBlank())
+		{
+			return SKY_CHART_WIDTH;
+		}
 
-		SkyBody sun = addSkyBody(bodyList, "Sun", null, 0, 215, 195, 9, "c-sun");
-		sun.setRises("06:41");
-		sun.setTransit("13:32 (46\u00b0)");
-		sun.setSets("20:21");
+		int width;
+		try
+		{
+			width = Integer.parseInt(text.trim());
+		}
+		catch (NumberFormatException failure)
+		{
+			getLogger().info("Sky chart: width %s does not parse, using %s", text, SKY_CHART_WIDTH);
+			return SKY_CHART_WIDTH;
+		}
 
-		SkyBody earth = addSkyBody(bodyList, "Earth", sun, 60, 273.4, 208.6, 4.5, "c-coral");
-		earth.setLabel("Earth+Moon", 273.4, 193.6, "middle");
-		earth.setArrowheadPoints("211.1,255.0 206.4,257.0 207.0,251.9");
-		earth.setOrbitPeriod(365.26);
+		if (width < MINIMUM_CHART_WIDTH || width > MAXIMUM_CHART_WIDTH)
+		{
+			getLogger().info("Sky chart: width %s is outside %s to %s, using %s",
+					width, MINIMUM_CHART_WIDTH, MAXIMUM_CHART_WIDTH, SKY_CHART_WIDTH);
+			return SKY_CHART_WIDTH;
+		}
+		return width;
+	}
 
-		SkyBody moon = addSkyBody(bodyList, "Moon", earth, 10, 264.6, 203.9, 2.5, "c-moon");
-		moon.setArrowheadPoints("283.4,211.1 283.6,215.1 280.0,213.3");
-		moon.setOrbitPeriod(27.32);
-		moon.setRises("22:07");
-		moon.setTransit("05:14 (52\u00b0)");
-		moon.setSets("13:26");
+	/**
+	 * The chart for today. It is heliocentric, so it takes no observer.
+	 */
+	private SkyDataChart makeSkyChart()
+	{
+		LocalDate date = today();
 
-		SkyBody mercury = addSkyBody(bodyList, "Mercury", sun, 20, 197.1, 204.0, 4.5, "c-coral");
-		mercury.setLabel("Mercury", 197.1, 219.5, "middle");
-		mercury.setArrowheadPoints("215.7,215.2 210.9,217.3 211.5,212.1");
-		mercury.setOrbitPeriod(87.97);
-		mercury.setRises("07:18");
-		mercury.setTransit("13:55 (44\u00b0)");
-		mercury.setSets("20:33");
+		SkyDataMaker skyDataMaker = new SkyDataMaker();
+		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
 
-		SkyBody venus = addSkyBody(bodyList, "Venus", sun, 40, 245.7, 220.6, 4.5, "c-coral");
-		venus.setLabel("Venus", 245.7, 236.1, "middle");
-		venus.setArrowheadPoints("213.4,235.1 208.7,237.2 209.2,232.0");
-		venus.setOrbitPeriod(224.70);
-		venus.setRises("05:12");
-		venus.setTransit("12:24 (41\u00b0)");
-		venus.setSets("19:37");
-
-		SkyBody mars = addSkyBody(bodyList, "Mars", sun, 80, 236.2, 117.9, 4.5, "c-coral");
-		mars.setLabel("Mars", 236.2, 108.4, "middle");
-		mars.setArrowheadPoints("208.9,274.8 204.1,276.9 204.7,271.7");
-		mars.setOrbitPeriod(686.98);
-		mars.setRises("09:04");
-		mars.setTransit("15:11 (43\u00b0)");
-		mars.setSets("21:19");
-
-		SkyBody jupiter = addSkyBody(bodyList, "Jupiter", sun, 110, 145.1, 110.1, 5.5, "c-amber");
-		jupiter.setLabel("Jupiter", 145.1, 99.6, "middle");
-		jupiter.setArrowheadPoints("205.4,304.6 200.7,306.7 201.3,301.5");
-		jupiter.setOrbitPeriod(4332.59);
-		jupiter.setRises("01:47");
-		jupiter.setTransit("09:33 (57\u00b0)");
-		jupiter.setSets("17:20");
-
-		SkyBody saturn = addSkyBody(bodyList, "Saturn", sun, 130, 343.0, 172.1, 5.5, "c-amber");
-		saturn.setLabel("Saturn", 343.0, 161.6, "middle");
-		saturn.setArrowheadPoints("203.2,324.5 198.4,326.6 199.0,321.4");
-		saturn.setOrbitPeriod(10759.22);
-		saturn.setRises("19:52");
-		saturn.setTransit("01:38 (32\u00b0)");
-		saturn.setSets("07:26");
-
-		SkyBody uranus = addSkyBody(bodyList, "Uranus", sun, 150, 284.5, 62.1, 5, "c-teal");
-		uranus.setLabel("Uranus", 284.5, 52.1, "middle");
-		uranus.setArrowheadPoints("200.9,344.4 196.1,346.4 196.7,341.3");
-		uranus.setOrbitPeriod(30688.5);
-		uranus.setRises("22:41");
-		uranus.setTransit("06:12 (61\u00b0)");
-		uranus.setSets("13:44");
-
-		SkyBody neptune = addSkyBody(bodyList, "Neptune", sun, 170, 384.8, 187.5, 5, "c-teal");
-		neptune.setLabel("Neptune", 384.8, 203.5, "middle");
-		neptune.setArrowheadPoints("198.6,364.2 193.8,366.3 194.4,361.1");
-		neptune.setOrbitPeriod(60182.0);
-		neptune.setRises("19:33");
-		neptune.setTransit("01:14 (35\u00b0)");
-		neptune.setSets("06:57");
-
-		SkyChart skyChart = new SkyChart();
-		skyChart.setViewBoxWidth(430);
-		skyChart.setViewBoxHeight(420);
-		skyChart.setTitle("Heliocentric positions of the eight planets and the Moon on 10 September 2026");
-		skyChart.setDescription("Top-down view from ecliptic north. The Sun is at the centre; each planet sits on"
-				+ " its own orbit circle at its computed heliocentric ecliptic longitude. Arrowheads show the"
-				+ " direction of travel, counter-clockwise in this view. The Moon is the small white dot on its"
-				+ " own circle around Earth. Not to scale.");
-		skyChart.setCaption("Not to scale");
-		skyChart.setCaptionX(215);
-		skyChart.setCaptionY(405);
+		SkyDataChart skyChart = new SkyDataChart();
+		skyChart.setDate(date);
 		skyChart.setBodyList(bodyList);
-		skyChart.setLatitude(50.0);
-		skyChart.setLongitude(-125.27);
-		skyChart.setTimeZoneName("America/Vancouver");
-		skyChart.setDateText("10 September 2026");
+		skyChart.setCaption(SKY_CHART_CAPTION);
 
 		return skyChart;
 	}
 
-	private SkyBody addSkyBody(List<SkyBody> bodyList, String name, SkyBody parent, double orbitRadius,
-			double dotX, double dotY, double dotRadius, String colourClass)
+	/**
+	 * The table for today: where the visitor says they are, the clock they read, and the same
+	 * bodies the chart draws. The times on them are still made up.
+	 */
+	private SkyDataTable makeSkyTable(double latitude, double longitude)
 	{
-		SkyBody skyBody = new SkyBody();
-		skyBody.setName(name);
-		skyBody.setParent(parent);
-		skyBody.setOrbitRadius(orbitRadius);
-		skyBody.setDotX(dotX);
-		skyBody.setDotY(dotY);
-		skyBody.setDotRadius(dotRadius);
-		skyBody.setColourClass(colourClass);
+		LocalDate date = today();
 
-		bodyList.add(skyBody);
-		return skyBody;
+		SkyDataMaker skyDataMaker = new SkyDataMaker();
+		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
+
+		SkyDataTable skyTable = new SkyDataTable();
+		skyTable.setDate(date);
+		skyTable.setBodyList(bodyList);
+		skyTable.setLatitude(latitude);
+		skyTable.setLongitude(longitude);
+		skyTable.setTimeZone(ZoneId.of(SKY_TIME_ZONE));
+
+		applyPlaceholderTimes(skyTable);
+		return skyTable;
+	}
+
+	private LocalDate today()
+	{
+		ZoneId timeZone = ZoneId.of(SKY_TIME_ZONE);
+		LocalDate date = LocalDate.now(timeZone);
+		return date;
+	}
+
+	/**
+	 * Made-up rise, transit and set times, keyed by body name, until the astronomy for them is
+	 * written.
+	 */
+	private void applyPlaceholderTimes(SkyData skyData)
+	{
+		for (SkyBody skyBody : skyData.getBodyList())
+		{
+			String[] timeList = PLACEHOLDER_TIMES.get(skyBody.getName());
+			if (null == timeList)
+			{
+				continue;
+			}
+			skyBody.setRises(timeList[0]);
+			skyBody.setTransit(timeList[1]);
+			skyBody.setSets(timeList[2]);
+		}
 	}
 
 	/**

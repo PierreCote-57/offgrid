@@ -1,89 +1,51 @@
 <!--
-	The sky block: the date, the chart, and the rise/transit/set table, all from the skyChart
-	the processor put on the model.
+	The rise, transit and set table, with the observer it is computed for underneath.
 
-	The chart comes in as an image from /sky/chart.svg, which is the second fragment in this
-	file. That is what lets the reader open it on its own; the cost is that the page's CSS
-	cannot reach inside it.
-
-	The table walks the same body list as the chart, and a body with no rise time is drawn but
-	not tabled. The styles here stay in this file while the page is being worked out, so
-	nothing about it reaches site.css.
+	A body with no rise time is drawn on the chart but not tabled. The page owns the box this
+	sits in — its width and where it goes beside the chart — so nothing here states one.
 -->
-<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="sky">
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="table">
 
 	<style>
-		.sky-row {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 24px;
-			align-items: flex-start;
-		}
-		.sky-row .sky-chart { flex: 0 0 430px; }
-		.sky-row .sky-table { flex: 1 1 380px; }
-
-		/* The date heads the block; the observer is centred under the table it labels, the
-		   way "Not to scale" is centred on the chart. Heading size without .gl-heading, whose
-		   rule and brand colour would make this read as a section divider. */
-		.sky-date {
-			margin: 0 0 16px;
-			text-align: center;
-			color: var(--text);
-			font-size: 20px;
-			font-weight: 600;
-		}
-		.sky-table .sky-observer { text-align: center; }
-		.sky-observer p { margin: 0; }
-
-		/* The chart arrives as its own document, so its colours are inside it, not here. */
-		.sky-chart img {
-			display: block;
-			width: 100%;
-		}
-
 		/* The body names read down the left edge; every measurement is centred under its heading. */
 		.sky-table table { width: 100%; }
 		.sky-table th,
 		.sky-table td { text-align: center; }
 		.sky-table th:first-child,
 		.sky-table td:first-child { text-align: left; }
+
+		/* The observer is centred under the table it labels, the way "Not to scale" is centred
+		   on the chart. */
+		.sky-observer { text-align: center; }
+		.sky-observer p { margin: 0; }
 	</style>
 
-	<h2 class="sky-date" th:text="${skyChart.dateText}"></h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Body</th>
+				<th>Rises</th>
+				<th>Transit</th>
+				<th>Sets</th>
+				<th>Orbit</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="body : ${skyTable.bodyList}" th:if="${body.rises != null}">
+				<td th:text="${body.name}"></td>
+				<td th:text="${body.rises}"></td>
+				<td th:text="${body.transit}"></td>
+				<td th:text="${body.sets}"></td>
+				<td th:text="${body.orbitPeriod == null ? ''
+						: T(com.lc.basics.tools.units.TimeUnits).DAY.format(body.orbitPeriod)}"></td>
+			</tr>
+		</tbody>
+	</table>
 
-	<div class="sky-row">
-		<div class="sky-chart">
-			<img th:src="@{/sky/chart.svg}" th:alt="${skyChart.title}" src="" alt="">
-		</div>
-
-		<div class="sky-table">
-			<table>
-				<thead>
-					<tr>
-						<th>Body</th>
-						<th>Rises</th>
-						<th>Transit</th>
-						<th>Sets</th>
-						<th>Orbit</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="body : ${skyChart.bodyList}" th:if="${body.rises != null}">
-						<td th:text="${body.name}"></td>
-						<td th:text="${body.rises}"></td>
-						<td th:text="${body.transit}"></td>
-						<td th:text="${body.sets}"></td>
-						<td th:text="${body.orbitPeriodText}"></td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="sky-observer">
-				<p><strong class="sky-place"></strong><span class="sky-place-dash" hidden> &mdash; </span><span
-						th:text="${skyChart.coordinateText}"></span></p>
-				<p th:text="${skyChart.timeZoneName}"></p>
-			</div>
-		</div>
+	<div class="sky-observer">
+		<p><strong class="sky-place"></strong><span class="sky-place-dash" hidden> &mdash; </span><span
+				th:text="|${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.latitude), 1, 'POINT', 4, 'POINT')}°${skyTable.latitude >= 0 ? 'N' : 'S'}, ${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.longitude), 1, 'POINT', 4, 'POINT')}°${skyTable.longitude >= 0 ? 'E' : 'W'}|"></span></p>
+		<p th:text="${#temporals.format(skyTable.zonedDate, 'VV (OOOO)')}"></p>
 	</div>
 
 	<script th:inline="javascript">
@@ -102,8 +64,8 @@
 		(function () {
 			"use strict";
 
-			var latitude = [[${skyChart.latitude}]];
-			var longitude = [[${skyChart.longitude}]];
+			var latitude = [[${skyTable.latitude}]];
+			var longitude = [[${skyTable.longitude}]];
 
 			// One place builds the stamp, so no call site carries a time of its own.
 			function stamp() {
@@ -219,9 +181,12 @@
 	nothing on the page reaches inside it.
 
 	No named entity may appear below — an SVG document is parsed as XML, which knows only the
-	five built-in ones.
+	five built-in ones. It carries no title or desc either: through an img tag the browser
+	never exposes them, and opened on its own it is named by its URL, like every other image
+	on the site.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:th="http://www.thymeleaf.org" th:fragment="chart"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)"
+	 th:with="positionMap=${skyChart.setCanvas(width)}"
 	 th:attr="viewBox=${skyChart.viewBox}" role="img">
 	<style>
 		svg {
@@ -245,23 +210,19 @@
 		}
 	</style>
 
-	<title th:text="${skyChart.title}"></title>
-	<desc th:text="${skyChart.description}"></desc>
-
 	<circle th:each="body : ${skyChart.bodyList}" th:if="${body.parent != null}"
-			th:cx="${body.parent.dotX}" th:cy="${body.parent.dotY}" th:r="${body.orbitRadius}"
+			th:cx="${positionMap[body.parent.name].dotX}" th:cy="${positionMap[body.parent.name].dotY}"
+			th:r="${positionMap[body.name].orbitRadius}"
 			fill="none" stroke="var(--border-strong)" stroke-width="0.5"/>
 
-	<polygon th:each="body : ${skyChart.bodyList}" th:if="${body.arrowheadPoints != null}"
-			 th:attr="points=${body.arrowheadPoints}" fill="var(--border-strong)"/>
-
 	<circle th:each="body : ${skyChart.bodyList}"
-			th:cx="${body.dotX}" th:cy="${body.dotY}" th:r="${body.dotRadius}"
+			th:cx="${positionMap[body.name].dotX}" th:cy="${positionMap[body.name].dotY}"
+			th:r="${positionMap[body.name].dotRadius}"
 			th:class="${body.colourClass}"/>
 
 	<text th:each="body : ${skyChart.bodyList}" th:if="${body.labelText != null}" class="ts"
-		  th:x="${body.labelX}" th:y="${body.labelY}"
-		  th:attr="text-anchor=${body.labelAnchor}" th:text="${body.labelText}"></text>
+		  th:x="${positionMap[body.name].labelX}" th:y="${positionMap[body.name].labelY}"
+		  th:attr="text-anchor=${positionMap[body.name].labelAnchor}" th:text="${body.labelText}"></text>
 
 	<text class="ts" th:x="${skyChart.captionX}" th:y="${skyChart.captionY}"
 		  text-anchor="middle" th:text="${skyChart.caption}"></text>
