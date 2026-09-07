@@ -95,6 +95,23 @@ public class OffgridWebController extends BaseWebController
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PostPage.class));
 	}
 
+	/**
+	 * The sky chart, as an image of its own. It answers bytes rather than a view name, so it
+	 * goes to the processor directly instead of through processRequest.
+	 */
+	@GetMapping("/sky/chart.svg")
+	public ResponseEntity<Resource> skyChart()
+	{
+		return getProcessor().processSkyChart();
+	}
+
+	@GetMapping("/info/sky")
+	public String sky(HttpServletRequest request, HttpServletResponse response, Model model)
+	{
+		String path = String.format("/info/%1$s", "sky");
+		return processRequest(request, response, model, () -> getProcessor().processSky(model, path, PageData.class));
+	}
+
 	@GetMapping("/info/{name}")
 	public String info(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{

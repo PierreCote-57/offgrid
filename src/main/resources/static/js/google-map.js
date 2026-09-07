@@ -46,6 +46,10 @@
 		document.head.appendChild(script);
 	}
 
+	// Exposed because the loader is already built to serve several callers on one page, and
+	// the geocoder needs the same script the maps do.
+	window.GL.loadGoogleMapsApi = loadGoogleMapsApi;
+
 	/*
 	 * Build a marker icon from a pin's icon word, via GL.PIN_ICONS. An absent or unknown word
 	 * hands back null, and the marker is Google's own pin — a pin nobody gave a figure to is
