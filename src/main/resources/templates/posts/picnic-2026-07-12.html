@@ -4,9 +4,9 @@
 
 <main>
 	<h1 th:text="${PageName}">Picnic at Beavertail Lake</h1>
-	<p class="gl-dateline" th:text="${pageData.date}">2026-07-12</p>
+	<p class="og-dateline" th:text="${pageData.date}">2026-07-12</p>
 
-	<div class="gl-post">
+	<div class="og-post">
 		<p style="margin-top:0;">
 			Today is a picnic lunch day. We will go to
 			<a th:href="@{/destinations/rec-site/beavertail-lake-dayuse}">Beavertail Lake Day Use</a>
@@ -45,7 +45,7 @@
 
 		<p>
 			Google map satellite view shows the fishing pier bigger than my
-			<a href="#gl-photo-photos-img_0874">picture below</a>.
+			<a href="#og-photo-photos-img_0874">picture below</a>.
 			The
 			Campbell River Fish & Wildlife Association
 			web site indicates it was completed in 2023.
@@ -81,7 +81,7 @@
 		</p>
 
 		<details>
-			<summary><h2 class="gl-heading">Temperature log</h2></summary>
+			<summary><h2 class="og-heading">Temperature log</h2></summary>
 
 			<table style="table-layout:fixed; width:100%; text-align:center;">
 				<thead>
@@ -157,7 +157,7 @@
 		<div th:replace="~{fragments/block/note-list :: notes('Further readings')}"></div>
 	</div>
 
-	<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+	<div class="og-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

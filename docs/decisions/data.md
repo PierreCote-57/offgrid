@@ -401,13 +401,13 @@ added together — potholes 3, dirt 5, potholes 2, dirt 1 gives potholes 5 — a
 pavement. The leg is built, not picked out of the list, because pavement and back country are
 not surfaces any leg names.
 
-It has to be Java: `ROAD_RANK` and `NON_DRIVE_LEG_TYPES` live in `gl-constants.js` and
+It has to be Java: `ROAD_RANK` and `NON_DRIVE_LEG_TYPES` live in `og-constants.js` and
 Thymeleaf cannot read them. So the vocabulary and the derivation now exist twice, in `Access`
 for server-rendered pages and in `browser.js` for the gallery cards the browser assembles —
 the same split the link rule carries, for the same reason.
 
 `fragments/block/tags.html` reads that one leg, writes `data-road` with no colour, and
-`GL.paintTags` finishes it from the one palette. The tag row now draws when there are badges
+`OG.paintTags` finishes it from the one palette. The tag row now draws when there are badges
 **or** a road, with an empty left group when there are no badges, which is what the
 GettingLost renderer did.
 
@@ -468,7 +468,7 @@ renamed to their singular under both `data/destinations/` and `templates/destina
 every link and every `file` pointer rewritten. Nothing outside the repo pointed at the old
 ones. `park` still has no folder — it is a type with no page yet, not a missing one.
 
-A template renders the word, never the constant: both palettes in `gl-constants.js` are keyed
+A template renders the word, never the constant: both palettes in `og-constants.js` are keyed
 by what the JSON writes, so `tags.html` lower-cases the constant once into `badgeWord` and
 `roadWord`. `SHARP_ROCK` reaching `data-road` would have painted nothing.
 

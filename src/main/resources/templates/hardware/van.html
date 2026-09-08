@@ -5,7 +5,7 @@
 <main>
 	<h1 th:text="${PageName}">Van Overview</h1>
 
-	<div class="gl-photo" style="width:100%;float:left;"
+	<div class="og-photo" style="width:100%;float:left;"
 		 th:insert="~{fragments/block/photo :: photo('floorplan')}"></div>
 
 	<p style="margin-top:0;">Our van was originally purchased at
@@ -16,7 +16,7 @@
 	</p>
 
 	<details open>
-		<summary><h2 class="gl-heading">Upgraded battery systems</h2></summary>
+		<summary><h2 class="og-heading">Upgraded battery systems</h2></summary>
 		<p>
 			The original battery, a 300 Ah AMG (150 Ah usable) did not provide us
 			with sufficient. Chrome and Darryl of
@@ -32,12 +32,12 @@
 
 
 	<details open>
-		<summary><h2 class="gl-heading">The van in pictures.</h2></summary>
+		<summary><h2 class="og-heading">The van in pictures.</h2></summary>
 		<div th:replace="~{fragments/block/photo-gallery :: gallery('our-van')}"></div>
 	</details>
 
 	<details>
-		<summary><h2 class="gl-heading">Listing features</h2></summary>
+		<summary><h2 class="og-heading">Listing features</h2></summary>
 		<table style="width:60%; table-layout:fixed; border-collapse:collapse; margin:0 auto;">
 			<colgroup>
 				<col style="width:80%;"/>
@@ -187,7 +187,7 @@
 	</details>
 
 	<details>
-		<summary><h2 class="gl-heading">Manufacturer options</h2></summary>
+		<summary><h2 class="og-heading">Manufacturer options</h2></summary>
 		<table style="width:60%; table-layout:fixed; border-collapse:collapse; margin:0 auto;">
 			<colgroup>
 				<col style="width:80%;"/>
@@ -257,12 +257,12 @@
 	</details>
 
 	<details>
-		<summary><h2 class="gl-heading">Listing pictures</h2></summary>
+		<summary><h2 class="og-heading">Listing pictures</h2></summary>
 		<div th:replace="~{fragments/block/photo-gallery :: gallery('listing-pictures')}"></div>
 	</details>
 
 	<details>
-		<summary><h2 class="gl-heading">Supplier documentation</h2></summary>
+		<summary><h2 class="og-heading">Supplier documentation</h2></summary>
 		<div th:replace="~{fragments/block/note-list :: notes('')}"></div>
 	</details>
 </main>

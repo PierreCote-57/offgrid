@@ -13,9 +13,9 @@
 				   itemId=${#strings.substringAfter(photoId, '/')}">
 	<th:block th:with="gallery=${pageData.photoGalleries == null ? null : pageData.photoGalleries.get(galleryName)},
 					   item=${gallery == null ? null : gallery.get(itemId)}">
-		<a th:if="${item != null}" th:href="'#gl-photo-' + ${galleryName} + '-' + ${itemId}"
+		<a th:if="${item != null}" th:href="'#og-photo-' + ${galleryName} + '-' + ${itemId}"
 		   th:text="${item.label} ?: ${itemId}" href="">label</a>
-		<span th:if="${item == null}" class="block-unavailable-inline"
+		<span th:if="${item == null}" class="og-block-unavailable-inline"
 			  th:text="'image unavailable: ' + ${photoId}">image unavailable</span>
 	</th:block>
 </th:block>

@@ -1,8 +1,8 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="gallery(galleryName)" class="gl-gallery-grid"
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="gallery(galleryName)" class="og-gallery-grid"
 	 th:with="galleryData=${pageData.photoGalleries == null ? null : pageData.photoGalleries.get(galleryName)}">
-	<figure class="gl-gallery-item" th:each="itemEntry : ${galleryData}"
+	<figure class="og-gallery-item" th:each="itemEntry : ${galleryData}"
 			th:with="itemId=${itemEntry.key}, item=${itemEntry.value}"
-			th:id="'gl-photo-' + ${galleryName} + '-' + ${itemId}">
+			th:id="'og-photo-' + ${galleryName} + '-' + ${itemId}">
 		<a data-lightbox th:href="@{/image/{imageName}(imageName=${item.img})}"
 		   th:attr="data-caption=${item.label}" href="">
 			<img th:src="@{/image/{imageName}(imageName=${item.img}, size='small')}"

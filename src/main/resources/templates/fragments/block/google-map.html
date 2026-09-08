@@ -2,21 +2,21 @@
 	One map on the page, named by the caller: map('road') draws pageData.googleMap["road"].
 
 	The caller states the size, on the div it wraps this in, and uses th:insert so that div
-	survives — .gl-mapbox fills whatever box it is given.
+	survives — .og-mapbox fills whatever box it is given.
 
 	Every call emits its own script: the entry crosses through JavaScript inlining, becomes a
-	mapObject here, and is handed to GL.drawMap. Two maps on a page are two independent
+	mapObject here, and is handed to OG.drawMap. Two maps on a page are two independent
 	scripts, told apart by the map's name.
 -->
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="map(mapName)"
 		  th:with="mapEntry=${pageData.googleMap != null ? pageData.googleMap.get(mapName) : null}">
 
-	<div th:if="${mapEntry != null}" class="gl-mapbox"
-		 th:id="'gl-map-' + ${mapName}"></div>
+	<div th:if="${mapEntry != null}" class="og-mapbox"
+		 th:id="'og-map-' + ${mapName}"></div>
 
 	<script th:inline="javascript">
 		/*
-		 * The page's googleMap entry, as the mapObject GL.drawMap draws. The two differ in
+		 * The page's googleMap entry, as the mapObject OG.drawMap draws. The two differ in
 		 * what a pin carries: the entry names a photo ("IMG_0499"), a pin holds the URL that
 		 * shows it, so the name is resolved here rather than inside the drawer.
 		 *
@@ -54,8 +54,8 @@
 
 		window["renderMap" + [[${mapName}]]] = function () {
 			var mapObject = mapObjectFor([[${mapEntry}]]);
-			var box = document.getElementById("gl-map-" + [[${mapName}]]);
-			window.GL.drawMap(box, mapObject);
+			var box = document.getElementById("og-map-" + [[${mapName}]]);
+			window.OG.drawMap(box, mapObject);
 		};
 
 		document.addEventListener("DOMContentLoaded", function () {

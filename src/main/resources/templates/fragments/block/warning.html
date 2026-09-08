@@ -1,12 +1,12 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="warning(text)" class="gl-warning">
-	<svg class="gl-warning-sign" viewBox="0 0 120 120" aria-hidden="true">
-		<rect class="field" x="19" y="19" width="82" height="82" rx="7" transform="rotate(45 60 60)"/>
-		<rect class="border" x="25" y="25" width="70" height="70" rx="6" transform="rotate(45 60 60)"/>
-		<rect class="mark" x="53" y="34" width="14" height="35" rx="7"/>
-		<circle class="mark" cx="60" cy="80" r="7.5"/>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="warning(text)" class="og-warning">
+	<svg class="og-warning-sign" viewBox="0 0 120 120" aria-hidden="true">
+		<rect class="og-field" x="19" y="19" width="82" height="82" rx="7" transform="rotate(45 60 60)"/>
+		<rect class="og-border" x="25" y="25" width="70" height="70" rx="6" transform="rotate(45 60 60)"/>
+		<rect class="og-mark" x="53" y="34" width="14" height="35" rx="7"/>
+		<circle class="og-mark" cx="60" cy="80" r="7.5"/>
 	</svg>
 	<div>
-		<p class="gl-warning-kicker">Warning</p>
-		<p class="gl-warning-text" th:text="${text}">Warning text</p>
+		<p class="og-warning-kicker">Warning</p>
+		<p class="og-warning-text" th:text="${text}">Warning text</p>
 	</div>
 </div>

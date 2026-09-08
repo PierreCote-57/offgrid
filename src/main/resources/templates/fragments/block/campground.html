@@ -12,7 +12,7 @@
 	The separator lives in site.css, so the row reads the same whichever of the three a place
 	has. Nothing renders at all when the page carries no campgroundData.
 -->
-<p xmlns:th="http://www.thymeleaf.org" class="gl-linkrow"
+<p xmlns:th="http://www.thymeleaf.org" class="og-linkrow"
    th:if="${pageData.campgroundData != null}">
 	<th:block th:each="reference : ${pageData.campgroundData.referenceList}"
 			  th:if="${reference.type != null and reference.type.name() == 'HOMEPAGE'}"><th:block

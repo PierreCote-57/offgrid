@@ -16,33 +16,33 @@
 
 	function build() {
 		overlay = document.createElement("div");
-		overlay.className = "gl-lightbox";
+		overlay.className = "og-lightbox";
 		overlay.setAttribute("role", "dialog");
 		overlay.setAttribute("aria-modal", "true");
 		overlay.setAttribute("aria-hidden", "true");
 
-		closeBtn = button("gl-lightbox-close", "Close", "&times;");
-		prevBtn = button("gl-lightbox-nav gl-lightbox-prev", "Previous", "&#8249;");
-		nextBtn = button("gl-lightbox-nav gl-lightbox-next", "Next", "&#8250;");
+		closeBtn = button("og-lightbox-close", "Close", "&times;");
+		prevBtn = button("og-lightbox-nav og-lightbox-prev", "Previous", "&#8249;");
+		nextBtn = button("og-lightbox-nav og-lightbox-next", "Next", "&#8250;");
 
 		var figure = document.createElement("figure");
-		figure.className = "gl-lightbox-figure";
+		figure.className = "og-lightbox-figure";
 
 		imgEl = document.createElement("img");
-		imgEl.className = "gl-lightbox-img";
+		imgEl.className = "og-lightbox-img";
 		imgEl.alt = "";
 
 		captionEl = document.createElement("figcaption");
-		captionEl.className = "gl-lightbox-caption";
+		captionEl.className = "og-lightbox-caption";
 
 		hiresLink = document.createElement("a");
-		hiresLink.className = "gl-lightbox-hires";
+		hiresLink.className = "og-lightbox-hires";
 		hiresLink.target = "_blank";
 		hiresLink.rel = "noopener";
 		hiresLink.textContent = "Full size";
 
 		counterEl = document.createElement("div");
-		counterEl.className = "gl-lightbox-counter";
+		counterEl.className = "og-lightbox-counter";
 
 		figure.appendChild(imgEl);
 		figure.appendChild(captionEl);
@@ -131,7 +131,7 @@
 	 * just the link itself.
 	 */
 	function linkListOf(link) {
-		var grid = link.closest(".gl-gallery-grid");
+		var grid = link.closest(".og-gallery-grid");
 		var linkList = grid ? Array.prototype.slice.call(grid.querySelectorAll("a[data-lightbox]")) : [link];
 		return linkList;
 	}

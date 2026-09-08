@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +54,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
 
 	private static final String SKY_TEMPLATE = "fragments/block/sky-fragment";
-	private static final String SKY_CHART_FRAGMENT = "chart";
+	private static final String SKY_CHART_FRAGMENT = "drawing";
 
 	/** The 50th parallel marker in Campbell River, until the browser says otherwise. */
 	private static final double SKY_LATITUDE = 50.0;
@@ -61,7 +62,15 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private static final String SKY_TIME_ZONE = "America/Vancouver";
 
 	/** The chart's width when the caller states none, and the range it will draw at. */
-	private static final String SKY_CHART_CAPTION = "Not to scale";
+	private static final String SKY_CHART_CAPTION = "Not to scale — everything moves counterclockwise";
+	/**
+	 * What the ephemeris covers. Ephemeris draws on the JPL approximate elements, which are
+	 * stated as valid 1800-2050; outside that its positions are wrong rather than rough, so a
+	 * date past either end is answered with that end.
+	 */
+	private static final LocalDate SKY_FIRST_DATE = LocalDate.of(1800, 1, 1);
+	private static final LocalDate SKY_LAST_DATE = LocalDate.of(2050, 12, 31);
+
 	private static final int SKY_CHART_WIDTH = 430;
 	private static final int MINIMUM_CHART_WIDTH = 200;
 	private static final int MAXIMUM_CHART_WIDTH = 2000;
@@ -158,15 +167,20 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	}
 
 	public String processSky(Model model, String path, Class<? extends PageData> clazz,
-			String latitudeText, String longitudeText)
+			String latitudeText, String longitudeText, String dateText)
 	{
 		String answer = processPage(model, path, clazz);
 
 		double latitude = readCoordinate(latitudeText, SKY_LATITUDE, MAXIMUM_LATITUDE);
 		double longitude = readCoordinate(longitudeText, SKY_LONGITUDE, MAXIMUM_LONGITUDE);
+		LocalDate date = readDate(dateText);
 
-		SkyDataTable skyTable = makeSkyTable(latitude, longitude);
+		SkyDataTable skyTable = makeSkyTable(latitude, longitude, date);
 		model.addAttribute("skyTable", skyTable);
+
+		// The picker states the ends it may not go past, so the browser stops there itself.
+		model.addAttribute("skyFirstDate", SKY_FIRST_DATE);
+		model.addAttribute("skyLastDate", SKY_LAST_DATE);
 
 		return answer;
 	}
@@ -201,11 +215,51 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		return value;
 	}
 
-	public ResponseEntity<Resource> processSkyChart(String widthText)
+	/**
+	 * A date off the query string, or today when it is missing or does not parse. A date the
+	 * ephemeris does not cover is answered with the end it passed, so a hand-edited URL gets
+	 * the nearest sky that can be computed rather than an error. The page shows the date it
+	 * used, so a clamped date is visible.
+	 */
+	private LocalDate readDate(String text)
+	{
+		if (null == text || text.isBlank())
+		{
+			return today();
+		}
+
+		LocalDate date;
+		try
+		{
+			date = LocalDate.parse(text.trim());
+		}
+		catch (DateTimeParseException failure)
+		{
+			LocalDate defaultValue = today();
+			getLogger().info("Sky page: date %s does not parse, using %s", text, defaultValue);
+			return defaultValue;
+		}
+
+		if (date.isBefore(SKY_FIRST_DATE))
+		{
+			getLogger().info("Sky page: date %s is before %s, using %s", text, SKY_FIRST_DATE, SKY_FIRST_DATE);
+			return SKY_FIRST_DATE;
+		}
+
+		if (date.isAfter(SKY_LAST_DATE))
+		{
+			getLogger().info("Sky page: date %s is after %s, using %s", text, SKY_LAST_DATE, SKY_LAST_DATE);
+			return SKY_LAST_DATE;
+		}
+		return date;
+	}
+
+	public ResponseEntity<Resource> processSkyChart(String widthText, String dateText)
 	{
 		int width = readWidth(widthText);
+		LocalDate date = readDate(dateText);
 
-		SkyDataChart skyChart = makeSkyChart();
+		SkyDataChart skyChart = makeSkyChart(date);
 		Resource chartResource = makeChartImage(skyChart, width);
 
 		ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, chartResource);
@@ -260,12 +314,10 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	}
 
 	/**
-	 * The chart for today. It is heliocentric, so it takes no observer.
+	 * The chart for one date. It is heliocentric, so it takes no observer.
 	 */
-	private SkyDataChart makeSkyChart()
+	private SkyDataChart makeSkyChart(LocalDate date)
 	{
-		LocalDate date = today();
-
 		SkyDataMaker skyDataMaker = new SkyDataMaker();
 		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
 
@@ -278,13 +330,11 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	}
 
 	/**
-	 * The table for today: where the visitor says they are, the clock they read, and the same
-	 * bodies the chart draws. The times on them are still made up.
+	 * The table for one date: where the visitor says they are, the clock they read, and the
+	 * same bodies the chart draws. The times on them are still made up.
 	 */
-	private SkyDataTable makeSkyTable(double latitude, double longitude)
+	private SkyDataTable makeSkyTable(double latitude, double longitude, LocalDate date)
 	{
-		LocalDate date = today();
-
 		SkyDataMaker skyDataMaker = new SkyDataMaker();
 		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
 

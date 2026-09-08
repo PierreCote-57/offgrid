@@ -6,25 +6,25 @@
 	from the waterbody name — Go Fish BC wants the bare name, not a URL — and every lake on
 	this site is on Vancouver Island, so the region is fixed here.
 -->
-<div xmlns:th="http://www.thymeleaf.org" class="gl-fishing"
+<div xmlns:th="http://www.thymeleaf.org" class="og-fishing"
 	 th:with="fishing=${pageData.fishingReferences},
 			  stockingUrl='https://www.gofishbc.com/stocked-fish/?reportType=lake&amp;region=VANCOUVER%20ISLAND&amp;waterbody='">
-	<h3 class="gl-heading">Fishing references</h3>
+	<h3 class="og-heading">Fishing references</h3>
 
 	<table>
 		<tbody>
 		<tr>
-			<td class="gl-fishing-label">BC Identifier</td>
-			<td class="gl-fishing-value" th:text="${fishing?.bcIdentifier} ?: 'NA'">NA</td>
+			<td class="og-fishing-label">BC Identifier</td>
+			<td class="og-fishing-value" th:text="${fishing?.bcIdentifier} ?: 'NA'">NA</td>
 		</tr>
 		<tr>
-			<td class="gl-fishing-label">Area</td>
-			<td class="gl-fishing-value"
+			<td class="og-fishing-label">Area</td>
+			<td class="og-fishing-value"
 				th:text="${fishing?.areaKm2 == null} ? 'NA' : ${fishing.areaKm2} + ' km²'">NA</td>
 		</tr>
 		<tr>
-			<td class="gl-fishing-label">Lake chart</td>
-			<td class="gl-fishing-value">
+			<td class="og-fishing-label">Lake chart</td>
+			<td class="og-fishing-value">
 				<span th:if="${#maps.isEmpty(fishing?.lakeChartMap)}">NA</span>
 				<span th:each="chart, iter : ${fishing?.lakeChartMap}">
 					<br th:if="${!iter.first}">
@@ -33,8 +33,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="gl-fishing-label">Stocking report</td>
-			<td class="gl-fishing-value">
+			<td class="og-fishing-label">Stocking report</td>
+			<td class="og-fishing-value">
 				<span th:if="${#strings.isEmpty(fishing?.stockingName)}">NA</span>
 				<th:block th:unless="${#strings.isEmpty(fishing?.stockingName)}"
 						  th:with="stockingLink=${stockingUrl + #uris.escapeQueryParam(fishing.stockingName)}"><span

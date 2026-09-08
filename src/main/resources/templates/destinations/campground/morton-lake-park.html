@@ -11,12 +11,12 @@
 
 	<div>
 		<details>
-			<summary><h2 class="gl-heading">Road map</h2></summary>
+			<summary><h2 class="og-heading">Road map</h2></summary>
 			<div style="width:750px;height:500px;clear:both"
 			 th:insert="~{fragments/block/google-map :: map('road')}"></div>
 		</details>
 		<details>
-			<summary><h2 class="gl-heading">Campground map</h2></summary>
+			<summary><h2 class="og-heading">Campground map</h2></summary>
 			<div style="width:750px;height:500px;clear:both"
 			 th:insert="~{fragments/block/google-map :: map('campground')}"></div>
 		</details>
@@ -28,11 +28,11 @@
 	</div>
 
 	<details>
-		<summary><h2 class="gl-heading">Campground & lake</h2></summary>
+		<summary><h2 class="og-heading">Campground & lake</h2></summary>
 		<div th:replace="~{fragments/block/photo-gallery :: gallery('atSite')}"></div>
 	</details>
 	<details>
-		<summary><h2 class="gl-heading">On the way</h2></summary>
+		<summary><h2 class="og-heading">On the way</h2></summary>
 		<div th:replace="~{fragments/block/photo-gallery :: gallery('onTheWay')}"></div>
 	</details>
 

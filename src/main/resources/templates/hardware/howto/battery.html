@@ -8,8 +8,8 @@
 	<section data-howto-section="howto">
 
 		<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;">
-			<div class="gl-photo" style="width:28%;float:none;margin:0;" th:insert="~{fragments/block/photo :: photo('12V206H_img')}"></div>
-			<div class="gl-photo" style="width:65%;float:none;margin:0;" th:insert="~{fragments/block/photo :: photo('control-panel')}"></div>
+			<div class="og-photo" style="width:28%;float:none;margin:0;" th:insert="~{fragments/block/photo :: photo('12V206H_img')}"></div>
+			<div class="og-photo" style="width:65%;float:none;margin:0;" th:insert="~{fragments/block/photo :: photo('control-panel')}"></div>
 		</div>
 
 
@@ -34,7 +34,7 @@
 		</ol>
 		<br />
 
-		<table class="gl-table">
+		<table class="og-table">
 			<colgroup>
 				<col style="width:15%;"/>
 				<col style="width:10%;"/>
@@ -152,7 +152,7 @@
 
 	<!-- Supplier documentation -->
 	<details>
-		<summary><h2 class="gl-heading">Supplier documentation</h2></summary>
+		<summary><h2 class="og-heading">Supplier documentation</h2></summary>
 		<div th:replace="~{fragments/block/note-list :: notes('')}"></div>
 	</details>
 	<br/>

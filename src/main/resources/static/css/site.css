@@ -55,7 +55,7 @@ body {
 
 /* Messages from the processor, below the header bar. The container has no padding of its
    own, so with no messages it takes no vertical space. */
-.message {
+.og-message {
 	width: calc(100% - 48px);
 	max-width: 768px;
 	margin: 8px auto;
@@ -66,19 +66,19 @@ body {
 	box-sizing: border-box;
 }
 
-.message-user {
+.og-message-user {
 	background: var(--brand-soft);
 	border-color: var(--brand);
 	color: var(--brand-deep);
 }
 
-.message-warning {
+.og-message-warning {
 	background: var(--warn-soft);
 	border-color: var(--warn);
 	color: var(--warn-deep);
 }
 
-.message-error {
+.og-message-error {
 	background: var(--error-soft);
 	border-color: var(--error);
 	color: var(--error-deep);
@@ -123,56 +123,56 @@ li {
    narrow column and its description beside it. The description's lines are joined into
    flowing text — a line in the data is a wrap, not a break — and they are the author's own
    HTML, so it is the author's job for it to be valid. */
-.note-section table {
+.og-note-section table {
 	width: 100%;
 	margin: 4px 0 16px;
 	border-collapse: collapse;
 }
 
-.note-name {
+.og-note-name {
 	width: 25%;
 	padding: 5px 24px 5px 0;
 	vertical-align: top;
 	font-weight: 600;
 }
 
-.note-description {
+.og-note-description {
 	padding: 5px 0;
 	vertical-align: top;
 	line-height: 1.5;
 }
 
-.note-section a {
+.og-note-section a {
 	color: var(--brand);
 }
 
 /* Fishing references: a narrow label column against its value, centred under the heading
    rather than run across the page — there are four short rows and nothing gains by
    stretching them. */
-.gl-fishing table {
+.og-fishing table {
 	margin: 4px auto 16px;
 	border-collapse: collapse;
 }
 
-.gl-fishing-label {
+.og-fishing-label {
 	padding: 3px 24px 3px 0;
 	vertical-align: top;
 	color: var(--faded);
 	font-size: 0.88rem;
 }
 
-.gl-fishing-value {
+.og-fishing-value {
 	padding: 3px 0;
 	vertical-align: top;
 	font-size: 0.9rem;
 }
 
-.gl-fishing a {
+.og-fishing a {
 	color: var(--brand);
 }
 
 /* Header: brand on the left, menu on the right, on the coloured bar. */
-.site-header {
+.og-site-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -182,7 +182,7 @@ li {
 	color: var(--bar-text);
 }
 
-.site-header .brand {
+.og-site-header .og-brand {
 	font-family: "Bradley Hand", cursive;
 	font-style: italic;
 	font-size: 24px;
@@ -192,7 +192,7 @@ li {
 	color: var(--bar-text);
 }
 
-.menu ul {
+.og-menu ul {
 	display: flex;
 	gap: 24px;
 	list-style: none;
@@ -202,8 +202,8 @@ li {
 
 /* A button's default line-height differs from an anchor's, which drops the dropdown
    labels a pixel below the plain ones. Both are pinned to the same value. */
-.menu a,
-.menu button {
+.og-menu a,
+.og-menu button {
 	font: inherit;
 	font-size: 15px;
 	line-height: 1.4;
@@ -218,23 +218,23 @@ li {
 	cursor: pointer;
 }
 
-.menu a:hover,
-.menu button:hover {
+.og-menu a:hover,
+.og-menu button:hover {
 	border-bottom-color: var(--bar-text);
 }
 
-.menu .has-submenu {
+.og-menu .has-submenu {
 	position: relative;
 }
 
-.menu .has-submenu > button::after {
+.og-menu .has-submenu > button::after {
 	content: " \25be";
 }
 
 /* An open dropdown has to beat everything the page positions under it — a gallery card's
    image wrapper, the badge pills, the list browser's filter panel — or the page paints over
-   it and takes the click. The value sits above .gl-lb-panel and below .gl-lightbox. */
-.menu .submenu {
+   it and takes the click. The value sits above .og-lb-panel and below .og-lightbox. */
+.og-menu .og-submenu {
 	position: absolute;
 	z-index: 20;
 	top: 32px;
@@ -252,7 +252,7 @@ li {
 /* The row's padding belongs to the anchor, not the item, so the highlight and the clickable
    rectangle are the same shape. The margin the global `li` gives a prose list is dead space
    here: it opens an unlit gap between two rows that should touch. */
-.menu .submenu li {
+.og-menu .og-submenu li {
 	margin-top: 0;
 	padding: 0;
 }
@@ -260,7 +260,7 @@ li {
 /* The bar's line-height is set for items sitting alone on one row; stacked in a dropdown it
    reads as gaps between the entries. Tighter here, and only here. The bar's hover underline
    is dropped: on this panel the whole row lights instead. */
-.menu .submenu a {
+.og-menu .og-submenu a {
 	display: block;
 	padding: 5px 16px;
 	border-bottom: 0;
@@ -270,19 +270,19 @@ li {
 }
 
 /* The selected row on a light panel: the fill goes dark and the text goes light. */
-.menu .submenu a:hover {
+.og-menu .og-submenu a:hover {
 	background: var(--brand);
 	color: var(--bar-text);
 }
 
 /* The last menu's dropdown opens leftwards so it stays inside the window. */
-.menu > ul > li:last-child .submenu {
+.og-menu > ul > li:last-child .og-submenu {
 	left: auto;
 	right: 0;
 }
 
 /* Outline button: brand-soft fill, brand border, filling in on hover. */
-.cta {
+.og-cta {
 	display: inline-block;
 	padding: 7px 16px;
 	font-weight: 600;
@@ -294,13 +294,13 @@ li {
 	border: 1px solid var(--brand);
 }
 
-.cta:hover {
+.og-cta:hover {
 	background: var(--brand);
 	color: var(--bar-text);
 }
 
 /* Footer: copyright, contact and last-modified across the coloured bar. */
-.site-footer {
+.og-site-footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -311,12 +311,12 @@ li {
 	font-size: 14px;
 }
 
-.site-footer .footer-center {
+.og-site-footer .og-footer-center {
 	flex: 1;
 	text-align: center;
 }
 
-.site-footer a {
+.og-site-footer a {
 	color: var(--bar-text);
 }
 
@@ -328,28 +328,28 @@ li {
 /* The two paper rulings. Quadrille at 15px for a checklist, horizontals at 30px for a post.
    Both sit on the warm ground with a rust edge down the left, so a ruled block reads as a
    page torn out of a notebook rather than as a panel. */
-.gl-checklist,
-.gl-numcheck,
-.gl-post {
+.og-checklist,
+.og-numcheck,
+.og-post {
 	background-color: #fdfbf4;
 	border-left: 3px solid var(--rust);
 	padding: 12px 20px 16px;
 }
 
-.gl-checklist,
-.gl-numcheck {
+.og-checklist,
+.og-numcheck {
 	background-image:
 		repeating-linear-gradient(to bottom, transparent 0 14px, var(--ruling) 14px 15px),
 		repeating-linear-gradient(to right,  transparent 0 14px, var(--ruling) 14px 15px);
 }
 
-.gl-post {
+.og-post {
 	background-image:
 		repeating-linear-gradient(to bottom, transparent 0 29px, var(--ruling) 29px 30px);
 }
 
 /* Copy on lined paper has to sit on the ruling, so the rhythm is the line spacing. */
-.gl-post p {
+.og-post p {
 	margin: 0;
 	line-height: 30px;
 }
@@ -357,16 +357,16 @@ li {
 /* Checklists. The label, checkbox and text span are emitted by
    ChecklistElementProcessor; authors write bare <li> lines. The class carries the styling
    and selects the variant, so it stays on the list. */
-.gl-checklist {
+.og-checklist {
 	list-style: none;
 	margin: 8px 0 24px;
 }
 
-.gl-checklist li {
+.og-checklist li {
 	margin: 7px 0;
 }
 
-.gl-checklist label {
+.og-checklist label {
 	display: flex;
 	align-items: flex-start;
 	gap: 10px;
@@ -374,7 +374,7 @@ li {
 	line-height: 1.45;
 }
 
-.gl-checklist input[type="checkbox"] {
+.og-checklist input[type="checkbox"] {
 	margin-top: 3px;
 	width: 17px;
 	height: 17px;
@@ -385,26 +385,26 @@ li {
 
 /* A checked row is struck through and dimmed — a done item, de-emphasized. Nothing is
    stored, so a reload clears every box. */
-.gl-checklist input[type="checkbox"]:checked + span {
+.og-checklist input[type="checkbox"]:checked + span {
 	text-decoration: line-through;
 	color: var(--faded);
 }
 
-/* gl-numcheck: the same interactive row with an automatic number between the box and the
+/* og-numcheck: the same interactive row with an automatic number between the box and the
    text. The number is a CSS counter, so each list restarts at 1 and the authored lines stay
-   bare; the processor emits the .gl-num span empty and ::before draws the digit. */
-.gl-numcheck {
+   bare; the processor emits the .og-num span empty and ::before draws the digit. */
+.og-numcheck {
 	list-style: none;
 	margin: 8px 0 24px;
-	counter-reset: gl-numcheck;
+	counter-reset: og-numcheck;
 }
 
-.gl-numcheck li {
+.og-numcheck li {
 	margin: 7px 0;
-	counter-increment: gl-numcheck;
+	counter-increment: og-numcheck;
 }
 
-.gl-numcheck label {
+.og-numcheck label {
 	display: flex;
 	align-items: flex-start;
 	gap: 10px;
@@ -412,7 +412,7 @@ li {
 	line-height: 1.45;
 }
 
-.gl-numcheck input[type="checkbox"] {
+.og-numcheck input[type="checkbox"] {
 	margin-top: 3px;
 	width: 17px;
 	height: 17px;
@@ -421,24 +421,24 @@ li {
 	cursor: pointer;
 }
 
-.gl-numcheck .gl-num {
+.og-numcheck .og-num {
 	flex-shrink: 0;
 	font-weight: 700;
 }
 
-.gl-numcheck .gl-num::before {
-	content: counter(gl-numcheck) ".";
+.og-numcheck .og-num::before {
+	content: counter(og-numcheck) ".";
 }
 
 /* On check, strike and dim the text while the number stays solid. The text span is the one
-   that is not .gl-num. */
-.gl-numcheck input[type="checkbox"]:checked ~ span:not(.gl-num) {
+   that is not .og-num. */
+.og-numcheck input[type="checkbox"]:checked ~ span:not(.og-num) {
 	text-decoration: line-through;
 	color: var(--faded);
 }
 
 /* A post's dateline, right under the title and in the brand's hand. */
-.gl-dateline {
+.og-dateline {
 	margin: -8px 0 16px;
 	color: var(--faded);
 	font-family: "Bradley Hand", cursive;
@@ -446,31 +446,31 @@ li {
 }
 
 /* The way back to the list a page was reached from. */
-.gl-dest-back {
+.og-dest-back {
 	margin: 24px 0 0;
 }
 
-.gl-dest-back a {
+.og-dest-back a {
 	color: var(--brand);
 	font-weight: 600;
 }
 
 /* The maintenance record: one row per visit to a shop. The narrow columns are centred; the
    work done is the only one that runs long enough to want its left edge. */
-.gl-maintenance {
+.og-maintenance {
 	width: 90%;
 	margin: 4px auto 24px;
 	border-collapse: collapse;
 	table-layout: fixed;
 }
 
-.gl-maintenance th,
-.gl-maintenance td {
+.og-maintenance th,
+.og-maintenance td {
 	padding: 4px 8px;
 	text-align: center;
 }
 
-.gl-maintenance th {
+.og-maintenance th {
 	vertical-align: bottom;
 	border-bottom: 1px solid var(--rule);
 	color: var(--faded);
@@ -478,20 +478,20 @@ li {
 	font-weight: 600;
 }
 
-.gl-maintenance td {
+.og-maintenance td {
 	vertical-align: top;
 	font-size: 15px;
 }
 
-.gl-maintenance th:nth-child(4),
-.gl-maintenance td:nth-child(4) {
+.og-maintenance th:nth-child(4),
+.og-maintenance td:nth-child(4) {
 	text-align: left;
 }
 
 /* A warning, drawn as roadside signage: an orange construction diamond beside the words,
    on a pale panel edged in the same orange. The diamond is authored as geometry only, so
    every colour in it stays here with the rest of the palette. */
-.gl-warning {
+.og-warning {
 	display: flex;
 	align-items: center;
 	gap: 18px;
@@ -501,28 +501,28 @@ li {
 	border-left: 4px solid var(--sign-orange);
 }
 
-.gl-warning-sign {
+.og-warning-sign {
 	flex: none;
 	width: 62px;
 	height: auto;
 }
 
-.gl-warning-sign .field {
+.og-warning-sign .og-field {
 	fill: var(--sign-orange);
 }
 
-.gl-warning-sign .border {
+.og-warning-sign .og-border {
 	fill: none;
 	stroke: var(--sign-ink);
 	stroke-width: 5;
 }
 
-.gl-warning-sign .mark {
+.og-warning-sign .og-mark {
 	fill: var(--sign-ink);
 }
 
 /* The first of the signage lettering to reach a page: condensed, uppercase, letterspaced. */
-.gl-warning-kicker {
+.og-warning-kicker {
 	margin: 2px 0 4px;
 	font-family: "Avenir Next Condensed", "Futura", system-ui, sans-serif;
 	text-transform: uppercase;
@@ -531,13 +531,13 @@ li {
 	color: var(--rust);
 }
 
-.gl-warning-text {
+.og-warning-text {
 	margin: 0;
 	line-height: 1.5;
 }
 
 /* Placeholder for a block whose renderer does not exist yet. */
-.block-unavailable {
+.og-block-unavailable {
 	margin: 16px 0;
 	padding: 10px 14px;
 	border: 3px solid red;
@@ -546,13 +546,13 @@ li {
 	font-style: italic;
 }
 
-.block-unavailable-inline {
+.og-block-unavailable-inline {
 	color: var(--faded);
 	font-style: italic;
 }
 
 /* A bordered section heading, the one used on <summary> lines and above a gallery. */
-.gl-heading {
+.og-heading {
 	margin: 0;
 	padding-bottom: 4px;
 	border-bottom: 1px solid var(--rule);
@@ -563,13 +563,13 @@ li {
 
 /* A <details> block: the summary is the clickable line, the marker stays the browser's.
    The browser page's filter dropdowns are <details> too, re-skinned from scratch by
-   .gl-lb-dropdown, so they are excluded here and start from the browser default instead of
+   .og-lb-dropdown, so they are excluded here and start from the browser default instead of
    having to undo these. Page content keeps writing a bare <details> and gets this. */
-details:not(.gl-lb-dropdown) {
+details:not(.og-lb-dropdown) {
 	margin: 16px 0;
 }
 
-details:not(.gl-lb-dropdown) > summary {
+details:not(.og-lb-dropdown) > summary {
 	margin-bottom: 12px;
 	cursor: pointer;
 }
@@ -587,7 +587,7 @@ details > summary:focus:not(:focus-visible) {
 
 /* A single inline photo. The page owns the box — width, float and margin are set on the
    block element itself — so these are defaults for a page that sets none of them. */
-.gl-photo {
+.og-photo {
 	width: 25%;
 	float: right;
 	margin: 0 0 16px 16px;
@@ -595,20 +595,20 @@ details > summary:focus:not(:focus-visible) {
 
 /* A mini-gallery: a grid of captioned thumbnails. Its heading, and whether it sits inside a
    <details>, are the page's business, not the fragment's. */
-.gl-gallery-grid {
+.og-gallery-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 	gap: 16px;
 	margin: 12px 0 24px;
 }
 
-.gl-gallery-item {
+.og-gallery-item {
 	margin: 0;
 }
 
 /* Every thumbnail gets the same bounding rectangle and is sized to fit inside it — contain,
    never crop — so a portrait and a landscape shot sit on the same grid lines. */
-.gl-gallery-item img {
+.og-gallery-item img {
 	display: block;
 	width: 100%;
 	aspect-ratio: 3 / 2;
@@ -616,7 +616,7 @@ details > summary:focus:not(:focus-visible) {
 	object-position: bottom;
 }
 
-.gl-gallery-item figcaption {
+.og-gallery-item figcaption {
 	margin-top: 2px;
 	text-align: center;
 	font-size: 14px;
@@ -649,7 +649,7 @@ main tbody tr:last-child td {
 
 /* The pop-up image viewer (lightbox.js). It builds its own markup, so these classes have no
    counterpart in the templates. */
-.gl-lightbox {
+.og-lightbox {
 	position: fixed;
 	inset: 0;
 	z-index: 1000;
@@ -661,13 +661,13 @@ main tbody tr:last-child td {
 	box-sizing: border-box;
 }
 
-.gl-lightbox[aria-hidden="false"] {
+.og-lightbox[aria-hidden="false"] {
 	display: flex;
 }
 
 /* min-height:0 on both the figure and the image is load bearing: without it the max-height
    below never binds, and a portrait shot grows past the viewport and clips at the top. */
-.gl-lightbox-figure {
+.og-lightbox-figure {
 	margin: 0;
 	max-width: 100%;
 	max-height: 100%;
@@ -677,7 +677,7 @@ main tbody tr:last-child td {
 	align-items: center;
 }
 
-.gl-lightbox-img {
+.og-lightbox-img {
 	display: block;
 	max-width: 100%;
 	max-height: 75vh;
@@ -687,7 +687,7 @@ main tbody tr:last-child td {
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
-.gl-lightbox-caption {
+.og-lightbox-caption {
 	margin-top: 0.75rem;
 	max-width: 60ch;
 	color: #eee;
@@ -695,7 +695,7 @@ main tbody tr:last-child td {
 	text-align: center;
 }
 
-.gl-lightbox-hires {
+.og-lightbox-hires {
 	align-self: stretch;
 	margin-top: 0.5rem;
 	color: #ddd;
@@ -703,7 +703,7 @@ main tbody tr:last-child td {
 	text-align: right;
 }
 
-.gl-lightbox-counter {
+.og-lightbox-counter {
 	position: absolute;
 	top: 1rem;
 	left: 50%;
@@ -713,7 +713,7 @@ main tbody tr:last-child td {
 	letter-spacing: 0.03em;
 }
 
-.gl-lightbox-close {
+.og-lightbox-close {
 	position: absolute;
 	top: 0.5rem;
 	right: 0.9rem;
@@ -726,11 +726,11 @@ main tbody tr:last-child td {
 	cursor: pointer;
 }
 
-.gl-lightbox-close:hover, .gl-lightbox-close:focus {
+.og-lightbox-close:hover, .og-lightbox-close:focus {
 	color: var(--brand-deep);
 }
 
-.gl-lightbox-nav {
+.og-lightbox-nav {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
@@ -744,21 +744,21 @@ main tbody tr:last-child td {
 	cursor: pointer;
 }
 
-.gl-lightbox-nav:hover {
+.og-lightbox-nav:hover {
 	background: rgba(0, 0, 0, 0.6);
 }
 
-.gl-lightbox-prev {
+.og-lightbox-prev {
 	left: 0.75rem;
 }
 
-.gl-lightbox-next {
+.og-lightbox-next {
 	right: 0.75rem;
 }
 
 /* A thumbnail link is the image and nothing else — no underline, no link colour. */
-.gl-gallery-item a,
-a.gl-photo-link {
+.og-gallery-item a,
+a.og-photo-link {
 	display: block;
 	text-decoration: none;
 	cursor: zoom-in;
@@ -770,7 +770,7 @@ a.gl-photo-link {
 
 /* The options bar. The controls sit in a row that wraps; the match count is the only
    right-anchored item. */
-.gl-lb-bar {
+.og-lb-bar {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -781,7 +781,7 @@ a.gl-photo-link {
 /* Match-count readout — not a control, so no pill. margin-left:auto floats it to the right
    end of the bar, past any booklet button. A notch larger than the controls and semibold, so
    it reads as the answer to the filters. */
-.gl-lb-count {
+.og-lb-count {
 	margin-left: auto;
 	font-weight: 600;
 	font-size: 1.15rem;
@@ -792,10 +792,10 @@ a.gl-photo-link {
    line up — left to itself each control sizes from its own content box, which is what makes
    a bar look assembled from parts. font-family/font-size must be stated explicitly: form
    elements do not inherit type from the page. */
-.gl-lb-view,
-.gl-lb-dropdown summary,
-.gl-lb-select,
-.gl-lb-search {
+.og-lb-view,
+.og-lb-dropdown summary,
+.og-lb-select,
+.og-lb-search {
 	box-sizing: border-box;
 	height: 34px;
 	border: 1px solid var(--rule);
@@ -808,9 +808,9 @@ a.gl-photo-link {
 
 /* The three data-axis filters share their inner padding. The view toggle is excluded: its
    buttons run edge to edge inside the pill. */
-.gl-lb-dropdown summary,
-.gl-lb-select,
-.gl-lb-search {
+.og-lb-dropdown summary,
+.og-lb-select,
+.og-lb-search {
 	padding: 0 12px;
 }
 
@@ -818,8 +818,8 @@ a.gl-photo-link {
    select — so they read as one kind of control rather than as our styling next to the
    browser's. appearance:none is what removes the select's native arrow; without it ours
    would be the second one. */
-.gl-lb-dropdown summary,
-.gl-lb-select {
+.og-lb-dropdown summary,
+.og-lb-select {
 	-webkit-appearance: none;
 	appearance: none;
 	cursor: pointer;
@@ -830,7 +830,7 @@ a.gl-photo-link {
 }
 
 /* Open state: the chevron flips up. */
-.gl-lb-dropdown[open] summary {
+.og-lb-dropdown[open] summary {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 5l4-4 4 4' fill='none' stroke='%23173f2d' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
@@ -838,12 +838,12 @@ a.gl-photo-link {
    is the only control with a filled state — it picks the display axis, the other three
    filter the data. The label is the view's own value, capitalized here, so a new view needs
    no label of its own. */
-.gl-lb-view {
+.og-lb-view {
 	display: inline-flex;
 	overflow: hidden;
 }
 
-.gl-lb-view button {
+.og-lb-view button {
 	height: 100%;
 	padding: 0 14px;
 	border: none;
@@ -854,18 +854,18 @@ a.gl-photo-link {
 	cursor: pointer;
 }
 
-.gl-lb-view button.is-active {
+.og-lb-view button.is-active {
 	background: var(--brand);
 	color: var(--bar-text);
 }
 
 /* Multi-select filter: <details> disclosure + absolutely positioned panel. */
-.gl-lb-dropdown {
+.og-lb-dropdown {
 	position: relative;
 	display: inline-block;
 }
 
-.gl-lb-dropdown summary {
+.og-lb-dropdown summary {
 	display: flex;
 	align-items: center;
 	list-style: none;
@@ -873,11 +873,11 @@ a.gl-photo-link {
 }
 
 /* Safari draws its own disclosure triangle; list-style:none does not remove it. */
-.gl-lb-dropdown summary::-webkit-details-marker {
+.og-lb-dropdown summary::-webkit-details-marker {
 	display: none;
 }
 
-.gl-lb-panel {
+.og-lb-panel {
 	position: absolute;
 	z-index: 5;
 	margin-top: 4px;
@@ -891,7 +891,7 @@ a.gl-photo-link {
 	padding: 6px;
 }
 
-.gl-lb-panel label {
+.og-lb-panel label {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -899,7 +899,7 @@ a.gl-photo-link {
 	cursor: pointer;
 }
 
-.gl-lb-panel input[type="checkbox"] {
+.og-lb-panel input[type="checkbox"] {
 	accent-color: var(--brand);
 	cursor: pointer;
 }
@@ -908,7 +908,7 @@ a.gl-photo-link {
    button rather than a field. It must still match the 34px so the row lines up — which needs
    box-sizing:border-box, since the vertical padding would otherwise stack on top of the
    height and make the button tower over everything else. */
-.gl-lb-booklet {
+.og-lb-booklet {
 	box-sizing: border-box;
 	height: 34px;
 	padding: 0 1rem;
@@ -924,26 +924,26 @@ a.gl-photo-link {
 	transition: background 0.15s ease;
 }
 
-.gl-lb-booklet:hover {
+.og-lb-booklet:hover {
 	background: var(--brand-deep);
 }
 
 /* ---- the table view ------------------------------------------------------------------
    The wrapper scrolls sideways rather than letting a wide table push the page: the table is
    the one view that can want more room than the page column has. */
-.gl-lb-tablewrap {
+.og-lb-tablewrap {
 	overflow-x: auto;
 }
 
-.gl-lb-table {
+.og-lb-table {
 	width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
 	margin-top: 0.25rem;
 }
 
-.gl-lb-table th,
-.gl-lb-table td {
+.og-lb-table th,
+.og-lb-table td {
 	border: 1px solid var(--rule);
 	padding: 0.3rem 0.6rem;
 	vertical-align: top;
@@ -951,18 +951,18 @@ a.gl-photo-link {
 	overflow-wrap: break-word;
 }
 
-.gl-lb-table th {
+.og-lb-table th {
 	text-align: left;
 	font-weight: 700;
 	color: var(--brand-deep);
 }
 
-.gl-lb-table sup {
+.og-lb-table sup {
 	margin-left: 1px;
 }
 
 /* Footnotes sit under the table, at the page's own width — only the table scrolls. */
-.gl-lb-footnotes {
+.og-lb-footnotes {
 	font-size: 0.8rem;
 	color: var(--faded);
 	margin: 0.4rem 0 0;
@@ -971,9 +971,9 @@ a.gl-photo-link {
 
 /* ---- the grid view -------------------------------------------------------------------
    Cards. A card IS a link to a page, which is why the grid is the one view that narrows.
-   Its own grid class: .gl-gallery-grid is the photo galleries' thumbnail grid, and a card is
+   Its own grid class: .og-gallery-grid is the photo galleries' thumbnail grid, and a card is
    a much bigger thing than a thumbnail. */
-.gl-lb-grid {
+.og-lb-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 1.5rem;
@@ -981,24 +981,24 @@ a.gl-photo-link {
 }
 
 @media (max-width: 900px) {
-	.gl-lb-grid { grid-template-columns: repeat(2, 1fr); }
+	.og-lb-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 600px) {
-	.gl-lb-grid { grid-template-columns: 1fr; }
+	.og-lb-grid { grid-template-columns: 1fr; }
 }
 
-.gl-gallery-card {
+.og-gallery-card {
 	display: block;
 	text-decoration: none;
 	color: inherit;
 }
 
-.gl-gallery-card-img-wrap {
+.og-gallery-card-img-wrap {
 	position: relative;
 }
 
-.gl-gallery-card-img {
+.og-gallery-card-img {
 	width: 100%;
 	height: 200px;
 	object-fit: contain;
@@ -1006,13 +1006,13 @@ a.gl-photo-link {
 	display: block;
 }
 
-.gl-gallery-card-title {
+.og-gallery-card-title {
 	margin: 0.6rem 0 0.3rem;
 	font-size: 1.15rem;
 	color: var(--brand-deep);
 }
 
-.gl-gallery-card-teaser {
+.og-gallery-card-teaser {
 	margin: 0;
 	font-size: 0.95rem;
 	color: var(--text);
@@ -1020,7 +1020,7 @@ a.gl-photo-link {
 }
 
 /* Badge pills, stacked in the image's top-right corner. */
-.gl-tag-stack {
+.og-tag-stack {
 	position: absolute;
 	top: 8px;
 	right: 8px;
@@ -1030,7 +1030,7 @@ a.gl-photo-link {
 	align-items: flex-end;
 }
 
-.gl-tag {
+.og-tag {
 	font-size: 11px;
 	font-weight: 500;
 	padding: 2px 8px;
@@ -1039,9 +1039,9 @@ a.gl-photo-link {
 	border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
-/* The road badge, lower-left corner. The same pill as .gl-tag; only the position differs, so
+/* The road badge, lower-left corner. The same pill as .og-tag; only the position differs, so
    the two corners read as one family. */
-.gl-road {
+.og-road {
 	position: absolute;
 	bottom: 8px;
 	left: 8px;
@@ -1055,41 +1055,41 @@ a.gl-photo-link {
 
 /* The destination page's tag row. The same pills as the cards, laid along the page instead
    of pinned to the corners of an image: badges LEFT, road badge RIGHT, keywords BELOW. Only
-   the containers are new — .gl-tag is the pill in both places, which is what keeps a card
+   the containers are new — .og-tag is the pill in both places, which is what keeps a card
    and a page from drifting apart. */
 /* The block owns the space after itself: either row can be the last one, so the gap is
    written once on the wrapper instead of twice on the rows. */
-.gl-tags {
+.og-tags {
 	margin-bottom: 1rem;
 }
 
-.gl-tagrow {
+.og-tagrow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 1rem;
 }
 
-.gl-tagrow-group {
+.og-tagrow-group {
 	display: inline-flex;
 	flex-wrap: wrap;
 	gap: 0.35rem;
 	align-items: center;
 }
 
-.gl-tagrow-keywords {
+.og-tagrow-keywords {
 	margin-top: 0.4rem;
 }
 
 /* A vocabulary with no colour of its own. Its fill and its ink come from TAG_COLORS like
-   every other pill's; only the border is left here, because .gl-tag's white one is invisible
+   every other pill's; only the border is left here, because .og-tag's white one is invisible
    against a white pill and an outline is what still makes this one read as a pill. */
-.gl-tag[data-tag="plain"] {
+.og-tag[data-tag="plain"] {
 	border-color: var(--rule);
 }
 
 /* A measurement, not a vocabulary word — no pill. */
-.gl-tagrow-km {
+.og-tagrow-km {
 	font-size: 11px;
 	color: var(--faded);
 }
@@ -1098,38 +1098,38 @@ a.gl-photo-link {
    rather than written into the markup, so the row closes up on its own when a place has
    only two of the three. It is punctuation, not part of either link, so it takes the page's
    ink and none of the link's decoration. */
-.gl-linkrow {
+.og-linkrow {
 	font-size: 1.1rem;
 	margin-top: 0;
 	margin-bottom: 1.5rem;
 }
 
-.gl-linkrow a:not(:first-of-type)::before {
+.og-linkrow a:not(:first-of-type)::before {
 	content: "\00a0\00b7\00a0 ";
 	display: inline-block;
 	color: var(--text);
 	text-decoration: none;
 }
 
-/* Maps. GL.drawMap gives every map the same two children — the map and the live centre/zoom
+/* Maps. OG.drawMap gives every map the same two children — the map and the live centre/zoom
    caption under it — and touches no box property at all: the size is stated by whoever wrote
-   the box, and .gl-mapbox fills it. The flex column is what splits that height, so the
+   the box, and .og-mapbox fills it. The flex column is what splits that height, so the
    caption takes its own line out of the box rather than being added on underneath it.
    The caption reserves its line before it has any text, so Google sizes the map once against
    a box that already allows for it and never redraws into a box that shrank underneath. */
-.gl-mapbox {
+.og-mapbox {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
 }
 
-.gl-map {
+.og-map {
 	flex: 1;
 	min-height: 0;
 }
 
-.gl-map-caption {
+.og-map-caption {
 	flex: none;
 	min-height: 1.4em;
 	margin: 0.4rem 0 0;
@@ -1150,11 +1150,11 @@ a.gl-photo-link {
    receive, so it took its content's height and the log grew with it instead of scrolling.
    :has keeps the cap to this page. dvh rather than vh so a phone's collapsing browser bar
    does not push the input row off screen. */
-body:has(.gl-chat-page) {
+body:has(.og-chat-page) {
 	height: 100dvh;
 }
 
-.gl-chat-page {
+.og-chat-page {
 	display: flex;
 	flex-direction: column;
 	min-height: 0;
@@ -1162,7 +1162,7 @@ body:has(.gl-chat-page) {
 
 /* Narrower than the page. The two sides sit against opposite edges of this box, so the
    narrower it is the less eye travel there is between a question and its answer. */
-.gl-chat {
+.og-chat {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
@@ -1177,7 +1177,7 @@ body:has(.gl-chat-page) {
    where the conversation will appear. White over the page's paper, with the same shadow the
    menu and the filter panel use, so it reads as a surface above the page rather than a
    region of it. The floor wins on a short viewport, and there the page scrolls again. */
-.gl-chat-log {
+.og-chat-log {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
@@ -1196,27 +1196,27 @@ body:has(.gl-chat-page) {
    that there is anything above the top of the log. Styling the pseudo-elements is what asks
    WebKit for the classic bar that is always there while the content overflows; the gutter
    above reserves its width from the start, so nothing shifts when it appears. */
-.gl-chat-log::-webkit-scrollbar {
+.og-chat-log::-webkit-scrollbar {
 	width: 10px;
 }
 
-.gl-chat-log::-webkit-scrollbar-track {
+.og-chat-log::-webkit-scrollbar-track {
 	background: transparent;
 }
 
-.gl-chat-log::-webkit-scrollbar-thumb {
+.og-chat-log::-webkit-scrollbar-thumb {
 	background: var(--rule);
 	border: 2px solid #fff;
 	border-radius: 5px;
 }
 
-.gl-chat-log::-webkit-scrollbar-thumb:hover {
+.og-chat-log::-webkit-scrollbar-thumb:hover {
 	background: var(--faded);
 }
 
 /* A bubble is sized by its text and never by the column, up to a readable line. The side it
    takes comes from the role, below. */
-.gl-chat-bubble {
+.og-chat-bubble {
 	max-width: 72%;
 	padding: 5px 10px;
 	border-radius: 12px;
@@ -1227,11 +1227,11 @@ body:has(.gl-chat-page) {
 /* An exchange is a question and the answer under it, and they meet: the answer's top edge
    is the question's bottom edge, so the eye crosses from one to the other without hunting.
    The space in the log is BETWEEN exchanges, which is the margin below. */
-.gl-chat-assistant + .gl-chat-user {
+.og-chat-assistant + .og-chat-user {
 	margin-top: 16px;
 }
 
-.gl-chat-user {
+.og-chat-user {
 	align-self: flex-end;
 	background: var(--brand-soft);
 	border-color: var(--brand-soft);
@@ -1239,32 +1239,32 @@ body:has(.gl-chat-page) {
 
 /* Off-white, not white: the log itself is white now, and an answer has to be visible
    against it the way the visitor's line is. */
-.gl-chat-assistant {
+.og-chat-assistant {
 	align-self: flex-start;
 	background: #f3f5f3;
 }
 
-.gl-chat-text {
+.og-chat-text {
 	white-space: pre-wrap;
 }
 
 /* Under the bubble it belongs to: the wall clock on the visitor's line, the server's own
    duration on the answer. Each follows its bubble's edge. */
-.gl-chat-timing {
+.og-chat-timing {
 	margin-top: 4px;
 	font-size: 0.8rem;
 	color: var(--faded);
 }
 
-.gl-chat-user .gl-chat-timing {
+.og-chat-user .og-chat-timing {
 	text-align: right;
 }
 
-.gl-chat-waiting {
+.og-chat-waiting {
 	color: var(--faded);
 }
 
-.gl-chat-error {
+.og-chat-error {
 	color: var(--error-deep);
 	background: var(--error-soft);
 	border: 1px solid var(--error);
@@ -1272,12 +1272,12 @@ body:has(.gl-chat-page) {
 	padding: 8px 12px;
 }
 
-.gl-chat-input {
+.og-chat-input {
 	display: flex;
 	gap: 8px;
 }
 
-.gl-chat-input input {
+.og-chat-input input {
 	flex: 1;
 	min-width: 0;
 	padding: 10px 12px;
@@ -1288,7 +1288,7 @@ body:has(.gl-chat-page) {
 	border-radius: 8px;
 }
 
-.gl-chat-input button {
+.og-chat-input button {
 	padding: 10px 18px;
 	font: inherit;
 	color: var(--bar-text);
@@ -1298,8 +1298,92 @@ body:has(.gl-chat-page) {
 	cursor: pointer;
 }
 
-.gl-chat-input button:disabled,
-.gl-chat-input input:disabled {
+.og-chat-input button:disabled,
+.og-chat-input input:disabled {
 	opacity: 0.6;
 	cursor: default;
 }
+
+/* ---- the sky page --------------------------------------------------------------------
+   Two columns: the chart is drawn at 430 and is given exactly that, and the table states its
+   own width on its columns. Neither shrinks — a table narrower than its columns would fold
+   every row onto several lines — so on a narrow screen the page scrolls sideways. Below about
+   800 the two stack. */
+.og-sky-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+	align-items: flex-start;
+}
+
+.og-sky-row .og-sky-chart { flex: 0 0 430px; }
+
+.og-sky-row .og-sky-table { flex: 0 0 auto; }
+
+/* The chart arrives as its own document, so its colours are inside it, not here. */
+.og-sky-chart img,
+.og-sky-wide img {
+	display: block;
+	width: 100%;
+}
+
+/* The date is the page's control, and it says so: the surface the browser page's filters
+   wear — white, ruled, rounded, with the chevron that means a list comes down — at the size
+   the date heading used to be, so it still reads as the page's date.
+
+   The button carries the words. The input beside it is transparent and 1px because the
+   browser anchors its calendar to an input; it stays focusable and takes pointer events,
+   since Safari only dismisses the calendar when focus is actually in the input. */
+.og-sky-datebox {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	margin: 0 0 16px;
+}
+
+.og-sky-date {
+	box-sizing: border-box;
+	height: 42px;
+	padding: 0 34px 0 14px;
+	color: var(--brand-deep);
+	background-color: #fff;
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23173f2d' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	font-family: inherit;
+	font-size: 20px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.og-sky-date:hover {
+	border-color: var(--brand);
+}
+
+.og-sky-date-input {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	border: 0;
+	opacity: 0;
+}
+
+.og-sky-wide { margin-top: 24px; }
+
+/* The body names read down the left edge; every measurement is centred under its heading. */
+.og-sky-table th,
+.og-sky-table td { text-align: center; }
+
+.og-sky-table th:first-child,
+.og-sky-table td:first-child { text-align: left; }
+
+/* The observer is centred under the table it labels, the way "Not to scale" is centred on
+   the chart. */
+.og-sky-observer { text-align: center; }
+
+.og-sky-observer p { margin: 0; }

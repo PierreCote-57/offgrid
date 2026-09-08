@@ -1,33 +1,62 @@
 <!--
-	The rise, transit and set table, with the observer it is computed for underneath.
+	The sky page's blocks. The file is named for the page and holds all of them, rather than
+	one file per fragment: they are the parts of one page and nothing else includes them.
 
-	A body with no rise time is drawn on the chart but not tabled. The page owns the box this
-	sits in — its width and where it goes beside the chart — so nothing here states one.
+		datePicker   the date, and the control that changes it
+		chart        the drawing on the page, as an image at the width asked for
+		table        rise, transit and set, with the observer underneath
+		drawing      the chart itself, an SVG document, served at /sky/chart.svg
+
+	Each one carries the element the page lays out, so a page places a block with th:replace
+	and states nothing about it. Only the chart takes a parameter; everything else, the date
+	included, each fragment reads off the model.
 -->
-<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="table">
 
-	<style>
-		/* The body names read down the left edge; every measurement is centred under its heading. */
-		.sky-table table { width: 100%; }
-		.sky-table th,
-		.sky-table td { text-align: center; }
-		.sky-table th:first-child,
-		.sky-table td:first-child { text-align: left; }
+<!--
+	The date is the page's one control. The button carries the words and the look; the date
+	input beside it is transparent and 1px, and exists because the browser anchors its own
+	calendar to an input and to nothing else. OG.wireDatePicker opens it.
 
-		/* The observer is centred under the table it labels, the way "Not to scale" is centred
-		   on the chart. */
-		.sky-observer { text-align: center; }
-		.sky-observer p { margin: 0; }
-	</style>
+	A GET form, so picking a day is an ordinary page load and the browser writes the query
+	string. The coordinates ride along as hidden fields, or picking a date would put the
+	visitor back at the default marker.
+-->
+<form xmlns:th="http://www.thymeleaf.org" th:fragment="datePicker"
+	  class="og-sky-datebox" th:action="@{/info/sky}" method="get">
+	<input type="hidden" name="latitude" th:value="${skyTable.latitude}">
+	<input type="hidden" name="longitude" th:value="${skyTable.longitude}">
 
-	<table>
+	<button type="button" class="og-sky-date"
+			th:text="${#temporals.format(skyTable.date, 'EEE yyyy-MM-dd')}">Mon 2026-09-07</button>
+	<input type="date" class="og-sky-date-input" name="date"
+		   th:value="${skyTable.date}" th:min="${skyFirstDate}" th:max="${skyLastDate}">
+</form>
+
+<!--
+	The chart on the page: an img pointing at the drawing, which the browser fetches as its
+	own request. That request carries the date, or it would answer today beside another day's
+	table.
+-->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)" class="og-sky-chart">
+	<img th:src="@{/sky/chart.svg(width=${width}, date=${skyTable.date})}" src=""
+		 alt="The Sun, the eight planets and the Moon, each on its orbit, seen from above">
+</div>
+
+<!--
+	A body with no rise time is drawn on the chart but not tabled. Each heading states its
+	column, the table is laid out fixed so those widths bind, and the table is as wide as they
+	add up to.
+-->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="table" class="og-sky-table">
+
+	<table style="table-layout:fixed;width:max-content">
 		<thead>
 			<tr>
-				<th>Body</th>
-				<th>Rises</th>
-				<th>Transit</th>
-				<th>Sets</th>
-				<th>Orbit</th>
+				<th style="width:70px">Body</th>
+				<th style="width:50px">Rises</th>
+				<th style="width:90px">Transit</th>
+				<th style="width:50px">Sets</th>
+				<th style="width:120px">Period</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -42,8 +71,8 @@
 		</tbody>
 	</table>
 
-	<div class="sky-observer">
-		<p><strong class="sky-place"></strong><span class="sky-place-dash" hidden> &mdash; </span><span
+	<div class="og-sky-observer">
+		<p><strong class="og-sky-place"></strong><span class="og-sky-place-dash" hidden> &mdash; </span><span
 				th:text="|${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.latitude), 1, 'POINT', 4, 'POINT')}°${skyTable.latitude >= 0 ? 'N' : 'S'}, ${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.longitude), 1, 'POINT', 4, 'POINT')}°${skyTable.longitude >= 0 ? 'E' : 'W'}|"></span></p>
 		<p th:text="${#temporals.format(skyTable.zonedDate, 'VV (OOOO)')}"></p>
 	</div>
@@ -116,21 +145,21 @@
 			}
 
 			function lookUpPlace() {
-				var placeElement = document.querySelector(".sky-place");
-				var dashElement = document.querySelector(".sky-place-dash");
-				if (!placeElement) {
-					logError("No .sky-place element on the page; nothing to fill in.");
+				var placeList = document.querySelectorAll(".og-sky-place");
+				var dashList = document.querySelectorAll(".og-sky-place-dash");
+				if (placeList.length === 0) {
+					logError("No .og-sky-place element on the page; nothing to fill in.");
 					return;
 				}
-				if (!window.GL || !window.GL.loadGoogleMapsApi) {
-					logError("GL.loadGoogleMapsApi is not there; the name cannot be looked up.");
+				if (!window.OG || !window.OG.loadGoogleMapsApi) {
+					logError("OG.loadGoogleMapsApi is not there; the name cannot be looked up.");
 					return;
 				}
 
 				var startedAt = Date.now();
 				log("Loading the Maps JavaScript API to reverse geocode " + latitude + "," + longitude + ".");
 
-				window.GL.loadGoogleMapsApi(function () {
+				window.OG.loadGoogleMapsApi(function () {
 					log("Maps API ready after " + (Date.now() - startedAt) + "ms; asking the geocoder.");
 
 					var geocoder = new google.maps.Geocoder();
@@ -148,9 +177,13 @@
 								return;
 							}
 
-							placeElement.textContent = name;
-							dashElement.hidden = false;
-							log("Wrote \"" + name + "\" into the observer line.");
+							placeList.forEach(function (placeElement) {
+								placeElement.textContent = name;
+							});
+							dashList.forEach(function (dashElement) {
+								dashElement.hidden = false;
+							});
+							log("Wrote \"" + name + "\" into " + placeList.length + " observer line(s).");
 						})
 						.catch(function (failure) {
 							logError("The geocoder failed after " + (Date.now() - startedAt) + "ms: "
@@ -160,8 +193,8 @@
 			}
 
 			/*
-			 * gl-constants.js and google-map.js are deferred, so neither has run while this
-			 * inline script is being parsed and window.GL does not exist yet. DOMContentLoaded
+			 * og-constants.js and google-map.js are deferred, so neither has run while this
+			 * inline script is being parsed and window.OG does not exist yet. DOMContentLoaded
 			 * fires after every deferred script, which is the first moment they are there.
 			 */
 			if (document.readyState === "loading") {
@@ -173,19 +206,20 @@
 			}
 		})();
 	</script>
-</th:block>
+</div>
 
 <!--
-	The chart on its own, served at /sky/chart.svg so the browser treats it as an image. It is
-	its own document: the palette and the label font live here rather than in site.css, and
-	nothing on the page reaches inside it.
+	The drawing on its own, served at /sky/chart.svg so the browser treats it as an image. It
+	is its own document: the palette and the label font live here rather than in site.css, and
+	nothing on the page reaches inside it. The chart fragment above is the img that points at
+	it.
 
 	No named entity may appear below — an SVG document is parsed as XML, which knows only the
 	five built-in ones. It carries no title or desc either: through an img tag the browser
 	never exposes them, and opened on its own it is named by its URL, like every other image
 	on the site.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:th="http://www.thymeleaf.org" th:fragment="drawing(width)"
 	 th:with="positionMap=${skyChart.setCanvas(width)}"
 	 th:attr="viewBox=${skyChart.viewBox}" role="img">
 	<style>

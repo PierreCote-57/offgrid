@@ -79,9 +79,9 @@ Three paper treatments now, one stylesheet, scoped by what the element is:
 
 - **Wavy** — topographic contour lines, pale on the bar and footer, green on the page. Two
   `url()` data-URIs held in custom properties, so the drawing exists once.
-- **Grid** — quadrille at 15px, one weight, on `.gl-checklist` and `.gl-numcheck`. Not
+- **Grid** — quadrille at 15px, one weight, on `.og-checklist` and `.og-numcheck`. Not
   scientific graph paper: no fine sub-grid, no heavier majors.
-- **Lined** — horizontals at 30px on `.gl-post`, with the copy sitting on the rulings.
+- **Lined** — horizontals at 30px on `.og-post`, with the copy sitting on the rulings.
 
 All three stand on warm paper `#faf7f0`, which replaced white everywhere. Ruled blocks carry
 a rust edge down the left so they read as a page out of a notebook rather than as a panel.
@@ -121,8 +121,8 @@ down its left edge — the notebook's rust-edge idiom, in the warning colour. Or
 temporary-condition family: something is happening right now and you have to watch it.
 Yellow, the permanent-hazard family, is unused so far.
 
-The diamond is inline SVG carrying geometry and three class names — `field`, `border`,
-`mark` — with every colour in `site.css`. A drawing whose colours are baked into the markup
+The diamond is inline SVG carrying geometry and three class names — `og-field`,
+`og-border`, `og-mark` — with every colour in `site.css`. A drawing whose colours are baked into the markup
 cannot follow the palette.
 
 The panel reuses `--warn-soft` rather than mixing a fourth cream from the sign orange. Two
@@ -132,6 +132,5 @@ and `--sign-ink`, the warm near-black of printed sheeting.
 This is where the parked signage typography first lands — the `Warning` kicker is condensed
 uppercase, letterspaced, in rust. The rest of it stays parked.
 
-Alternatives drawn and rejected in `_preview/signs.html`: the sign bare on the paper with no
-panel, mounted on two posts above the text, a hazard-tape strip with a small chip, and a
+Alternatives drawn and rejected: the sign bare on the paper with no panel, mounted on two posts above the text, a hazard-tape strip with a small chip, and a
 worded orange panel with no symbol at all.

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div th:replace="~{fragments/site/header}"></div>
 
-<div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<div class="og-message og-message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
 <main>
 	<h1 th:text="${PageName}">Something went wrong</h1>

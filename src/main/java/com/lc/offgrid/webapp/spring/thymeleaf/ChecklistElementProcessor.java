@@ -19,17 +19,17 @@ import java.util.List;
  * &lt;label&gt;&lt;input type="checkbox"&gt;&lt;span&gt;text&lt;/span&gt;&lt;/label&gt;, so
  * that clicking anywhere on the row toggles the box. Authors write bare &lt;li&gt; lines.
  *
- * The class on the list carries the styling and selects the variant: gl-checklist is a
- * plain checkbox row, gl-numcheck adds an empty &lt;span class="gl-num"&gt; between the box
+ * The class on the list carries the styling and selects the variant: og-checklist is a
+ * plain checkbox row, og-numcheck adds an empty &lt;span class="og-num"&gt; between the box
  * and the text whose digit is drawn by a CSS counter.
  *
  * Lists without either class are left exactly as authored.
  */
 public class ChecklistElementProcessor extends AbstractElementModelProcessor
 {
-	private static final String		CLASS_CHECKLIST		= "gl-checklist";
-	private static final String		CLASS_NUMCHECK		= "gl-numcheck";
-	private static final String		CLASS_NUMBER		= "gl-num";
+	private static final String		CLASS_CHECKLIST		= "og-checklist";
+	private static final String		CLASS_NUMCHECK		= "og-numcheck";
+	private static final String		CLASS_NUMBER		= "og-num";
 	private static final String		TAG_ITEM			= "li";
 	private static final String		TAG_INPUT			= "input";
 	private static final String		TYPE_CHECKBOX		= "checkbox";

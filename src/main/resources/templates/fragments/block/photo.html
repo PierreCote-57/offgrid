@@ -1,4 +1,4 @@
-<a xmlns:th="http://www.thymeleaf.org" th:fragment="photo(img)" class="gl-photo-link" data-lightbox
+<a xmlns:th="http://www.thymeleaf.org" th:fragment="photo(img)" class="og-photo-link" data-lightbox
    th:href="@{/image/{imageName}(imageName=${img})}" href="">
 	<img style="width:100%;display:block;" th:src="@{/image/{imageName}(imageName=${img}, size='medium')}"
 		 th:alt="${img}" src="" alt="">

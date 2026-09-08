@@ -103,14 +103,14 @@ nothing and the page renders correctly with dead controls. The inline `x-data` o
 **The chat page is the one page whose height is capped, not floored.** Everywhere else `body`
 is `min-height:100vh` and the page grows with its content. That is why an inner box cannot
 scroll: `main`'s `flex:1` has no free space to receive in an auto-height container, so it
-takes its content's height and the box grows with it. `body:has(.gl-chat-page)` sets
+takes its content's height and the box grows with it. `body:has(.og-chat-page)` sets
 `height:100dvh`, and `min-height:0` at each level below lets the log shrink and scroll
 instead. On a viewport too short for the log's 260px floor the page scrolls again, accepted
 as the degradation. Rejected: `calc(100vh - …)` on the log, which hard-codes the height of
 the header, the `h1`, the input row and the footer.
 
 **The log is a surface above the page, drawn with the site's existing device** — white fill,
-1px `--rule` border, and `.gl-lb-panel`'s shadow, the same treatment as the menu and the
+1px `--rule` border, and `.og-lb-panel`'s shadow, the same treatment as the menu and the
 filter panel. The answer bubble went off-white so it stays visible against it. macOS hides an
 overlay scrollbar until you scroll, which left no sign there was anything above the top, so
 the log states `::-webkit-scrollbar` and reserves its gutter.

@@ -18,7 +18,7 @@
 
 	<!-- Power consumers -->
 	<details>
-		<summary><h2 class="gl-heading">Power consumers</h2></summary>
+		<summary><h2 class="og-heading">Power consumers</h2></summary>
 
 		<p>
 			First, find the power needs of the system you are trying to use ...
@@ -155,7 +155,7 @@
 
 	<!-- Power source -->
 	<details>
-		<summary><h2 class="gl-heading">Power sources</h2></summary>
+		<summary><h2 class="og-heading">Power sources</h2></summary>
 
 		<p>
 			... then find a way to power it.
@@ -233,9 +233,9 @@
 	<!-- Power access point. flow-root so the floated floorplan is contained: without it the
 	     image hangs below the block and Operation flows up beside it. -->
 	<details style="display:flow-root;">
-		<summary><h2 class="gl-heading">Power access point</h2></summary>
+		<summary><h2 class="og-heading">Power access point</h2></summary>
 
-		<div class="gl-photo" style="width:60%;float:left;margin:0 16px 16px 0;"
+		<div class="og-photo" style="width:60%;float:left;margin:0 16px 16px 0;"
 			 th:insert="~{fragments/block/photo :: photo('floorplan-electric')}"></div>
 
 		<!-- text-align is inherited, so the table states it once and every cell is bare. -->
@@ -299,9 +299,9 @@
 
 	<!-- Operation -->
 	<details>
-		<summary><h2 class="gl-heading">Operation</h2></summary>
+		<summary><h2 class="og-heading">Operation</h2></summary>
 
-		<h3 class="gl-heading">Basics</h3>
+		<h3 class="og-heading">Basics</h3>
 		<ol>
 			<li>On the
 				<span th:replace="~{fragments/block/photo-ref :: ref('howto/master-cutoff')}"></span>
@@ -325,7 +325,7 @@
 			</li>
 		</ol>
 
-		<h3 class="gl-heading">Charging the battery</h3>
+		<h3 class="og-heading">Charging the battery</h3>
 		<ol>
 			<li>Step — to be filled in</li>
 			<li>Step — to be filled in</li>
@@ -336,7 +336,7 @@
 
 	<!-- Power consumption - Raw -->
 	<details>
-		<summary><h2 class="gl-heading">Power consumption &mdash; raw</h2></summary>
+		<summary><h2 class="og-heading">Power consumption &mdash; raw</h2></summary>
 
 		<p>
 			Draw for each element on its own &mdash; the building blocks.
@@ -418,7 +418,7 @@
 
 	<!-- Power consumption - by activity -->
 	<details>
-		<summary><h2 class="gl-heading">Power consumption &mdash; by activity</h2></summary>
+		<summary><h2 class="og-heading">Power consumption &mdash; by activity</h2></summary>
 
 		<p>
 			The raw figures rolled up into real situations, one row per element.
@@ -541,7 +541,7 @@
 
 	<!-- Supplier documentation -->
 	<details>
-		<summary><h2 class="gl-heading">Supplier documentation</h2></summary>
+		<summary><h2 class="og-heading">Supplier documentation</h2></summary>
 		<div th:replace="~{fragments/block/note-list :: notes('Generator')}"></div>
 		<div th:replace="~{fragments/block/note-list :: notes('Inverter (2,000 W Victron)')}"></div>
 		<div th:replace="~{fragments/block/note-list :: notes('Solar panels')}"></div>

@@ -64,7 +64,7 @@ spec: sample each body's altitude across the local day and report every crossing
 horizon altitude, which differs per body and is not a detail. `Ephemeris.getHeliocentric` already
 returns the `z` this needs and the chart discards. The observer arrives on `SkyDataTable` —
 latitude, longitude and `ZoneId` — from `/info/sky?latitude=&longitude=`, which the menu link
-fills from `navigator.geolocation`.
+fills from `navigator.geolocation`, and the day arrives beside them as `date`.
 
 #49 Fix `README.md`'s Layout table. It names the package
 `src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
@@ -81,9 +81,22 @@ step. Medium's box is the alternative. Since the "Full size" link went to the ba
 positions and takes the first that clears; on days when two planets are in conjunction as seen
 from above, none clears and the two texts print on top of each other. A sweep of 2026-01-01 to
 2028-12-31 hit it on 60 days of 1096, longest run 3 to 23 February 2027 — Mercury/Venus and
-Earth/Mars account for most of them. `_preview/sky-label-placement.html` shows 10 February 2027
-beside a clean date.
+Earth/Mars account for most of them. 10 February 2027 is a date to draw when checking it.
 
 It is a width problem, not a placement one: the same sweep at a 1024 canvas fails on no day at
-all, because the orbits scale and the 12px labels do not. `_preview/sky-chart-widths.html` has
-one date drawn at both.
+all, because the orbits scale and the 12px labels do not — draw one date at both widths to see
+it.
+
+#55 Convert the remaining `rem` lengths in `site.css` to px. `docs/decisions/look.md` rules
+that all CSS lengths are px, and the conversion recorded there on 2026-08-25 left values
+behind — run the count before deciding how big the pass is.
+
+#56 Work the sky table's columns once #48 lands. The widths on the headings in
+`templates/fragments/block/sky-fragment.html` were eyeballed off `PLACEHOLDER_TIMES`, and the
+Transit cell's `13:32 (46°)` shape is a placeholder's shape, not a computed one. Re-size them
+against real values, and decide then what each column shows.
+
+#57 Keep the sky date's transparent input out of the tab order without breaking dismissal.
+`.og-sky-date-input` in `site.css` is 1px and transparent, and it has to stay focusable and take
+pointer events or Safari will not close the calendar on Escape. Today that costs a tab stop on
+something invisible: a keyboard user tabs to the button, then to nothing they can see.

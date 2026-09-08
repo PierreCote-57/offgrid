@@ -5,7 +5,7 @@
  * looks the same on a gallery card and on a page IS the same code.
  *
  * Colour is the first of these. A pill carries its word in data-tag or data-road and no
- * colour of its own; paintTags fills it from the palettes in gl-constants.js. That is what
+ * colour of its own; paintTags fills it from the palettes in og-constants.js. That is what
  * lets a Thymeleaf fragment, which cannot read those palettes, write the same pill the
  * gallery card writes.
  */
@@ -14,13 +14,13 @@
 
 	// The shared registry, created defensively: this file may execute before OR after the
 	// other scripts that add to it.
-	window.GL = window.GL || {};
+	window.OG = window.OG || {};
 
 	/*
 	 * Fill every pill under root — the whole document when no root is given. Markup built
 	 * after load passes the element it just filled.
 	 *
-	 * The selector is the CLASS. gl-tag is what a pill IS; data-tag only says which colour
+	 * The selector is the CLASS. og-tag is what a pill IS; data-tag only says which colour
 	 * to give it. Selecting on the attribute meant a pill that arrived without one was
 	 * skipped in silence, and looked right only for as long as the page behind it did.
 	 *
@@ -28,21 +28,21 @@
 	 * a new badge is visible the day it is authored. data-road is CLOSED: an unknown value is
 	 * a data error, and the badge goes away rather than showing uncoloured.
 	 *
-	 * A road badge on a page IS a gl-tag — it sits in the tag row and wears the pill shape —
+	 * A road badge on a page IS a og-tag — it sits in the tag row and wears the pill shape —
 	 * so the first pass leaves anything carrying data-road to the second.
 	 */
-	window.GL.paintTags = function (root) {
+	window.OG.paintTags = function (root) {
 		var scope = root || document;
 
-		var pillList = scope.querySelectorAll(".gl-tag:not([data-road])");
+		var pillList = scope.querySelectorAll(".og-tag:not([data-road])");
 		for (var i = 0; i < pillList.length; i++) {
 			var pill = pillList[i];
 			var word = pill.getAttribute("data-tag");
 			if (!word) {
-				console.error('[offgrid] A gl-tag with no data-tag: "' + pill.textContent +
+				console.error('[offgrid] A og-tag with no data-tag: "' + pill.textContent +
 					'" — painted from the fallback.');
 			}
-			var tagColors = window.GL.TAG_COLORS[word] || window.GL.TAG_FALLBACK;
+			var tagColors = window.OG.TAG_COLORS[word] || window.OG.TAG_FALLBACK;
 			pill.style.background = tagColors.bg;
 			pill.style.color = tagColors.text;
 		}
@@ -51,7 +51,7 @@
 		for (var j = 0; j < badgeList.length; j++) {
 			var badge = badgeList[j];
 			var road = badge.getAttribute("data-road");
-			var roadColors = window.GL.ROAD_COLORS[road];
+			var roadColors = window.OG.ROAD_COLORS[road];
 			if (!roadColors) {
 				console.error('[offgrid] Unknown road value "' + road + '" — no road badge rendered.');
 				badge.parentNode.removeChild(badge);
@@ -130,7 +130,7 @@
 	 * position is being fetched; that href is still what a visitor with JavaScript off gets,
 	 * and what this navigates to when there are no coordinates to add.
 	 */
-	window.GL.openSky = function (anchor) {
+	window.OG.openSky = function (anchor) {
 		var url = anchor.getAttribute("href");
 
 		if (!navigator.geolocation) {
@@ -160,7 +160,7 @@
 		return false;
 	};
 
-	window.GL.linkOpenTag = function (url) {
+	window.OG.linkOpenTag = function (url) {
 		var external = url.charAt(0) !== "/";
 		var newTab = external || url.indexOf("/document/") === 0;
 
@@ -181,7 +181,41 @@
 		return escaped;
 	}
 
+	/*
+	 * The sky page's date control. The button is what the visitor sees; the calendar belongs
+	 * to the browser and is anchored to the input beside it, which is why that input is on
+	 * the page at all.
+	 *
+	 * Focus first, then open. Safari opens the calendar either way but only closes it — on
+	 * Escape, on a click outside — when focus is in the input.
+	 *
+	 * Picking a day fires change, which submits the form; the browser builds the query string
+	 * from the fields, so nothing here writes a URL. requestSubmit rather than submit so the
+	 * form's own validation still runs.
+	 */
+	window.OG.wireDatePicker = function () {
+		var button = document.querySelector(".og-sky-date");
+		var input = document.querySelector(".og-sky-date-input");
+		if (!button || !input) {
+			return;
+		}
+
+		button.addEventListener("click", function () {
+			input.focus();
+			if (typeof input.showPicker === "function") {
+				input.showPicker();
+				return;
+			}
+			input.click();
+		});
+
+		input.addEventListener("change", function () {
+			input.form.requestSubmit();
+		});
+	};
+
 	document.addEventListener("DOMContentLoaded", function () {
-		window.GL.paintTags();
+		window.OG.paintTags();
+		window.OG.wireDatePicker();
 	});
 })();

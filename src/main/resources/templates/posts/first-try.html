@@ -4,9 +4,9 @@
 
 <main>
 	<h1 th:text="${PageName}">First try</h1>
-	<p class="gl-dateline" th:text="${pageData.date}">2026-06-06</p>
+	<p class="og-dateline" th:text="${pageData.date}">2026-06-06</p>
 
-	<div class="gl-post">
+	<div class="og-post">
 		<p style="margin-top:0;">
 			Our first actual camping trip, we went to
 			<a th:href="@{/destinations/campground/salmon-point-resort}">Salmon Point Resort</a>,
@@ -53,7 +53,7 @@
 		</p>
 	</div>
 
-	<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+	<div class="og-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

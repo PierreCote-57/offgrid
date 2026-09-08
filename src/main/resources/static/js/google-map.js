@@ -14,7 +14,7 @@
 
 	// The shared registry, created defensively: this file may execute before OR after the
 	// other scripts that add to it.
-	window.GL = window.GL || {};
+	window.OG = window.OG || {};
 
 	/*
 	 * Load the Google Maps API, then call onReady. The script tag is injected once per page
@@ -39,7 +39,7 @@
 			});
 		};
 		var script = document.createElement("script");
-		var mapConfig = window.GL.MAP_CONFIG;
+		var mapConfig = window.OG.MAP_CONFIG;
 		script.src = "https://maps.googleapis.com/maps/api/js?key=" + mapConfig.mapApiKey +
 			"&loading=async&callback=__offgridMapsApiInit";
 		script.async = true;
@@ -48,15 +48,15 @@
 
 	// Exposed because the loader is already built to serve several callers on one page, and
 	// the geocoder needs the same script the maps do.
-	window.GL.loadGoogleMapsApi = loadGoogleMapsApi;
+	window.OG.loadGoogleMapsApi = loadGoogleMapsApi;
 
 	/*
-	 * Build a marker icon from a pin's icon word, via GL.PIN_ICONS. An absent or unknown word
+	 * Build a marker icon from a pin's icon word, via OG.PIN_ICONS. An absent or unknown word
 	 * hands back null, and the marker is Google's own pin — a pin nobody gave a figure to is
 	 * still a pin.
 	 */
 	function pinIcon(word) {
-		var svg = window.GL.PIN_ICONS && window.GL.PIN_ICONS[word];
+		var svg = window.OG.PIN_ICONS && window.OG.PIN_ICONS[word];
 		if (!svg) {
 			return null;
 		}
@@ -74,7 +74,7 @@
 	 */
 	function pinLink(url, child) {
 		var holder = document.createElement("div");
-		holder.innerHTML = window.GL.linkOpenTag(url) + "</a>";
+		holder.innerHTML = window.OG.linkOpenTag(url) + "</a>";
 		var link = holder.firstChild;
 		link.appendChild(child);
 		return link;
@@ -84,7 +84,7 @@
 	 * Drop one pin onto the map. pin = { lat?, lng?, icon?, label?, img?, url? }.
 	 *   lat/lng absent -> the pin sits at the map's centre, which is what a single-pin
 	 *                     authored map wants.
-	 *   icon           -> the figure from GL.PIN_ICONS, else the default marker.
+	 *   icon           -> the figure from OG.PIN_ICONS, else the default marker.
 	 *   img            -> click opens an InfoWindow with the photo, labelled.
 	 *   url            -> the pin is a link. No img: the click navigates. With an img: the
 	 *                     photo and the header carry the link, so neither field cancels the
@@ -145,22 +145,22 @@
 	 * in place BEFORE the API answers, so Google sizes the map once, against a box that
 	 * already allows for the caption.
 	 */
-	window.GL.drawMap = function (box, mapObject) {
+	window.OG.drawMap = function (box, mapObject) {
 		box.textContent = "";
-		box.classList.add("gl-mapbox");
+		box.classList.add("og-mapbox");
 
 		var mapEl = document.createElement("div");
-		mapEl.className = "gl-map";
+		mapEl.className = "og-map";
 		box.appendChild(mapEl);
 
 		// The live centre/zoom readout under every map, following pan and zoom through the
 		// map's "idle" event, so the current values can be read straight off it.
 		var caption = document.createElement("div");
-		caption.className = "gl-map-caption";
+		caption.className = "og-map-caption";
 		box.appendChild(caption);
 
 		loadGoogleMapsApi(function () {
-			var mapConfig = window.GL.MAP_CONFIG;
+			var mapConfig = window.OG.MAP_CONFIG;
 			var zoom = (typeof mapObject.zoom === "number") ? mapObject.zoom : mapConfig.mapZoom;
 			var map = new google.maps.Map(mapEl, {
 				zoom: zoom,

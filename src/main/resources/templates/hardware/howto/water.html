@@ -6,7 +6,7 @@
 	<h1 th:text="${PageName}">How To: Water</h1>
 
 	<section data-howto-section="howto">
-	    <ol class="gl-numcheck">
+	    <ol class="og-numcheck">
 	        <li>First step using
 	            <span th:replace="~{fragments/block/photo-ref :: ref('howto/example')}"></span>
 	            placeholder</li>
@@ -16,7 +16,7 @@
 	    <div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
 	</section>
 	<details>
-	    <summary><h2 class="gl-heading">The details</h2></summary>
+	    <summary><h2 class="og-heading">The details</h2></summary>
 	    <p style="margin-top:0;">
 	        Placeholder explanation text for the details section goes here.
 	        Example inline photo reference: <span th:replace="~{fragments/block/photo-ref :: ref('details/example')}"></span>
@@ -24,7 +24,7 @@
 	    <div th:replace="~{fragments/block/photo-gallery :: gallery('details')}"></div>
 	</details>
 	<details>
-	    <summary><h2 class="gl-heading">Supplier documentation</h2></summary>
+	    <summary><h2 class="og-heading">Supplier documentation</h2></summary>
 	</details>
 	<br />
 	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>

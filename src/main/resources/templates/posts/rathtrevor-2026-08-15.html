@@ -4,9 +4,9 @@
 
 <main>
 	<h1 th:text="${PageName}">Rathtrevor, August</h1>
-	<p class="gl-dateline" th:text="${pageData.date}">2026-08-15</p>
+	<p class="og-dateline" th:text="${pageData.date}">2026-08-15</p>
 
-	<div class="gl-post">
+	<div class="og-post">
 		<p style="margin-top:0;">
 			Our first trip without shore power, at BC Park Rathtrevor, near Parksville, lots of learning.
 		</p>
@@ -110,7 +110,7 @@
 		</ol>
 	</div>
 
-	<div class="gl-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+	<div class="og-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

@@ -44,7 +44,7 @@
 
 	// The shared registry, created defensively: this file may execute before OR after the
 	// other scripts that add to it.
-	window.GL = window.GL || {};
+	window.OG = window.OG || {};
 
 	// The definition list is a static file; the rows come from the server, which maps the id
 	// to its file and hydrates it. The browser never reads a dataset's `file`.
@@ -76,7 +76,7 @@
 	// through a function, not a top-level constant, because the constants file may execute
 	// after this one.
 	function roadOrder() {
-		var order = Object.keys(window.GL.ROAD_COLORS);
+		var order = Object.keys(window.OG.ROAD_COLORS);
 		return order;
 	}
 
@@ -168,8 +168,8 @@
 		if (!Array.isArray(legs)) { return null; }
 		if (legs.length === 0) { return "pavement"; }
 
-		var driveList = window.GL.ROAD_RANK;
-		var nonDriveList = window.GL.NON_DRIVE_LEG_TYPES;
+		var driveList = window.OG.ROAD_RANK;
+		var nonDriveList = window.OG.NON_DRIVE_LEG_TYPES;
 		var worst = -1;
 		for (var i = 0; i < legs.length; i++) {
 			var leg = legs[i];
@@ -194,14 +194,14 @@
 	}
 
 	// The badge pills in the card image's top-right corner. An empty list renders nothing.
-	// The pill carries its word and no colour — GL.paintTags fills that in once the card is
+	// The pill carries its word and no colour — OG.paintTags fills that in once the card is
 	// in the document, so a card pill and a page pill come from the one palette.
 	function renderTags(tagList) {
 		if (!tagList || !tagList.length) { return ""; }
 		var sorted = tagList.slice().sort();
-		var html = '<div class="gl-tag-stack">';
+		var html = '<div class="og-tag-stack">';
 		for (var i = 0; i < sorted.length; i++) {
-			html += '<span class="gl-tag" data-tag="' + escapeHtml(sorted[i]) + '">' +
+			html += '<span class="og-tag" data-tag="' + escapeHtml(sorted[i]) + '">' +
 				escapeHtml(sorted[i]) + "</span>";
 		}
 		html += "</div>";
@@ -209,14 +209,14 @@
 	}
 
 	// The road badge, lower-left corner. A falsy road (legs not filled in yet) renders
-	// nothing, exactly like an empty tag list. The vocabulary is strict, and GL.paintTags is
+	// nothing, exactly like an empty tag list. The vocabulary is strict, and OG.paintTags is
 	// where that is enforced: it drops a badge whose word the palette does not know.
 	//
 	// The underscore in a value is an id convention, not something to show a reader, so it
 	// becomes a space on the way to the badge. data-road keeps the id.
 	function renderRoad(road) {
 		if (!road) { return ""; }
-		var html = '<span class="gl-road" data-road="' + escapeHtml(road) + '">' +
+		var html = '<span class="og-road" data-road="' + escapeHtml(road) + '">' +
 			escapeHtml(road.replace(/_/g, " ")) + "</span>";
 		return html;
 	}
@@ -230,14 +230,14 @@
 		var href = escapeHtml(pageHref(row));
 
 		var html =
-			'<a class="gl-gallery-card" href="' + href + '">' +
-			'<div class="gl-gallery-card-img-wrap">' +
-			'<img class="gl-gallery-card-img" src="' + image + '" alt="' + title + '" loading="lazy">' +
+			'<a class="og-gallery-card" href="' + href + '">' +
+			'<div class="og-gallery-card-img-wrap">' +
+			'<img class="og-gallery-card-img" src="' + image + '" alt="' + title + '" loading="lazy">' +
 			renderTags((row.tags || {}).badgeList) +
 			renderRoad(deriveRoadBadge(row.access)) +
 			"</div>" +
-			'<h3 class="gl-gallery-card-title">' + title + "</h3>" +
-			'<p class="gl-gallery-card-teaser">' + teaser + "</p>" +
+			'<h3 class="og-gallery-card-title">' + title + "</h3>" +
+			'<p class="og-gallery-card-teaser">' + teaser + "</p>" +
 			"</a>";
 		return html;
 	}
@@ -261,7 +261,7 @@
 	// ---- table cell helpers ---------------------------------------------------
 
 	// Every link a row carries lives in one flat referenceList, and `type` says what each one
-	// IS (GL.LINK_TYPES). The label is display text and nothing else — selecting by type is
+	// IS (OG.LINK_TYPES). The label is display text and nothing else — selecting by type is
 	// why the column helpers are one-liners.
 	function linksOfType(place, type) {
 		var referenceList = (place.campgroundData || {}).referenceList || [];
@@ -298,12 +298,12 @@
 		return cell;
 	}
 
-	// One anchor, whatever the url is. GL.linkOpenTag owns the whole target/rel decision —
+	// One anchor, whatever the url is. OG.linkOpenTag owns the whole target/rel decision —
 	// the same one fragments/block/link.html makes on a server-rendered page — and hands back
 	// the opening tag; the text and the title are this file's business.
 	function linkTo(url, text, tip) {
 		var holder = document.createElement("div");
-		holder.innerHTML = window.GL.linkOpenTag(url) + "</a>";
+		holder.innerHTML = window.OG.linkOpenTag(url) + "</a>";
 		var a = holder.firstChild;
 		a.textContent = text;
 		if (tip) { a.title = tip; }
@@ -390,7 +390,7 @@
 
 	function buildFootnoteList(textList) {
 		var ol = document.createElement("ol");
-		ol.className = "gl-lb-footnotes";
+		ol.className = "og-lb-footnotes";
 		textList.forEach(function (text) {
 			var li = document.createElement("li");
 			li.textContent = text;
@@ -520,7 +520,7 @@
 
 	// How many rows carry each value of one tag field. The keys are the vocabulary itself
 	// for an OPEN field (keywords); for a CLOSED one (types, badges) the vocabulary lives in
-	// gl-constants.js and a value nobody used simply has no key here, reading as (0).
+	// og-constants.js and a value nobody used simply has no key here, reading as (0).
 	function countTags(rows, field) {
 		var counts = {};
 		rows.forEach(function (row) {
@@ -573,18 +573,18 @@
 	// Card grid. Renders exactly what it is handed; the "has a page" rule is filterView's job.
 	function renderGrid(rows) {
 		var grid = document.createElement("div");
-		grid.className = "gl-lb-grid";
+		grid.className = "og-lb-grid";
 		var html = "";
 		for (var i = 0; i < rows.length; i++) {
 			html += renderCard(rows[i]);
 		}
 		grid.innerHTML = html;
-		window.GL.paintTags(grid);
+		window.OG.paintTags(grid);
 		return grid;
 	}
 
 	/*
-	 * The rows, as a mapObject for GL.drawMap — the same shape a page's googleMap entry
+	 * The rows, as a mapObject for OG.drawMap — the same shape a page's googleMap entry
 	 * resolves to, so this map and a destination page's map are one renderer with one pin
 	 * vocabulary.
 	 *
@@ -619,7 +619,7 @@
 	// Map view: one pin per row, centre and zoom FIXED.
 	//
 	// Pure like its siblings, and synchronous like them too: it returns the container, then
-	// GL.drawMap fills it. The fill is deferred one tick because a map is sized from its
+	// OG.drawMap fills it. The fill is deferred one tick because a map is sized from its
 	// element's box — which does not exist until displayDataset's caller has appended it.
 	//
 	// The height is set here: drawMap never touches its container's box.
@@ -628,7 +628,7 @@
 		box.style.height = MAP_HEIGHT;
 
 		setTimeout(function () {
-			window.GL.drawMap(box, mapObjectFor(rows));
+			window.OG.drawMap(box, mapObjectFor(rows));
 		}, 0);
 
 		return box;
@@ -639,7 +639,7 @@
 	// the readout never changes shape under you as you filter.
 	function buildCount(n, total) {
 		var el = document.createElement("div");
-		el.className = "gl-lb-count";
+		el.className = "og-lb-count";
 		el.textContent = n + " of " + total + " found";
 		return el;
 	}
@@ -654,7 +654,7 @@
 		var footnoteList = [];
 
 		var table = document.createElement("table");
-		table.className = "gl-lb-table";
+		table.className = "og-lb-table";
 		table.appendChild(buildColGroup());
 
 		var thead = document.createElement("thead");
@@ -693,7 +693,7 @@
 		table.appendChild(tbody);
 
 		var wrap = document.createElement("div");
-		wrap.className = "gl-lb-tablewrap";
+		wrap.className = "og-lb-tablewrap";
 		wrap.appendChild(table);
 
 		var out = document.createElement("div");
@@ -762,7 +762,7 @@
 		var current = known.params.get("view");
 
 		var wrap = document.createElement("div");
-		wrap.className = "gl-lb-view";
+		wrap.className = "og-lb-view";
 		VALID_VIEWS.forEach(function (v) {
 			var b = document.createElement("button");
 			b.type = "button";
@@ -799,14 +799,14 @@
 		var boxList = [];
 
 		var details = document.createElement("details");
-		details.className = "gl-lb-dropdown";
+		details.className = "og-lb-dropdown";
 
 		var summary = document.createElement("summary");
 		summary.textContent = chosen.length ? label + " (" + chosen.length + ")" : label;
 		details.appendChild(summary);
 
 		var panel = document.createElement("div");
-		panel.className = "gl-lb-panel";
+		panel.className = "og-lb-panel";
 
 		valueList.forEach(function (v) {
 			var lab = document.createElement("label");
@@ -859,7 +859,7 @@
 		var counts = known.counts.access;
 
 		var sel = document.createElement("select");
-		sel.className = "gl-lb-select";
+		sel.className = "og-lb-select";
 
 		var any = document.createElement("option");
 		any.value = "";
@@ -890,7 +890,7 @@
 
 		var input = document.createElement("input");
 		input.type = "text";
-		input.className = "gl-lb-search";
+		input.className = "og-lb-search";
 		input.placeholder = "Search";
 		input.value = current;
 
@@ -925,7 +925,7 @@
 		// A booklet is one of our own documents, so linkTo gives it the new tab every
 		// /document/ link gets, and the list keeps its filters while it is read.
 		var a = linkTo(BOOKLET_URL + name, "Open booklet (PDF)");
-		a.className = "gl-lb-booklet";
+		a.className = "og-lb-booklet";
 		return a;
 	}
 
@@ -935,13 +935,13 @@
 	var CONTROL_BUILDERS = {
 		view: function (known) { return buildViewToggle(known); },
 		types: function (known) {
-			return buildCheckboxDropdown("Types", "types", window.GL.DESTINATION_TYPES, known.counts.types, known);
+			return buildCheckboxDropdown("Types", "types", window.OG.DESTINATION_TYPES, known.counts.types, known);
 		},
 		keywords: function (known) {
 			return buildCheckboxDropdown("Keywords", "keywords", known.keywords, known.counts.keywords, known);
 		},
 		badges: function (known) {
-			return buildCheckboxDropdown("Badges", "badges", Object.keys(window.GL.TAG_COLORS), known.counts.badges, known);
+			return buildCheckboxDropdown("Badges", "badges", Object.keys(window.OG.TAG_COLORS), known.counts.badges, known);
 		},
 		access: function (known) { return buildAccessSelect(known); },
 		search: function (known) { return buildSearchBox(known); },
@@ -959,7 +959,7 @@
 	// only — a token is a plain name, never "name=value".
 	function buildOptionsBar(options, known) {
 		var bar = document.createElement("div");
-		bar.className = "gl-lb-bar";
+		bar.className = "og-lb-bar";
 		(options || []).forEach(function (token) {
 			var build = CONTROL_BUILDERS[token];
 			if (!build) { return; }

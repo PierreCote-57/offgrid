@@ -50,7 +50,7 @@ The host tag on an include is a placeholder and nothing else: `th:replace` disca
 emits the fragment in its place, so `<div>` renders identically to any other name.
 
 Every script the site has is loaded on every page. Each one is inert where it is not used —
-`gl-constants.js` and `google-map.js` only register on `window.GL`, and `lightbox.js` and
+`og-constants.js` and `google-map.js` only register on `window.OG`, and `lightbox.js` and
 `browser.js` return immediately when the element they look for is absent. So there is one
 script list, in one file, and a page that adds a block needing a script declares nothing.
 
@@ -146,19 +146,21 @@ Two alternatives were weighed and dropped:
 Carrying the markup in the authoring was also rejected: it puts the same three tags on every
 line of every checklist, where the processor states the rule once.
 
-`gl-checklist` and `gl-numcheck` keep their GettingLost names. The `gl-` prefix exists there
-to namespace against the WordPress theme and offgrid has no theme to collide with, so it
-buys nothing on its own — but pages copied across paste in untouched, now and later, and a
-rename would have to be applied to every one on the way in. Revisit when copying stops.
+The lists carry `og-checklist` and `og-numcheck`. The `gl-` prefix existed to namespace
+against the WordPress theme, and offgrid has no theme to collide with, so it bought nothing
+here — it was kept only so pages copied from GettingLost pasted in untouched.
+
+**A page copied from GettingLost is renamed on the way in.** Nothing in this repo carries a
+`gl-` name, so a pasted page is not finished until every one of them is `og-`.
 
 The class on the list is what selects the variant, so it stays on the element and the
-processor reads it: `gl-checklist` is a plain checkbox row, `gl-numcheck` adds the counter
+processor reads it: `og-checklist` is a plain checkbox row, `og-numcheck` adds the counter
 span. One processor with two looks rather than two processors.
 
 **The processor has to be idempotent, or it recurses until the stack runs out.** Thymeleaf
 hands a model processor's own output straight back to it — `ProcessorTemplateHandler` sets
 `modelAfterProcessable = true` whenever the processor changed anything — and the rewritten
-list still carries `gl-checklist`, so it matches again. The engine stops only when a pass
+list still carries `og-checklist`, so it matches again. The engine stops only when a pass
 leaves the model untouched (`gatheredModel.sameAs(processedModel)`), so the processor skips
 any list whose rows already hold a checkbox. Every checklist is therefore walked twice: once
 to wrap, once to find nothing to do.
@@ -191,7 +193,7 @@ and the mirror decides the name.
 **`photo` is inserted, not replaced.** The page owns the box — the van sets
 `width:100%;float:left` on the block element itself — so `th:insert` keeps the authored
 element and puts the picture inside it. `th:replace` would drop the geometry the author
-wrote. The defaults for a page that sets nothing live in `.gl-photo` in the stylesheet, not
+wrote. The defaults for a page that sets nothing live in `.og-photo` in the stylesheet, not
 in code that inspects what the author already set.
 
 **`photoGallery` takes the gallery name and renders a grid of captioned tiles — nothing
@@ -257,7 +259,7 @@ is the folder doing its job.
 
 ## 2026-08-26 — Posts, and the map that does not belong on one
 
-The six posts are converted. `.gl-post` — the lined paper written in the Texture pass and
+The six posts are converted. `.og-post` — the lined paper written in the Texture pass and
 until now used by nothing — is what the body sits on, and the post's `date`, carried in all
 six JSON files and rendered by none of them, is a dateline in the brand's hand directly under
 the title.
@@ -273,7 +275,7 @@ be — the three destination links, and the "← All posts" link that used to po
 `gettinglostonvi.wpcomstaging.com`. A link that is removed because its target is missing is a
 link nobody restores when the target arrives.
 
-`photo-gallery` now puts `id="gl-photo-<gallery>-<itemId>"` on each figure. The ids were in
+`photo-gallery` now puts `id="og-photo-<gallery>-<itemId>"` on each figure. The ids were in
 the JSON all along and the fragment dropped them, which left the picnic post's link to its
 own photo pointing at nothing.
 
@@ -310,7 +312,7 @@ vocabulary derived from the filtered list deletes the choices you need to widen 
 `isPublished` and `fileToSlug` did not come over: a row carries its own href, and `pageHref` is
 the one place a card, a map pin and the table's View link read it, so they cannot disagree.
 
-`gl-constants.js` holds the vocabularies — `TAG_COLORS`, `DESTINATION_TYPES`, `LINK_TYPES`,
+`og-constants.js` holds the vocabularies — `TAG_COLORS`, `DESTINATION_TYPES`, `LINK_TYPES`,
 `ROAD_COLORS`, `ROAD_RANK`, `NON_DRIVE_LEG_TYPES`, `MAP_CONFIG`, `PIN_ICONS` — because the
 browser is the only reader and putting them in Java would mean inventing a way to ship them
 out again. The map view builds the real `mapObject` and hands it to `google-map.js`.
@@ -351,7 +353,7 @@ are now full pages like the checklists: header, `<main>`, footer, and the Thymel
 The `pageLink` block became the real `<a th:href="@{/hardware/checklists/arriving-campsite}">`
 it will be, following the rule the posts pass set.
 
-**Step lists carry `gl-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
+**Step lists carry `og-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
 that choice; awning, climate and water follow it. The lists in battery and power enumerate
 things rather than tell you to do them in order, so they are not checkboxes.
 
@@ -403,13 +405,13 @@ JavaScript inlining serializes it and no attribute carries JSON. Two consequence
 serializer, both handled in the builder: it spells a `MapIcon` by its enum constant, so `icon`
 is lower-cased on the way into a pin; and it knows nothing of `/image/`, so the entry's
 `"IMG_0499"` becomes the URL there too. The script finds its own box by id — the div is
-`gl-map-<mapName>` — and the render function is `window["renderMap" + mapName]`, so two maps
+`og-map-<mapName>` — and the render function is `window["renderMap" + mapName]`, so two maps
 on a page never collide.
 
 **The page states the map's size on its own div, and keeps it with `th:insert`** (2026-08-29).
 Google fills the container it is given, so some box has to state a width and a height. The
 page writes `<div style="width:47%;height:200px;float:right" th:insert="…map('road')">`, and
-`.gl-mapbox` is `width/height:100%` so the fragment's div fills that box. `th:replace` would
+`.og-mapbox` is `width/height:100%` so the fragment's div fills that box. `th:replace` would
 discard the div and the size with it. Nothing is passed through the fragment call, and float
 and margin are stated the same way — GettingLost's `[data-block-type="googleMap"]` house rule
 has no equivalent here, because the page that wants a map is the page that says how big.
@@ -432,7 +434,7 @@ link and an image link with no second signature. Thymeleaf's parser does not bal
 `header.html` opens `<body>` and `footer.html` closes it — so a fragment can end mid-element.
 
     fragments/block/link.html   th:fragment="link(url)"
-    offgrid.js                  window.GL.linkOpenTag(url) -> string
+    offgrid.js                  window.OG.linkOpenTag(url) -> string
 
 Two implementations, because pages are server-rendered and the browser page assembles its
 rows in JS from `/shared/browser/data/{id}`. A single implementation would need one side to
@@ -447,7 +449,7 @@ site-absolute `/…` — never a name a template wraps a route around. `workUrl`
 folder so they are `/document/` links like any other.
 
 **Two anchors are built without calling it, and that is fine.** The gallery card in
-`browser.js` writes its own `<a class="gl-gallery-card">`, and a map pin with a url and no
+`browser.js` writes its own `<a class="og-gallery-card">`, and a map pin with a url and no
 photo navigates on marker click with `window.location.href` in `google-map.js`. A card always
 points at an offgrid page, which is the bare-anchor case; the rule would add nothing. If a url
 ever needs a new tab in either place, that is a content matter, not a defect in these two.
@@ -515,5 +517,71 @@ The server never claims a name it cannot know: the page renders with coordinates
 is written in when Google answers, or not at all.
 
 Departure from the template-layout decision above: `fragments/block/sky-fragment.html` holds
-two fragments, `table` and `chart`, not one. Pierre's call — they are two halves of one page
-and the file is named for the page, not for either fragment.
+all of the page's fragments, not one. Pierre's call — they are the parts of one page and the
+file is named for the page, not for any one fragment. Four of them now: `datePicker`, `chart`
+(the img on the page), `table`, and `drawing` (the SVG document `/sky/chart.svg` renders).
+
+**Every block carries the element the page lays out.** The page places one with `th:replace`
+and states nothing about it — `.og-sky-chart` and `.og-sky-table` are inside their fragments,
+not in `sky.html`, so the row is two lines and the page reads as content. `th:replace` discards
+the host div, which is what makes that work; it is also why a block needing a per-use size uses
+`th:insert` instead, the way the map fragment does. Only `chart` takes a parameter, its width.
+The date every block needs is read off the model.
+
+**The date is a request parameter, and the heading is the control that sets it**
+(2026-09-07). `/info/sky` takes `date` beside `latitude` and `longitude`, read the same lenient
+way: missing or unparseable is today, and a date outside what `Ephemeris` covers — the JPL
+elements are stated valid 1800-2050 — is answered with the end it passed rather than an error.
+The page shows the date it used, so a clamped date is visible without a message. `/sky/chart.svg`
+takes `date` too, because the browser fetches it as a separate request that would otherwise draw
+today beside another day's table.
+
+**No calendar is ours.** The `datePicker` fragment is a `<button>` over a transparent 1px
+`<input type="date">`, and `OG.wireDatePicker` calls `input.showPicker()` on the click. The
+browser draws its own calendar, anchored to that input — which is the only reason the input is on
+the page. Picking a day fires `change`, which submits the surrounding GET form, so the browser
+writes `?latitude=…&longitude=…&date=…` itself and no JavaScript builds a URL. The coordinates are
+hidden fields; without them picking a date would send the visitor back to the default marker.
+
+Two things about that input are load bearing. It must be rendered — transparent and 1px, never
+`display:none` — or there is nothing for the calendar to anchor to. And it must stay focusable and
+take pointer events: Safari opens the calendar with `tabindex="-1"` and `aria-hidden` on it, then
+will not close it for Escape or a click outside, because focus never entered the input. It was
+found by drawing three variants side by side and clicking each one in Safari.
+
+The button wears the surface the browser page's filters wear — white, `--rule` border, 6px radius,
+the chevron that means a list comes down — at the 20px the date heading used to be. It is a rule of
+its own rather than a fifth selector on theirs, since only the idiom is shared and none of the
+measurements are.
+
+**The table owns its width, and it is stated on the headings** (2026-09-07). Each `<th>` carries
+its column, the table is `table-layout: fixed` so those widths bind, and `width: max-content`
+makes the table their sum — so changing a column changes the table and nothing has to be kept in
+step in `site.css`. This follows the house rule on `main table`: the width and the column widths
+are inline.
+
+Neither column of the row shrinks, so a screen narrower than chart plus table scrolls sideways.
+Pierre's call: a table squeezed below its columns folds every row onto several lines, which costs
+more than the scroll does. The Orbit column is sized for `1 year 322 day` — Mars is the only
+orbit in the 1-to-10-year band where `TimeUnits.format` uses two units, so nothing else grows
+into it.
+
+## 2026-09-07 — Every name is `og-`
+
+The sky page's CSS came out of `sky.html` and `sky-fragment.html` into `site.css`. It went
+there rather than into a `sky.css` because the header loads one stylesheet for every page,
+and a second one would need a per-page `<link>` mechanism that does not exist.
+
+That raised the prefix, which the stylesheet had been answering two ways: 67 classes carried
+GettingLost's `gl-`, and everything written for offgrid carried none.
+
+**One prefix, `og-`, on every class and every generated id.** `window.GL` became `window.OG`
+and `gl-constants.js` became `og-constants.js` — a GettingLost name is a GettingLost name
+whether or not it is a class. The sweep reached `site.css`, the four js files, the templates,
+and `ChecklistElementProcessor`, which writes three class names in Java.
+
+**State classes stay bare** — `is-active`, `has-submenu`. They say what an element currently
+is, not what it is; `og-is-active` reads as a thing.
+
+The chart SVG keeps its own `ts` and `c-*`. It is served as its own document, so nothing on
+the page can reach its names and they collide with nothing.

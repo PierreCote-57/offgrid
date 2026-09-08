@@ -5,55 +5,24 @@
 <main>
 	<h1 th:text="${PageName}">The sky above you</h1>
 
-	<style>
-		/* The page owns the two columns: the chart is drawn at 430 and is given exactly that,
-		   the table takes what is left, and below about 800 they stack. */
-		.sky-row {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 24px;
-			align-items: flex-start;
-		}
-		.sky-row .sky-chart { flex: 0 0 430px; }
-		.sky-row .sky-table { flex: 1 1 380px; }
+	<p>
+		This is the sky above you.
+	</p>
 
-		/* The chart arrives as its own document, so its colours are inside it, not here. */
-		.sky-chart img,
-		.sky-wide img {
-			display: block;
-			width: 100%;
-		}
+	<div th:replace="~{fragments/block/sky-fragment :: datePicker}"></div>
 
-		/* Heading size without .gl-heading, whose rule and brand colour would make this read
-		   as a section divider. */
-		.sky-date {
-			margin: 0 0 16px;
-			text-align: center;
-			color: var(--text);
-			font-size: 20px;
-			font-weight: 600;
-		}
-
-		.sky-wide { margin-top: 24px; }
-	</style>
-
-	<h2 class="sky-date" th:text="${#temporals.format(skyTable.date, 'd MMMM yyyy')}"></h2>
-
-	<div class="sky-row">
-		<div class="sky-chart">
-			<img th:src="@{/sky/chart.svg(width=430)}" src=""
-				 alt="The Sun, the eight planets and the Moon, each on its orbit, seen from above">
-		</div>
-
-		<div class="sky-table">
-			<div th:replace="~{fragments/block/sky-fragment :: table}"></div>
-		</div>
+	<div class="og-sky-row">
+		<div th:replace="~{fragments/block/sky-fragment :: chart(430)}"></div>
+		<div th:replace="~{fragments/block/sky-fragment :: table}"></div>
 	</div>
 
-	<details class="sky-wide">
+	<p>
+		And this is text below the sky
+	</p>
+
+	<details class="og-sky-wide">
 		<summary>The chart, full width</summary>
-		<img th:src="@{/sky/chart.svg(width=1024)}" src=""
-			 alt="The Sun, the eight planets and the Moon, each on its orbit, seen from above">
+		<div th:replace="~{fragments/block/sky-fragment :: chart(1024)}"></div>
 	</details>
 </main>
 

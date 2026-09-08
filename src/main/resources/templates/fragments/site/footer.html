@@ -1,14 +1,14 @@
-<footer xmlns:th="http://www.thymeleaf.org" class="site-footer">
-	<span class="footer-left">
+<footer xmlns:th="http://www.thymeleaf.org" class="og-site-footer">
+	<span class="og-footer-left">
 		&copy; Copyright 2026 LogicielCote.COM<br />
 		<span  th:text="'Version: ' + ${SiteVersion}"></span>
 	</span>
-	<span class="footer-center">
+	<span class="og-footer-center">
 		Contact: <a href="mailto:Pierre@logicielcote.com">
 		Pierre@LogicielCote.com</a>
 	</span>
-	<span class="footer-right">
-		<span class="footer-right"
+	<span class="og-footer-right">
+		<span class="og-footer-right"
 			  th:text="'Rendered on: ' + ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm')}">
 		</span><br />
 		<span th:text="'Renderer in: ' + ${Timer.elapsedTime}"></span>

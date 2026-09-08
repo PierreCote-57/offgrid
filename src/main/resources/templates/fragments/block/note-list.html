@@ -9,10 +9,10 @@
 	A page with several blocks makes several calls, and the order of the calls is the order
 	they appear in. A name no block answers to renders nothing at all.
 -->
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="notes(noteName)" class="note-list"
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="notes(noteName)" class="og-note-list"
 	 th:with="noteItemList=${pageData.noteMap == null ? null : pageData.noteMap.get(noteName)}">
-	<section class="note-section" th:if="${noteItemList != null}">
-		<h3 class="gl-heading" th:if="${!#strings.isEmpty(noteName)}" th:text="${noteName}">Section name</h3>
+	<section class="og-note-section" th:if="${noteItemList != null}">
+		<h3 class="og-heading" th:if="${!#strings.isEmpty(noteName)}" th:text="${noteName}">Section name</h3>
 
 		<table>
 			<tbody>
@@ -20,12 +20,12 @@
 			     of its own, the site's name is the description. -->
 			<tr th:each="noteItem : ${noteItemList}"
 				th:with="internal=${noteItem.url != null and #strings.startsWith(noteItem.url, '/')}">
-				<td class="note-name">
+				<td class="og-note-name">
 					<th:block th:if="${noteItem.url}"><span
 						th:replace="~{fragments/block/link :: link(${noteItem.url})}"></span>[[${noteItem.name}]]</a></th:block>
 					<span th:unless="${noteItem.url}" th:text="${noteItem.name}">Name</span>
 				</td>
-				<td class="note-description"
+				<td class="og-note-description"
 					th:utext="${internal and noteItem.description == null}
 					          ? |On ${SiteName}|
 					          : ${#strings.listJoin(noteItem.description, ' ')}">Description</td>

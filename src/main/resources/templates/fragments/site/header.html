@@ -5,20 +5,20 @@
 	<link rel="stylesheet" th:href="@{/css/site.css}">
 	<script defer th:src="@{/js/chat.js}"></script>
 	<script defer th:src="@{/js/alpine.min.js}"></script>
-	<script defer th:src="@{/js/gl-constants.js}"></script>
+	<script defer th:src="@{/js/og-constants.js}"></script>
 	<script defer th:src="@{/js/lightbox.js}"></script>
 	<script defer th:src="@{/js/google-map.js}"></script>
 	<script defer th:src="@{/js/offgrid.js}"></script>
 	<script defer th:src="@{/js/browser.js}"></script>
 </head>
 <body>
-<header xmlns:th="http://www.thymeleaf.org" class="site-header">
-	<a class="brand" th:href="@{/}" th:text="${WelcomeMessage}"></a>
+<header xmlns:th="http://www.thymeleaf.org" class="og-site-header">
+	<a class="og-brand" th:href="@{/}" th:text="${WelcomeMessage}"></a>
 	<div th:replace="~{fragments/site/menu}"></div>
 </header>
 
-<div xmlns:th="http://www.thymeleaf.org" class="messages">
-	<div class="message message-user" th:each="userMessage : ${UserMessageList}" th:text="${userMessage}"></div>
-	<div class="message message-warning" th:each="warningMessage : ${WarningMessageList}" th:text="${warningMessage}"></div>
-	<div class="message message-error" th:each="errorMessage : ${ErrorMessageList}" th:text="${errorMessage}"></div>
+<div xmlns:th="http://www.thymeleaf.org" class="og-messages">
+	<div class="og-message og-message-user" th:each="userMessage : ${UserMessageList}" th:text="${userMessage}"></div>
+	<div class="og-message og-message-warning" th:each="warningMessage : ${WarningMessageList}" th:text="${warningMessage}"></div>
+	<div class="og-message og-message-error" th:each="errorMessage : ${ErrorMessageList}" th:text="${errorMessage}"></div>
 </div>
