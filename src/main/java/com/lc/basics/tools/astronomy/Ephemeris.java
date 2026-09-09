@@ -1,6 +1,7 @@
 package com.lc.basics.tools.astronomy;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Where the planets and the Moon are on a given date, from the JPL approximate elements and a
@@ -18,6 +19,12 @@ public class Ephemeris
 	/** Turns a proleptic Gregorian ordinal into a Julian Date at 00:00 UT. */
 	private static final double ORDINAL_TO_JULIAN = 1721424.5;
 
+	/** The Julian Date of 1970-01-01 00:00 UT, the instant a Date counts its milliseconds from. */
+	private static final double EPOCH_TO_JULIAN = 2440587.5;
+
+	/** Milliseconds in a day, the unit a Date is stated in. */
+	private static final double MILLIS_PER_DAY = 86400000.0;
+
 	/**
 	 * The Julian Date at 00:00 UT on a Gregorian date.
 	 */
@@ -25,6 +32,17 @@ public class Ephemeris
 	{
 		long ordinal = date.toEpochDay() + 719163;
 		double julianDate = ordinal + ORDINAL_TO_JULIAN;
+		return julianDate;
+	}
+
+	/**
+	 * The Julian Date at a moment, which carries a time of day as its fraction.
+	 */
+	public static double getJulianDate(Date date)
+	{
+		long milliCount = date.getTime();
+		double dayCount = milliCount / MILLIS_PER_DAY;
+		double julianDate = dayCount + EPOCH_TO_JULIAN;
 		return julianDate;
 	}
 

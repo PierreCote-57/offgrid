@@ -59,18 +59,36 @@ whatever serves `/mcp`, not for the server that was removed.
 
 #48 Compute the rise, transit and set times. The page is built and served at `/info/sky`; the
 chart is real, the table is not — `OffgridWebProcessor.PLACEHOLDER_TIMES` is nine hardcoded rows
-that `applyPlaceholderTimes` puts onto the bodies. `docs/skills/SolarSystemRiseSet.md` is the
-spec: sample each body's altitude across the local day and report every crossing of its own
-horizon altitude, which differs per body and is not a detail. `Ephemeris.getHeliocentric` already
-returns the `z` this needs and the chart discards. The observer arrives on `SkyDataTable` —
-latitude, longitude and `ZoneId` — from `/info/sky?latitude=&longitude=`, which the menu link
-fills from `navigator.geolocation`, and the day arrives beside them as `date`.
+that `applyPlaceholderTimes` puts onto the bodies. The positions come from JPL Horizons; the
+three 2026-09-08 and 2026-09-09 entries in `docs/decisions/data.md` hold the file layout, the
+class shapes and everything settled.
+
+`SkyAnalyser` in `common/misc/sky` computes all of it: built for a folder, a `ZonedDateTime`, a
+latitude and a longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
+at a time or as a map over the nine.
+
+What is left is the wiring: the browser has to send its zone beside `latitude`, `longitude` and `date`, which
+`OG` already builds from `navigator.geolocation`; `SKY_TIME_ZONE` in `OffgridWebProcessor` is
+still a constant; the page has to read `SkyBodyDay`, the `Sky*` POJOs and `SkyDataMaker` being
+replaced rather than adjusted; and `com.lc.basics.tools.astronomy` goes when nothing reads it,
+`Ephemeris` included.
+
+Two more that belong here rather than in the implementation: the constellation is carried as the
+three-letter code, and turning it into a name a reader knows is still to do; and the table itself
+is then reworked into a narrow one — rise, transit and set with the bearing beside each time — and
+a wider one carrying the rest.
 
 #49 Fix `README.md`'s Layout table. It names the package
 `src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
 predates `src/main/resources/data`, the profile yamls beside `application.properties`, and
 the `folder.local` root holding `images/`, `documents/` and `logs/`. Read the whole table
 against the tree rather than fixing the one row.
+
+#50 Fetch the ephemeris years that are not on disk, and decide who fetches them. Only 2026 sits
+under `{folder.local}/ephemeris/`, and nothing in the app asks Horizons for a year — the nine
+files were pulled by hand. `HorizonsEphemeris` reads three days on each side of its date, so a
+date in the last three days of December already needs the next year's files and throws without
+them. The query that fetches one is in `HorizonsRow`'s javadoc.
 
 #51 Decide whether the lightbox stays at the Large box. The overlay is capped at 75vh, and
 Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per

@@ -495,3 +495,156 @@ the type nesting inside `Reference`, which would have read three deep for no gai
 `FishingReferences` and `MaintenanceEntry` each have one owner too, but that owner is a page
 class. Following the rule there would move every block into `page` and empty `part`, so it
 stops at the package line: a part nests inside a part, never inside a page.
+
+## 2026-09-08 — The sky table's positions come from JPL Horizons, cached as files
+
+`Ephemeris` computes positions from the JPL approximate elements, which is enough for the
+chart's angles and was going to need a lunar latitude and distance series, a rotation to the
+equator, sidereal time and a per-body horizon altitude before the table could be filled.
+Horizons answers all of that from one source, so the table takes its numbers from there.
+
+**One file per body per year**, under `{folder.local}/ephemeris/<year>/<body>.csv` — the
+comma-separated form Horizons writes with `CSV_FORMAT='YES'` and `ANG_FORMAT='DEG'`, one row a
+day at 00:00 UT, the column header kept as its first line. Text on disk, POJO in memory,
+parsed on load: a serialized form would stop being readable, would break when the class gains
+a field, and buys nothing established over splitting a 122-character line.
+
+**One row a day is enough for every body, the Moon included.** The Moon's 13° a day is linear
+motion, which interpolation reproduces exactly; only the curvature costs anything, and over
+400 days from 2026-01-01 the worst error interpolating its geocentric vector between daily
+samples is 0.017°, about four seconds of rise time.
+
+**A local day needs three rows.** The rows are instants, not dates — 00:00 UT — and an
+observer's day is local midnight to local midnight, so it straddles two UT days and the
+samples between them are bracketed by three rows. The zone is therefore not only how the
+answers are printed: it decides which rows are read. The values in a row are the same for
+every observer; which rows a request touches is not.
+
+**Earth is not a body here.** The ephemeris is geocentric, so Earth has none of its own, and
+the table is nine rows where the chart draws ten.
+
+`external/horizons/` holds `HorizonsBody` (the nine, each with the identifier `COMMAND` takes),
+`HorizonsRow` (one line of an OBSERVER answer), `HorizonsPosition` (where one body is at one
+moment) and `HorizonsEphemeris` (the object that reads the files and answers positions).
+
+## 2026-09-08 — The sky page's two paths meet at one interpolated position
+
+The query stays `EPHEM_TYPE='OBSERVER'`, `CENTER='500@399'`, times in UT. `VECTORS` centred on
+the Sun was weighed and dropped: it would hand the chart its angle for nothing, and charge the
+table — the side that asks for a position every minute of the day, and the side that needs the
+view from a place on Earth — for a conversion at every one of them. The chart needs one angle a
+drawing and can afford to build it. Nothing in the files is Sun-centred, so the chart reaches
+the Sun through Earth: the planet's position and the Sun's, both seen from here, give the
+Sun-to-planet vector.
+
+**One call answers where a body is, at a moment.** `HorizonsEphemeris` takes a body and a moment
+and answers a position — direction against the star background, distance, and the moment it is
+for. Nothing outside it ever holds a row: which file, which two rows bracket the moment and how
+they are interpolated are its own business, and a caller that wanted rows would be asking about
+the storage rather than about the sky.
+
+**Everything else is arithmetic on that answer, and neither path is privileged.** The chart's
+angle takes two of them, the planet's and the Sun's, and asks for the direction of one from the
+other. The observer's view takes one of them plus a latitude and a longitude, and answers a
+compass bearing and an elevation. A series of those across the day gives rise and set at the
+elevation crossing, transit halfway between them, and the elevation at that time from one more
+call.
+
+**Simple case first: a standard planet.** The Sun and the Moon are discs rather than points and
+cross a horizon of their own, and an observer south of a planet's declination sees it transit
+north rather than south. None of that is being designed yet, and a design that starts from the
+exceptions cannot be understood.
+
+**The years Horizons answers for are −2000 to +2999**, and the ones on disk are whatever has
+been fetched.
+
+## 2026-09-09 — The moment is an Instant, and one ephemeris serves one request
+
+**The zone stops above the ephemeris.** A position does not vary with the observer's zone — the
+same instant gives the same place for everyone on Earth — so the call takes a `java.time.Instant`,
+and a parameter carrying a zone would be the signature claiming otherwise. Above that line the
+currency is `ZonedDateTime`: the day's boundaries, the times as printed and the date the user
+picked are all local, and a bare instant there would put the zone beside it in every signature.
+`instant.atZone` and `toInstant` cross the line in one call each. A `Date` was weighed and
+dropped — it is a millisecond count with no zone in it, which is the confusion, not the fix.
+
+**The browser sends the date and the zone, as two parameters.** Nothing in an HTTP request
+carries a zone, and the user picks a day rather than a moment, so there is no zoned date-time for
+the browser to compose: the picked date and
+`Intl.DateTimeFormat().resolvedOptions().timeZone` go on the URL that already carries latitude
+and longitude. Deriving the zone from those coordinates instead would need a boundary lookup,
+a zone being a polygon rather than a formula.
+
+**`HorizonsEphemeris` is built for one date and reads three days on each side of it, for every
+body at once.** The world's offsets run −12 to +14, so a local day sits inside date−2 to date+2
+wherever the observer is; three is the paranoid two. Loading at construction is what answers,
+once, whether the window needs one year's file or two, and after it nothing is lazy and nothing
+reads a file. Every body is loaded because the request wants all of them — the table is nine rows
+and every chart angle needs the Sun — so a per-body load would add a test that never answers no.
+A moment outside the window throws: extrapolating off the edge rows would be wrong and invisible.
+
+**It is not a bean, and nothing is shared between requests.** `${folder.local}` is what made the
+earlier reader a `@Component`, and handing the folder to the constructor removes that reason.
+The window is what replaces a year cache: an object whose contents are settled at construction
+has no eviction policy, no second year turning up mid-request, and nothing left in it by the
+request before.
+
+**The series is a `List`, not a map keyed by instant.** What the day is walked for is a crossing
+— the sample where an altitude passes a horizon, and its neighbour — which is an index and the
+next index. A key would have to be reconstructed by the caller as `start + n × step`, which is
+the stepping the call just did, and the moment would still have to travel with each position for
+the two ends of a crossing to be usable.
+
+## 2026-09-09 — `SkyAnalyser` answers the sky page, and carries its answers in its own objects
+
+**One class answers both halves of the page.** `SkyAnalyser`, in `common/misc/sky`, is built for
+one observer at one moment — `folder.local`, a `ZonedDateTime`, a latitude and a longitude — and
+builds its own `HorizonsEphemeris` for the local date that moment falls on. The conversion belongs
+to the class that holds a zone, so nothing above it holds a position, a row or a file path. Like
+the ephemeris, one serves one request and is not a bean. The Sun is read once there too: every
+angle and every lit fraction is measured against it, and the moment never changes.
+
+**Each answer comes in two calls: one body, and a map over all of them.** The chart asks for the
+Sun angle, which is a number; the table asks for a `SkyBodyDay`. No entry object is needed where
+the body is the key and the answer is the whole value. The map is returned as a `Map` and is an
+`EnumMap` underneath, which is a debugger decision and not a promise to the caller — a caller that
+wants a given order loops the enum and calls `get`.
+
+**What finds a body in the sky is a true bearing and an elevation at a time.** The reader is
+someone camping, with eyes, a watch, a phone compass and a fist at arm's length, which is about
+10°. A constellation finds nothing unless you already recognise the pattern, and a magnitude is a
+backwards logarithmic scale that says nothing on its own — it is carried as the number and turned
+into words where it is displayed. So the unit of an answer is a moment: a time, a bearing, an
+elevation and a name. Rise and set are that moment at elevation 0, transit is that moment at
+bearing 180, and a moment with no name is a plain time somebody asked about — where is Mars right
+now.
+
+**`SkyMomentName` carries its own display name.** A table prints "Rise", not "RISE", and ordering
+or titling rows off a `String` would be a text comparison. "Transit" is kept as the word even
+though a reader does not know it, because the bearing printed beside it explains it.
+
+**The elongation and the side it sits on came out of the day**: the moments and the lit fraction
+say the same thing, and the Sun has a day of its own to compare against.
+
+**A value only the file has travels on `HorizonsPosition`**, taken from the closer of the two rows
+rather than interpolated — the constellation because a name does not average, the magnitude
+because it is missing wherever the model does not cover the phase angle. Everything else a day
+needs is arithmetic on positions: the lit fraction from the Sun and body vectors, the bearing and
+elevation from a position with the place and the time.
+
+**The order of work is what a thing IS, then what it does.** Step one settles the shape — the
+method signatures of a working class, the member variables of a data class — with methods
+returning null and no accessors written. Step two fills them in, accessors included. Both steps
+are done for `SkyAnalyser`, `SkyBodyDay`, `SkyMoment` and `SkyMomentName`; what is left is the
+page reading them, which is #48.
+
+**How a crossing is found: sample the day, then refine.** The observer's day is walked every two
+minutes, and the pair of samples that brackets the horizon or due south is read as a straight
+line to the moment it crosses, which is then worked out properly at that time. The first crossing
+of each kind is the one reported. The simple case is what the numbers mean: a body is a point, so
+there is no refraction, no solar or lunar disc and no parallax, and the directions are ICRF
+against the sidereal time of the day, which in 2026 puts a transit about a minute and a half off
+what an almanac prints.
+
+**Nothing outside `misc/sky` and `misc/external/horizons` constrains these classes.** They replace
+the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them.
