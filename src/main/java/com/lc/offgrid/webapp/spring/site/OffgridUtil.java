@@ -2,8 +2,11 @@ package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 /**
  * What the site needs in more than one place and no one class owns: the values it is built
@@ -105,6 +108,54 @@ public class OffgridUtil
 			timeZone = ZoneId.of(DEFAULT_TIME_ZONE);
 		}
 		return timeZone;
+	}
+
+	/**
+	 * The moment the sky is asked for: the instant off the query string, read in the zone off
+	 * the query string. Each part falls back on its own.
+	 */
+	public static ZonedDateTime parseZonedDateTime(String epochSecondText, String timeZoneText)
+	{
+		long epochSecond = parseEpochSecond(epochSecondText);
+		ZoneId timeZone = parseTimeZone(timeZoneText);
+		ZonedDateTime dateTime = Instant.ofEpochSecond(epochSecond).atZone(timeZone);
+		return dateTime;
+	}
+
+	/**
+	 * The instant the sky is asked for, in seconds since the epoch, or now when the caller
+	 * states none. A value outside what the ephemeris covers is answered with the end it
+	 * passed.
+	 */
+	public static long parseEpochSecond(String text)
+	{
+		long epochSecond;
+		try
+		{
+			epochSecond = Long.parseLong(text.trim());
+		}
+		catch (Exception failure)
+		{
+			if (null != text && !text.isBlank())
+			{
+				getLogger().info("parseEpochSecond('%s') could not be parsed, using now", text);
+			}
+			epochSecond = System.currentTimeMillis() / 1000;
+		}
+
+		long firstEpochSecond = SKY_FIRST_DATE.atStartOfDay(ZoneOffset.UTC).toEpochSecond();
+		long lastEpochSecond = SKY_LAST_DATE.atStartOfDay(ZoneOffset.UTC).toEpochSecond();
+		if (epochSecond < firstEpochSecond)
+		{
+			getLogger().info("parseEpochSecond('%s') is before %s, using it", text, SKY_FIRST_DATE);
+			return firstEpochSecond;
+		}
+		if (epochSecond > lastEpochSecond)
+		{
+			getLogger().info("parseEpochSecond('%s') is after %s, using it", text, SKY_LAST_DATE);
+			return lastEpochSecond;
+		}
+		return epochSecond;
 	}
 
 	/**

@@ -44,16 +44,18 @@ public class OffgridRestController extends BaseRestController
 	}
 
 	/**
-	 * The sky where the caller is, right now. All three parameters are optional, and absent
-	 * they are the 50th parallel marker in Campbell River in its own zone. They arrive as text
-	 * so a value that does not parse falls back rather than failing the request.
+	 * The sky where the caller is, at the second it asks for. All four parameters are optional,
+	 * and absent they are the 50th parallel marker in Campbell River in its own zone, now. They
+	 * arrive as text so a value that does not parse falls back rather than failing the request.
 	 */
 	@GetMapping("/sky/data")
 	public ResponseEntity<SkyInfoRestAnswer> skyData(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required = false) String timezone,
 			@RequestParam(required = false) String lat,
-			@RequestParam(required = false) String lng)
+			@RequestParam(required = false) String lng,
+			@RequestParam(required = false) String epochSecond)
 	{
-		return processRequest(request, response, () -> getProcessor().processSkyData(timezone, lat, lng));
+		return processRequest(request, response,
+				() -> getProcessor().processSkyData(timezone, lat, lng, epochSecond));
 	}
 }

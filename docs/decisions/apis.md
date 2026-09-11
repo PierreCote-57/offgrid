@@ -135,7 +135,8 @@ controller. Going through `processRequest` is what `/sky/chart.svg` gives up —
 extends `RestBaseAnswer`, so it carries its own timing and a failure is logged and answered
 500 in one place.
 
-**The three parameters — `timezone`, `lat`, `lng` — arrive as text, null when absent.**
+**The parameters — `timezone`, `lat`, `lng`, and later `epochSecond` — arrive as text, null
+when absent.**
 Rejected: `Double`, which is the natural REST shape and would refuse a malformed number with a
 400. Spring's conversion runs before the handler, so that 400 never reaches `processRequest`
 and the body is Spring's error rather than ours.
@@ -159,7 +160,7 @@ a `Supplier`, which cannot throw checked exceptions, so the checked pair `Horizo
 declares had to stop somewhere; nothing a caller states makes a missing ephemeris file
 readable, so there is nothing for it to catch.
 
-**A moment on the wire is epoch milliseconds beside a zone id stated once.** JSON has no date
+**A moment on the wire is an epoch second beside a zone id stated once.** JSON has no date
 type and JavaScript's `Date` is an instant with no zone in it, so a `ZonedDateTime` serialized
 by Jackson arrives as an ISO string with an offset and the zone's name is gone — the client
 cannot say what the times mean. Every time in one answer is in the same zone, so the zone
@@ -167,7 +168,30 @@ travels once as its own value. A `long` and a `String` also owe nothing to a ser
 Jackson writes `java.time` and Gson does not, since `java.time` is not open to Gson's
 reflection.
 
-**`SkyBodyDay` does not belong on the answer.** It is what `SkyAnalyser` works in. What
-`SkyInfoRestAnswer` carries is not decided — #58 in `docs/todo.md` — and the class is
-deliberately empty until it is.
+**`SkyBodyDay` was ruled off the answer here, and that was reversed on 2026-09-11.** It is
+what `SkyAnalyser` works in, and it turned out to be what the page needs as well.
 
+## 2026-09-11 — What the sky answer carries
+
+**A fourth parameter, `epochSecond`, states the moment; absent, it is now.** The zone is
+already on the call, so the pair is exactly the `ZonedDateTime` `SkyAnalyser` takes, and
+`OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText)` reads both and hands back the
+one value the processor then holds. Seconds rather than milliseconds: nothing the sky answers
+is finer than a second, and the parameter and the value that comes back are then the same
+number. The cost is on the client, where a `Date` is built from milliseconds.
+
+**Outside 1800–2050 the parse answers with the end it passed**, which is the rule already
+stated on `SKY_FIRST_DATE`: outside the JPL elements' stated range the positions are wrong
+rather than rough. It lands in `parseEpochSecond` because that is where a date first exists.
+
+**`SkyInfoRestAnswer` is constructed from the `ZonedDateTime` and stores the two parts.**
+Handing it the moment keeps the splitting in one place; storing `epochSecond` and `ZoneId` is
+what goes on the wire, and the client puts them back together. The observer's `latitude` and
+`longitude` ride beside them, so the answer states what the request was read as — every
+parameter falls back silently, and without the echo a caller cannot tell a fallback from a
+value it sent.
+
+**The analyser's two maps go on the answer as they are**, `getSunAngleMap` and
+`getSkyBodyDayMap`, through setters rather than the constructor: they are what the endpoint
+was built to answer, and a setter keeps the constructor to the observer. Both are keyed by
+`HorizonsBody`, so Jackson writes the constant names as the JSON keys.

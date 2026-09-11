@@ -119,12 +119,6 @@ against real values, and decide then what each column shows.
 pointer events or Safari will not close the calendar on Escape. Today that costs a tab stop on
 something invisible: a keyboard user tabs to the button, then to nothing they can see.
 
-#58 Decide what `SkyInfoRestAnswer` carries, then fill `processSkyData`. The endpoint at
-`/rest/sky/data` is wired and answers timing only: the class is empty on purpose, and the
-processor parses its three parameters and builds nothing. `SkyAnalyser` is what the answer
-would draw on. Settled already, in `docs/decisions/apis.md`: `SkyBodyDay` does not go on the
-wire, and a moment travels as epoch milliseconds beside the zone id stated once.
-
 #59 Decide where `normalise` and `clamp` live. `HorizonsEphemeris` and `SkyAnalyser` now each
 hold a private copy: the ephemeris needs them for the hour angle and the elevation, the analyser
 for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated because nothing in
