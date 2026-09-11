@@ -1,11 +1,10 @@
 package com.lc.offgrid.common.misc.sky;
 
+import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsEphemeris;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsPosition;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -65,16 +64,27 @@ public class SkyAnalyser
 	 * asking about where the caller is. The latitude and longitude are that place, in degrees,
 	 * north and east positive: they are the horizon a body rises over. The Sun's position is
 	 * read here too, every angle and every lit fraction being measured against it.
+	 *
+	 * An ephemeris that cannot be read is a runtime failure: nothing a caller states can make
+	 * a missing or malformed file readable, so there is nothing for it to catch.
 	 */
 	public SkyAnalyser(String dataRootFolder, ZonedDateTime dateTime, double latitude, double longitude)
-			throws IOException, ParseException
 	{
 		this.dateTime = dateTime;
 		this.latitude = latitude;
 		this.longitude = longitude;
 
 		LocalDate localDate = dateTime.toLocalDate();
-		this.ephemeris = new HorizonsEphemeris(dataRootFolder, localDate);
+		try
+		{
+			this.ephemeris = new HorizonsEphemeris(dataRootFolder, localDate);
+		}
+		catch (Exception exception)
+		{
+			throw new BasicRuntimeException(exception,
+					"SkyAnalyser('%1$s', %2$s, %3$s, %4$s) could not read the ephemeris",
+					dataRootFolder, dateTime, latitude, longitude);
+		}
 
 		this.instant = dateTime.toInstant();
 		this.sunPosition = ephemeris.getPosition(HorizonsBody.SUN, instant);

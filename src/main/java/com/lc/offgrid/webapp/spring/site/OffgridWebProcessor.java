@@ -56,28 +56,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private static final String SKY_TEMPLATE = "fragments/block/sky-fragment";
 	private static final String SKY_CHART_FRAGMENT = "drawing";
 
-	/** The 50th parallel marker in Campbell River, until the browser says otherwise. */
-	private static final double SKY_LATITUDE = 50.0;
-	private static final double SKY_LONGITUDE = -125.230450;
-	private static final String SKY_TIME_ZONE = "America/Vancouver";
-
-	/** The chart's width when the caller states none, and the range it will draw at. */
 	private static final String SKY_CHART_CAPTION = "Not to scale — everything moves counterclockwise";
-	/**
-	 * What the ephemeris covers. Ephemeris draws on the JPL approximate elements, which are
-	 * stated as valid 1800-2050; outside that its positions are wrong rather than rough, so a
-	 * date past either end is answered with that end.
-	 */
-	private static final LocalDate SKY_FIRST_DATE = LocalDate.of(1800, 1, 1);
-	private static final LocalDate SKY_LAST_DATE = LocalDate.of(2050, 12, 31);
-
-	private static final int SKY_CHART_WIDTH = 430;
-	private static final int MINIMUM_CHART_WIDTH = 200;
-	private static final int MAXIMUM_CHART_WIDTH = 2000;
-
-	private static final double MAXIMUM_LATITUDE = 90.0;
-	private static final double MAXIMUM_LONGITUDE = 180.0;
-
 	/** Rise, transit and set, made up, until the astronomy for them is written. */
 	private static final Map<String, String[]> PLACEHOLDER_TIMES = Map.of(
 			"Sun", new String[] {"06:41", "13:32 (46°)", "20:21"},
@@ -171,48 +150,18 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	{
 		String answer = processPage(model, path, clazz);
 
-		double latitude = readCoordinate(latitudeText, SKY_LATITUDE, MAXIMUM_LATITUDE);
-		double longitude = readCoordinate(longitudeText, SKY_LONGITUDE, MAXIMUM_LONGITUDE);
+		double latitude = OffgridUtil.parseLatitude(latitudeText);
+		double longitude = OffgridUtil.parseLongitude(longitudeText);
 		LocalDate date = readDate(dateText);
 
 		SkyDataTable skyTable = makeSkyTable(latitude, longitude, date);
 		model.addAttribute("skyTable", skyTable);
 
 		// The picker states the ends it may not go past, so the browser stops there itself.
-		model.addAttribute("skyFirstDate", SKY_FIRST_DATE);
-		model.addAttribute("skyLastDate", SKY_LAST_DATE);
+		model.addAttribute("skyFirstDate", OffgridUtil.SKY_FIRST_DATE);
+		model.addAttribute("skyLastDate", OffgridUtil.SKY_LAST_DATE);
 
 		return answer;
-	}
-
-	/**
-	 * One coordinate off the query string, or the default when it is missing, unparseable or
-	 * off the globe. A hand-edited URL gets the marker back and a page, not an error.
-	 */
-	private double readCoordinate(String text, double defaultValue, double limit)
-	{
-		if (null == text || text.isBlank())
-		{
-			return defaultValue;
-		}
-
-		double value;
-		try
-		{
-			value = Double.parseDouble(text.trim());
-		}
-		catch (NumberFormatException failure)
-		{
-			getLogger().info("Sky page: coordinate %s does not parse, using %s", text, defaultValue);
-			return defaultValue;
-		}
-
-		if (value < -limit || value > limit)
-		{
-			getLogger().info("Sky page: coordinate %s is outside %s, using %s", text, limit, defaultValue);
-			return defaultValue;
-		}
-		return value;
 	}
 
 	/**
@@ -240,23 +189,23 @@ public class OffgridWebProcessor extends BaseWebProcessor
 			return defaultValue;
 		}
 
-		if (date.isBefore(SKY_FIRST_DATE))
+		if (date.isBefore(OffgridUtil.SKY_FIRST_DATE))
 		{
-			getLogger().info("Sky page: date %s is before %s, using %s", text, SKY_FIRST_DATE, SKY_FIRST_DATE);
-			return SKY_FIRST_DATE;
+			getLogger().info("Sky page: date %s is before %s, using %s", text, OffgridUtil.SKY_FIRST_DATE, OffgridUtil.SKY_FIRST_DATE);
+			return OffgridUtil.SKY_FIRST_DATE;
 		}
 
-		if (date.isAfter(SKY_LAST_DATE))
+		if (date.isAfter(OffgridUtil.SKY_LAST_DATE))
 		{
-			getLogger().info("Sky page: date %s is after %s, using %s", text, SKY_LAST_DATE, SKY_LAST_DATE);
-			return SKY_LAST_DATE;
+			getLogger().info("Sky page: date %s is after %s, using %s", text, OffgridUtil.SKY_LAST_DATE, OffgridUtil.SKY_LAST_DATE);
+			return OffgridUtil.SKY_LAST_DATE;
 		}
 		return date;
 	}
 
 	public ResponseEntity<Resource> processSkyChart(String widthText, String dateText)
 	{
-		int width = readWidth(widthText);
+		int width = OffgridUtil.parseWidth(widthText);
 		LocalDate date = readDate(dateText);
 
 		SkyDataChart skyChart = makeSkyChart(date);
@@ -280,37 +229,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 		ByteArrayResource answer = new ByteArrayResource(svgBytes);
 		return answer;
-	}
-
-	/**
-	 * A width off the query string, or the default when it is missing, unparseable or outside
-	 * what the drawing is legible at. A hand-edited URL gets a chart, not an error.
-	 */
-	private int readWidth(String text)
-	{
-		if (null == text || text.isBlank())
-		{
-			return SKY_CHART_WIDTH;
-		}
-
-		int width;
-		try
-		{
-			width = Integer.parseInt(text.trim());
-		}
-		catch (NumberFormatException failure)
-		{
-			getLogger().info("Sky chart: width %s does not parse, using %s", text, SKY_CHART_WIDTH);
-			return SKY_CHART_WIDTH;
-		}
-
-		if (width < MINIMUM_CHART_WIDTH || width > MAXIMUM_CHART_WIDTH)
-		{
-			getLogger().info("Sky chart: width %s is outside %s to %s, using %s",
-					width, MINIMUM_CHART_WIDTH, MAXIMUM_CHART_WIDTH, SKY_CHART_WIDTH);
-			return SKY_CHART_WIDTH;
-		}
-		return width;
 	}
 
 	/**
@@ -343,7 +261,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		skyTable.setBodyList(bodyList);
 		skyTable.setLatitude(latitude);
 		skyTable.setLongitude(longitude);
-		skyTable.setTimeZone(ZoneId.of(SKY_TIME_ZONE));
+		skyTable.setTimeZone(ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE));
 
 		applyPlaceholderTimes(skyTable);
 		return skyTable;
@@ -351,7 +269,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	private LocalDate today()
 	{
-		ZoneId timeZone = ZoneId.of(SKY_TIME_ZONE);
+		ZoneId timeZone = ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE);
 		LocalDate date = LocalDate.now(timeZone);
 		return date;
 	}

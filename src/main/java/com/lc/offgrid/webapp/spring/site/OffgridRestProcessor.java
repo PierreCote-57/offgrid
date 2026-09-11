@@ -4,9 +4,12 @@ import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
 import com.lc.offgrid.webapp.pojo.chat.ChatMessage;
 import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
+import com.lc.offgrid.webapp.pojo.sky.SkyInfoRestAnswer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -24,6 +27,15 @@ public class OffgridRestProcessor
 		return LOGGER;
 	}
 
+	@Value("${folder.local}")
+	// Initializer for tests. As WEB/bean, it gets from config
+	private String data_root_folder = "/Users/pierrecote/Working/offgrid";
+
+	public String getDataRootFolder()
+	{
+		return data_root_folder;
+	}
+
 	/**
 	 * The chat's reply. This pass repeats the last line of the transcript back, so what is
 	 * being proven is the round trip rather than the answer.
@@ -39,5 +51,21 @@ public class OffgridRestProcessor
 
 		ChatAnswer			chatAnswer		= new ChatAnswer(text);
 		return chatAnswer;
+	}
+
+	/**
+	 * The sky where the observer stands. The three parameters arrive as text so a value that
+	 * does not parse falls back to the default rather than failing the request.
+	 */
+	public SkyInfoRestAnswer processSkyData(String timeZoneText, String latitudeText, String longitudeText)
+	{
+		ZoneId		timeZone	= OffgridUtil.parseTimeZone(timeZoneText);
+		double		latitude	= OffgridUtil.parseLatitude(latitudeText);
+		double		longitude	= OffgridUtil.parseLongitude(longitudeText);
+
+		getLogger().debug("Sky data: %s at %s, %s", timeZone, latitude, longitude);
+
+		SkyInfoRestAnswer	skyAnswer	= new SkyInfoRestAnswer();
+		return skyAnswer;
 	}
 }
