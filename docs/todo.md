@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 54**
+**next id: 59**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -118,3 +118,9 @@ against real values, and decide then what each column shows.
 `.og-sky-date-input` in `site.css` is 1px and transparent, and it has to stay focusable and take
 pointer events or Safari will not close the calendar on Escape. Today that costs a tab stop on
 something invisible: a keyboard user tabs to the button, then to nothing they can see.
+
+#58 Decide what `SkyInfoRestAnswer` carries, then fill `processSkyData`. The endpoint at
+`/rest/sky/data` is wired and answers timing only: the class is empty on purpose, and the
+processor parses its three parameters and builds nothing. `SkyAnalyser` is what the answer
+would draw on. Settled already, in `docs/decisions/apis.md`: `SkyBodyDay` does not go on the
+wire, and a moment travels as epoch milliseconds beside the zone id stated once.

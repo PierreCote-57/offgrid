@@ -125,3 +125,49 @@ Alpine has drawn the bubble scrolls to where the log ended one message ago.
 trip. The LLM behind it, and the in-process tools it would call, are not this pass — the MCP
 server publishes those tools to an outside client and is not the way in for a chat running in
 the same JVM.
+
+## 2026-09-10 — The sky endpoint, and the shape a time takes on the wire
+
+**`/rest/sky/data` on `OffgridRestController`, through `processRequest`.** The first path
+proposed was `/info/sky/data`, which would have put it on the web controller beside the page:
+a method mapping cannot escape the controller's class-level `/rest`, so the path decided the
+controller. Going through `processRequest` is what `/sky/chart.svg` gives up — the answer
+extends `RestBaseAnswer`, so it carries its own timing and a failure is logged and answered
+500 in one place.
+
+**The three parameters — `timezone`, `lat`, `lng` — arrive as text, null when absent.**
+Rejected: `Double`, which is the natural REST shape and would refuse a malformed number with a
+400. Spring's conversion runs before the handler, so that 400 never reaches `processRequest`
+and the body is Spring's error rather than ours.
+
+**`OffgridUtil` holds what both processors need**, in `webapp/spring/site`: the defaults, the
+limits, and the parse methods, all public static. It exists because the same reader and the
+same constants were about to live in both processors, and a rule like "latitudes only below
+85°" would then have been two edits. Its parse methods follow one pattern — one `try`, `catch
+(Exception)` so a null text is the same path as a bad one, log only when the text was actually
+stated, then fall back — and `parseLatitude`/`parseLongitude` wrap `parseDouble` so a caller
+passes one argument. `parse`, not `read`: reading starts at an external source, and these are
+handed the text.
+
+**A failing log line or exception names the call, `methodName(parameter values)`.**
+`parseDouble('foo', 50, 90) could not be parsed` says which caller it was and what it was
+trying to do, without opening the code. Every parameter goes in, including the ones that look
+like configuration.
+
+**`SkyAnalyser` throws `BasicRuntimeException`, catching `Exception`.** `processRequest` takes
+a `Supplier`, which cannot throw checked exceptions, so the checked pair `HorizonsEphemeris`
+declares had to stop somewhere; nothing a caller states makes a missing ephemeris file
+readable, so there is nothing for it to catch.
+
+**A moment on the wire is epoch milliseconds beside a zone id stated once.** JSON has no date
+type and JavaScript's `Date` is an instant with no zone in it, so a `ZonedDateTime` serialized
+by Jackson arrives as an ISO string with an offset and the zone's name is gone — the client
+cannot say what the times mean. Every time in one answer is in the same zone, so the zone
+travels once as its own value. A `long` and a `String` also owe nothing to a serializer:
+Jackson writes `java.time` and Gson does not, since `java.time` is not open to Gson's
+reflection.
+
+**`SkyBodyDay` does not belong on the answer.** It is what `SkyAnalyser` works in. What
+`SkyInfoRestAnswer` carries is not decided — #58 in `docs/todo.md` — and the class is
+deliberately empty until it is.
+
