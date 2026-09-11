@@ -12,6 +12,14 @@ import java.time.Instant;
  */
 public class HorizonsPosition
 {
+	/** The tilt of the Earth's axis, in degrees: what turns an equatorial direction into an ecliptic one. */
+	private static final double OBLIQUITY = 23.4392911;
+
+	/** What is lit of a body that shines by itself. */
+	private static final double FULLY_LIT = 1.0;
+
+	private static final double DEGREES_AROUND = 360.0;
+
 	private final Instant	instant;
 	private final double	rightAscension;
 	private final double	declination;
@@ -79,5 +87,124 @@ public class HorizonsPosition
 	public Double getApparentMagnitude()
 	{
 		return apparentMagnitude;
+	}
+
+	/**
+	 * The direction from the Sun to this body, in degrees from 0 to 360, taken in the ecliptic
+	 * plane. Both positions are seen from the Earth's centre, so one taken from the other is the
+	 * vector from the Sun to the body.
+	 */
+	public double getSunAngle(HorizonsPosition sunPosition)
+	{
+		double[] bodyVector = toVector();
+		double[] sunVector = sunPosition.toVector();
+		double[] sunToBody = subtract(bodyVector, sunVector);
+		double[] eclipticVector = toEcliptic(sunToBody);
+
+		double radians = Math.atan2(eclipticVector[1], eclipticVector[0]);
+		double degrees = Math.toDegrees(radians);
+		double angle = normalise(degrees);
+		return angle;
+	}
+
+	/**
+	 * How much of this body's disc an observer on Earth sees lit, from the angle the Sun and the
+	 * Earth stand apart at the body. A body sitting on either of them is taken as fully lit.
+	 */
+	public double getLitFraction(HorizonsPosition sunPosition)
+	{
+		double[] bodyVector = toVector();
+		double[] sunVector = sunPosition.toVector();
+		double[] bodyToEarth = subtract(new double[] { 0.0, 0.0, 0.0 }, bodyVector);
+		double[] bodyToSun = subtract(sunVector, bodyVector);
+
+		double earthLength = length(bodyToEarth);
+		double sunLength = length(bodyToSun);
+
+		double litFraction;
+		if (0.0 == earthLength || 0.0 == sunLength)
+		{
+			litFraction = FULLY_LIT;
+		}
+		else
+		{
+			double dotProduct = dot(bodyToEarth, bodyToSun);
+			double cosine = clamp(dotProduct / (earthLength * sunLength));
+			litFraction = (1.0 + cosine) / 2.0;
+		}
+
+		return litFraction;
+	}
+
+	/**
+	 * This position as x, y and z from the Earth's centre, against the celestial equator.
+	 */
+	private double[] toVector()
+	{
+		double rightAscension = Math.toRadians(getRightAscension());
+		double declination = Math.toRadians(getDeclination());
+		double range = getRange();
+
+		double x = range * Math.cos(declination) * Math.cos(rightAscension);
+		double y = range * Math.cos(declination) * Math.sin(rightAscension);
+		double z = range * Math.sin(declination);
+
+		double[] vector = { x, y, z };
+		return vector;
+	}
+
+	/**
+	 * The same vector turned onto the ecliptic, which is the plane the chart draws.
+	 */
+	private static double[] toEcliptic(double[] vector)
+	{
+		double obliquity = Math.toRadians(OBLIQUITY);
+		double x = vector[0];
+		double y = vector[1] * Math.cos(obliquity) + vector[2] * Math.sin(obliquity);
+		double z = -vector[1] * Math.sin(obliquity) + vector[2] * Math.cos(obliquity);
+
+		double[] eclipticVector = { x, y, z };
+		return eclipticVector;
+	}
+
+	private static double[] subtract(double[] first, double[] second)
+	{
+		double[] difference = { first[0] - second[0], first[1] - second[1], first[2] - second[2] };
+		return difference;
+	}
+
+	private static double dot(double[] first, double[] second)
+	{
+		double dotProduct = first[0] * second[0] + first[1] * second[1] + first[2] * second[2];
+		return dotProduct;
+	}
+
+	private static double length(double[] vector)
+	{
+		double dotProduct = dot(vector, vector);
+		double length = Math.sqrt(dotProduct);
+		return length;
+	}
+
+	/**
+	 * An angle brought back into 0 to 360.
+	 */
+	private static double normalise(double degrees)
+	{
+		double remainder = degrees % DEGREES_AROUND;
+		if (remainder < 0.0)
+		{
+			remainder = remainder + DEGREES_AROUND;
+		}
+		return remainder;
+	}
+
+	/**
+	 * A cosine or a sine held inside -1 to 1, where rounding can put it just outside.
+	 */
+	private static double clamp(double value)
+	{
+		double clamped = Math.max(-1.0, Math.min(1.0, value));
+		return clamped;
 	}
 }

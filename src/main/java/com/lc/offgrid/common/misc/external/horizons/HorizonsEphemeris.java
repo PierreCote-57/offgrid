@@ -51,6 +51,17 @@ public class HorizonsEphemeris
 	/** Two rows are the least an interpolation can work from. */
 	private static final int MINIMUM_ROW_COUNT = 2;
 
+	/** Greenwich sidereal time at J2000 in degrees, and how much of it a day adds. */
+	private static final double SIDEREAL_AT_J2000 = 280.46061837;
+	private static final double SIDEREAL_PER_DAY = 360.98564736629;
+
+	/** The Julian Date of J2000, and of the moment a millisecond count starts from. */
+	private static final double JULIAN_AT_J2000 = 2451545.0;
+	private static final double JULIAN_AT_EPOCH = 2440587.5;
+	private static final double MILLIS_PER_DAY = 86400000.0;
+
+	private static final double DEGREES_AROUND = 360.0;
+
 	private final String						dataRootFolder;
 	private final LocalDate						date;
 	private final Instant						fromInstant;
@@ -142,6 +153,37 @@ public class HorizonsEphemeris
 		}
 
 		return positionList;
+	}
+
+	/**
+	 * Where a body stands for an observer at one moment: which way to turn, and how far up.
+	 * The latitude and longitude are the observer's place, in degrees, north and east positive.
+	 *
+	 * The direction is the one the files state, turned from the star background onto the
+	 * observer's horizon: no refraction, no disc and no parallax, so a body is a point.
+	 */
+	public HorizonsMoment getMoment(HorizonsBody body, Instant instant, double latitude, double longitude)
+	{
+		HorizonsPosition position = getPosition(body, instant);
+
+		double siderealTime = getLocalSiderealTime(instant, longitude);
+		double hourAngle = normalise(siderealTime - position.getRightAscension());
+		double hourAngleRadians = Math.toRadians(hourAngle);
+		double declinationRadians = Math.toRadians(position.getDeclination());
+		double latitudeRadians = Math.toRadians(latitude);
+
+		double north = Math.sin(declinationRadians) * Math.cos(latitudeRadians)
+				- Math.cos(declinationRadians) * Math.cos(hourAngleRadians) * Math.sin(latitudeRadians);
+		double east = -Math.cos(declinationRadians) * Math.sin(hourAngleRadians);
+		double up = Math.sin(declinationRadians) * Math.sin(latitudeRadians)
+				+ Math.cos(declinationRadians) * Math.cos(hourAngleRadians) * Math.cos(latitudeRadians);
+
+		double bearingDegrees = Math.toDegrees(Math.atan2(east, north));
+		double bearing = normalise(bearingDegrees);
+		double elevation = Math.toDegrees(Math.asin(clamp(up)));
+
+		HorizonsMoment moment = new HorizonsMoment(instant.getEpochSecond(), bearing, elevation);
+		return moment;
 	}
 
 	/**
@@ -297,6 +339,52 @@ public class HorizonsEphemeris
 
 		double[] vector = { x, y, z };
 		return vector;
+	}
+
+	/**
+	 * Sidereal time at a longitude, in degrees: the right ascension that stands due south
+	 * there at that moment.
+	 */
+	private double getLocalSiderealTime(Instant instant, double longitude)
+	{
+		double julianDate = getJulianDate(instant);
+		double dayCount = julianDate - JULIAN_AT_J2000;
+		double greenwichDegrees = SIDEREAL_AT_J2000 + SIDEREAL_PER_DAY * dayCount;
+		double siderealTime = normalise(greenwichDegrees + longitude);
+		return siderealTime;
+	}
+
+	/**
+	 * The Julian Date at a moment, which carries the time of day as its fraction.
+	 */
+	private double getJulianDate(Instant instant)
+	{
+		double milliCount = instant.toEpochMilli();
+		double dayCount = milliCount / MILLIS_PER_DAY;
+		double julianDate = dayCount + JULIAN_AT_EPOCH;
+		return julianDate;
+	}
+
+	/**
+	 * An angle brought back into 0 to 360.
+	 */
+	private double normalise(double degrees)
+	{
+		double remainder = degrees % DEGREES_AROUND;
+		if (remainder < 0.0)
+		{
+			remainder = remainder + DEGREES_AROUND;
+		}
+		return remainder;
+	}
+
+	/**
+	 * A cosine or a sine held inside -1 to 1, where rounding can put it just outside.
+	 */
+	private double clamp(double value)
+	{
+		double clamped = Math.max(-1.0, Math.min(1.0, value));
+		return clamped;
 	}
 
 	/**

@@ -614,12 +614,11 @@ wants a given order loops the enum and calls `get`.
 someone camping, with eyes, a watch, a phone compass and a fist at arm's length, which is about
 10°. A constellation finds nothing unless you already recognise the pattern, and a magnitude is a
 backwards logarithmic scale that says nothing on its own — it is carried as the number and turned
-into words where it is displayed. So the unit of an answer is a moment: a time, a bearing, an
-elevation and a name. Rise and set are that moment at elevation 0, transit is that moment at
-bearing 180, and a moment with no name is a plain time somebody asked about — where is Mars right
-now.
+into words where it is displayed. So the unit of an answer is a moment: a time, a bearing and an
+elevation. Rise and set are that moment at elevation 0, transit is that moment at bearing 180, and
+the moment somebody asked about — where is Mars right now — is one more of them.
 
-**`SkyMomentName` carries its own display name.** A table prints "Rise", not "RISE", and ordering
+**`HorizonsMomentName` carries its own display name.** A table prints "Rise", not "RISE", and ordering
 or titling rows off a `String` would be a text comparison. "Transit" is kept as the word even
 though a reader does not know it, because the bearing printed beside it explains it.
 
@@ -635,16 +634,40 @@ elevation from a position with the place and the time.
 **The order of work is what a thing IS, then what it does.** Step one settles the shape — the
 method signatures of a working class, the member variables of a data class — with methods
 returning null and no accessors written. Step two fills them in, accessors included. Both steps
-are done for `SkyAnalyser`, `SkyBodyDay`, `SkyMoment` and `SkyMomentName`; what is left is the
+are done for `SkyAnalyser`, `SkyBodyDay`, `HorizonsMoment` and `HorizonsMomentName`; what is left is the
 page reading them, which is #48.
 
-**How a crossing is found: sample the day, then refine.** The observer's day is walked every two
-minutes, and the pair of samples that brackets the horizon or due south is read as a straight
-line to the moment it crosses, which is then worked out properly at that time. The first crossing
-of each kind is the one reported. The simple case is what the numbers mean: a body is a point, so
+**How a crossing is found: sample the day, take the nearer sample.** The observer's day is walked
+at `SAMPLE_STEP`, and of the pair of samples that brackets the horizon or due south, the one the
+crossing sits nearer to is the answer. The step is therefore the precision the page states, and it
+is meant to be turned: a minute and a quarter of an hour are the same amount of code, and no
+caller and no comment may assume the value it holds today. The first crossing of each kind is the
+one reported. The simple case is what the numbers mean: a body is a point, so
 there is no refraction, no solar or lunar disc and no parallax, and the directions are ICRF
 against the sidereal time of the day, which in 2026 puts a transit about a minute and a half off
 what an almanac prints.
 
 **Nothing outside `misc/sky` and `misc/external/horizons` constrains these classes.** They replace
 the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them.
+
+## 2026-09-10 — The observer's moment belongs to Horizons
+
+**All the astronomy sits in `external/horizons`.** `HorizonsEphemeris.getMoment(body, instant,
+latitude, longitude)` is a peer of `getPosition`: it reads the position and turns that direction
+onto the observer's horizon, sidereal time and the hour angle being its own business the way the
+rows already were. The two answers that need no observer are the position's own:
+`HorizonsPosition.getSunAngle(sunPosition)` for the angle the chart draws, and
+`getLitFraction(sunPosition)` for the disc, both taken from one position against another. What
+stays in `misc/sky` is the day — which moments are asked for, and the walking that finds them.
+
+**A moment carries epoch seconds, not a date object.** `HorizonsMoment` holds a `long`, a bearing
+and an elevation. A `ZonedDateTime` reaches a browser as an offset with the zone lost, and the
+client can do nothing with it that it cannot do with a number; epoch seconds go over as they are,
+and the browser prints them in its own locale, 12 or 24 hour as that reader has it set. The zone a
+time is shown in belongs to whoever shows it.
+
+**The moments are a map keyed by name, not a list.** `SkyBodyDay` answers
+`Map<HorizonsMomentName, HorizonsMoment>` — an `EnumMap` — so a page asks for the rise by name
+rather than by position, and nothing sorts. A crossing that does not happen on the day is a null
+value: a `get` cannot tell an absent key from a null one, so the put is not guarded. That also
+takes the name off the moment itself, where it was a second copy of the key.

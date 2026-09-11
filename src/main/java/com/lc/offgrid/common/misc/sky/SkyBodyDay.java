@@ -1,18 +1,21 @@
 package com.lc.offgrid.common.misc.sky;
 
-import java.util.List;
+import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
+import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
+
+import java.util.Map;
 
 /**
  * One body's day, as an observer at one place sees it: where to look and when, and what it
  * looks like while it is up.
  *
- * The moments are in time order and stated in the observer's own zone. One that does not
- * happen on the day is not in the list.
+ * Each moment is held under its name, and one that does not happen on the day is a null. The
+ * times are epoch seconds: the zone they are shown in is the reader's business.
  */
 public class SkyBodyDay
 {
-	/** The asked-for moment, the rise, the transit and the set, in time order. */
-	private final List<SkyMoment>	momentList;
+	/** The rise, the transit, the set and the moment that was asked about. */
+	private final Map<HorizonsMomentName, HorizonsMoment>	momentMap;
 
 	/** Distance from the observer, in astronomical units. */
 	private final double	distance;
@@ -26,19 +29,19 @@ public class SkyBodyDay
 	/** How much of the disc is lit, from 0 to 1. */
 	private final double	litFraction;
 
-	public SkyBodyDay(List<SkyMoment> momentList, double distance, Double apparentMagnitude,
-			String constellation, double litFraction)
+	public SkyBodyDay(Map<HorizonsMomentName, HorizonsMoment> momentMap, double distance,
+			Double apparentMagnitude, String constellation, double litFraction)
 	{
-		this.momentList = momentList;
+		this.momentMap = momentMap;
 		this.distance = distance;
 		this.apparentMagnitude = apparentMagnitude;
 		this.constellation = constellation;
 		this.litFraction = litFraction;
 	}
 
-	public List<SkyMoment> getMomentList()
+	public Map<HorizonsMomentName, HorizonsMoment> getMomentMap()
 	{
-		return momentList;
+		return momentMap;
 	}
 
 	public double getDistance()

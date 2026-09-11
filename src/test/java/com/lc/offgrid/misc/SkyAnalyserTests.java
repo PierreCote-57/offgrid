@@ -1,0 +1,222 @@
+package com.lc.offgrid.misc;
+
+import com.lc.offgrid.AbstractTests;
+import com.lc.offgrid.OffgridTestApplication;
+import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
+import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
+import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
+import com.lc.offgrid.common.misc.sky.SkyAnalyser;
+import com.lc.offgrid.common.misc.sky.SkyBodyDay;
+import com.lc.offgrid.webapp.spring.site.OffgridUtil;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * What the sky page asks `SkyAnalyser` for, at one fixed place on one fixed day, so a run six
+ * months from now answers what this run answers.
+ *
+ * The day is read from the ephemeris files under {@code folder.local}, and those cover the
+ * years that have been fetched.
+ */
+@SpringBootTest(classes = OffgridTestApplication.class)
+@ActiveProfiles("local")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class SkyAnalyserTests extends AbstractTests
+{
+	/** The observer: the 50th parallel marker in Campbell River. */
+	private static final ZoneId ZONE_ROOT = ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE);
+
+	/**
+	 * How far a crossing may sit from the value it crosses. The answer is the sample nearer to
+	 * the crossing, so the gap is the body's own movement over half a sample step: a body near
+	 * the zenith swings through its bearing faster than it climbs.
+	 */
+	private static final double ELEVATION_TOLERANCE = 1.0;
+	private static final double BEARING_TOLERANCE = 5.0;
+
+	/** The whole circle, which every angle is stated inside. */
+	private static final double DEGREES_AROUND = 360.0;
+
+	/** How a moment is written in a source, which is the observer's own clock. */
+	private static final DateTimeFormatter TEXT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+	/** What is written where a body has no such moment on the day. */
+	private static final String NO_MOMENT = "does not happen on the day";
+
+	/** Where the ephemeris files are read from, which the profile states. */
+	@Value("${folder.local}")
+	private String dataRootFolder;
+
+	public String getDataRootFolder()
+	{
+		return dataRootFolder;
+	}
+
+	/**
+	 * A moment written as the observer's clock reads it, which is how a source states one.
+	 */
+	private static ZonedDateTime makeZDT(String text)
+	{
+		LocalDateTime localDateTime = LocalDateTime.parse(text, TEXT_FORMAT);
+		ZonedDateTime dateTime = localDateTime.atZone(ZONE_ROOT);
+		return dateTime;
+	}
+
+	/**
+	 * The moments the Sun angles are asked for, each a fixed one: a day the files on disk cover,
+	 * so a run six months from now asks what this run asks.
+	 */
+	public static Object[][] SunAngleSource()
+	{
+		return new Object[][] {
+				new Object[] {makeZDT("2026-09-14 12:00")},
+		};
+	}
+
+	/**
+	 * The moments a body's day is asked for, fixed the same way.
+	 */
+	public static Object[][] BodyDaySource()
+	{
+		return new Object[][] {
+				new Object[] {makeZDT("2026-09-14 12:00")},
+		};
+	}
+
+	@ParameterizedTest
+	@MethodSource("SunAngleSource")
+	public void testSunAngleMap(ZonedDateTime dateTime) throws Exception
+	{
+		SkyAnalyser analyser = makeAnalyser(dateTime);
+		Map<HorizonsBody, Double> angleMap = analyser.getSunAngleMap();
+
+		int bodyCount = HorizonsBody.values().length;
+		assertEquals(bodyCount, angleMap.size(), "getSunAngleMap() answered a body short");
+
+		for (HorizonsBody body : HorizonsBody.values())
+		{
+			Double angle = angleMap.get(body);
+			String missing = String.format("getSunAngleMap() has no angle for %s", body);
+			assertNotNull(angle, missing);
+
+			getLogger().info("%-8s is %6.2f° around the ecliptic from the Sun", body, angle);
+
+			boolean inCircle = angle >= 0.0 && angle < DEGREES_AROUND;
+			String outside = String.format("getSunAngle(%s) answered %s, which is outside 0 to 360",
+					body, angle);
+			assertTrue(inCircle, outside);
+		}
+	}
+
+	@ParameterizedTest
+	@MethodSource("BodyDaySource")
+	public void testSkyBodyDayMap(ZonedDateTime dateTime) throws Exception
+	{
+		SkyAnalyser analyser = makeAnalyser(dateTime);
+		Map<HorizonsBody, SkyBodyDay> bodyDayMap = analyser.getSkyBodyDayMap();
+
+		int bodyCount = HorizonsBody.values().length;
+		assertEquals(bodyCount, bodyDayMap.size(), "getSkyBodyDayMap() answered a body short");
+
+		for (HorizonsBody body : HorizonsBody.values())
+		{
+			SkyBodyDay bodyDay = bodyDayMap.get(body);
+			String missing = String.format("getSkyBodyDayMap() has no day for %s", body);
+			assertNotNull(bodyDay, missing);
+
+			logBodyDay(body, bodyDay);
+			checkBodyDay(body, bodyDay);
+		}
+	}
+
+	/**
+	 * What the body looks like, then one line for each of the day's moments.
+	 */
+	private void logBodyDay(HorizonsBody body, SkyBodyDay bodyDay)
+	{
+		getLogger().info("%-8s %.3f AU, %s, %.0f%% lit", body, bodyDay.getDistance(),
+				bodyDay.getConstellation(), bodyDay.getLitFraction() * 100.0);
+
+		for (Map.Entry<HorizonsMomentName, HorizonsMoment> entry :bodyDay.getMomentMap().entrySet())
+		{
+			HorizonsMomentName name = entry.getKey();
+			HorizonsMoment moment = entry.getValue();
+			String momentText = null == moment ? NO_MOMENT : moment.toString();
+			getLogger().info("\t%-8s %s", name.getDisplayName(), momentText);
+		}
+	}
+
+	/**
+	 * What holds for every body on every day: the asked-for moment is always there, a crossing
+	 * that was found sits on the value it crosses, and the body is somewhere with some of it lit.
+	 */
+	private void checkBodyDay(HorizonsBody body, SkyBodyDay bodyDay)
+	{
+		Map<HorizonsMomentName, HorizonsMoment> momentMap = bodyDay.getMomentMap();
+
+		HorizonsMoment now = momentMap.get(HorizonsMomentName.NOW);
+		String noNow = String.format("%s has no NOW moment, which every body has", body);
+		assertNotNull(now, noNow);
+
+		HorizonsMoment rise = momentMap.get(HorizonsMomentName.RISE);
+		checkCrossing(body, HorizonsMomentName.RISE, rise, 0.0, ELEVATION_TOLERANCE, true);
+
+		HorizonsMoment set = momentMap.get(HorizonsMomentName.SET);
+		checkCrossing(body, HorizonsMomentName.SET, set, 0.0, ELEVATION_TOLERANCE, true);
+
+		HorizonsMoment transit = momentMap.get(HorizonsMomentName.TRANSIT);
+		checkCrossing(body, HorizonsMomentName.TRANSIT, transit, 180.0, BEARING_TOLERANCE, false);
+
+		double distance = bodyDay.getDistance();
+		String noDistance = String.format("%s answered a distance of %s AU", body, distance);
+		assertTrue(distance > 0.0, noDistance);
+
+		double litFraction = bodyDay.getLitFraction();
+		boolean litInRange = litFraction >= 0.0 && litFraction <= 1.0;
+		String badLit = String.format("%s answered a lit fraction of %s", body, litFraction);
+		assertTrue(litInRange, badLit);
+	}
+
+	/**
+	 * A crossing that was found sits within a sample step's movement of the value it crosses. One
+	 * that does not happen on the day is null, and there is nothing to check.
+	 */
+	private void checkCrossing(HorizonsBody body, HorizonsMomentName name, HorizonsMoment moment,
+			double targetValue, double tolerance, boolean onElevation)
+	{
+		if (null == moment)
+		{
+			return;
+		}
+
+		double value = onElevation ? moment.getElevation() : moment.getBearing();
+		double gap = Math.abs(targetValue - value);
+		String tooFar = String.format("%s %s is at %s, which is %s from %s",
+				body, name, value, gap, targetValue);
+		assertTrue(gap <= tolerance, tooFar);
+	}
+
+	/**
+	 * The analyser the tests ask, built for one moment at the fixed place.
+	 */
+	private SkyAnalyser makeAnalyser(ZonedDateTime dateTime)
+	{
+		SkyAnalyser analyser = new SkyAnalyser(getDataRootFolder(), dateTime,
+				OffgridUtil.DEFAULT_LATITUDE, OffgridUtil.DEFAULT_LONGITUDE);
+		return analyser;
+	}
+}

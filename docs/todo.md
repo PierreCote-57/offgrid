@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 59**
+**next id: 61**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -124,3 +124,13 @@ something invisible: a keyboard user tabs to the button, then to nothing they ca
 processor parses its three parameters and builds nothing. `SkyAnalyser` is what the answer
 would draw on. Settled already, in `docs/decisions/apis.md`: `SkyBodyDay` does not go on the
 wire, and a moment travels as epoch milliseconds beside the zone id stated once.
+
+#59 Decide where `normalise` and `clamp` live. `HorizonsEphemeris` and `SkyAnalyser` now each
+hold a private copy: the ephemeris needs them for the hour angle and the elevation, the analyser
+for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated because nothing in
+`com.lc.basics.tools.math` offers them and `external` may not be reached into for utilities.
+
+#60 Apply the rise and set offset for the Sun and the Moon. `SkyAnalyser` crosses
+`HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
+and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
+test cannot assert an almanac time for a rise or a set — transit is unaffected.
