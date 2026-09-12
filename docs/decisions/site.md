@@ -501,7 +501,7 @@ Thymeleaf renders a template on one thread in document order, so two calls at tw
 safe: the first is fully written before the second replaces the map.
 
 **`SkyData` holds only what both renderings share** — the date and the body list.
-`SkyDataChart` adds the canvas and the caption, `SkyDataTable` the observer. The split exists
+`SkyDataChart` adds the canvas, `SkyDataTable` the observer. The split exists
 because one object serving both meant the table's template saw the drawing and the SVG's saw
 the observer.
 
@@ -585,3 +585,23 @@ is, not what it is; `og-is-active` reads as a thing.
 
 The chart SVG keeps its own `ts` and `c-*`. It is served as its own document, so nothing on
 the page can reach its names and they collide with nothing.
+
+## 2026-09-11 — The chart's width is one number, and the caption is page text
+
+**The width is stated once, in the page's `chart(width)` call.** It goes two places from
+there: the query string of the `/sky/chart.svg` request, and the `width` and `height`
+attributes of the `img` itself, which is what makes the image exactly that size. `site.css`
+states no length for it at all — `flex: 0 0 430px` was the same number written twice, and
+either it was kept in step by hand or the browser scaled the drawing to whatever the CSS said.
+A page now places the chart at any width and changes nothing else, which is what the 430
+beside the table and the 1024 in the `<details>` already wanted.
+
+**The drawing is square.** `SkyDataChart.getHeight()` answers the width, and the band that
+used to sit under it — `CAPTION_STRIP`, `CAPTION_BASELINE`, `captionX`, `captionY` — is gone,
+along with the caption `<text>` and the `caption` on the chart. A square is what lets one
+number set both attributes.
+
+**The caption is a `<p>` under the image, on the model as `skyChartCaption`.** Inside the SVG
+it scaled with the drawing, so the same words read at a different size in the 430 chart and the
+1024 one; as page text it reads at the page's size in both, and it can be selected. It is
+`OffgridWebProcessor`'s own string either way.

@@ -13,18 +13,8 @@ import java.util.Map;
  */
 public class SkyDataChart extends SkyData
 {
-	private String						caption;
 	private int							width;
 	private Map<String, BodyPosition>	positionMap;
-
-	public String getCaption()
-	{
-		return caption;
-	}
-	public void setCaption(String caption)
-	{
-		this.caption = caption;
-	}
 
 	public int getWidth()
 	{
@@ -32,24 +22,13 @@ public class SkyDataChart extends SkyData
 	}
 
 	/**
-	 * The drawing is square, so the height is the width plus the band the caption sits in.
+	 * The drawing is square: it is exactly as tall as the width it was asked for. The caption
+	 * is page text under the image, so nothing inside the drawing is reserved for it.
 	 */
 	public double getHeight()
 	{
-		double height = getWidth() + SkyDataMaker.captionStrip();
+		double height = getWidth();
 		return height;
-	}
-
-	public double getCaptionX()
-	{
-		double captionX = getWidth() / 2.0;
-		return captionX;
-	}
-
-	public double getCaptionY()
-	{
-		double captionY = SkyDataMaker.captionBaseline(getWidth());
-		return captionY;
 	}
 
 	/**

@@ -1305,10 +1305,11 @@ body:has(.og-chat-page) {
 }
 
 /* ---- the sky page --------------------------------------------------------------------
-   Two columns: the chart is drawn at 430 and is given exactly that, and the table states its
+   Two columns: the chart is as wide as the page asked it to be drawn, and the table states its
    own width on its columns. Neither shrinks — a table narrower than its columns would fold
    every row onto several lines — so on a narrow screen the page scrolls sideways. Below about
-   800 the two stack. */
+   800 the two stack. The chart's width is stated in the page's chart(width) call and never
+   here, so no length below is the chart's. */
 .og-sky-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -1316,15 +1317,24 @@ body:has(.og-chat-page) {
 	align-items: flex-start;
 }
 
-.og-sky-row .og-sky-chart { flex: 0 0 430px; }
+.og-sky-row .og-sky-chart { flex: 0 0 auto; }
 
 .og-sky-row .og-sky-table { flex: 0 0 auto; }
 
-/* The chart arrives as its own document, so its colours are inside it, not here. */
+/* The chart arrives as its own document, so its colours are inside it, not here. Its width
+   and height are on the img itself, which is what makes it exactly the size the page asked
+   for: a length here would either fight that or have to be kept in step with it. */
 .og-sky-chart img,
 .og-sky-wide img {
 	display: block;
-	width: 100%;
+}
+
+/* The caption under the chart, centred on it the way the observer line is centred under the
+   table. It is page text now rather than a line drawn inside the SVG, so it reads at the
+   page's size whatever width the chart was drawn at. */
+.og-sky-caption {
+	margin: 8px 0 0;
+	text-align: center;
 }
 
 /* The date is the page's control, and it says so: the surface the browser page's filters

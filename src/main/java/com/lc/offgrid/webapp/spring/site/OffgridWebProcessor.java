@@ -157,6 +157,9 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		SkyDataTable skyTable = makeSkyTable(latitude, longitude, date);
 		model.addAttribute("skyTable", skyTable);
 
+		// The caption sits under the chart as page text, so the page is handed the words.
+		model.addAttribute("skyChartCaption", SKY_CHART_CAPTION);
+
 		// The picker states the ends it may not go past, so the browser stops there itself.
 		model.addAttribute("skyFirstDate", OffgridUtil.SKY_FIRST_DATE);
 		model.addAttribute("skyLastDate", OffgridUtil.SKY_LAST_DATE);
@@ -242,7 +245,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		SkyDataChart skyChart = new SkyDataChart();
 		skyChart.setDate(date);
 		skyChart.setBodyList(bodyList);
-		skyChart.setCaption(SKY_CHART_CAPTION);
 
 		return skyChart;
 	}

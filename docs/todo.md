@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 61**
+**next id: 62**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -128,3 +128,16 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 `HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
+
+#61 Carry in `/rest/sky/data` what the browser cannot work out for itself. The answer already
+gives each planet's heliocentric longitude as its `sunAngle`, and rise, transit and set as epoch
+seconds, which is most of what a browser-drawn chart and table need. Three things are not there:
+
+ - `orbitPeriod`, the table's last column. It is a fact about the body, not a drawing constant:
+   the fractions, the colours and the labels move to the JS with the chart, and the period does
+   not belong with them.
+ - Earth. `HorizonsBody` has no `EARTH`, the ephemeris being geocentric, so neither map carries
+   it — and the chart places Earth's dot and centres the Moon's circle on it.
+ - The Moon's angle around Earth. `HorizonsPosition.getSunAngle` answers the Sun to Moon
+   direction, which is Earth's own heliocentric longitude to within 0.15°, rather than the angle
+   `SkyDataMaker` draws the Moon at today through `Ephemeris.getMoonLongitude`.

@@ -6,6 +6,7 @@ import com.lc.offgrid.webapp.spring.tools.RestBaseAnswer;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -22,6 +23,7 @@ public class SkyInfoRestAnswer extends RestBaseAnswer
 	private String		dateTimeText;
 	private double		latitude;
 	private double		longitude;
+	private Map<HorizonsBody, SkyBodyInfo>	bodyMap;
 	private Map<HorizonsBody, Double>		sunAngleMap;
 	private Map<HorizonsBody, SkyBodyDay>	skyBodyDayMap;
 
@@ -32,6 +34,30 @@ public class SkyInfoRestAnswer extends RestBaseAnswer
 		this.dateTimeText = dateTime.toString();
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.bodyMap = makeBodyMap();
+	}
+
+	/**
+	 * What every body is called and how long it takes to go around, keyed the way the other two
+	 * maps are keyed. Nothing in it depends on the request, so it is built here rather than
+	 * handed in.
+	 */
+	private Map<HorizonsBody, SkyBodyInfo> makeBodyMap()
+	{
+		Map<HorizonsBody, SkyBodyInfo> infoMap = new EnumMap<>(HorizonsBody.class);
+
+		for (HorizonsBody body : HorizonsBody.values())
+		{
+			SkyBodyInfo bodyInfo = new SkyBodyInfo(body.getDisplayName(), body.getPeriodDay());
+			infoMap.put(body, bodyInfo);
+		}
+
+		return infoMap;
+	}
+
+	public Map<HorizonsBody, SkyBodyInfo> getBodyMap()
+	{
+		return bodyMap;
 	}
 
 	public long getEpochSecond()

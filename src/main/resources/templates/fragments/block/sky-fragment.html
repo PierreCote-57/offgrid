@@ -36,10 +36,20 @@
 	The chart on the page: an img pointing at the drawing, which the browser fetches as its
 	own request. That request carries the date, or it would answer today beside another day's
 	table.
+
+	The width is stated here and nowhere else. It goes to the request, and to the img's own
+	width and height, which is what makes the image exactly that size; the drawing is square,
+	so the two are the same number. A page places the chart at whatever width it wants and
+	changes nothing else.
+
+	The caption is page text under the image rather than a line inside the drawing, so it reads
+	at the page's size whatever the chart is drawn at.
 -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)" class="og-sky-chart">
 	<img th:src="@{/sky/chart.svg(width=${width}, date=${skyTable.date})}" src=""
+		 th:width="${width}" th:height="${width}"
 		 alt="The Sun, the eight planets and the Moon, each on its orbit, seen from above">
+	<p class="og-sky-caption" th:text="${skyChartCaption}">Not to scale</p>
 </div>
 
 <!--
@@ -257,7 +267,4 @@
 	<text th:each="body : ${skyChart.bodyList}" th:if="${body.labelText != null}" class="ts"
 		  th:x="${positionMap[body.name].labelX}" th:y="${positionMap[body.name].labelY}"
 		  th:attr="text-anchor=${positionMap[body.name].labelAnchor}" th:text="${body.labelText}"></text>
-
-	<text class="ts" th:x="${skyChart.captionX}" th:y="${skyChart.captionY}"
-		  text-anchor="middle" th:text="${skyChart.caption}"></text>
 </svg>

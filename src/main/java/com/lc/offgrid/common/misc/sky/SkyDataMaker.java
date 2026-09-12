@@ -31,10 +31,6 @@ public class SkyDataMaker
 	 */
 	private static final double MARGIN = 25;
 
-	/** The band under the drawing that holds the caption, and where its baseline sits in it. */
-	private static final double CAPTION_STRIP = 25;
-	private static final double CAPTION_BASELINE = 15;
-
 	/**
 	 * Orbit and dot sizes as fractions. An orbit is a fraction of the width available to the
 	 * drawing, so the outermost is 0.5 and fills it; a dot is a fraction of the same width.
@@ -265,20 +261,6 @@ public class SkyDataMaker
 	}
 
 	/**
-	 * The caption's baseline, and the floor a label may not cross.
-	 */
-	public static double captionBaseline(double width)
-	{
-		double baseline = width + CAPTION_BASELINE;
-		return baseline;
-	}
-
-	public static double captionStrip()
-	{
-		return CAPTION_STRIP;
-	}
-
-	/**
 	 * Place every planet's label. Earth and the Moon take one label between them, because two
 	 * labels ten pixels apart collide wherever each is put, and the pair's effective radius is
 	 * the Moon's circle rather than Earth's dot.
@@ -377,7 +359,7 @@ public class SkyDataMaker
 
 	private boolean insideViewBox(LabelBox candidate, double width, double height)
 	{
-		double floor = height - CAPTION_STRIP - LABEL_LINE_HEIGHT;
+		double floor = height - LABEL_LINE_HEIGHT;
 		boolean inside = candidate.left >= VIEW_BOX_MARGIN
 				&& candidate.right <= width - VIEW_BOX_MARGIN
 				&& candidate.top >= VIEW_BOX_MARGIN
