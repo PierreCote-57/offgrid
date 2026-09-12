@@ -6,6 +6,7 @@ import com.lc.offgrid.common.misc.external.horizons.HorizonsEphemeris;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
 import com.lc.offgrid.common.misc.external.horizons.HorizonsPosition;
+import com.lc.offgrid.common.pojo.part.SkyBody;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -41,6 +42,7 @@ public class SkyAnalyser
 	private final HorizonsEphemeris	ephemeris;
 	private final Instant			instant;
 	private final HorizonsPosition	sunPosition;
+	private final HorizonsPosition	earthPosition;
 
 	/**
 	 * Reads the ephemeris for the local date the moment falls on, which is the day the caller is
@@ -71,6 +73,7 @@ public class SkyAnalyser
 
 		this.instant = dateTime.toInstant();
 		this.sunPosition = ephemeris.getPosition(HorizonsBody.SUN, instant);
+		this.earthPosition = new HorizonsPosition(getInstant(), 0.0, 0.0, 0.0, null, null);
 	}
 
 	public ZonedDateTime getDateTime()
@@ -98,27 +101,34 @@ public class SkyAnalyser
 		return instant;
 	}
 
-	/**
-	 * Where the Sun is at that moment, which every angle and every lit fraction is measured
-	 * against.
-	 */
 	public HorizonsPosition getSunPosition()
 	{
 		return sunPosition;
 	}
+	public HorizonsPosition getEarthPosition()
+	{
+		return earthPosition;
+	}
 
 	/**
-	 * The direction from the Sun to a body, in degrees from 0 to 360. It is the vector from the
-	 * Sun's position to the body's, both of them seen from the Earth's centre.
+	 * The angle from a body's parent to the body, in degrees from 0 to 360, 0 being 3 o'clock.
 	 */
 	public double getSunAngle(HorizonsBody body)
 	{
-		HorizonsPosition bodyPosition = getEphemeris().getPosition(body, getInstant());
-
-		double angle = bodyPosition.getSunAngle(getSunPosition());
+		// The only body without ephemeris is Earth
+		HorizonsPosition bodyPosition = body.hasEphemeris()
+				? getEphemeris().getPosition(body, getInstant())
+				: getEarthPosition();
+		HorizonsPosition parentPosition = HorizonsBody.EARTH.equals(body.getParent())
+				? getEarthPosition()
+				: getSunPosition();
+		double angle = bodyPosition.getSunAngle(parentPosition);
 		return angle;
 	}
 
+	/**
+	 * Every body's angle from its parent.
+	 */
 	public Map<HorizonsBody, Double> getSunAngleMap()
 	{
 		Map<HorizonsBody, Double> angleMap = new EnumMap<>(HorizonsBody.class);
@@ -152,12 +162,21 @@ public class SkyAnalyser
 		return bodyDay;
 	}
 
+	/**
+	 * Every body's day, in the order the enum states them. Only the bodies there is an ephemeris
+	 * to read are in it, which is what the table's rows are built from.
+	 */
 	public Map<HorizonsBody, SkyBodyDay> getSkyBodyDayMap()
 	{
 		Map<HorizonsBody, SkyBodyDay> bodyDayMap = new EnumMap<>(HorizonsBody.class);
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
+			if (!body.hasEphemeris())
+			{
+				continue;
+			}
+
 			SkyBodyDay bodyDay = getSkyBodyDay(body);
 			bodyDayMap.put(body, bodyDay);
 		}

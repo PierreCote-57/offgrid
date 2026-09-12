@@ -104,11 +104,16 @@ public class SkyAnalyserTests extends AbstractTests
 		SkyAnalyser analyser = makeAnalyser(dateTime);
 		Map<HorizonsBody, Double> angleMap = analyser.getSunAngleMap();
 
-		int bodyCount = HorizonsBody.values().length;
+		int bodyCount = ephemerisBodyCount();
 		assertEquals(bodyCount, angleMap.size(), "getSunAngleMap() answered a body short");
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
+			if (!body.hasEphemeris())
+			{
+				continue;
+			}
+
 			Double angle = angleMap.get(body);
 			String missing = String.format("getSunAngleMap() has no angle for %s", body);
 			assertNotNull(angle, missing);
@@ -129,11 +134,16 @@ public class SkyAnalyserTests extends AbstractTests
 		SkyAnalyser analyser = makeAnalyser(dateTime);
 		Map<HorizonsBody, SkyBodyDay> bodyDayMap = analyser.getSkyBodyDayMap();
 
-		int bodyCount = HorizonsBody.values().length;
+		int bodyCount = ephemerisBodyCount();
 		assertEquals(bodyCount, bodyDayMap.size(), "getSkyBodyDayMap() answered a body short");
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
+			if (!body.hasEphemeris())
+			{
+				continue;
+			}
+
 			SkyBodyDay bodyDay = bodyDayMap.get(body);
 			String missing = String.format("getSkyBodyDayMap() has no day for %s", body);
 			assertNotNull(bodyDay, missing);
@@ -141,6 +151,24 @@ public class SkyAnalyserTests extends AbstractTests
 			logBodyDay(body, bodyDay);
 			checkBodyDay(body, bodyDay);
 		}
+	}
+
+	/**
+	 * How many bodies the maps are expected to hold: the ones there is an ephemeris to read.
+	 */
+	private static int ephemerisBodyCount()
+	{
+		int bodyCount = 0;
+
+		for (HorizonsBody body : HorizonsBody.values())
+		{
+			if (body.hasEphemeris())
+			{
+				bodyCount++;
+			}
+		}
+
+		return bodyCount;
 	}
 
 	/**

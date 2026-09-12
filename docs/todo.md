@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 63**
+**next id: 64**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -128,25 +128,10 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
 
-#61 Carry in `/rest/sky/data` what the browser cannot work out for itself. The answer already
-gives each planet's heliocentric longitude as its `sunAngle`, and rise, transit and set as epoch
-seconds, which is most of what a browser-drawn chart and table need. Three things are not there:
-
- - `orbitPeriod`, the table's last column. It is a fact about the body, not a drawing constant:
-   the fractions, the colours and the labels move to the JS with the chart, and the period does
-   not belong with them.
- - Earth. `HorizonsBody` has no `EARTH`, the ephemeris being geocentric, so neither map carries
-   it — and the chart places Earth's dot and centres the Moon's circle on it.
- - The Moon's angle around Earth. `HorizonsPosition.getSunAngle` answers the Sun to Moon
-   direction, which is Earth's own heliocentric longitude to within 0.15°, rather than the angle
-   `SkyDataMaker` draws the Moon at today through `Ephemeris.getMoonLongitude`.
-
-#62 Make the sky date picker reach the table. It is still a GET form that reloads `/info/sky`
-with `date`, `latitude` and `longitude`, and the server renders the page around it — but the
-table is now drawn from `/rest/sky/data`, which `onPageLoad` calls with today. Picking a day
-therefore reloads the page and changes nothing in the table.
-
-`loadSkyData(dateTime)` takes the moment and is on `window.OG` for exactly this. What has to be
-decided first is which second of a picked day the call states: rise, transit and set are the
-same whichever it is, and the NOW moment, the sun angles and the lit fractions are not.
-
+#63 Remove the server-side sky chart, now that the browser draws it. Nothing on a page points
+at any of it: `/sky/chart.svg` and its controller mapping, `processSkyChart` and `makeChartImage`
+in `OffgridWebProcessor`, the `drawing` fragment in `sky-fragment.html`, and `SkyDataChart`,
+`SkyDataMaker`, `SkyBody` and `BodyPosition` behind them. Two more things go with it: the
+`.og-sky-chart img, .og-sky-wide img` rule in `site.css`, which matches nothing now, and the
+decisions in `docs/decisions/site.md` that state the chart is an image at its own URL with its
+width in that request's query string and its palette inside the SVG document.

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2026 LogicielCote.COM All rights reserved.
  *
- * The sky page in the browser. The table and the observer line under it are built here from
- * what /rest/sky/data answers; the chart still arrives drawn from the server.
+ * The sky page in the browser. The table, the observer line under it and the chart are all
+ * built here from what /rest/sky/data answers.
  *
  * Every page loads this file, so it finds its own blocks at load and asks the server for
  * nothing when there are none. A page may hold more than one chart — sky.html draws two —
@@ -13,6 +13,7 @@
 
 	var TABLE_SELECTOR = ".og-sky-table";
 	var CHART_SELECTOR = ".og-sky-chart";
+	var DRAWING_SELECTOR = ".og-sky-drawing";
 	var OBSERVER_SELECTOR = ".og-sky-observer";
 	var PLACE_SELECTOR = ".og-sky-place";
 	var DASH_SELECTOR = ".og-sky-place-dash";
@@ -61,6 +62,7 @@
 	var WIDE_COLUMN_LIST = [
 	    // 1024 pixels available
 		{ heading: "Body",                width: 70, value: "bodyMap.name" },
+		{ heading: "Parent",        width: 50, value: "bodyMap.parent" },
 		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
 		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
 		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
@@ -82,6 +84,64 @@
 		periodDay: periodText,
 		orbitRadius: distanceText
 	};
+
+	/*
+	 * The chart's palette. The drawing is built here rather than served as its own document, so
+	 * the colours are here too: the rocky planets, the gas giants, the ice giants, the Sun, the
+	 * Moon, the line an orbit is drawn with, and the label text.
+	 */
+	var ROCK_COLOUR = "#c8553d";
+	var GAS_COLOUR = "#c08a2e";
+	var ICE_COLOUR = "#2f7e76";
+	var SUN_COLOUR = "#f5c400";
+	var MOON_COLOUR = "#808080";
+	var ORBIT_COLOUR = "#8c877d";
+	var LABEL_COLOUR = "#243027";
+
+	/*
+	 * What the chart draws for one body: how far out its orbit sits, how big its dot is, and what
+	 * colour the dot takes. A body the answer names and this does not is not drawn.
+	 *
+	 * The two lengths are the ones the chart was first drawn at, and they become fractions of the
+	 * width below, so changing one here keeps its proportion at any size. The spacing is
+	 * deliberately not to scale: to scale, the four inner planets sit on top of each other.
+	 */
+	var CHART_BODY_MAP = {
+		SUN:     { orbitRadius:   0, dotRadius: 9.0, colour: SUN_COLOUR },
+		EARTH:   { orbitRadius:  60, dotRadius: 4.5, colour: ROCK_COLOUR },
+		MOON:    { orbitRadius:  10, dotRadius: 2.5, colour: MOON_COLOUR },
+		MERCURY: { orbitRadius:  20, dotRadius: 4.5, colour: ROCK_COLOUR },
+		VENUS:   { orbitRadius:  40, dotRadius: 4.5, colour: ROCK_COLOUR },
+		MARS:    { orbitRadius:  80, dotRadius: 4.5, colour: ROCK_COLOUR },
+		JUPITER: { orbitRadius: 110, dotRadius: 5.5, colour: GAS_COLOUR },
+		SATURN:  { orbitRadius: 130, dotRadius: 5.5, colour: GAS_COLOUR },
+		URANUS:  { orbitRadius: 150, dotRadius: 5.0, colour: ICE_COLOUR },
+		NEPTUNE: { orbitRadius: 170, dotRadius: 5.0, colour: ICE_COLOUR }
+	};
+
+	// What the two lengths above are fractions of, and the space kept clear outside the outermost
+	// orbit. The margin holds half a label, so it is a text measurement and does not scale.
+	var ORBIT_BASE = 340;
+	var DOT_BASE = 380;
+	var CHART_MARGIN = 25;
+
+	// The label's font, and how far its baseline sits above the dot it names. Both are text
+	// measurements: the font stays 12px whatever the canvas.
+	var LABEL_FONT_SIZE = 12;
+	var LABEL_FONT_FAMILY = "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif";
+	var LABEL_GAP = 5;
+
+	// The caption's size, and how far its baseline sits above the bottom edge: the tail of a "g"
+	// lands on the edge itself.
+	var CAPTION_FONT_SIZE = 13;
+	var CAPTION_DESCENT = 3;
+
+	// What a reader who cannot see the chart is told it is.
+	var CHART_LABEL = "The Sun, the eight planets and the Moon, each on its orbit, seen from above";
+
+	// The namespace an SVG element is created in. createElement() makes an HTML element of the
+	// same name, which the browser lays out but never draws.
+	var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
 	// The page's own blocks, found once at load and read by every function after: nothing here
 	// takes them as a parameter, and nothing outside this file sees them.
@@ -466,6 +526,184 @@
 		});
 	}
 
+	// ---- the chart ------------------------------------------------------------
+
+	// One SVG element, with the attributes it is drawn by.
+	function makeSvgElement(name, attributeMap) {
+		var element = document.createElementNS(SVG_NAMESPACE, name);
+
+		Object.keys(attributeMap).forEach(function (attributeName) {
+			element.setAttribute(attributeName, attributeMap[attributeName]);
+		});
+
+		return element;
+	}
+
+	// The width this block draws at. The page states it, on the block itself.
+	function chartWidthOf(chartElement) {
+		var width = Number(chartElement.dataset.width);
+		return width;
+	}
+
+	/*
+	 * Where every body lands on a canvas of one width, keyed by body: the dot, the radius of the
+	 * circle it travels on, and the size and colour of the dot itself.
+	 *
+	 * The answer names the bodies in the order the server states them, parents before children,
+	 * which is what lets a child's circle be centred on a parent already placed. A body whose
+	 * parent is not there is drawn around the middle, where the Sun sits.
+	 */
+	function placeBodyMap(width, skyData) {
+		var widthOrbit = width - 2 * CHART_MARGIN;
+		var centre = width / 2;
+		var placeMap = {};
+
+		Object.keys(skyData.bodyMap).forEach(function (bodyId) {
+			var chartBody = CHART_BODY_MAP[bodyId];
+			if (chartBody === undefined) {
+				logError("placeBodyMap() has no chart entry for '" + bodyId + "'; it is not drawn.");
+				return;
+			}
+
+			var parentId = skyData.bodyMap[bodyId].parent;
+			var parentPlace = placeMap[parentId];
+			var aroundX = (parentPlace === undefined) ? centre : parentPlace.dotX;
+			var aroundY = (parentPlace === undefined) ? centre : parentPlace.dotY;
+
+			var orbitRadius = (chartBody.orbitRadius / ORBIT_BASE) * widthOrbit;
+			var dotRadius = (chartBody.dotRadius / DOT_BASE) * widthOrbit;
+			var radians = skyData.sunAngleMap[bodyId] * Math.PI / 180;
+			var dotX = aroundX + orbitRadius * Math.cos(radians);
+			var dotY = aroundY - orbitRadius * Math.sin(radians);
+
+			placeMap[bodyId] = {
+				dotX: dotX,
+				dotY: dotY,
+				orbitRadius: orbitRadius,
+				dotRadius: dotRadius,
+				colour: chartBody.colour
+			};
+		});
+
+		return placeMap;
+	}
+
+	/*
+	 * The circle a body travels on, centred on what it goes around. A body with nothing to go
+	 * around is the middle of the chart and travels on no circle, so it draws none.
+	 */
+	function drawOrbitList(svgElement, placeMap, skyData) {
+		Object.keys(placeMap).forEach(function (bodyId) {
+			var parentId = skyData.bodyMap[bodyId].parent;
+			var parentPlace = placeMap[parentId];
+			if (parentPlace === undefined) {
+				return;
+			}
+
+			var place = placeMap[bodyId];
+			var orbitElement = makeSvgElement("circle", {
+				cx: parentPlace.dotX,
+				cy: parentPlace.dotY,
+				r: place.orbitRadius,
+				fill: "none",
+				stroke: ORBIT_COLOUR,
+				"stroke-width": 0.5
+			});
+			svgElement.appendChild(orbitElement);
+		});
+	}
+
+	// The body itself, at the place it was put.
+	function drawDotList(svgElement, placeMap) {
+		Object.keys(placeMap).forEach(function (bodyId) {
+			var place = placeMap[bodyId];
+			var dotElement = makeSvgElement("circle", {
+				cx: place.dotX,
+				cy: place.dotY,
+				r: place.dotRadius,
+				fill: place.colour
+			});
+			svgElement.appendChild(dotElement);
+		});
+	}
+
+	/*
+	 * Every body's name, centred above its dot. Two bodies standing together take two labels that
+	 * overlap, which is the price of a label always being in the one place the reader looks.
+	 */
+	function drawLabelList(svgElement, placeMap, skyData) {
+		Object.keys(placeMap).forEach(function (bodyId) {
+			var place = placeMap[bodyId];
+			var baselineY = place.dotY - (place.dotRadius + LABEL_GAP);
+
+			var labelElement = makeSvgElement("text", {
+				x: place.dotX,
+				y: baselineY,
+				"text-anchor": "middle",
+				"font-size": LABEL_FONT_SIZE,
+				"font-family": LABEL_FONT_FAMILY,
+				fill: LABEL_COLOUR
+			});
+			labelElement.textContent = skyData.bodyMap[bodyId].name;
+			svgElement.appendChild(labelElement);
+		});
+	}
+
+	/*
+	 * The caption, centred on the drawing's bottom edge: it sits in the band the margin keeps
+	 * clear outside the outermost orbit, as low in it as a descender allows.
+	 */
+	function drawCaption(svgElement, width, captionText) {
+		var baselineY = width - CAPTION_DESCENT;
+
+		var captionElement = makeSvgElement("text", {
+			x: width / 2,
+			y: baselineY,
+			"text-anchor": "middle",
+			"font-size": CAPTION_FONT_SIZE,
+			"font-family": LABEL_FONT_FAMILY,
+			fill: LABEL_COLOUR
+		});
+		captionElement.textContent = captionText;
+		svgElement.appendChild(captionElement);
+	}
+
+	/*
+	 * Draw one block's chart. The drawing is square and exactly the width the block states, so
+	 * the page places a chart at any size and states nothing else.
+	 */
+	function renderChart(chartElement, skyData) {
+		var drawingElement = chartElement.querySelector(DRAWING_SELECTOR);
+		if (drawingElement === null) {
+			logError("renderChart() found no " + DRAWING_SELECTOR + " in the block.");
+			return;
+		}
+
+		var width = chartWidthOf(chartElement);
+		if (!width) {
+			logError("renderChart() found no width on the block; the page states it as data-width.");
+			return;
+		}
+
+		var svgElement = makeSvgElement("svg", {
+			viewBox: "0 0 " + width + " " + width,
+			width: width,
+			height: width,
+			role: "img",
+			"aria-label": CHART_LABEL
+		});
+		// Inline by default, which leaves the caption a baseline's worth of space below the chart.
+		svgElement.style.display = "block";
+
+		var placeMap = placeBodyMap(width, skyData);
+		drawOrbitList(svgElement, placeMap, skyData);
+		drawDotList(svgElement, placeMap);
+		drawLabelList(svgElement, placeMap, skyData);
+		drawCaption(svgElement, width, chartElement.dataset.caption);
+
+		drawingElement.replaceChildren(svgElement);
+	}
+
 	/*
 	 * Ask for the sky at one moment, where the visitor stands, and draw it when the answer
 	 * comes. The position is asked for first because it arrives by callback: refused, timed out
@@ -536,7 +774,7 @@
 				});
 
 				chartList.forEach(function (chartElement) {
-//					alert("Chart " + chartElement.className);
+					renderChart(chartElement, skyData);
 				});
 			})
 			.catch(function (failure) {

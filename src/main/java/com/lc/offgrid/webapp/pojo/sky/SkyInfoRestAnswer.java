@@ -38,9 +38,9 @@ public class SkyInfoRestAnswer extends RestBaseAnswer
 	}
 
 	/**
-	 * What every body is called and how long it takes to go around, keyed the way the other two
-	 * maps are keyed. Nothing in it depends on the request, so it is built here rather than
-	 * handed in.
+	 * What every body is called, how long it takes to go around and what it goes around, keyed
+	 * the way the other two maps are keyed. Nothing in it depends on the request, so it is built
+	 * here rather than handed in.
 	 */
 	private Map<HorizonsBody, SkyBodyInfo> makeBodyMap()
 	{
@@ -48,7 +48,8 @@ public class SkyInfoRestAnswer extends RestBaseAnswer
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
-			SkyBodyInfo bodyInfo = new SkyBodyInfo(body.getDisplayName(), body.getPeriodDay());
+			SkyBodyInfo bodyInfo = new SkyBodyInfo(body.getDisplayName(), body.getPeriodDay(),
+					body.getParent());
 			infoMap.put(body, bodyInfo);
 		}
 

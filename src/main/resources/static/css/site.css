@@ -1330,14 +1330,6 @@ body:has(.og-chat-page) {
 	display: block;
 }
 
-/* The caption under the chart, centred on it the way the observer line is centred under the
-   table. It is page text now rather than a line drawn inside the SVG, so it reads at the
-   page's size whatever width the chart was drawn at. */
-.og-sky-caption {
-	margin: 8px 0 0;
-	text-align: center;
-}
-
 /* The date is the page's control, and it says so: the surface the browser page's filters
    wear — white, ruled, rounded, with the chevron that means a list comes down — at the size
    the date heading used to be, so it still reads as the page's date.

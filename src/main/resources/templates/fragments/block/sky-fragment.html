@@ -3,7 +3,7 @@
 	one file per fragment: they are the parts of one page and nothing else includes them.
 
 		datePicker   the date, and the control that changes it
-		chart        the drawing on the page, as an image at the width asked for
+		chart        the element sky.js draws the chart into, at the width asked for
 		table        the element sky.js fills with rise, transit and set, and the observer
 		drawing      the chart itself, an SVG document, served at /sky/chart.svg
 
@@ -33,23 +33,23 @@
 </form>
 
 <!--
-	The chart on the page: an img pointing at the drawing, which the browser fetches as its
-	own request. That request carries the date, or it would answer today beside another day's
-	table.
+	The chart's block: the element sky.js draws into, and nothing in it. The drawing is built
+	from what /rest/sky/data answers, so the page can ask again — another date, another place —
+	and only this block changes.
 
-	The width is stated here and nowhere else. It goes to the request, and to the img's own
-	width and height, which is what makes the image exactly that size; the drawing is square,
-	so the two are the same number. A page places the chart at whatever width it wants and
-	changes nothing else.
+	The width is stated here and nowhere else. It rides on the element as data-width, because
+	the browser is what reads it, and it is the drawing element's own width and height, so the
+	space is held from the first paint and the caption never moves when the chart arrives. The
+	drawing is square, so one number is the whole canvas. A page places the chart at whatever
+	width it wants and changes nothing else.
 
-	The caption is page text under the image rather than a line inside the drawing, so it reads
-	at the page's size whatever the chart is drawn at.
+	The caption is a line at the bottom of the drawing, under the outermost orbit, so it sits as
+	close to the chart as the margin allows. Its words come from the model and ride on the block
+	as data-caption, the browser being what draws them.
 -->
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)" class="og-sky-chart">
-	<img th:src="@{/sky/chart.svg(width=${width}, date=${skyTable.date})}" src=""
-		 th:width="${width}" th:height="${width}"
-		 alt="The Sun, the eight planets and the Moon, each on its orbit, seen from above">
-	<p class="og-sky-caption" th:text="${skyChartCaption}">Not to scale</p>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)" class="og-sky-chart"
+	 th:attr="data-width=${width}, data-caption=${skyChartCaption}">
+	<div class="og-sky-drawing" th:style="|width: ${width}px; height: ${width}px|"></div>
 </div>
 
 <!--

@@ -187,7 +187,8 @@ public class HorizonsEphemeris
 	}
 
 	/**
-	 * Every body's rows for the years the window spans, which is one year or two.
+	 * Every body's rows for the years the window spans, which is one year or two. A body there
+	 * is no ephemeris for has no file to read and is not in the map.
 	 */
 	private Map<HorizonsBody, List<HorizonsRow>> readRowListMap(int firstYear, int lastYear) throws IOException, ParseException
 	{
@@ -195,6 +196,11 @@ public class HorizonsEphemeris
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
+			if (!body.hasEphemeris())
+			{
+				continue;
+			}
+
 			List<HorizonsRow> rowList = readRowList(body, firstYear, lastYear);
 			map.put(body, rowList);
 		}
