@@ -84,7 +84,9 @@ body {
 	color: var(--error-deep);
 }
 
-/* The page column. max-width sets how wide it gets; margin-inline centres it. */
+/* The page column: 1024 wide, and 1024 is what a page lays out in. Nothing is taken off the
+   sides and nothing is added to them — a page that places 430 beside 570 has placed 1000 of
+   its 1024. margin-inline centres it. */
 main {
 	flex: 1;
 	width: 100%;
@@ -92,8 +94,7 @@ main {
 	margin-inline: auto;
 	background-color: var(--paper);
 	background-image: var(--contour-green);
-	padding: 32px 24px 40px;
-	box-sizing: border-box;
+	padding: 32px 0 40px;
 }
 
 main h1 {
@@ -1385,11 +1386,45 @@ body:has(.og-chat-page) {
 
 .og-sky-wide { margin-top: 24px; }
 
-/* The body names read down the left edge; every measurement is centred under its heading. */
-.og-sky-table th,
-.og-sky-table td { text-align: center; }
+/* sky.js states the table's width, which is the sum of its column list, and fixed layout makes
+   the widths it writes onto the headings bind rather than act as a floor. */
+.og-sky-table table {
+	table-layout: fixed;
+}
 
-.og-sky-table th:first-child,
+/* A column occupies exactly the width the list states: border-box keeps the padding and the
+   border inside that number, and there is no side padding to add to it — the site-wide
+   6px 10px would put 20 on every column. The body names read down the left edge; every
+   measurement is centred under its heading. */
+.og-sky-table th,
+.og-sky-table td {
+	box-sizing: border-box;
+	padding: 6px 0;
+	text-align: center;
+}
+
+/* The group row's rule is drawn short, so it stops before the next group starts and each
+   segment says which columns its heading covers. A border cannot do it: the cells collapse
+   theirs into one line across the whole head. */
+.og-sky-table thead tr:first-child th[colspan] {
+	position: relative;
+	border-bottom: 0;
+}
+
+.og-sky-table thead tr:first-child th[colspan]::after {
+	content: "";
+	position: absolute;
+	left: 8px;
+	right: 8px;
+	bottom: 0;
+	height: 2px;
+	background: var(--rule);
+}
+
+/* The body's name is the one thing read down the left edge. In the head that is the first
+   cell of the first row only: the second row starts inside a group, and its first heading is
+   centred over its own column like every other. */
+.og-sky-table thead tr:first-child th:first-child,
 .og-sky-table td:first-child { text-align: left; }
 
 /* The observer is centred under the table it labels, the way "Not to scale" is centred on

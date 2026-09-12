@@ -182,6 +182,26 @@
 	}
 
 	/*
+	 * The day the input names, as a moment on it. Noon, because a date carries no time of its
+	 * own and midnight is one offset away from the day before it.
+	 */
+	function noonOf(dayText) {
+		var partList = dayText.split("-");
+		var year = Number(partList[0]);
+		var month = Number(partList[1]);
+		var day = Number(partList[2]);
+		var dateTime = new Date(year, month - 1, day, 12, 0, 0);
+		return dateTime;
+	}
+
+	// What the button reads, the way the server rendered it: "Mon 2026-09-07".
+	function buttonText(dateTime, dayText) {
+		var weekday = dateTime.toLocaleDateString("en-GB", { weekday: "short" });
+		var text = weekday + " " + dayText;
+		return text;
+	}
+
+	/*
 	 * The sky page's date control. The button is what the visitor sees; the calendar belongs
 	 * to the browser and is anchored to the input beside it, which is why that input is on
 	 * the page at all.
@@ -189,9 +209,9 @@
 	 * Focus first, then open. Safari opens the calendar either way but only closes it — on
 	 * Escape, on a click outside — when focus is in the input.
 	 *
-	 * Picking a day fires change, which submits the form; the browser builds the query string
-	 * from the fields, so nothing here writes a URL. requestSubmit rather than submit so the
-	 * form's own validation still runs.
+	 * Picking a day fires change, and the page asks for that day where it stands rather than
+	 * loading again. The button's text comes back with it: the page load used to bring the new
+	 * day rendered into it, and nothing else writes it now.
 	 */
 	window.OG.wireDatePicker = function () {
 		var button = document.querySelector(".og-sky-date");
@@ -210,7 +230,10 @@
 		});
 
 		input.addEventListener("change", function () {
-			input.form.requestSubmit();
+			var dayText = input.value;
+			var dateTime = noonOf(dayText);
+			button.textContent = buttonText(dateTime, dayText);
+			window.OG.loadSkyData(dateTime);
 		});
 	};
 

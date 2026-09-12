@@ -195,3 +195,23 @@ value it sent.
 `getSkyBodyDayMap`, through setters rather than the constructor: they are what the endpoint
 was built to answer, and a setter keeps the constructor to the observer. Both are keyed by
 `HorizonsBody`, so Jackson writes the constant names as the JSON keys.
+
+## 2026-09-12 — What the browser needs the answer to state
+
+**`bodyMap` joined the answer, keyed like the other two maps.** Its entries carry the body's
+name and its `periodDay`, so a browser drawing the table names its own rows instead of holding
+a list of names that has to be kept in step with the enum. `SkyBodyInfo` is the wire shape and
+`SkyInfoRestAnswer` builds the map in its constructor from `HorizonsBody.values()`: nothing in
+it depends on the request.
+
+**`periodDay` went on `HorizonsBody` rather than into `SkyAnalyser`.** It does not change with
+the date or the observer, which is all the analyser exists for, and a second enum mirroring the
+same nine constants is one more place to keep in step. The enum's javadoc now says the name and
+the period are ours, not Horizons': an ephemeris file states neither.
+
+**`orbitRadius` joined `SkyBodyDay`, beside `distance`.** It is the length of the very vector
+`getSunAngle` takes its direction from — body minus Sun, both geocentric — so the ephemeris
+already had it and only the angle was being kept. `distance` is from the observer and
+`orbitRadius` is from the Sun; for the Moon that is its distance from the Sun, not the size of
+its own orbit.
+

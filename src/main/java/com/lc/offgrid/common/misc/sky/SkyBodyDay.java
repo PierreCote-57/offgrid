@@ -20,6 +20,9 @@ public class SkyBodyDay
 	/** Distance from the observer, in astronomical units. */
 	private final double	distance;
 
+	/** Distance from the Sun, in astronomical units. */
+	private final double	orbitRadius;
+
 	/** Apparent visual magnitude, or null where Horizons does not state one. */
 	private final Double	apparentMagnitude;
 
@@ -30,10 +33,11 @@ public class SkyBodyDay
 	private final double	litFraction;
 
 	public SkyBodyDay(Map<HorizonsMomentName, HorizonsMoment> momentMap, double distance,
-			Double apparentMagnitude, String constellation, double litFraction)
+			double orbitRadius, Double apparentMagnitude, String constellation, double litFraction)
 	{
 		this.momentMap = momentMap;
 		this.distance = distance;
+		this.orbitRadius = orbitRadius;
 		this.apparentMagnitude = apparentMagnitude;
 		this.constellation = constellation;
 		this.litFraction = litFraction;
@@ -47,6 +51,11 @@ public class SkyBodyDay
 	public double getDistance()
 	{
 		return distance;
+	}
+
+	public double getOrbitRadius()
+	{
+		return orbitRadius;
 	}
 
 	public Double getApparentMagnitude()

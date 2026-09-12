@@ -142,11 +142,13 @@ public class SkyAnalyser
 
 		Map<HorizonsMomentName, HorizonsMoment> momentMap = makeMomentMap(body);
 		double distance = position.getRange();
+		double orbitRadius = position.getOrbitRadius(getSunPosition());
 		Double apparentMagnitude = position.getApparentMagnitude();
 		String constellation = position.getConstellation();
 		double litFraction = position.getLitFraction(getSunPosition());
 
-		SkyBodyDay bodyDay = new SkyBodyDay(momentMap, distance, apparentMagnitude, constellation, litFraction);
+		SkyBodyDay bodyDay = new SkyBodyDay(momentMap, distance, orbitRadius, apparentMagnitude,
+				constellation, litFraction);
 		return bodyDay;
 	}
 

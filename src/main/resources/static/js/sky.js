@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2026 LogicielCote.COM All rights reserved.
  *
- * The sky page in the browser. The chart and the table still arrive drawn from the server;
- * this is where drawing them here, from what /rest/sky/data answers, starts.
+ * The sky page in the browser. The table and the observer line under it are built here from
+ * what /rest/sky/data answers; the chart still arrives drawn from the server.
  *
  * Every page loads this file, so it finds its own blocks at load and asks the server for
  * nothing when there are none. A page may hold more than one chart — sky.html draws two —
@@ -13,7 +13,75 @@
 
 	var TABLE_SELECTOR = ".og-sky-table";
 	var CHART_SELECTOR = ".og-sky-chart";
+	var OBSERVER_SELECTOR = ".og-sky-observer";
+	var PLACE_SELECTOR = ".og-sky-place";
+	var DASH_SELECTOR = ".og-sky-place-dash";
 	var DATA_URL = "/rest/sky/data";
+
+	// What a cell shows when the day does not hold the moment it asks for.
+	var MISSING_TEXT = "-";
+
+	// The year a period is stated in once it is longer than one.
+	var DAYS_IN_YEAR = 365.25;
+
+	// How long the browser is given to answer where the visitor is, and how old an answer it
+	// may reuse. The same numbers the menu's sky link waits on.
+	var POSITION_TIMEOUT_MS = 5000;
+	var POSITION_MAX_AGE_MS = 600000;
+
+	// What splits a heading's group from the heading itself: "Rise|Time" is the Time column of
+	// the Rise group. A heading may hold anything but this, and only the first one splits.
+	var HEADING_SEPARATOR = "|";
+
+	/*
+	 * The table's columns, one entry each: the heading, the width its th states, and the path to
+	 * the value.
+	 *
+	 * A path whose first segment names a member of the answer is read from that member, keyed by
+	 * the body — bodyMap.name is that body's entry in bodyMap. A first segment naming nothing up
+	 * there is a moment of the body's own day, so RISE.bearing is where it came up. The last
+	 * segment picks the format.
+	 *
+	 * Narrow and wide differ by these two lists and nothing else: a column is added, moved or
+	 * dropped here alone.
+	 */
+	var NARROW_COLUMN_LIST = [
+	    // 570 pixels available
+		{ heading: "Body",                width: 70, value: "bodyMap.name" },
+		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
+		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
+		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
+		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
+		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
+		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
+		{ heading: "Sunlit",                 width: 60, value: "skyBodyDayMap.litFraction" },
+//		{ heading: "Period",              width: 50, value: "bodyMap.periodDay" }
+	];
+
+	var WIDE_COLUMN_LIST = [
+	    // 1024 pixels available
+		{ heading: "Body",                width: 70, value: "bodyMap.name" },
+		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
+		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
+		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
+		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
+		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
+		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
+		{ heading: "Orbit|Period",        width: 50, value: "bodyMap.periodDay" },
+		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadius" },
+		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" }
+	];
+
+	// How a value is written, by the last segment of the path that found it. A field with no
+	// entry here is written as it stands.
+	var FORMAT_BY_FIELD = {
+		epochSecond: timeText,
+		bearing: degreeText,
+		elevation: degreeText,
+		litFraction: percentText,
+		periodDay: periodText,
+		orbitRadius: distanceText
+	};
 
 	// The page's own blocks, found once at load and read by every function after: nothing here
 	// takes them as a parameter, and nothing outside this file sees them.
@@ -35,21 +103,425 @@
 		console.error(stamp() + message);
 	}
 
+	// ---- the table ------------------------------------------------------------
+
+	// An epoch second on the clock of the zone the answer states, which is the zone its times
+	// are in. The browser's own zone never enters into it.
+	function timeText(value, timeZone) {
+		var text = new Date(value * 1000).toLocaleTimeString("en-GB", {
+			timeZone: timeZone, hour: "2-digit", minute: "2-digit", hour12: false
+		});
+		return text;
+	}
+
+	// Whole degrees: the table is read at a glance, and the ephemeris is sampled every two
+	// minutes, so a decimal would state a precision the value does not have.
+	function degreeText(value, timeZone) {
+		var text = Math.round(value) + "°";
+		return text;
+	}
+
+	// Days while the number is small, years once it is not: 27.3 d, 88 d, 165 y. One decimal
+	// below a hundred and none above, so no cell states a precision the reader has no use for.
+	function periodText(value, timeZone) {
+		var isYear = value >= DAYS_IN_YEAR;
+		var amount = isYear ? value / DAYS_IN_YEAR : value;
+		var numberText = (amount < 100) ? amount.toFixed(1).replace(/\.0$/, "") : String(Math.round(amount));
+		var text = numberText + (isYear ? " y" : " d");
+		return text;
+	}
+
+	// Astronomical units, two decimals: the Moon sits at 0.99 of one and Neptune at 30.07.
+	function distanceText(value, timeZone) {
+		var text = value.toFixed(2) + " AU";
+		return text;
+	}
+
+	// A fraction of the whole, as a reader says it: 0.8734 is 87%.
+	function percentText(value, timeZone) {
+		var text = Math.round(value * 100) + "%";
+		return text;
+	}
+
 	/*
-	 * Ask the server for the sky, and draw it when the answer comes. The call carries no
-	 * parameters yet, so what comes back is the default observer at the current moment.
+	 * The value one path names for one body.
+	 *
+	 * A null is a moment that does not happen on the day — the Moon that never rises — and an
+	 * undefined is a path that names nothing at all. The two are told apart so a typo says so
+	 * while an empty cell stays quiet.
+	 */
+	function valueAt(path, bodyId, skyData) {
+		var partList = path.split(".");
+		var head = partList[0];
+		var value;
+
+		if (head in skyData) {
+			value = skyData[head][bodyId];
+		}
+		else {
+			var bodyDay = skyData.skyBodyDayMap[bodyId];
+			value = (bodyDay === undefined) ? undefined : bodyDay.momentMap[head];
+		}
+
+		for (var index = 1; index < partList.length; index++) {
+			if (value === null || value === undefined) { break; }
+			value = value[partList[index]];
+		}
+
+		return value;
+	}
+
+	// The text of one cell: the value the path names, written the way its last segment says.
+	function cellText(path, bodyId, skyData) {
+		var value = valueAt(path, bodyId, skyData);
+		if (value === undefined) {
+			logError("cellText('" + path + "', '" + bodyId + "') names nothing in the answer.");
+			return MISSING_TEXT;
+		}
+		if (value === null) {
+			return MISSING_TEXT;
+		}
+
+		var partList = path.split(".");
+		var field = partList[partList.length - 1];
+		var format = FORMAT_BY_FIELD[field];
+		var text = format ? format(value, skyData.timeZone) : String(value);
+		return text;
+	}
+
+	// Which columns this block asks for. The page states it, on the block itself.
+	function columnListFor(tableElement) {
+		var columnList = (tableElement.dataset.wide === "true") ? WIDE_COLUMN_LIST : NARROW_COLUMN_LIST;
+		return columnList;
+	}
+
+	// The group a column belongs to, or "" for one that stands on its own.
+	function groupOf(column) {
+		var index = column.heading.indexOf(HEADING_SEPARATOR);
+		var group = (index < 0) ? "" : column.heading.slice(0, index);
+		return group;
+	}
+
+	// The column's own heading, which is all of it when there is no group.
+	function headingOf(column) {
+		var index = column.heading.indexOf(HEADING_SEPARATOR);
+		var heading = (index < 0) ? column.heading : column.heading.slice(index + 1);
+		return heading;
+	}
+
+	/*
+	 * The widths, one element each. Under table-layout: fixed the columns are taken from the
+	 * first row, and that row carries the groups' spans — a col is what still makes a column
+	 * exactly the width its entry asks for.
+	 */
+	function buildColumnGroup(columnList) {
+		var columnGroup = document.createElement("colgroup");
+
+		columnList.forEach(function (column) {
+			var columnElement = document.createElement("col");
+			columnElement.style.width = column.width + "px";
+			columnGroup.appendChild(columnElement);
+		});
+
+		return columnGroup;
+	}
+
+	/*
+	 * Two rows: the groups, and the columns under them. Columns naming the same group in a row
+	 * share one cell above them, so "Bearing" says which bearing it is; a column with no group
+	 * takes one cell down both rows.
+	 */
+	function buildHead(columnList) {
+		var head = document.createElement("thead");
+		var groupRow = document.createElement("tr");
+		var columnRow = document.createElement("tr");
+
+		for (var index = 0; index < columnList.length; index++) {
+			var group = groupOf(columnList[index]);
+
+			if (group === "") {
+				var aloneCell = document.createElement("th");
+				aloneCell.rowSpan = 2;
+				aloneCell.textContent = headingOf(columnList[index]);
+				groupRow.appendChild(aloneCell);
+				continue;
+			}
+
+			var span = 1;
+			while (index + span < columnList.length && groupOf(columnList[index + span]) === group) {
+				span++;
+			}
+
+			var groupCell = document.createElement("th");
+			groupCell.colSpan = span;
+			groupCell.textContent = group;
+			groupRow.appendChild(groupCell);
+
+			for (var inner = 0; inner < span; inner++) {
+				var cell = document.createElement("th");
+				cell.textContent = headingOf(columnList[index + inner]);
+				columnRow.appendChild(cell);
+			}
+
+			index += span - 1;
+		}
+
+		head.appendChild(groupRow);
+		if (columnRow.childElementCount > 0) {
+			head.appendChild(columnRow);
+		}
+		return head;
+	}
+
+	// One row per body, in the order the answer lists them, and every body gets one: a body that
+	// does not rise today is still a body the reader is looking for.
+	function buildBody(columnList, skyData) {
+		var body = document.createElement("tbody");
+
+		Object.keys(skyData.skyBodyDayMap).forEach(function (bodyId) {
+			var row = buildRow(columnList, bodyId, skyData);
+			body.appendChild(row);
+		});
+
+		return body;
+	}
+
+	function buildRow(columnList, bodyId, skyData) {
+		var row = document.createElement("tr");
+
+		columnList.forEach(function (column) {
+			var cell = document.createElement("td");
+			cell.textContent = cellText(column.value, bodyId, skyData);
+			row.appendChild(cell);
+		});
+
+		return row;
+	}
+
+	// What the table needs, which is what its columns ask for and nothing else.
+	function tableWidth(columnList) {
+		var width = 0;
+
+		columnList.forEach(function (column) {
+			width += column.width;
+		});
+
+		return width;
+	}
+
+	// Fill one block's table. The fragment leaves it empty and keeps the observer line beside
+	// it, so this replaces the table's own children and touches nothing else in the block.
+	function renderTable(tableElement, skyData) {
+		var table = tableElement.querySelector("table");
+		if (table === null) {
+			logError("renderTable() found no table element in the block.");
+			return;
+		}
+
+		var columnList = columnListFor(tableElement);
+		table.style.width = tableWidth(columnList) + "px";
+		table.replaceChildren(buildColumnGroup(columnList), buildHead(columnList),
+				buildBody(columnList, skyData));
+	}
+
+	// ---- the observer ---------------------------------------------------------
+
+	function coordinateText(latitude, longitude) {
+		var latitudeText = Math.abs(latitude).toFixed(4) + "°" + (latitude >= 0 ? "N" : "S");
+		var longitudeText = Math.abs(longitude).toFixed(4) + "°" + (longitude >= 0 ? "E" : "W");
+		return latitudeText + ", " + longitudeText;
+	}
+
+	// The zone by name and the offset it was on at that moment — an offset belongs to a moment,
+	// since a zone changes its own twice a year.
+	function zoneText(timeZone, epochSecond) {
+		var partList = new Intl.DateTimeFormat("en-GB", {
+			timeZone: timeZone, timeZoneName: "longOffset"
+		}).formatToParts(new Date(epochSecond * 1000));
+
+		var offsetPart = partList.find(function (part) { return part.type === "timeZoneName"; });
+		var offsetText = offsetPart ? offsetPart.value : "";
+		return timeZone + " (" + offsetText + ")";
+	}
+
+	/*
+	 * The line under the table: where the answer was read as, and the clock its times are on.
+	 * The name is not in it — the server has coordinates and not a name — so it renders with the
+	 * numbers and gains its name a moment later, if Google answers.
+	 */
+	function renderObserver(tableElement, skyData) {
+		var observerElement = tableElement.querySelector(OBSERVER_SELECTOR);
+		if (observerElement === null) {
+			logError("renderObserver() found no " + OBSERVER_SELECTOR + " in the block.");
+			return;
+		}
+
+		var placeElement = document.createElement("strong");
+		placeElement.className = "og-sky-place";
+
+		var dashElement = document.createElement("span");
+		dashElement.className = "og-sky-place-dash";
+		dashElement.textContent = " \u2014 ";
+		dashElement.hidden = true;
+
+		var coordinateElement = document.createElement("span");
+		coordinateElement.textContent = coordinateText(skyData.latitude, skyData.longitude);
+
+		var placeLine = document.createElement("p");
+		placeLine.append(placeElement, dashElement, coordinateElement);
+
+		var zoneLine = document.createElement("p");
+		zoneLine.textContent = zoneText(skyData.timeZone, skyData.epochSecond);
+
+		observerElement.replaceChildren(placeLine, zoneLine);
+	}
+
+	// ---- the place name -------------------------------------------------------
+
+	// The town, then the province's short form: "Campbell River", "BC".
+	function placeName(result) {
+		var componentList = result.address_components || [];
+		var town = null;
+		var region = null;
+		componentList.forEach(function (component) {
+			if (component.types.indexOf("locality") >= 0) { town = component.long_name; }
+			if (component.types.indexOf("administrative_area_level_1") >= 0) { region = component.short_name; }
+		});
+		if (!town) { return null; }
+		return region ? town + ", " + region : town;
+	}
+
+	/*
+	 * Google answers a point with a stack of results, finest first: the street, then the
+	 * neighbourhood, the town, the district, the province. Only some carry a locality, so this
+	 * takes the first one that does.
+	 */
+	function firstNamed(resultList) {
+		for (var index = 0; index < resultList.length; index++)
+		{
+			var name = placeName(resultList[index]);
+			if (name) {
+				log("Result " + index + " of " + resultList.length + " gave \"" + name + "\".");
+				return name;
+			}
+		}
+		log("No result carried a locality; the types were "
+				+ resultList.map(function (result) { return result.types.join("/"); }).join(", ")
+				+ ".");
+		return null;
+	}
+
+	/*
+	 * Ask Google what is at the answer's coordinates and write it into the observer line. No
+	 * answer means no name, and the numbers stand on their own.
+	 *
+	 * It goes through the Maps JavaScript API rather than the geocoding web service: the site's
+	 * key is restricted by referrer, and the web service refuses such a key outright.
+	 */
+	function lookUpPlace(tableElement, skyData) {
+		var placeElement = tableElement.querySelector(PLACE_SELECTOR);
+		var dashElement = tableElement.querySelector(DASH_SELECTOR);
+		if (placeElement === null) {
+			logError("lookUpPlace() found no " + PLACE_SELECTOR + " to fill in.");
+			return;
+		}
+		if (!window.OG || !window.OG.loadGoogleMapsApi) {
+			logError("OG.loadGoogleMapsApi is not there; the name cannot be looked up.");
+			return;
+		}
+
+		var latitude = skyData.latitude;
+		var longitude = skyData.longitude;
+		var startedAt = Date.now();
+		log("Loading the Maps JavaScript API to reverse geocode " + latitude + "," + longitude + ".");
+
+		window.OG.loadGoogleMapsApi(function () {
+			log("Maps API ready after " + (Date.now() - startedAt) + "ms; asking the geocoder.");
+
+			var geocoder = new google.maps.Geocoder();
+			var request = { location: { lat: latitude, lng: longitude } };
+
+			geocoder.geocode(request)
+				.then(function (answer) {
+					var resultList = answer.results || [];
+					log("Geocoder answered " + resultList.length + " result(s) after "
+							+ (Date.now() - startedAt) + "ms.");
+
+					var name = firstNamed(resultList);
+					if (!name) {
+						log("No name applied; the coordinates stand on their own.");
+						return;
+					}
+
+					placeElement.textContent = name;
+					if (dashElement !== null) {
+						dashElement.hidden = false;
+					}
+					log("Wrote \"" + name + "\" into the observer line.");
+				})
+				.catch(function (failure) {
+					logError("The geocoder failed after " + (Date.now() - startedAt) + "ms: "
+							+ failure.message);
+				});
+		});
+	}
+
+	/*
+	 * Ask for the sky at one moment, where the visitor stands, and draw it when the answer
+	 * comes. The position is asked for first because it arrives by callback: refused, timed out
+	 * or unavailable, the call carries no coordinates and the server answers for its marker —
+	 * the same thing the menu's sky link settles for.
 	 *
 	 * It is on window.OG because the page will ask again — another date, another place — and
 	 * the caller then is not this file.
 	 */
-	function loadSkyData() {
-		var startedAt = Date.now();
-		log("Asking " + DATA_URL + " for the sky.");
+	function loadSkyData(dateTime) {
+		if (!navigator.geolocation) {
+			log("This browser states no position; the server's marker will answer.");
+			requestSkyData(dateTime, null);
+			return;
+		}
 
-		fetch(DATA_URL)
+		var startedAt = Date.now();
+		navigator.geolocation.getCurrentPosition(
+			function (position) {
+				log("Position after " + (Date.now() - startedAt) + "ms.");
+				requestSkyData(dateTime, position);
+			},
+			function (failure) {
+				log("No position after " + (Date.now() - startedAt) + "ms: " + failure.message
+						+ "; the server's marker will answer.");
+				requestSkyData(dateTime, null);
+			},
+			{ timeout: POSITION_TIMEOUT_MS, maximumAge: POSITION_MAX_AGE_MS });
+	}
+
+	/*
+	 * The call the endpoint reads. A parameter it is not given falls back on the server, which is
+	 * what a refused position comes to.
+	 */
+	function makeDataUrl(dateTime, position) {
+		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		var epochSecond = Math.floor(dateTime.getTime() / 1000);
+
+		var url = DATA_URL + "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
+		if (position) {
+			url = url + "&lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+		}
+
+		return url;
+	}
+
+	// Ask, and fill every block on the page with what comes back.
+	function requestSkyData(dateTime, position) {
+		var url = makeDataUrl(dateTime, position);
+		var startedAt = Date.now();
+		log("Asking " + url + " for the sky.");
+
+		fetch(url)
 			.then(function (response) {
 				if (!response.ok) {
-					throw new Error("failed to load " + DATA_URL + " (HTTP " + response.status + ")");
+					throw new Error("failed to load " + url + " (HTTP " + response.status + ")");
 				}
 				return response.json();
 			})
@@ -57,6 +529,9 @@
 				log("Answered " + skyData.dateTimeText + " after " + (Date.now() - startedAt) + "ms.");
 
 				tableList.forEach(function (tableElement) {
+					renderTable(tableElement, skyData);
+					renderObserver(tableElement, skyData);
+					lookUpPlace(tableElement, skyData);
 //					alert("Table " + tableElement.className);
 				});
 
@@ -65,8 +540,8 @@
 				});
 			})
 			.catch(function (failure) {
-				logError("loadSkyData() failed after " + (Date.now() - startedAt) + "ms: "
-						+ failure.message);
+				logError("requestSkyData(" + url + ") failed after " + (Date.now() - startedAt)
+						+ "ms: " + failure.message);
 			});
 	}
 
@@ -77,7 +552,7 @@
 
 		if (tableList.length === 0 && chartList.length === 0) { return; }
 
-		loadSkyData();
+		loadSkyData(new Date());
 	}
 
 	// Created defensively: this file may execute before OR after the others that add to it.

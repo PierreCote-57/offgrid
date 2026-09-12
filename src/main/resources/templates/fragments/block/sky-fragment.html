@@ -4,12 +4,12 @@
 
 		datePicker   the date, and the control that changes it
 		chart        the drawing on the page, as an image at the width asked for
-		table        rise, transit and set, with the observer underneath
+		table        the element sky.js fills with rise, transit and set, and the observer
 		drawing      the chart itself, an SVG document, served at /sky/chart.svg
 
 	Each one carries the element the page lays out, so a page places a block with th:replace
-	and states nothing about it. Only the chart takes a parameter; everything else, the date
-	included, each fragment reads off the model.
+	and states nothing about it. The chart takes its width and the table takes isWide; the
+	datePicker reads the model.
 -->
 
 <!--
@@ -53,169 +53,17 @@
 </div>
 
 <!--
-	A body with no rise time is drawn on the chart but not tabled. Each heading states its
-	column, the table is laid out fixed so those widths bind, and the table is as wide as they
-	add up to.
+	The table's block: the two elements sky.js fills, and nothing in them. The rows and the
+	observer line under them are both built from what /rest/sky/data answers, so the page can
+	ask again — another date, another place — and only this block changes.
+
+	isWide states which set of columns the block wants. It rides on the element as data-wide,
+	because the browser is what reads it; the two column lists are in sky.js.
 -->
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="table" class="og-sky-table">
-
-	<table style="table-layout:fixed;width:max-content">
-		<thead>
-			<tr>
-				<th style="width:70px">Body</th>
-				<th style="width:50px">Rises</th>
-				<th style="width:90px">Transit</th>
-				<th style="width:50px">Sets</th>
-				<th style="width:120px">Period</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="body : ${skyTable.bodyList}" th:if="${body.rises != null}">
-				<td th:text="${body.name}"></td>
-				<td th:text="${body.rises}"></td>
-				<td th:text="${body.transit}"></td>
-				<td th:text="${body.sets}"></td>
-				<td th:text="${body.orbitPeriod == null ? ''
-						: T(com.lc.basics.tools.units.TimeUnits).DAY.format(body.orbitPeriod)}"></td>
-			</tr>
-		</tbody>
-	</table>
-
-	<div class="og-sky-observer">
-		<p><strong class="og-sky-place"></strong><span class="og-sky-place-dash" hidden> &mdash; </span><span
-				th:text="|${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.latitude), 1, 'POINT', 4, 'POINT')}°${skyTable.latitude >= 0 ? 'N' : 'S'}, ${#numbers.formatDecimal(T(java.lang.Math).abs(skyTable.longitude), 1, 'POINT', 4, 'POINT')}°${skyTable.longitude >= 0 ? 'E' : 'W'}|"></span></p>
-		<p th:text="${#temporals.format(skyTable.zonedDate, 'VV (OOOO)')}"></p>
-	</div>
-
-	<script th:inline="javascript">
-		/*
-		 * The place name is not in the page, because the server has coordinates and not a name.
-		 * This asks Google what is at those coordinates and writes the answer in when it comes
-		 * back, so the line renders at once with the numbers and gains its name a moment later.
-		 * No answer means no name, and the numbers stand on their own.
-		 *
-		 * It goes through the Maps JavaScript API rather than the geocoding web service: the
-		 * site's key is restricted by referrer, and the web service refuses such a key outright.
-		 *
-		 * Every step is logged, timestamped, so a page that shows no name says why in the
-		 * console: the script, the call, Google's own status, and what was made of the answer.
-		 */
-		(function () {
-			"use strict";
-
-			var latitude = [[${skyTable.latitude}]];
-			var longitude = [[${skyTable.longitude}]];
-
-			// One place builds the stamp, so no call site carries a time of its own.
-			function stamp() {
-				var text = new Date().toLocaleTimeString("en-GB", {
-					hour: "2-digit", minute: "2-digit", second: "2-digit",
-					fractionalSecondDigits: 3, hour12: false
-				});
-				return text + " [sky] ";
-			}
-			function log(message) {
-				console.log(stamp() + message);
-			}
-			function logError(message) {
-				console.error(stamp() + message);
-			}
-
-			// The town, then the province's short form: "Campbell River", "BC".
-			function placeName(result) {
-				var componentList = result.address_components || [];
-				var town = null;
-				var region = null;
-				componentList.forEach(function (component) {
-					if (component.types.indexOf("locality") >= 0) { town = component.long_name; }
-					if (component.types.indexOf("administrative_area_level_1") >= 0) { region = component.short_name; }
-				});
-				if (!town) { return null; }
-				return region ? town + ", " + region : town;
-			}
-
-			/*
-			 * Google answers a point with a stack of results, finest first: the street, then the
-			 * neighbourhood, the town, the district, the province. Only some carry a locality,
-			 * so this takes the first one that does.
-			 */
-			function firstNamed(resultList) {
-				for (var index = 0; index < resultList.length; index++)
-				{
-					var name = placeName(resultList[index]);
-					if (name) {
-						log("Result " + index + " of " + resultList.length + " gave \"" + name + "\".");
-						return name;
-					}
-				}
-				log("No result carried a locality; the types were "
-						+ resultList.map(function (result) { return result.types.join("/"); }).join(", ")
-						+ ".");
-				return null;
-			}
-
-			function lookUpPlace() {
-				var placeList = document.querySelectorAll(".og-sky-place");
-				var dashList = document.querySelectorAll(".og-sky-place-dash");
-				if (placeList.length === 0) {
-					logError("No .og-sky-place element on the page; nothing to fill in.");
-					return;
-				}
-				if (!window.OG || !window.OG.loadGoogleMapsApi) {
-					logError("OG.loadGoogleMapsApi is not there; the name cannot be looked up.");
-					return;
-				}
-
-				var startedAt = Date.now();
-				log("Loading the Maps JavaScript API to reverse geocode " + latitude + "," + longitude + ".");
-
-				window.OG.loadGoogleMapsApi(function () {
-					log("Maps API ready after " + (Date.now() - startedAt) + "ms; asking the geocoder.");
-
-					var geocoder = new google.maps.Geocoder();
-					var request = { location: { lat: latitude, lng: longitude } };
-
-					geocoder.geocode(request)
-						.then(function (answer) {
-							var resultList = answer.results || [];
-							log("Geocoder answered " + resultList.length + " result(s) after "
-									+ (Date.now() - startedAt) + "ms.");
-
-							var name = firstNamed(resultList);
-							if (!name) {
-								log("No name applied; the coordinates stand on their own.");
-								return;
-							}
-
-							placeList.forEach(function (placeElement) {
-								placeElement.textContent = name;
-							});
-							dashList.forEach(function (dashElement) {
-								dashElement.hidden = false;
-							});
-							log("Wrote \"" + name + "\" into " + placeList.length + " observer line(s).");
-						})
-						.catch(function (failure) {
-							logError("The geocoder failed after " + (Date.now() - startedAt) + "ms: "
-									+ failure.message);
-						});
-				});
-			}
-
-			/*
-			 * og-constants.js and google-map.js are deferred, so neither has run while this
-			 * inline script is being parsed and window.OG does not exist yet. DOMContentLoaded
-			 * fires after every deferred script, which is the first moment they are there.
-			 */
-			if (document.readyState === "loading") {
-				log("Waiting for DOMContentLoaded; the deferred scripts have not run yet.");
-				document.addEventListener("DOMContentLoaded", lookUpPlace);
-			}
-			else {
-				lookUpPlace();
-			}
-		})();
-	</script>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="table(isWide)" class="og-sky-table"
+	 th:attr="data-wide=${isWide}">
+	<table></table>
+	<div class="og-sky-observer"></div>
 </div>
 
 <!--

@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 62**
+**next id: 63**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -67,16 +67,15 @@ class shapes and everything settled.
 latitude and a longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
 at a time or as a map over the nine.
 
-What is left is the wiring: the browser has to send its zone beside `latitude`, `longitude` and `date`, which
-`OG` already builds from `navigator.geolocation`; `SKY_TIME_ZONE` in `OffgridWebProcessor` is
-still a constant; the page has to read `SkyBodyDay`, the `Sky*` POJOs and `SkyDataMaker` being
-replaced rather than adjusted; and `com.lc.basics.tools.astronomy` goes when nothing reads it,
-`Ephemeris` included.
+The table is done, on 2026-09-12: `sky.js` draws it from `/rest/sky/data`, and the 2026-09-12
+entries in `docs/decisions/site.md` and `apis.md` state how. What is left is the chart, which
+still arrives drawn from the server, and then the teardown: `PLACEHOLDER_TIMES`,
+`applyPlaceholderTimes`, the times on `SkyBody`, the `Sky*` POJOs and `SkyDataMaker` all go
+when nothing reads them, and `com.lc.basics.tools.astronomy` goes with them, `Ephemeris`
+included. #61 holds what the answer still has to carry before a browser can draw the chart.
 
-Two more that belong here rather than in the implementation: the constellation is carried as the
-three-letter code, and turning it into a name a reader knows is still to do; and the table itself
-is then reworked into a narrow one — rise, transit and set with the bearing beside each time — and
-a wider one carrying the rest.
+One more that belongs here rather than in the implementation: the constellation is carried as
+the three-letter code, and turning it into a name a reader knows is still to do.
 
 #49 Fix `README.md`'s Layout table. It names the package
 `src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
@@ -141,3 +140,13 @@ seconds, which is most of what a browser-drawn chart and table need. Three thing
  - The Moon's angle around Earth. `HorizonsPosition.getSunAngle` answers the Sun to Moon
    direction, which is Earth's own heliocentric longitude to within 0.15°, rather than the angle
    `SkyDataMaker` draws the Moon at today through `Ephemeris.getMoonLongitude`.
+
+#62 Make the sky date picker reach the table. It is still a GET form that reloads `/info/sky`
+with `date`, `latitude` and `longitude`, and the server renders the page around it — but the
+table is now drawn from `/rest/sky/data`, which `onPageLoad` calls with today. Picking a day
+therefore reloads the page and changes nothing in the table.
+
+`loadSkyData(dateTime)` takes the moment and is on `window.OG` for exactly this. What has to be
+decided first is which second of a picked day the call states: rise, transit and set are the
+same whichever it is, and the NOW moment, the sun angles and the lit fractions are not.
+

@@ -108,6 +108,21 @@ public class HorizonsPosition
 	}
 
 	/**
+	 * How far this body stands from the Sun, in astronomical units: the length of the same
+	 * vector getSunAngle takes its direction from. For a body that orbits the Earth it is the
+	 * distance from the Sun all the same, and not the size of its own orbit.
+	 */
+	public double getOrbitRadius(HorizonsPosition sunPosition)
+	{
+		double[] bodyVector = toVector();
+		double[] sunVector = sunPosition.toVector();
+		double[] sunToBody = subtract(bodyVector, sunVector);
+
+		double orbitRadius = length(sunToBody);
+		return orbitRadius;
+	}
+
+	/**
 	 * How much of this body's disc an observer on Earth sees lit, from the angle the Sun and the
 	 * Earth stand apart at the body. A body sitting on either of them is taken as fully lit.
 	 */

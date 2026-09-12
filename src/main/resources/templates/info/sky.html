@@ -13,12 +13,13 @@
 
 	<div class="og-sky-row">
 		<div th:replace="~{fragments/block/sky-fragment :: chart(430)}"></div>
-		<div th:replace="~{fragments/block/sky-fragment :: table}"></div>
+		<div th:replace="~{fragments/block/sky-fragment :: table(false)}"></div>
 	</div>
 
-	<p>
-		And this is text below the sky
-	</p>
+	<details class="og-sky-wide">
+		<summary>The table, full width</summary>
+		<div th:replace="~{fragments/block/sky-fragment :: table(true)}"></div>
+	</details>
 
 	<details class="og-sky-wide">
 		<summary>The chart, full width</summary>

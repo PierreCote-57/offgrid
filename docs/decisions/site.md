@@ -605,3 +605,44 @@ number set both attributes.
 it scaled with the drawing, so the same words read at a different size in the 430 chart and the
 1024 one; as page text it reads at the page's size in both, and it can be selected. It is
 `OffgridWebProcessor`'s own string either way.
+
+## 2026-09-12 — The sky table is drawn in the browser
+
+**Thymeleaf produces the minimum the JS knows how to fill, and no data.** The `table` fragment
+is a `div.og-sky-table` holding an empty `<table>` and an empty `div.og-sky-observer`; `sky.js`
+builds the rows, the observer line and the place name from what `/rest/sky/data` answers. The
+point is the second call: the page can ask again — another date, another place — and only this
+block changes. What it costs is the first paint, since an empty block shows nothing until the
+answer arrives and nothing at all without JS.
+
+**The fragment takes `isWide` and writes it as `data-wide`**, because the browser is what reads
+it. `sky.js` holds a narrow and a wide column list and picks between them.
+
+**A column is one entry: heading, width, and a path to its value.** The path's first segment
+names a member of the answer when the answer has one by that name — `bodyMap.name`,
+`skyBodyDayMap.litFraction`, keyed by the body — and names a moment of that body's day when it
+does not, so `RISE.bearing` is where it came up. The last segment picks the format, out of a map
+of field name to formatter. Rejected: sniffing the format from the value's range, which already
+misreads this answer — a bearing runs past 180, and `litFraction` and `distance` both look
+exactly like degrees.
+
+**A heading carries its group before a `|`.** `Rise|Time` and `Rise|Bearing` sit under one
+`Rise` cell spanning both, and a heading with no separator takes one cell down both rows. It is
+one field rather than two because a column's whole identity then moves as one string. `/` was
+the first choice and lost to units like `km/h`; `~` stays available to a heading meaning
+"about".
+
+**The group row's rule is drawn as an inset pseudo-element, not a border.** Collapsed borders
+join into one line across the head, which says nothing about which columns a group covers.
+
+**A column occupies exactly the width its entry states.** `box-sizing: border-box` and no side
+padding on the cells, the table's own width set from the sum of the list, and the widths in a
+`<colgroup>` — the first row carries the groups' spans, so a width on a `th` would no longer
+bind. Anything that quietly adds to a stated width makes the author's arithmetic useless: seven
+columns of 50 have to fit wherever two of 175 fit.
+
+**The call carries the four parameters.** `loadSkyData(dateTime)` asks `navigator.geolocation`
+first, because it answers by callback, then requests `timezone` from `Intl`, `epochSecond` from
+the date, and `lat`/`lng` only when a position came back — a refusal leaves them off and the
+server answers for its marker, which is what the menu's sky link already settles for.
+

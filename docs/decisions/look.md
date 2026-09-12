@@ -66,8 +66,11 @@ anyway because normal pages carry images interspersed with the text, so no parag
 actually spans the full width. If a page ever does run edge-to-edge prose, that page caps
 its own paragraphs.
 
-`box-sizing: border-box` is set on `main` so the max-width is the visible column width
-rather than the width before padding.
+**The 1024 is what a page lays out in** — reversed on 2026-09-12. `main` had
+`box-sizing: border-box` and 24px of side padding, so the column measured 1024 and a page
+laying blocks out in it had 976. A stated width is the width there is to use, or every sum a
+page makes is short by an amount it cannot see. The side padding is gone: `main` is 1024 and
+gives 1024. A page that wants its content held off the edge states that itself.
 
 ## 2026-08-25 — Paper, not white
 
