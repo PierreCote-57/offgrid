@@ -41,6 +41,8 @@ code conventions. Those rules apply here in full and are not repeated below.
     system, planet positions computed for a date.
   - [docs/skills/SolarSystemRiseSet.md](docs/skills/SolarSystemRiseSet.md) — rise, transit
     and set times for an observer and a date.
+  - [docs/skills/HorizonsEphemeris.md](docs/skills/HorizonsEphemeris.md) — fetch a year of
+    Horizons ephemeris files into `folder.local`.
 
 There is no `docs/README.md` index. Add one the day `docs/` stops being scannable at a
 glance, not before.

@@ -59,7 +59,7 @@
 //		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
 		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
 //		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
-		{ heading: "Sunlit",                 width: 60, value: "skyBodyDayMap.litFraction" },
+		{ heading: "Sunlit",              width: 60, value: "skyBodyDayMap.litFraction" },
 //		{ heading: "Period",              width: 50, value: "bodyMap.periodDay" }
 	];
 
@@ -91,44 +91,35 @@
 		orbitRadius: distanceText
 	};
 
-	/*
-	 * The chart's palette. The drawing is built here rather than served as its own document, so
-	 * the colours are here too: the rocky planets, the gas giants, the ice giants, the Sun, the
-	 * Moon, the line an orbit is drawn with, and the label text.
-	 */
-	var ROCK_COLOUR = "#c8553d";
-	var GAS_COLOUR = "#c08a2e";
-	var ICE_COLOUR = "#2f7e76";
-	var SUN_COLOUR = "#f5c400";
-	var MOON_COLOUR = "#808080";
+	// A kind of body: dotRadius as a percent of the chart radius, scaled for the figure.
+	var ROCK = { dotRadius: 3.0, colour: "#c8553d" };
+	var GAS =  { dotRadius: 3.5, colour: "#c08a2e" };
+	var ICE =  { dotRadius: 3.0, colour: "#2f7e76" };
+	var STAR = { dotRadius: 5.0, colour: "#f5c400" };
+	var MOON = { dotRadius: 1.5, colour: "#808080" };
+
+	// The rest of the palette: the orbit line and the label text.
 	var ORBIT_COLOUR = "#8c877d";
 	var LABEL_COLOUR = "#243027";
 
-	/*
-	 * What the chart draws for one body: how far out its orbit sits, how big its dot is, and what
-	 * colour the dot takes. A body the answer names and this does not is not drawn.
-	 *
-	 * The two lengths are the ones the chart was first drawn at, and they become fractions of the
-	 * width below, so changing one here keeps its proportion at any size. The spacing is
-	 * deliberately not to scale: to scale, the four inner planets sit on top of each other.
-	 */
+	// orbitRadius: percent of the outermost orbit, scaled for the figure. Spacing is not to scale.
 	var CHART_BODY_MAP = {
-		SUN:     { orbitRadius:   0, dotRadius: 9.0, colour: SUN_COLOUR },
-		EARTH:   { orbitRadius:  60, dotRadius: 4.5, colour: ROCK_COLOUR },
-		MOON:    { orbitRadius:  10, dotRadius: 2.5, colour: MOON_COLOUR },
-		MERCURY: { orbitRadius:  20, dotRadius: 4.5, colour: ROCK_COLOUR },
-		VENUS:   { orbitRadius:  40, dotRadius: 4.5, colour: ROCK_COLOUR },
-		MARS:    { orbitRadius:  80, dotRadius: 4.5, colour: ROCK_COLOUR },
-		JUPITER: { orbitRadius: 110, dotRadius: 5.5, colour: GAS_COLOUR },
-		SATURN:  { orbitRadius: 130, dotRadius: 5.5, colour: GAS_COLOUR },
-		URANUS:  { orbitRadius: 150, dotRadius: 5.0, colour: ICE_COLOUR },
-		NEPTUNE: { orbitRadius: 170, dotRadius: 5.0, colour: ICE_COLOUR }
+		SUN:     { orbitRadius:   0.0, type: STAR },
+		MERCURY: { orbitRadius:  15,   type: ROCK },
+		VENUS:   { orbitRadius:  25,   type: ROCK },
+		EARTH:   { orbitRadius:  45,   type: ROCK },
+		MOON:    { orbitRadius:  10,   type: MOON },
+		MARS:    { orbitRadius:  60,   type: ROCK },
+		JUPITER: { orbitRadius:  70,   type: GAS },
+		SATURN:  { orbitRadius:  80,   type: GAS },
+		URANUS:  { orbitRadius:  90,   type: ICE },
+		NEPTUNE: { orbitRadius: 100.0, type: ICE }
 	};
 
-	// What the two lengths above are fractions of, and the space kept clear outside the outermost
+	// What the two lengths above are a percent of, and the space kept clear outside the outermost
 	// orbit. The margin holds half a label, so it is a text measurement and does not scale.
-	var ORBIT_BASE = 340;
-	var DOT_BASE = 380;
+	var ORBIT_BASE_PERCENT = 100;
+	var DOT_BASE_PERCENT = 100;
 	var CHART_MARGIN = 25;
 
 	// The label's font, and how far its baseline sits above the dot it names. Both are text
@@ -576,8 +567,8 @@
 			var aroundX = (parentPlace === undefined) ? centre : parentPlace.dotX;
 			var aroundY = (parentPlace === undefined) ? centre : parentPlace.dotY;
 
-			var orbitRadius = (chartBody.orbitRadius / ORBIT_BASE) * widthOrbit;
-			var dotRadius = (chartBody.dotRadius / DOT_BASE) * widthOrbit;
+			var orbitRadius = (chartBody.orbitRadius / ORBIT_BASE_PERCENT) * (widthOrbit / 2);
+			var dotRadius = (chartBody.type.dotRadius / DOT_BASE_PERCENT) * (widthOrbit / 2);
 			var radians = skyData.sunAngleMap[bodyId] * Math.PI / 180;
 			var dotX = aroundX + orbitRadius * Math.cos(radians);
 			var dotY = aroundY - orbitRadius * Math.sin(radians);
@@ -587,7 +578,7 @@
 				dotY: dotY,
 				orbitRadius: orbitRadius,
 				dotRadius: dotRadius,
-				colour: chartBody.colour
+				colour: chartBody.type.colour
 			};
 		});
 

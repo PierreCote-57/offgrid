@@ -83,12 +83,6 @@ predates `src/main/resources/data`, the profile yamls beside `application.proper
 the `folder.local` root holding `images/`, `documents/` and `logs/`. Read the whole table
 against the tree rather than fixing the one row.
 
-#50 Fetch the ephemeris years that are not on disk, and decide who fetches them. Only 2026 sits
-under `{folder.local}/ephemeris/`, and nothing in the app asks Horizons for a year — the nine
-files were pulled by hand. `HorizonsEphemeris` reads three days on each side of its date, so a
-date in the last three days of December already needs the next year's files and throws without
-them. The query that fetches one is in `HorizonsRow`'s javadoc.
-
 #51 Decide whether the lightbox stays at the Large box. The overlay is capped at 75vh, and
 Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per
 step. Medium's box is the alternative. Since the "Full size" link went to the bare URL on

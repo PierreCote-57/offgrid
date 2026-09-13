@@ -149,10 +149,13 @@ public class SkyAnalyser
 	public SkyBodyDay getSkyBodyDay(HorizonsBody body)
 	{
 		HorizonsPosition position = getEphemeris().getPosition(body, getInstant());
+		HorizonsPosition parentPosition = HorizonsBody.EARTH.equals(body.getParent())
+				? getEarthPosition()
+				: getSunPosition();
 
 		Map<HorizonsMomentName, HorizonsMoment> momentMap = makeMomentMap(body);
 		double distance = position.getRange();
-		double orbitRadius = position.getOrbitRadius(getSunPosition());
+		double orbitRadius = position.getOrbitRadius(parentPosition);
 		Double apparentMagnitude = position.getApparentMagnitude();
 		String constellation = position.getConstellation();
 		double litFraction = position.getLitFraction(getSunPosition());
