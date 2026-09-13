@@ -15,6 +15,8 @@
 	var CHART_SELECTOR = ".og-sky-chart";
 	var DRAWING_SELECTOR = ".og-sky-drawing";
 	var OBSERVER_SELECTOR = ".og-sky-observer";
+	var DATEBOX_SELECTOR = ".og-sky-datebox";
+	var DATE_INPUT_SELECTOR = ".og-sky-date-input";
 	var PLACE_SELECTOR = ".og-sky-place";
 	var DASH_SELECTOR = ".og-sky-place-dash";
 	var DATA_URL = "/rest/sky/data";
@@ -49,12 +51,14 @@
 	var NARROW_COLUMN_LIST = [
 	    // 570 pixels available
 		{ heading: "Body",                width: 70, value: "bodyMap.name" },
+		{ heading: "Current|Bearing",     width: 70, value: "NOW.bearing" },
+		{ heading: "Current|Elevation",   width: 70, value: "NOW.elevation" },
 		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
-		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
+//		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
 		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
-		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
+//		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
 		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
-		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
+//		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
 		{ heading: "Sunlit",                 width: 60, value: "skyBodyDayMap.litFraction" },
 //		{ heading: "Period",              width: 50, value: "bodyMap.periodDay" }
 	];
@@ -62,14 +66,16 @@
 	var WIDE_COLUMN_LIST = [
 	    // 1024 pixels available
 		{ heading: "Body",                width: 70, value: "bodyMap.name" },
-		{ heading: "Parent",        width: 50, value: "bodyMap.parent" },
+		{ heading: "Parent",              width: 55, value: "bodyMap.parent" },
+		{ heading: "Current|Bearing",     width: 70, value: "NOW.bearing" },
+		{ heading: "Current|Elevation",   width: 70, value: "NOW.elevation" },
 		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
 		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
 		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
 		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
 		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
 		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
-		{ heading: "Orbit|Period",        width: 50, value: "bodyMap.periodDay" },
+		{ heading: "Orbit|Period",        width: 60, value: "bodyMap.periodDay" },
 		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadius" },
 		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" }
 	];
@@ -143,10 +149,10 @@
 	// same name, which the browser lays out but never draws.
 	var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
-	// The page's own blocks, found once at load and read by every function after: nothing here
-	// takes them as a parameter, and nothing outside this file sees them.
-	var tableList = null;
-	var chartList = null;
+	// Where the visitor stands, asked of the browser once and reused for the rest of the page
+	// view: every block that asks again is another callback and another wait, and a visitor does
+	// not move between two clicks on the same page.
+	var positionPromise = null;
 
 	// One place builds the stamp, so no call site carries a time of its own.
 	function stamp() {
@@ -705,33 +711,53 @@
 	}
 
 	/*
-	 * Ask for the sky at one moment, where the visitor stands, and draw it when the answer
-	 * comes. The position is asked for first because it arrives by callback: refused, timed out
-	 * or unavailable, the call carries no coordinates and the server answers for its marker —
-	 * the same thing the menu's sky link settles for.
+	 * Where the visitor stands, as a promise that is made once. Refused, timed out, unavailable
+	 * or simply not offered by the browser, it answers null, and a call carrying no coordinates
+	 * is answered for the server's marker — the same thing the menu's sky link settles for.
+	 */
+	function positionOf() {
+		if (positionPromise) {
+			return positionPromise;
+		}
+
+		positionPromise = new Promise(function (resolve) {
+			if (!navigator.geolocation) {
+				log("This browser states no position; the server's marker will answer.");
+				resolve(null);
+				return;
+			}
+
+			var startedAt = Date.now();
+			navigator.geolocation.getCurrentPosition(
+				function (position) {
+					log("Position after " + (Date.now() - startedAt) + "ms.");
+					resolve(position);
+				},
+				function (failure) {
+					log("No position after " + (Date.now() - startedAt) + "ms: " + failure.message
+							+ "; the server's marker will answer.");
+					resolve(null);
+				},
+				{ timeout: POSITION_TIMEOUT_MS, maximumAge: POSITION_MAX_AGE_MS });
+		});
+
+		return positionPromise;
+	}
+
+	/*
+	 * Ask for the sky at one moment and fill the blocks inside one element with the answer. The
+	 * scope is what a date control states it drives; given none, the whole page answers, which is
+	 * what the first load wants.
 	 *
 	 * It is on window.OG because the page will ask again — another date, another place — and
 	 * the caller then is not this file.
 	 */
-	function loadSkyData(dateTime) {
-		if (!navigator.geolocation) {
-			log("This browser states no position; the server's marker will answer.");
-			requestSkyData(dateTime, null);
-			return;
-		}
+	function loadSkyData(dateTime, scopeElement) {
+		var scope = scopeElement || document;
 
-		var startedAt = Date.now();
-		navigator.geolocation.getCurrentPosition(
-			function (position) {
-				log("Position after " + (Date.now() - startedAt) + "ms.");
-				requestSkyData(dateTime, position);
-			},
-			function (failure) {
-				log("No position after " + (Date.now() - startedAt) + "ms: " + failure.message
-						+ "; the server's marker will answer.");
-				requestSkyData(dateTime, null);
-			},
-			{ timeout: POSITION_TIMEOUT_MS, maximumAge: POSITION_MAX_AGE_MS });
+		positionOf().then(function (position) {
+			requestSkyData(dateTime, position, scope);
+		});
 	}
 
 	/*
@@ -750,8 +776,10 @@
 		return url;
 	}
 
-	// Ask, and fill every block on the page with what comes back.
-	function requestSkyData(dateTime, position) {
+	// Ask, and fill every block inside the scope with what comes back.
+	function requestSkyData(dateTime, position, scope) {
+		var tableList = scope.querySelectorAll(TABLE_SELECTOR);
+		var chartList = scope.querySelectorAll(CHART_SELECTOR);
 		var url = makeDataUrl(dateTime, position);
 		var startedAt = Date.now();
 		log("Asking " + url + " for the sky.");
@@ -770,7 +798,6 @@
 					renderTable(tableElement, skyData);
 					renderObserver(tableElement, skyData);
 					lookUpPlace(tableElement, skyData);
-//					alert("Table " + tableElement.className);
 				});
 
 				chartList.forEach(function (chartElement) {
@@ -783,10 +810,81 @@
 			});
 	}
 
-	// The blocks are found here and nowhere else. A page carrying neither asks for nothing.
+	/*
+	 * The day the input names, as a moment on it. Noon, because a date carries no time of its
+	 * own and midnight is one offset away from the day before it.
+	 */
+	function noonOf(dayText) {
+		var partList = dayText.split("-");
+		var year = Number(partList[0]);
+		var month = Number(partList[1]);
+		var day = Number(partList[2]);
+		var dateTime = new Date(year, month - 1, day, 12, 0, 0);
+		return dateTime;
+	}
+
+	// What the button reads, the way the server rendered it: "Mon 2026-09-07".
+	function buttonText(dateTime, dayText) {
+		var weekday = dateTime.toLocaleDateString("en-GB", { weekday: "short" });
+		var text = weekday + " " + dayText;
+		return text;
+	}
+
+	// The element a date control drives: the id its box states, or the whole page when it states
+	// none. An id naming nothing is reported, and the page answers instead of nothing happening.
+	function scopeOf(box) {
+		var scopeId = box.dataset.scope;
+		if (!scopeId) {
+			return document;
+		}
+
+		var scopeElement = document.getElementById(scopeId);
+		if (!scopeElement) {
+			logError("scopeOf(" + scopeId + ") names no element on this page; the whole page answers.");
+			return document;
+		}
+
+		return scopeElement;
+	}
+
+	/*
+	 * The date control's click, which the button carries in its markup. The calendar belongs to
+	 * the browser and is anchored to the input beside the button, which is the only reason that
+	 * input is on the page at all.
+	 *
+	 * Focus first, then open. Safari opens the calendar either way but only closes it — on
+	 * Escape, on a click outside — when focus is in the input.
+	 *
+	 * Picking a day fires change, and the blocks the box drives ask for that day where they
+	 * stand. The button's text comes back with it: the server rendered the first one, and nothing
+	 * else writes it after. Assigning onchange rather than adding a listener is what makes a
+	 * second click harmless.
+	 */
+	function openDatePicker(button) {
+		var box = button.closest(DATEBOX_SELECTOR);
+		var input = box.querySelector(DATE_INPUT_SELECTOR);
+		var scope = scopeOf(box);
+
+		input.onchange = function () {
+			var dayText = input.value;
+			var dateTime = noonOf(dayText);
+			button.textContent = buttonText(dateTime, dayText);
+			loadSkyData(dateTime, scope);
+		};
+
+		input.focus();
+		if (typeof input.showPicker === "function") {
+			input.showPicker();
+			return;
+		}
+
+		input.click();
+	}
+
+	// A page carrying no block of ours asks the server for nothing.
 	function onPageLoad() {
-		tableList = document.querySelectorAll(TABLE_SELECTOR);
-		chartList = document.querySelectorAll(CHART_SELECTOR);
+		var tableList = document.querySelectorAll(TABLE_SELECTOR);
+		var chartList = document.querySelectorAll(CHART_SELECTOR);
 
 		if (tableList.length === 0 && chartList.length === 0) { return; }
 
@@ -796,6 +894,7 @@
 	// Created defensively: this file may execute before OR after the others that add to it.
 	window.OG = window.OG || {};
 	window.OG.loadSkyData = loadSkyData;
+	window.OG.openDatePicker = openDatePicker;
 
 	document.addEventListener("DOMContentLoaded", onPageLoad);
 })();

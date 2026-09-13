@@ -446,6 +446,53 @@ li {
 	font-size: 18px;
 }
 
+/* A pull quote: the words centred between two hairlines, and under them who said them, in
+   the brand's hand — the voice the dateline already speaks in. The page states the block's
+   width inline, in px or %, and the hairlines are 75% of whatever that comes to. The name
+   hangs off the middle of the block, flush left, so a long one wraps under itself, and the
+   em dash belongs to the look, so the page writes the name and nothing else. */
+.og-quote {
+	box-sizing: border-box;
+	margin: 28px auto;
+	color: var(--brand-deep);
+	font-size: 22px;
+	font-style: italic;
+	line-height: 1.45;
+	text-align: center;
+}
+
+.og-quote::before,
+.og-quote::after {
+	content: "";
+	display: block;
+	width: 75%;
+	height: 1px;
+	margin: 0 auto;
+	background: var(--rule);
+}
+
+.og-quote::before {
+	margin-bottom: 14px;
+}
+
+.og-quote::after {
+	margin-top: 14px;
+}
+
+.og-quote og-author {
+	display: block;
+	margin: 0 0 0 50%;
+	text-align: left;
+	color: var(--faded);
+	font-family: "Bradley Hand", cursive;
+	font-size: 18px;
+	font-style: normal;
+}
+
+.og-quote og-author::before {
+	content: "— ";
+}
+
 /* The way back to the list a page was reached from. */
 .og-dest-back {
 	margin: 24px 0 0;
@@ -1340,8 +1387,16 @@ body:has(.og-chat-page) {
 .og-sky-datebox {
 	position: relative;
 	display: flex;
+	align-items: center;
 	justify-content: center;
+	gap: 10px;
 	margin: 0 0 16px;
+}
+
+/* The words the button's date completes: "The sky on" + "Fri 2026-09-12". */
+.og-sky-datebox-label {
+	color: var(--brand-deep);
+	font-size: 20px;
 }
 
 .og-sky-date {

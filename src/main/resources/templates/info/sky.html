@@ -5,24 +5,51 @@
 <main>
 	<h1 th:text="${PageName}">The sky above you</h1>
 
+	<blockquote class="og-quote" style="width: 50%">
+		My God, it's full of stars!
+		<og-author>
+			David Bowman
+		</og-author>
+	</blockquote>
+
 	<p>
-		This is the sky above you.
+		Most of us live in a city. Even a small city will put a dome of light
+		above its sky, severely limiting star visibility. Add that
+		your eyes tune themselves for the ambient light level created by modern life,
+		it's no wonder we are used to seeing only a few stars.
 	</p>
 
-	<div th:replace="~{fragments/block/sky-fragment :: datePicker}"></div>
+	<blockquote class="og-quote" style="width: 45%">
+		Astronomy compels the soul to look upwards and leads us from this world to another.
+		<og-author>
+			Plato, 428–347 BC
+		</og-author>
+	</blockquote>
 
-	<div class="og-sky-row">
-		<div th:replace="~{fragments/block/sky-fragment :: chart(460)}"></div>
-		<div th:replace="~{fragments/block/sky-fragment :: table(false)}"></div>
-	</div>
+	<p>
+		Get away from the city, in one of BC's wonderful parks, look up,
+		and let yourself be transformed through a world full of stars.
+		The scale of it is humbling while being magnificient.
+	</P>
 
-	<details class="og-sky-wide">
-		<summary>The table, full width</summary>
+	<details class="og-sky-wide" id="sky-overview">
+		<summary>The planets, overview</summary>
+		<div th:replace="~{fragments/block/sky-fragment :: datePicker('sky-overview')}"></div>
+		<div class="og-sky-row">
+			<div th:replace="~{fragments/block/sky-fragment :: chart(460)}"></div>
+			<div th:replace="~{fragments/block/sky-fragment :: table(false)}"></div>
+		</div>
+	</details>
+
+	<details class="og-sky-wide" id="sky-details">
+		<summary>The planets, details</summary>
+		<div th:replace="~{fragments/block/sky-fragment :: datePicker('sky-details')}"></div>
 		<div th:replace="~{fragments/block/sky-fragment :: table(true)}"></div>
 	</details>
 
-	<details class="og-sky-wide">
-		<summary>The chart, full width</summary>
+	<details class="og-sky-wide" id="sky-wide-chart">
+		<summary>Wide planet chart</summary>
+		<div th:replace="~{fragments/block/sky-fragment :: datePicker('sky-wide-chart')}"></div>
 		<div th:replace="~{fragments/block/sky-fragment :: chart(950)}"></div>
 	</details>
 </main>

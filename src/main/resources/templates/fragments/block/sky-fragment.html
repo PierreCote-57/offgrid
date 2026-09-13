@@ -2,7 +2,7 @@
 	The sky page's blocks. The file is named for the page and holds all of them, rather than
 	one file per fragment: they are the parts of one page and nothing else includes them.
 
-		datePicker   the date, and the control that changes it
+		datePicker   the date, and the control that changes it, for the blocks in one element
 		chart        the element sky.js draws the chart into, at the width asked for
 		table        the element sky.js fills with rise, transit and set, and the observer
 		drawing      the chart itself, an SVG document, served at /sky/chart.svg
@@ -13,24 +13,26 @@
 -->
 
 <!--
-	The date is the page's one control. The button carries the words and the look; the date
-	input beside it is transparent and 1px, and exists because the browser anchors its own
-	calendar to an input and to nothing else. OG.wireDatePicker opens it.
+	A date control. The button carries the words and the look; the date input beside it is
+	transparent and 1px, and exists because the browser anchors its own calendar to an input and
+	to nothing else. OG.openDatePicker opens it, hooked on the button's onclick.
 
-	A GET form, so picking a day is an ordinary page load and the browser writes the query
-	string. The coordinates ride along as hidden fields, or picking a date would put the
-	visitor back at the default marker.
+	scopeId is the id of the element holding the charts and tables this date drives, so a page may
+	carry several controls, each answering for its own block. A control given no id drives every
+	block on the page.
+
+	Picking a day asks /rest/sky/data for it: nothing is submitted and the page never loads again,
+	which is why there is no form here and no coordinates ride along.
 -->
-<form xmlns:th="http://www.thymeleaf.org" th:fragment="datePicker"
-	  class="og-sky-datebox" th:action="@{/info/sky}" method="get">
-	<input type="hidden" name="latitude" th:value="${skyTable.latitude}">
-	<input type="hidden" name="longitude" th:value="${skyTable.longitude}">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="datePicker(scopeId)" class="og-sky-datebox"
+	 th:attr="data-scope=${scopeId}">
+	<span class="og-sky-datebox-label">The sky on</span>
 
-	<button type="button" class="og-sky-date"
+	<button type="button" class="og-sky-date" onclick="OG.openDatePicker(this)"
 			th:text="${#temporals.format(skyTable.date, 'EEE yyyy-MM-dd')}">Mon 2026-09-07</button>
-	<input type="date" class="og-sky-date-input" name="date"
+	<input type="date" class="og-sky-date-input"
 		   th:value="${skyTable.date}" th:min="${skyFirstDate}" th:max="${skyLastDate}">
-</form>
+</div>
 
 <!--
 	The chart's block: the element sky.js draws into, and nothing in it. The drawing is built

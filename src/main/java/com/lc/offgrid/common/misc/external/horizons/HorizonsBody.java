@@ -16,7 +16,7 @@ public enum HorizonsBody
 {
 	SUN("Sun", "10", null, null),
 	EARTH("Earth", null, 365.26, SUN),
-	MOON("", "301", 27.32, EARTH),
+	MOON("Moon", "301", 27.32, EARTH),
 	MERCURY("Mercury", "199", 87.97, SUN),
 	VENUS("Venus", "299", 224.70, SUN),
 	MARS("Mars", "499", 686.98, SUN),

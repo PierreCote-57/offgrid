@@ -3,8 +3,8 @@
 What was decided and why. Rationale has no other master — the repo shows *what* the code
 is, never *why* it is that.
 
-The palette, the paper textures, the wordmark, type and lengths, the lightbox and the
-warning sign.
+The palette, the paper textures, the wordmark, type and lengths, the lightbox, the
+warning sign and the pull quote.
 
 ## 2026-08-24 — Palette
 
@@ -137,3 +137,38 @@ uppercase, letterspaced, in rust. The rest of it stays parked.
 
 Alternatives drawn and rejected: the sign bare on the paper with no panel, mounted on two posts above the text, a hazard-tape strip with a small chip, and a
 worded orange panel with no symbol at all.
+
+## 2026-09-12 — A quote is a plate, and the page states its width
+
+A short quote sits in the page as `<blockquote class="og-quote">`, the words on one line and
+who said them on the next, in `<og-author>`.
+
+`<og-author>` is not an HTML element. A browser keeps an unknown element and styles it like
+any other, and the name carries the site's own prefix so it stays clear of anything HTML may
+add later. `<cite>` was the obvious alternative and is wrong here: it marks the title of a
+work, not the person who spoke.
+
+**The words are in the page, not in a fragment argument.** A fragment taking the text as a
+parameter puts a whole sentence inside a Thymeleaf call, on one unbreakable line, and
+`th:replace` throws the element's own body away so the text cannot simply sit inside the
+call. Two lines of markup with a class on them cost nothing to write and wrap freely.
+
+**The page states the block's width inline, in px or %**, the way an authored table states
+its own. That is the knob that makes one style fit every quote: a short quote takes a narrow
+block, a long one takes a wider one, and `box-sizing: border-box` means the number stated is
+the width there is. Nothing in the style caps it.
+
+**The two hairlines are 75% of the block**, drawn as `::before` and `::after` rather than as
+the block's own borders — a border is the block's full width by construction, and 75% is the
+whole point. It makes the rules read differently at each end of the range: around a short
+quote they extend past the words and say look here, and under a long one the words run wider
+than the rules, which no longer have to help.
+
+The words are the page's own font, italic and centred. The name is the brand's hand, the
+voice the dateline already speaks in, with its left edge on the centre of the block so it
+hangs to the right of the quote rather than sharing its axis. The em dash is in the style, so
+a page writes the name and nothing else.
+
+Rejected: a green left rule beside the words, and a panel of `--brand-soft` behind them —
+neither earned the colour. Also rejected: centring the name under the quote's own centre, and
+a fixed 640px measure, which capped the text instead of letting the page choose.
