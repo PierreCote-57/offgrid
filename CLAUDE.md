@@ -2,14 +2,17 @@
 
 ## READ THIS AT THE START OF EVERY SESSION
 
-Follow the rules in this file and in the file it points to. All of them, every time.
+Follow the rules in this file and in the files it points to. All of them, every time.
 
 ## 1. How to work with Pierre
 
-**`~/Claude/working-with-pierre.md`** — loaded automatically in every project via
-`~/.claude/CLAUDE.md`. FIND ≠ FIX, plan before implementing, answer short, opinions vs
-verdicts, park small findings, work from fresh data, code conventions. Those rules apply
-here in full and are not repeated below.
+**`~/Claude/FIRST.md`** — three rules, loaded automatically in every project via
+`~/.claude/CLAUDE.md`: answer the question, no action until he says go, only what he asked.
+**They outrank every line in this file.**
+
+**`~/Claude/working-with-pierre.md`** — loaded the same way. FIND ≠ FIX, plan before
+implementing, answer short, opinions vs verdicts, park small findings, work from fresh data,
+code conventions. Those rules apply here in full and are not repeated below.
 
 ## 2. Where this project's knowledge lives
 
