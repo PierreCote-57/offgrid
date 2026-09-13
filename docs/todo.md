@@ -135,10 +135,3 @@ in `OffgridWebProcessor`, the `drawing` fragment in `sky-fragment.html`, and `Sk
 `.og-sky-chart img, .og-sky-wide img` rule in `site.css`, which matches nothing now, and the
 decisions in `docs/decisions/site.md` that state the chart is an image at its own URL with its
 width in that request's query string and its palette inside the SVG document.
-
-#64 Fix the pre-REST sentences in the `No calendar is ours` decision in
-`docs/decisions/site.md`. It states that picking a day submits the surrounding GET form so the
-browser writes the query string, and that the coordinates ride as hidden fields. Neither is
-true now: `wireDatePicker` handles the input's `change` and calls `OG.loadSkyData`, so the date
-reaches only `/rest/sky/data` and nothing is submitted. The `<form>` and its hidden inputs in
-the `datePicker` fragment go with the sentences if nothing submits them.

@@ -537,11 +537,12 @@ takes `date` too, because the browser fetches it as a separate request that woul
 today beside another day's table.
 
 **No calendar is ours.** The `datePicker` fragment is a `<button>` over a transparent 1px
-`<input type="date">`, and `OG.wireDatePicker` calls `input.showPicker()` on the click. The
-browser draws its own calendar, anchored to that input — which is the only reason the input is on
-the page. Picking a day fires `change`, which submits the surrounding GET form, so the browser
-writes `?latitude=…&longitude=…&date=…` itself and no JavaScript builds a URL. The coordinates are
-hidden fields; without them picking a date would send the visitor back to the default marker.
+`<input type="date">`, and the click calls `input.showPicker()`. The browser draws its own
+calendar, anchored to that input — which is the only reason the input is on the page.
+
+**Superseded 2026-09-12 from `change` onwards** — picking a day submitted a GET form and loaded
+the page again, with the coordinates riding as hidden fields. Nothing is submitted now. See *A
+date control drives the blocks in one element* below.
 
 Two things about that input are load bearing. It must be rendered — transparent and 1px, never
 `display:none` — or there is nothing for the calendar to anchor to. And it must stay focusable and
@@ -641,8 +642,38 @@ padding on the cells, the table's own width set from the sum of the list, and th
 bind. Anything that quietly adds to a stated width makes the author's arithmetic useless: seven
 columns of 50 have to fit wherever two of 175 fit.
 
-**The call carries the four parameters.** `loadSkyData(dateTime)` asks `navigator.geolocation`
-first, because it answers by callback, then requests `timezone` from `Intl`, `epochSecond` from
-the date, and `lat`/`lng` only when a position came back — a refusal leaves them off and the
-server answers for its marker, which is what the menu's sky link already settles for.
+**The call carries the four parameters.** `loadSkyData(dateTime, scopeElement)` asks
+`positionOf()` first, because a position answers by callback, then requests `timezone` from
+`Intl`, `epochSecond` from the date, and `lat`/`lng` only when a position came back — a refusal
+leaves them off and the server answers for its marker, which is what the menu's sky link already
+settles for.
+## 2026-09-12 — A date control drives the blocks in one element
 
+The page carries one date control per `<details>` rather than one for the page, because a control
+sitting inside the block it changes needs no prose explaining what it applies to — which was the
+problem to solve: the single picker above the blocks read as decoration. The cost is accepted
+deliberately: two blocks may show two different days at once, and there is nothing wrong with
+wanting sunrise on two days side by side.
+
+**A control is told the id of the element holding what it drives**, and the page states it:
+`datePicker('sky-overview')` beside `<details id="sky-overview">`. Walking up the tree with
+`closest()` was the alternative and was rejected — it ties the scope to whatever tag the page
+happened to use for disclosure, it cannot drive a group the control does not sit inside, and two
+blocks inside one `<details>` would silently share a control. An id that names nothing is reported
+by `logError` and the whole page answers, so a renamed wrapper is visible rather than inert.
+
+The mechanism is in the code and is not restated here: the fragment comment above `datePicker` in
+`sky-fragment.html`, and `openDatePicker` and `scopeOf` in `sky.js`.
+
+**The date control's wiring belongs to `sky.js`.** It lived in `offgrid.js`, which every page
+loads, and called `OG.loadSkyData`, which only `sky.js` defines — the site-wide file depending on
+a page's file. `noonOf` and `buttonText` went with it, nothing else using them.
+
+**Thymeleaf hooks the click; the JS owns the cascade.** The button carries
+`onclick="OG.openDatePicker(this)"` in the fragment, so there is no load-time pass hunting for
+controls and the connection is visible in the markup. The scope id rides as `data-scope` on the
+box, the idiom already used for `data-width` and `data-wide`: the browser is what reads it.
+
+**The position is asked of the browser once per page view.** `positionOf()` holds the promise, so
+three blocks refreshing are three requests for data and one geolocation callback. A visitor does
+not move between two clicks on the same page.
