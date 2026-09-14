@@ -1,7 +1,7 @@
 package com.lc.offgrid.common.misc.sky;
 
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
 
 import java.util.Map;
 

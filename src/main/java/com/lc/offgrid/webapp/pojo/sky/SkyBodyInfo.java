@@ -1,6 +1,6 @@
 package com.lc.offgrid.webapp.pojo.sky;
 
-import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 
 /**
  * What the site states about one body, whatever the date and wherever the observer stands:

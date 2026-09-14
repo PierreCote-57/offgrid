@@ -155,7 +155,7 @@ handed the text.
 trying to do, without opening the code. Every parameter goes in, including the ones that look
 like configuration.
 
-**`SkyAnalyser` throws `BasicRuntimeException`, catching `Exception`.** `processRequest` takes
+**`SkyBodyAnalyser` throws `BasicRuntimeException`, catching `Exception`.** `processRequest` takes
 a `Supplier`, which cannot throw checked exceptions, so the checked pair `HorizonsEphemeris`
 declares had to stop somewhere; nothing a caller states makes a missing ephemeris file
 readable, so there is nothing for it to catch.
@@ -169,12 +169,12 @@ Jackson writes `java.time` and Gson does not, since `java.time` is not open to G
 reflection.
 
 **`SkyBodyDay` was ruled off the answer here, and that was reversed on 2026-09-11.** It is
-what `SkyAnalyser` works in, and it turned out to be what the page needs as well.
+what `SkyBodyAnalyser` works in, and it turned out to be what the page needs as well.
 
 ## 2026-09-11 — What the sky answer carries
 
 **A fourth parameter, `epochSecond`, states the moment; absent, it is now.** The zone is
-already on the call, so the pair is exactly the `ZonedDateTime` `SkyAnalyser` takes, and
+already on the call, so the pair is exactly the `ZonedDateTime` `SkyBodyAnalyser` takes, and
 `OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText)` reads both and hands back the
 one value the processor then holds. Seconds rather than milliseconds: nothing the sky answers
 is finer than a second, and the parameter and the value that comes back are then the same
@@ -204,7 +204,7 @@ a list of names that has to be kept in step with the enum. `SkyBodyInfo` is the 
 `SkyInfoRestAnswer` builds the map in its constructor from `HorizonsBody.values()`: nothing in
 it depends on the request.
 
-**`periodDay` went on `HorizonsBody` rather than into `SkyAnalyser`.** It does not change with
+**`periodDay` went on `HorizonsBody` rather than into `SkyBodyAnalyser`.** It does not change with
 the date or the observer, which is all the analyser exists for, and a second enum mirroring the
 same nine constants is one more place to keep in step. The enum's javadoc now says the name and
 the period are ours, not Horizons': an ephemeris file states neither.

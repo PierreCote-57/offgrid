@@ -2,10 +2,10 @@ package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
 import com.lc.offgrid.OffgridTestApplication;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
-import com.lc.offgrid.common.misc.sky.SkyAnalyser;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
+import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.common.misc.sky.SkyBodyDay;
 import com.lc.offgrid.webapp.spring.site.OffgridUtil;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * What the sky page asks `SkyAnalyser` for, at one fixed place on one fixed day, so a run six
+ * What the sky page asks `SkyBodyAnalyser` for, at one fixed place on one fixed day, so a run six
  * months from now answers what this run answers.
  *
  * The day is read from the ephemeris files under {@code folder.local}, and those cover the
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(classes = OffgridTestApplication.class)
 @ActiveProfiles("local")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SkyAnalyserTests extends AbstractTests
+public class SkyBodyAnalyserTests extends AbstractTests
 {
 	/** The observer: the 50th parallel marker in Campbell River. */
 	private static final ZoneId ZONE_ROOT = ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE);
@@ -101,7 +101,7 @@ public class SkyAnalyserTests extends AbstractTests
 	@MethodSource("SunAngleSource")
 	public void testSunAngleMap(ZonedDateTime dateTime) throws Exception
 	{
-		SkyAnalyser analyser = makeAnalyser(dateTime);
+		SkyBodyAnalyser analyser = makeAnalyser(dateTime);
 		Map<HorizonsBody, Double> angleMap = analyser.getSunAngleMap();
 
 		int bodyCount = ephemerisBodyCount();
@@ -131,7 +131,7 @@ public class SkyAnalyserTests extends AbstractTests
 	@MethodSource("BodyDaySource")
 	public void testSkyBodyDayMap(ZonedDateTime dateTime) throws Exception
 	{
-		SkyAnalyser analyser = makeAnalyser(dateTime);
+		SkyBodyAnalyser analyser = makeAnalyser(dateTime);
 		Map<HorizonsBody, SkyBodyDay> bodyDayMap = analyser.getSkyBodyDayMap();
 
 		int bodyCount = ephemerisBodyCount();
@@ -241,9 +241,9 @@ public class SkyAnalyserTests extends AbstractTests
 	/**
 	 * The analyser the tests ask, built for one moment at the fixed place.
 	 */
-	private SkyAnalyser makeAnalyser(ZonedDateTime dateTime)
+	private SkyBodyAnalyser makeAnalyser(ZonedDateTime dateTime)
 	{
-		SkyAnalyser analyser = new SkyAnalyser(getDataRootFolder(), dateTime,
+		SkyBodyAnalyser analyser = new SkyBodyAnalyser(getDataRootFolder(), dateTime,
 				OffgridUtil.DEFAULT_LATITUDE, OffgridUtil.DEFAULT_LONGITUDE);
 		return analyser;
 	}

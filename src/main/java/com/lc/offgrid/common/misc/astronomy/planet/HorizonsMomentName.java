@@ -1,4 +1,4 @@
-package com.lc.offgrid.common.misc.external.horizons;
+package com.lc.offgrid.common.misc.astronomy.planet;
 
 /**
  * The moments of a body's day an observer is told about, each carrying the name as a reader

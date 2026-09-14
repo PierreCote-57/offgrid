@@ -63,7 +63,7 @@ that `applyPlaceholderTimes` puts onto the bodies. The positions come from JPL H
 three 2026-09-08 and 2026-09-09 entries in `docs/decisions/data.md` hold the file layout, the
 class shapes and everything settled.
 
-`SkyAnalyser` in `common/misc/sky` computes all of it: built for a folder, a `ZonedDateTime`, a
+`SkyBodyAnalyser` in `common/misc/sky` computes all of it: built for a folder, a `ZonedDateTime`, a
 latitude and a longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
 at a time or as a map over the nine.
 
@@ -112,12 +112,12 @@ against real values, and decide then what each column shows.
 pointer events or Safari will not close the calendar on Escape. Today that costs a tab stop on
 something invisible: a keyboard user tabs to the button, then to nothing they can see.
 
-#59 Decide where `normalise` and `clamp` live. `HorizonsEphemeris` and `SkyAnalyser` now each
+#59 Decide where `normalise` and `clamp` live. `HorizonsEphemeris` and `SkyBodyAnalyser` now each
 hold a private copy: the ephemeris needs them for the hour angle and the elevation, the analyser
 for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated because nothing in
-`com.lc.basics.tools.math` offers them and `external` may not be reached into for utilities.
+`com.lc.basics.tools.math` offers them and `astronomy/planet` may not be reached into for utilities.
 
-#60 Apply the rise and set offset for the Sun and the Moon. `SkyAnalyser` crosses
+#60 Apply the rise and set offset for the Sun and the Moon. `SkyBodyAnalyser` crosses
 `HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.

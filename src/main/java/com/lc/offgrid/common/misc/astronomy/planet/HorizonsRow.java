@@ -1,4 +1,4 @@
-package com.lc.offgrid.common.misc.external.horizons;
+package com.lc.offgrid.common.misc.astronomy.planet;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

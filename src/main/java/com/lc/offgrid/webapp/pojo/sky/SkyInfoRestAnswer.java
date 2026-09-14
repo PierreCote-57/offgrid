@@ -1,6 +1,6 @@
 package com.lc.offgrid.webapp.pojo.sky;
 
-import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 import com.lc.offgrid.common.misc.sky.SkyBodyDay;
 import com.lc.offgrid.webapp.spring.tools.RestBaseAnswer;
 

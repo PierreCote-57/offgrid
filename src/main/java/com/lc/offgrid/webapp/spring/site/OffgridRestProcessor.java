@@ -1,7 +1,7 @@
 package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
-import com.lc.offgrid.common.misc.sky.SkyAnalyser;
+import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
 import com.lc.offgrid.webapp.pojo.chat.ChatMessage;
 import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
@@ -68,11 +68,11 @@ public class OffgridRestProcessor
 
 		getLogger().debug("processSkyData(%s, %s, %s)", dateTime, latitude, longitude);
 
-		SkyAnalyser			skyAnalyser	= new SkyAnalyser(getDataRootFolder(), dateTime, latitude, longitude);
+		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(getDataRootFolder(), dateTime, latitude, longitude);
 
 		SkyInfoRestAnswer	skyAnswer	= new SkyInfoRestAnswer(dateTime, latitude, longitude);
-		skyAnswer.setSunAngleMap(skyAnalyser.getSunAngleMap());
-		skyAnswer.setSkyBodyDayMap(skyAnalyser.getSkyBodyDayMap());
+		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
+		skyAnswer.setSkyBodyDayMap(skyBodyAnalyser.getSkyBodyDayMap());
 		return skyAnswer;
 	}
 }

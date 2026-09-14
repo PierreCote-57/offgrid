@@ -23,7 +23,7 @@ Horizons answers for the years -2000 to +2999.
 ## Step 1 — the bodies
 
 Read the enum constants in
-`src/main/java/com/lc/offgrid/common/misc/external/horizons/HorizonsBody.java`. The second
+`src/main/java/com/lc/offgrid/common/misc/astronomy/planet/HorizonsBody.java`. The second
 argument of each is the `COMMAND` identifier. A body whose identifier is null — Earth, because
 the ephemeris is geocentric — has no file and is skipped.
 

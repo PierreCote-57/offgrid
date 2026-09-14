@@ -1,4 +1,4 @@
-package com.lc.offgrid.common.misc.external.horizons;
+package com.lc.offgrid.common.misc.astronomy.planet;
 
 import java.io.File;
 import java.io.FileNotFoundException;

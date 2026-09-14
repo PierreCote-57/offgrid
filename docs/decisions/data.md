@@ -523,7 +523,7 @@ every observer; which rows a request touches is not.
 **Earth is not a body here.** The ephemeris is geocentric, so Earth has none of its own, and
 the table is nine rows where the chart draws ten.
 
-`external/horizons/` holds `HorizonsBody` (the nine, each with the identifier `COMMAND` takes),
+`astronomy/planet/` holds `HorizonsBody` (the nine, each with the identifier `COMMAND` takes),
 `HorizonsRow` (one line of an OBSERVER answer), `HorizonsPosition` (where one body is at one
 moment) and `HorizonsEphemeris` (the object that reads the files and answers positions).
 
@@ -555,8 +555,8 @@ cross a horizon of their own, and an observer south of a planet's declination se
 north rather than south. None of that is being designed yet, and a design that starts from the
 exceptions cannot be understood.
 
-**The years Horizons answers for are −2000 to +2999**, and the ones on disk are whatever has
-been fetched.
+**The years Horizons answers for differ by body**, and are stated in `HorizonsBody`'s javadoc.
+The ones on disk are whatever has been fetched.
 
 ## 2026-09-09 — The moment is an Instant, and one ephemeris serves one request
 
@@ -595,9 +595,9 @@ next index. A key would have to be reconstructed by the caller as `start + n × 
 the stepping the call just did, and the moment would still have to travel with each position for
 the two ends of a crossing to be usable.
 
-## 2026-09-09 — `SkyAnalyser` answers the sky page, and carries its answers in its own objects
+## 2026-09-09 — `SkyBodyAnalyser` answers the sky page, and carries its answers in its own objects
 
-**One class answers both halves of the page.** `SkyAnalyser`, in `common/misc/sky`, is built for
+**One class answers both halves of the page.** `SkyBodyAnalyser`, in `common/misc/sky`, is built for
 one observer at one moment — `folder.local`, a `ZonedDateTime`, a latitude and a longitude — and
 builds its own `HorizonsEphemeris` for the local date that moment falls on. The conversion belongs
 to the class that holds a zone, so nothing above it holds a position, a row or a file path. Like
@@ -634,7 +634,7 @@ elevation from a position with the place and the time.
 **The order of work is what a thing IS, then what it does.** Step one settles the shape — the
 method signatures of a working class, the member variables of a data class — with methods
 returning null and no accessors written. Step two fills them in, accessors included. Both steps
-are done for `SkyAnalyser`, `SkyBodyDay`, `HorizonsMoment` and `HorizonsMomentName`; what is left is the
+are done for `SkyBodyAnalyser`, `SkyBodyDay`, `HorizonsMoment` and `HorizonsMomentName`; what is left is the
 page reading them, which is #48.
 
 **How a crossing is found: sample the day, take the nearer sample.** The observer's day is walked
@@ -647,12 +647,12 @@ there is no refraction, no solar or lunar disc and no parallax, and the directio
 against the sidereal time of the day, which in 2026 puts a transit about a minute and a half off
 what an almanac prints.
 
-**Nothing outside `misc/sky` and `misc/external/horizons` constrains these classes.** They replace
+**Nothing outside `misc/sky` and `misc/astronomy/planet` constrains these classes.** They replace
 the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them.
 
 ## 2026-09-10 — The observer's moment belongs to Horizons
 
-**All the astronomy sits in `external/horizons`.** `HorizonsEphemeris.getMoment(body, instant,
+**All the planet astronomy sits in `astronomy/planet`.** `HorizonsEphemeris.getMoment(body, instant,
 latitude, longitude)` is a peer of `getPosition`: it reads the position and turns that direction
 onto the observer's horizon, sidereal time and the hour angle being its own business the way the
 rows already were. The two answers that need no observer are the position's own:

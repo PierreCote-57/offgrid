@@ -1,12 +1,11 @@
 package com.lc.offgrid.common.misc.sky;
 
 import com.lc.basics.tools.misc.BasicRuntimeException;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsBody;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsEphemeris;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMoment;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsMomentName;
-import com.lc.offgrid.common.misc.external.horizons.HorizonsPosition;
-import com.lc.offgrid.common.pojo.part.SkyBody;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsEphemeris;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
+import com.lc.offgrid.common.misc.astronomy.planet.HorizonsPosition;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 
 /**
@@ -31,7 +28,7 @@ import java.util.function.ToDoubleFunction;
  * answers about that moment only. It serves one request and then goes away, so it is not a bean
  * and the local folder arrives as a constructor parameter.
  */
-public class SkyAnalyser
+public class SkyBodyAnalyser
 {
 	/** How often the day is sampled when a crossing is looked for. */
 	private static final Duration SAMPLE_STEP = Duration.ofMinutes(2);
@@ -53,7 +50,7 @@ public class SkyAnalyser
 	 * An ephemeris that cannot be read is a runtime failure: nothing a caller states can make
 	 * a missing or malformed file readable, so there is nothing for it to catch.
 	 */
-	public SkyAnalyser(String dataRootFolder, ZonedDateTime dateTime, double latitude, double longitude)
+	public SkyBodyAnalyser(String dataRootFolder, ZonedDateTime dateTime, double latitude, double longitude)
 	{
 		this.dateTime = dateTime;
 		this.latitude = latitude;
@@ -67,7 +64,7 @@ public class SkyAnalyser
 		catch (Exception exception)
 		{
 			throw new BasicRuntimeException(exception,
-					"SkyAnalyser('%1$s', %2$s, %3$s, %4$s) could not read the ephemeris",
+					"SkyBodyAnalyser('%1$s', %2$s, %3$s, %4$s) could not read the ephemeris",
 					dataRootFolder, dateTime, latitude, longitude);
 		}
 
