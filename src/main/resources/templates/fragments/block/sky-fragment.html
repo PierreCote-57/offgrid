@@ -24,7 +24,7 @@
 	The button is served blank and the input with no value and no ends: sky.js writes all of it
 	when the answer lands, the same way it fills a chart and a table.
 
-	Picking a day asks /rest/sky/data for it: nothing is submitted and the page never loads again,
+	Picking a day asks the sky endpoints for it: nothing is submitted and the page never loads again,
 	which is why there is no form here and no coordinates ride along.
 -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="datePicker(scopeId)" class="og-sky-datebox"
@@ -37,7 +37,7 @@
 
 <!--
 	The chart's block: the element sky.js draws into, and nothing in it. The drawing is built
-	from what /rest/sky/data answers, so the page can ask again — another date, another place —
+	from what /rest/sky/positions answers, so the page can ask again — another date, another place —
 	and only this block changes.
 
 	The width is stated here and nowhere else. It rides on the element as data-width, because
@@ -58,7 +58,7 @@
 
 <!--
 	The table's block: the two elements sky.js fills, and nothing in them. The rows and the
-	observer line under them are both built from what /rest/sky/data answers, so the page can
+	observer line under them are both built from what /rest/sky/observer answers, so the page can
 	ask again — another date, another place — and only this block changes.
 
 	isWide states which set of columns the block wants. It rides on the element as data-wide,

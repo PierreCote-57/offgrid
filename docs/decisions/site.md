@@ -658,7 +658,8 @@ columns of 50 have to fit wherever two of 175 fit.
 `positionOf()` first, because a position answers by callback, then requests `timezone` from
 `Intl`, `epochSecond` from the date, and `lat`/`lng` only when a position came back — a refusal
 leaves them off and the server answers for its marker, which is what the menu's sky link already
-settles for.
+settles for. **Superseded 2026-09-15** — there are two calls, and only one of them waits on the
+position. See *The chart does not wait for the visitor's position* below.
 ## 2026-09-12 — A date control drives the blocks in one element
 
 The page carries one date control per `<details>` rather than one for the page, because a control
@@ -722,3 +723,30 @@ Deleted with the server-side chart: `SkyDataMaker`, `SkyDataChart`, `SkyDataTabl
 `SkyBody`, `BodyPosition`, the `drawing` fragment, `processSkyChart`, `makeChartImage`,
 `OffgridUtil.parseWidth`, the processor's Thymeleaf `templateEngine`, and the `.og-sky-chart img`
 rule in `site.css`. `SkyBodyAnalyser` and `SkyBodyDay` stay — they are the REST side's.
+
+## 2026-09-15 — The chart does not wait for the visitor's position
+
+Everything on the page was drawn from one call, and that call waited on `positionOf()`. A first
+visit puts a permission prompt in front of it, which a visitor may take seconds to answer or
+never answer at all, and the chart and the date control sat blank through all of it — neither
+needs to know where anyone is.
+
+**Two calls, fired together.** `requestSkyData(dateTime, scope)` asks `/rest/sky/positions`
+straight away and `/rest/sky/observer` inside the `positionOf` callback. The chart and the
+picker draw at the speed of a fetch; the table waits, which is the one block that was always
+going to.
+
+**Each answer has its own named handler**, `processPosition` and `processObserver`, so the
+requesting and the filling read separately. `fetchSkyData(url)` holds what both calls share —
+the ok-check, the parse and the timing log — and on failure logs and returns a promise that
+never settles, so a handler runs on an answer or not at all.
+
+**The blocks are found once, before either fetch, and travel as one `blockMap`** of
+`tableList`, `chartList` and `pickerList`. Both handlers take the same `(data, blockMap)` and
+pick what they fill. Handing each handler only its own lists was written first and rejected:
+it froze at the call site which blocks an answer fills, and that is the handler's business —
+the picker needs only `epochSecond` and `timeZone`, which both answers carry, so it could be
+filled by either.
+
+Rejected: passing `scope` and letting each handler query. It costs a second pass over the DOM
+and puts the selectors in two places.

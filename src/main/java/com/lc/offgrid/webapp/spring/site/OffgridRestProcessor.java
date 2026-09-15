@@ -5,7 +5,8 @@ import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
 import com.lc.offgrid.webapp.pojo.chat.ChatMessage;
 import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
-import com.lc.offgrid.webapp.pojo.sky.SkyInfoRestAnswer;
+import com.lc.offgrid.webapp.pojo.sky.SkyObserverRestAnswer;
+import com.lc.offgrid.webapp.pojo.sky.SkyPositionsRestAnswer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -55,23 +56,41 @@ public class OffgridRestProcessor
 	}
 
 	/**
+	 * Where the bodies stand at the second it asks for, seen from above. It takes no observer,
+	 * so the caller asks for it without waiting for the browser to say where it is. Both
+	 * parameters arrive as text so a value that does not parse falls back to the default rather
+	 * than failing the request.
+	 */
+	public SkyPositionsRestAnswer processSkyPositions(String timeZoneText, String epochSecondText)
+	{
+		ZonedDateTime	dateTime		= OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText);
+
+		getLogger().debug("processSkyPositions(%s)", dateTime);
+
+		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(dateTime);
+
+		SkyPositionsRestAnswer	skyAnswer	= new SkyPositionsRestAnswer(dateTime);
+		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
+		return skyAnswer;
+	}
+
+	/**
 	 * The sky where the observer stands, at the second it asks for. The four parameters arrive
 	 * as text so a value that does not parse falls back to the default rather than failing the
 	 * request.
 	 */
-	public SkyInfoRestAnswer processSkyData(String timeZoneText, String latitudeText, String longitudeText,
+	public SkyObserverRestAnswer processSkyObserver(String timeZoneText, String latitudeText, String longitudeText,
 			String epochSecondText)
 	{
 		ZonedDateTime	dateTime		= OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText);
 		double			latitude		= OffgridUtil.parseLatitude(latitudeText);
 		double			longitude		= OffgridUtil.parseLongitude(longitudeText);
 
-		getLogger().debug("processSkyData(%s, %s, %s)", dateTime, latitude, longitude);
+		getLogger().debug("processSkyObserver(%s, %s, %s)", dateTime, latitude, longitude);
 
 		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(dateTime, latitude, longitude);
 
-		SkyInfoRestAnswer	skyAnswer	= new SkyInfoRestAnswer(dateTime, latitude, longitude);
-		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
+		SkyObserverRestAnswer	skyAnswer	= new SkyObserverRestAnswer(dateTime, latitude, longitude);
 		skyAnswer.setSkyBodyDayMap(skyBodyAnalyser.getSkyBodyDayMap());
 		return skyAnswer;
 	}

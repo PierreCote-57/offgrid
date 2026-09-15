@@ -2,7 +2,7 @@
  * Copyright (c) 2026 LogicielCote.COM All rights reserved.
  *
  * The sky page in the browser. The table, the observer line under it and the chart are all
- * built here from what /rest/sky/data answers.
+ * built here from what /rest/sky/positions and /rest/sky/observer answer.
  *
  * Every page loads this file, so it finds its own blocks at load and asks the server for
  * nothing when there are none. A page may hold more than one chart — sky.html draws two —
@@ -20,7 +20,8 @@
 	var DATE_INPUT_SELECTOR = ".og-sky-date-input";
 	var PLACE_SELECTOR = ".og-sky-place";
 	var DASH_SELECTOR = ".og-sky-place-dash";
-	var DATA_URL = "/rest/sky/data";
+	var POSITIONS_URL = "/rest/sky/positions";
+	var OBSERVER_URL = "/rest/sky/observer";
 
 	// The ends the date picker may not go past, as a date input names a day.
 	var FIRST_DAY_TEXT = "2020-01-01";
@@ -744,11 +745,24 @@
 	 * The call the endpoint reads. A parameter it is not given falls back on the server, which is
 	 * what a refused position comes to.
 	 */
-	function makeDataUrl(dateTime, position) {
+	function makeMomentQuery(dateTime) {
 		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		var epochSecond = Math.floor(dateTime.getTime() / 1000);
 
-		var url = DATA_URL + "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
+		var query = "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
+		return query;
+	}
+
+	// Where the bodies stand, which the observer does not enter into.
+	function makePositionsUrl(dateTime) {
+		var url = POSITIONS_URL + makeMomentQuery(dateTime);
+		return url;
+	}
+
+	// The observer's own sky. A refused position leaves the place off and the server answers for
+	// its marker.
+	function makeObserverUrl(dateTime, position) {
+		var url = OBSERVER_URL + makeMomentQuery(dateTime);
 		if (position) {
 			url = url + "&lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
 		}
@@ -766,51 +780,85 @@
 	 */
 	function loadSkyData(dateTime, scopeElement) {
 		var scope = scopeElement || document;
+		requestSkyData(dateTime, scope);
+	}
 
-        log("Getting position");
+	/*
+	 * Two calls, asked for at once. The positions answer needs no observer, so it goes out now
+	 * and the chart and the date control draw as soon as it lands; the observer call waits for
+	 * the browser to say where the visitor is, which is the second the table was always going to
+	 * cost.
+	 *
+	 * The blocks are found once, here, and each answer is handed only the list it fills.
+	 */
+	function requestSkyData(dateTime, scope) {
+		var blockMap = {
+			tableList: scope.querySelectorAll(TABLE_SELECTOR),
+			chartList: scope.querySelectorAll(CHART_SELECTOR),
+			pickerList: scope.querySelectorAll(DATEBOX_SELECTOR)
+		};
+
+		var positionsUrl = makePositionsUrl(dateTime);
+		log("Asking " + positionsUrl + " for the positions.");
+		fetchSkyData(positionsUrl).then(function (positionsData) {
+			processPosition(positionsData, blockMap);
+		});
+
+		log("Getting position");
 		positionOf().then(function (position) {
-			requestSkyData(dateTime, position, scope);
+			var observerUrl = makeObserverUrl(dateTime, position);
+			log("Asking " + observerUrl + " for the observer's sky.");
+			fetchSkyData(observerUrl).then(function (observerData) {
+				processObserver(observerData, blockMap);
+			});
 		});
 	}
 
-	// Ask, and fill every block inside the scope with what comes back.
-	function requestSkyData(dateTime, position, scope) {
-		var tableList = scope.querySelectorAll(TABLE_SELECTOR);
-		var chartList = scope.querySelectorAll(CHART_SELECTOR);
-		var pickerList = scope.querySelectorAll(DATEBOX_SELECTOR);
-		var url = makeDataUrl(dateTime, position);
+	/*
+	 * One call, answered as the object it carries. A failure is logged and the promise never
+	 * settles, so a handler runs on an answer or not at all.
+	 */
+	function fetchSkyData(url) {
 		var startedAt = Date.now();
-		log("Asking " + url + " for the sky.");
 
-		fetch(url)
+		var dataPromise = fetch(url)
 			.then(function (response) {
 				if (!response.ok) {
 					throw new Error("failed to load " + url + " (HTTP " + response.status + ")");
 				}
-			log("Sky data available");
-			return response.json();
+				return response.json();
 			})
 			.then(function (skyData) {
 				log("Answered " + skyData.dateTimeText + " after " + (Date.now() - startedAt) + "ms.");
-
-				tableList.forEach(function (tableElement) {
-					renderTable(tableElement, skyData);
-					renderObserver(tableElement, skyData);
-					lookUpPlace(tableElement, skyData);
-				});
-
-				chartList.forEach(function (chartElement) {
-					renderChart(chartElement, skyData);
-				});
-
-				pickerList.forEach(function (boxElement) {
-					renderDatePicker(boxElement, skyData);
-				});
+				return skyData;
 			})
 			.catch(function (failure) {
-				logError("requestSkyData(" + url + ") failed after " + (Date.now() - startedAt)
+				logError("fetchSkyData(" + url + ") failed after " + (Date.now() - startedAt)
 						+ "ms: " + failure.message);
+				return new Promise(function () {});
 			});
+
+		return dataPromise;
+	}
+
+	// What the positions answer fills: the chart, and the day on the date control.
+	function processPosition(positionsData, blockMap) {
+		blockMap.chartList.forEach(function (chartElement) {
+			renderChart(chartElement, positionsData);
+		});
+
+		blockMap.pickerList.forEach(function (boxElement) {
+			renderDatePicker(boxElement, positionsData);
+		});
+	}
+
+	// What the observer answer fills: the table, the observer line under it, and the place name.
+	function processObserver(observerData, blockMap) {
+		blockMap.tableList.forEach(function (tableElement) {
+			renderTable(tableElement, observerData);
+			renderObserver(tableElement, observerData);
+			lookUpPlace(tableElement, observerData);
+		});
 	}
 
 	/*

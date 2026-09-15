@@ -128,6 +128,8 @@ the same JVM.
 
 ## 2026-09-10 — The sky endpoint, and the shape a time takes on the wire
 
+**Superseded 2026-09-15** — there are two sky endpoints now, and no `/rest/sky/data`. Everything below about the path, the parameters and the answer still holds; it holds twice. See *Two sky endpoints, split by what they depend on* below.
+
 **`/rest/sky/data` on `OffgridRestController`, through `processRequest`.** The first path
 proposed was `/info/sky/data`, which would have put it on the web controller beside the page:
 a method mapping cannot escape the controller's class-level `/rest`, so the path decided the
@@ -185,7 +187,7 @@ number. The cost is on the client, where a `Date` is built from milliseconds.
 stated on `SKY_FIRST_DATE`: outside the JPL elements' stated range the positions are wrong
 rather than rough. It lands in `parseEpochSecond` because that is where a date first exists.
 
-**`SkyInfoRestAnswer` is constructed from the `ZonedDateTime` and stores the two parts.**
+**`SkyInfoRestAnswer` is constructed from the `ZonedDateTime` and stores the two parts.** (`SkyRestAnswer` since 2026-09-15, with the coordinates on the observer answer only.)
 Handing it the moment keeps the splitting in one place; storing `epochSecond` and `ZoneId` is
 what goes on the wire, and the client puts them back together. The observer's `latitude` and
 `longitude` ride beside them, so the answer states what the request was read as — every
@@ -202,8 +204,8 @@ was built to answer, and a setter keeps the constructor to the observer. Both ar
 **`bodyMap` joined the answer, keyed like the other two maps.** Its entries carry the body's
 name and its `periodDay`, so a browser drawing the table names its own rows instead of holding
 a list of names that has to be kept in step with the enum. `SkyBodyInfo` is the wire shape and
-`SkyInfoRestAnswer` builds the map in its constructor from `HorizonsBody.values()`: nothing in
-it depends on the request.
+`SkyRestAnswer` builds the map in its constructor from `HorizonsBody.values()`: nothing in
+it depends on the request, which is why both answers can carry it.
 
 **`periodDay` went on `HorizonsBody` rather than into `SkyBodyAnalyser`.** It does not change with
 the date or the observer, which is all the analyser exists for, and a second enum mirroring the
@@ -216,3 +218,36 @@ already had it and only the angle was being kept. `distance` is from the observe
 `orbitRadius` is from the Sun; for the Moon that is its distance from the Sun, not the size of
 its own orbit.
 
+
+## 2026-09-15 — Two sky endpoints, split by what they depend on
+
+`/rest/sky/data` answered the whole sky in one call, so the browser could not ask for any of it
+until it knew where the visitor stood. The chart and the date control need no observer, and
+they were waiting behind a geolocation prompt that a visitor may take seconds to answer, or
+never.
+
+**Two endpoints, named for what they depend on, not for the block that draws them.**
+`/rest/sky/positions` takes `timezone` and `epochSecond` and answers where the bodies stand
+seen from above; `/rest/sky/observer` takes those plus `lat` and `lng` and answers what the sky
+does for one observer that day. The browser asks for the first as the page loads and the second
+once the position is in.
+
+**Two answers over one base.** `SkyRestAnswer` holds what both state — the moment, and
+`bodyMap` — and `SkyPositionsRestAnswer` adds `sunAngleMap`, `SkyObserverRestAnswer` the
+coordinates and `skyBodyDayMap`. It is the split `SkyData` / `SkyDataChart` / `SkyDataTable`
+had, for the same reason: one object serving both meant each caller saw the other's data.
+
+**`bodyMap` is on both, not on one.** The table reads `bodyMap.name`, `bodyMap.parent` and
+`bodyMap.periodDay` and renders off the observer answer alone. On one answer only, a handler
+would have to wait for the other call and the two would have to coordinate; on both, each
+answer is everything its blocks need. The cost is ten bodies of name, parent and period sent
+twice.
+
+**The price is a second `HorizonsEphemeris`.** It reads every body's files for the seven-day
+window in its constructor, so two calls read them twice — measured at 29.5 ms per request,
+against the 0.5 to 1.5 seconds the position takes. The trade was made on those two numbers.
+
+**`SkyBodyAnalyser` gained a constructor with no observer.** `getSunAngleMap` never touched the
+latitude or the longitude — only `getSkyBodyDay` does — so the positions call builds it with
+the moment alone, and the two getters answer `Double` rather than `double` because there is now
+a case where there is no place to state.

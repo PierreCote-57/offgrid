@@ -2,7 +2,8 @@ package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
 import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
-import com.lc.offgrid.webapp.pojo.sky.SkyInfoRestAnswer;
+import com.lc.offgrid.webapp.pojo.sky.SkyObserverRestAnswer;
+import com.lc.offgrid.webapp.pojo.sky.SkyPositionsRestAnswer;
 import com.lc.offgrid.webapp.spring.tools.BaseRestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,18 +45,33 @@ public class OffgridRestController extends BaseRestController
 	}
 
 	/**
+	 * Where the bodies stand at the second it asks for, seen from above. It takes no place, so a
+	 * caller asks for it without waiting on the browser's position. Both parameters are optional,
+	 * and absent they are Campbell River's zone, now. They arrive as text so a value that does
+	 * not parse falls back rather than failing the request.
+	 */
+	@GetMapping("/sky/positions")
+	public ResponseEntity<SkyPositionsRestAnswer> skyPositions(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required = false) String timezone,
+			@RequestParam(required = false) String epochSecond)
+	{
+		return processRequest(request, response,
+				() -> getProcessor().processSkyPositions(timezone, epochSecond));
+	}
+
+	/**
 	 * The sky where the caller is, at the second it asks for. All four parameters are optional,
 	 * and absent they are the 50th parallel marker in Campbell River in its own zone, now. They
 	 * arrive as text so a value that does not parse falls back rather than failing the request.
 	 */
-	@GetMapping("/sky/data")
-	public ResponseEntity<SkyInfoRestAnswer> skyData(HttpServletRequest request, HttpServletResponse response,
+	@GetMapping("/sky/observer")
+	public ResponseEntity<SkyObserverRestAnswer> skyObserver(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required = false) String timezone,
 			@RequestParam(required = false) String lat,
 			@RequestParam(required = false) String lng,
 			@RequestParam(required = false) String epochSecond)
 	{
 		return processRequest(request, response,
-				() -> getProcessor().processSkyData(timezone, lat, lng, epochSecond));
+				() -> getProcessor().processSkyObserver(timezone, lat, lng, epochSecond));
 	}
 }
