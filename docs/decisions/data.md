@@ -648,7 +648,8 @@ against the sidereal time of the day, which in 2026 puts a transit about a minut
 what an almanac prints.
 
 **Nothing outside `misc/sky` and `misc/astronomy/planet` constrains these classes.** They replace
-the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them.
+the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them — and as of 2026-09-15 those are
+deleted, so `SkyBodyAnalyser` and `SkyBodyDay` are what `misc/sky` holds.
 
 ## 2026-09-10 — The observer's moment belongs to Horizons
 

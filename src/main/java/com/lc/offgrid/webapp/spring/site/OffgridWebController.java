@@ -95,38 +95,6 @@ public class OffgridWebController extends BaseWebController
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PostPage.class));
 	}
 
-	/**
-	 * The sky page, for an observer on a date. The coordinates are optional, and absent they
-	 * are the 50th parallel marker in Campbell River; the date is optional and absent it is
-	 * today. All three arrive as text so a value that does not parse falls back rather than
-	 * failing the request.
-	 */
-	@GetMapping("/info/sky")
-	public String sky(HttpServletRequest request, HttpServletResponse response, Model model,
-			@RequestParam(required = false) String latitude,
-			@RequestParam(required = false) String longitude,
-			@RequestParam(required = false) String date)
-	{
-		String path = String.format("/info/%1$s", "sky");
-		return processRequest(request, response, model,
-				() -> getProcessor().processSky(model, path, PageData.class, latitude, longitude, date));
-	}
-
-	/**
-	 * The sky chart, as an image of its own, drawn at the width asked for. It answers bytes
-	 * rather than a view name, so it goes to the processor directly instead of through
-	 * processRequest.
-	 */
-	@GetMapping("/sky/chart.svg")
-	public ResponseEntity<Resource> skyChart(HttpServletRequest request,
-			@RequestParam(required = false) String width,
-			@RequestParam(required = false) String date)
-	{
-		ResponseEntity<Resource> response = getProcessor().processSkyChart(width, date);
-		logVisit(request, "chart-" + width, System.nanoTime());
-		return response;
-	}
-
 	@GetMapping("/info/{name}")
 	public String info(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{

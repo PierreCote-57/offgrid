@@ -16,10 +16,15 @@
 	var DRAWING_SELECTOR = ".og-sky-drawing";
 	var OBSERVER_SELECTOR = ".og-sky-observer";
 	var DATEBOX_SELECTOR = ".og-sky-datebox";
+	var DATE_BUTTON_SELECTOR = ".og-sky-date";
 	var DATE_INPUT_SELECTOR = ".og-sky-date-input";
 	var PLACE_SELECTOR = ".og-sky-place";
 	var DASH_SELECTOR = ".og-sky-place-dash";
 	var DATA_URL = "/rest/sky/data";
+
+	// The ends the date picker may not go past, as a date input names a day.
+	var FIRST_DAY_TEXT = "2020-01-01";
+	var LAST_DAY_TEXT = "2029-12-31";
 
 	// What a cell shows when the day does not hold the moment it asks for.
 	var MISSING_TEXT = "-";
@@ -746,6 +751,7 @@
 	function loadSkyData(dateTime, scopeElement) {
 		var scope = scopeElement || document;
 
+        log("Getting position");
 		positionOf().then(function (position) {
 			requestSkyData(dateTime, position, scope);
 		});
@@ -771,6 +777,7 @@
 	function requestSkyData(dateTime, position, scope) {
 		var tableList = scope.querySelectorAll(TABLE_SELECTOR);
 		var chartList = scope.querySelectorAll(CHART_SELECTOR);
+		var pickerList = scope.querySelectorAll(DATEBOX_SELECTOR);
 		var url = makeDataUrl(dateTime, position);
 		var startedAt = Date.now();
 		log("Asking " + url + " for the sky.");
@@ -780,7 +787,8 @@
 				if (!response.ok) {
 					throw new Error("failed to load " + url + " (HTTP " + response.status + ")");
 				}
-				return response.json();
+			log("Sky data available");
+			return response.json();
 			})
 			.then(function (skyData) {
 				log("Answered " + skyData.dateTimeText + " after " + (Date.now() - startedAt) + "ms.");
@@ -793,6 +801,10 @@
 
 				chartList.forEach(function (chartElement) {
 					renderChart(chartElement, skyData);
+				});
+
+				pickerList.forEach(function (boxElement) {
+					renderDatePicker(boxElement, skyData);
 				});
 			})
 			.catch(function (failure) {
@@ -814,11 +826,54 @@
 		return dateTime;
 	}
 
-	// What the button reads, the way the server rendered it: "Mon 2026-09-07".
-	function buttonText(dateTime, dayText) {
-		var weekday = dateTime.toLocaleDateString("en-GB", { weekday: "short" });
+	/*
+	 * The day the answer is for, written the way a date input names a day: yyyy-MM-dd, on the
+	 * clock of the zone the answer states. Built from the parts rather than from a locale's own
+	 * order, which is not the input's.
+	 */
+	function dayTextOf(epochSecond, timeZone) {
+		var partList = new Intl.DateTimeFormat("en-GB", {
+			timeZone: timeZone, year: "numeric", month: "2-digit", day: "2-digit"
+		}).formatToParts(new Date(epochSecond * 1000));
+
+		var partMap = {};
+		partList.forEach(function (part) {
+			partMap[part.type] = part.value;
+		});
+
+		var text = partMap.year + "-" + partMap.month + "-" + partMap.day;
+		return text;
+	}
+
+	// What the button reads: "Mon 2026-09-07", the weekday on the same clock as the day beside it.
+	function buttonText(epochSecond, timeZone, dayText) {
+		var weekday = new Date(epochSecond * 1000).toLocaleDateString("en-GB", {
+			timeZone: timeZone, weekday: "short"
+		});
 		var text = weekday + " " + dayText;
 		return text;
+	}
+
+	/*
+	 * Fill one date control with the day the answer is for, and the ends the calendar may not go
+	 * past. The button carries the words and the input holds the value the browser's calendar
+	 * opens on, so both are written. The button is blank until this runs: the page is served with
+	 * no date on it.
+	 */
+	function renderDatePicker(boxElement, skyData) {
+		var buttonElement = boxElement.querySelector(DATE_BUTTON_SELECTOR);
+		var inputElement = boxElement.querySelector(DATE_INPUT_SELECTOR);
+		if (buttonElement === null || inputElement === null) {
+			logError("renderDatePicker() found no " + DATE_BUTTON_SELECTOR + " or "
+					+ DATE_INPUT_SELECTOR + " in the box.");
+			return;
+		}
+
+		var dayText = dayTextOf(skyData.epochSecond, skyData.timeZone);
+		inputElement.min = FIRST_DAY_TEXT;
+		inputElement.max = LAST_DAY_TEXT;
+		inputElement.value = dayText;
+		buttonElement.textContent = buttonText(skyData.epochSecond, skyData.timeZone, dayText);
 	}
 
 	// The element a date control drives: the id its box states, or the whole page when it states
@@ -847,8 +902,8 @@
 	 * Escape, on a click outside — when focus is in the input.
 	 *
 	 * Picking a day fires change, and the blocks the box drives ask for that day where they
-	 * stand. The button's text comes back with it: the server rendered the first one, and nothing
-	 * else writes it after. Assigning onchange rather than adding a listener is what makes a
+	 * stand. The button's text comes back with the answer, like every other part of a block, so
+	 * nothing is written here. Assigning onchange rather than adding a listener is what makes a
 	 * second click harmless.
 	 */
 	function openDatePicker(button) {
@@ -859,7 +914,6 @@
 		input.onchange = function () {
 			var dayText = input.value;
 			var dateTime = noonOf(dayText);
-			button.textContent = buttonText(dateTime, dayText);
 			loadSkyData(dateTime, scope);
 		};
 

@@ -1369,14 +1369,6 @@ body:has(.og-chat-page) {
 
 .og-sky-row .og-sky-table { flex: 0 0 auto; }
 
-/* The chart arrives as its own document, so its colours are inside it, not here. Its width
-   and height are on the img itself, which is what makes it exactly the size the page asked
-   for: a length here would either fight that or have to be kept in step with it. */
-.og-sky-chart img,
-.og-sky-wide img {
-	display: block;
-}
-
 /* The date is the page's control, and it says so: the surface the browser page's filters
    wear — white, ruled, rounded, with the chevron that means a list comes down — at the size
    the date heading used to be, so it still reads as the page's date.

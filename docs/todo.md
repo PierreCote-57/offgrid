@@ -67,12 +67,12 @@ class shapes and everything settled.
 latitude and a longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
 at a time or as a map over the nine.
 
-The table is done, on 2026-09-12: `sky.js` draws it from `/rest/sky/data`, and the 2026-09-12
-entries in `docs/decisions/site.md` and `apis.md` state how. What is left is the chart, which
-still arrives drawn from the server, and then the teardown: `PLACEHOLDER_TIMES`,
-`applyPlaceholderTimes`, the times on `SkyBody`, the `Sky*` POJOs and `SkyDataMaker` all go
-when nothing reads them, and `com.lc.basics.tools.astronomy` goes with them, `Ephemeris`
-included. #61 holds what the answer still has to carry before a browser can draw the chart.
+The table is done, on 2026-09-12, and the chart and the teardown on 2026-09-15: `sky.js` draws
+every block from `/rest/sky/data`, the `Sky*` POJOs and `SkyDataMaker` are deleted, and the
+2026-09-12 and 2026-09-15 entries in `docs/decisions/site.md` and `apis.md` state how. What is
+left of the teardown is `com.lc.basics.tools.astronomy`: `Body` and `EclipticPosition` have no
+caller outside that package now, and `Ephemeris` has one, `OffgridUtil`. #61 holds what the
+answer still has to carry.
 
 One more that belongs here rather than in the implementation: the constellation is carried as
 the three-letter code, and turning it into a name a reader knows is still to do.
@@ -88,9 +88,10 @@ Large is the biggest thing served — a visitor paging a gallery with the arrow 
 step. Medium's box is the alternative. Since the "Full size" link went to the bare URL on
 2026-09-06, nothing asks for Large at all.
 
-#53 Low priority. Give a crowded chart label somewhere to go. `SkyDataMaker` tries eight
-positions and takes the first that clears; on days when two planets are in conjunction as seen
-from above, none clears and the two texts print on top of each other. A sweep of 2026-01-01 to
+#53 Low priority. Give a crowded chart label somewhere to go. The server's chart tried eight
+positions and took the first that cleared; on days when two planets are in conjunction as seen
+from above, none clears and the two texts print on top of each other. `sky.js` draws the chart
+now and tries none of them, so the labels overlap on those days rather than moving. A sweep of 2026-01-01 to
 2028-12-31 hit it on 60 days of 1096, longest run 3 to 23 February 2027 — Mercury/Venus and
 Earth/Mars account for most of them. 10 February 2027 is a date to draw when checking it.
 
@@ -122,10 +123,3 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
 
-#63 Remove the server-side sky chart, now that the browser draws it. Nothing on a page points
-at any of it: `/sky/chart.svg` and its controller mapping, `processSkyChart` and `makeChartImage`
-in `OffgridWebProcessor`, the `drawing` fragment in `sky-fragment.html`, and `SkyDataChart`,
-`SkyDataMaker`, `SkyBody` and `BodyPosition` behind them. Two more things go with it: the
-`.og-sky-chart img, .og-sky-wide img` rule in `site.css`, which matches nothing now, and the
-decisions in `docs/decisions/site.md` that state the chart is an image at its own URL with its
-width in that request's query string and its palette inside the SVG document.

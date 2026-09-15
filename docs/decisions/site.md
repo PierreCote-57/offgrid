@@ -477,6 +477,10 @@ So there was never a word to choose between. The folder, the template folder and
 
 ## 2026-09-07 — The sky page
 
+**Superseded 2026-09-15 down to *Label placement*** — the server drew the chart, at its own
+URL, from its own POJOs. The browser draws it now and none of that code is left. See *The
+server sends no sky data* below.
+
 Two server calls, and they answer different things. `/info/sky` renders the page and knows
 about the observer; `/sky/chart.svg` answers one image and does not, because heliocentric
 positions do not depend on where the reader stands. Neither hands the other's data to its
@@ -509,7 +513,8 @@ the observer.
 a line height of it.** A box test alone passes two labels that never touch and still read as one
 stacked block; that rule is what replaces the skill's "look at the result and override where it
 reads badly", which a server cannot do. What it cannot fix is two planets in conjunction at a
-small canvas — see `docs/todo.md` #53.
+small canvas — see `docs/todo.md` #53. **Superseded 2026-09-15** — the rule went with
+`SkyDataMaker`. `sky.js` centres every label above its dot and tries no other position.
 
 **The place name is reverse geocoded in the browser, through the Maps JavaScript API.** The
 geocoding web service refuses a referrer-restricted key outright, and the site's key is one.
@@ -518,18 +523,20 @@ is written in when Google answers, or not at all.
 
 Departure from the template-layout decision above: `fragments/block/sky-fragment.html` holds
 all of the page's fragments, not one. Pierre's call — they are the parts of one page and the
-file is named for the page, not for any one fragment. Four of them now: `datePicker`, `chart`
-(the img on the page), `table`, and `drawing` (the SVG document `/sky/chart.svg` renders).
+file is named for the page, not for any one fragment. Three of them: `datePicker`, `chart` and
+`table`, each the empty element `sky.js` fills.
 
 **Every block carries the element the page lays out.** The page places one with `th:replace`
 and states nothing about it — `.og-sky-chart` and `.og-sky-table` are inside their fragments,
 not in `sky.html`, so the row is two lines and the page reads as content. `th:replace` discards
 the host div, which is what makes that work; it is also why a block needing a per-use size uses
-`th:insert` instead, the way the map fragment does. Only `chart` takes a parameter, its width.
-The date every block needs is read off the model.
+`th:insert` instead, the way the map fragment does. `chart` takes its width and `table` takes
+`isWide`; `datePicker` takes the id of the element it drives.
 
 **The date is a request parameter, and the heading is the control that sets it**
-(2026-09-07). `/info/sky` takes `date` beside `latitude` and `longitude`, read the same lenient
+(2026-09-07). **Superseded 2026-09-15** — `/info/sky` takes no parameters at all now, and there
+is no mapping for it: `/info/{name}` serves the page. See *The server sends no sky data* below.
+`/info/sky` took `date` beside `latitude` and `longitude`, read the same lenient
 way: missing or unparseable is today, and a date outside what `Ephemeris` covers — the JPL
 elements are stated valid 1800-2050 — is answered with the end it passed rather than an error.
 The page shows the date it used, so a clamped date is visible without a message. `/sky/chart.svg`
@@ -585,9 +592,14 @@ and `ChecklistElementProcessor`, which writes three class names in Java.
 is, not what it is; `og-is-active` reads as a thing.
 
 The chart SVG keeps its own `ts` and `c-*`. It is served as its own document, so nothing on
-the page can reach its names and they collide with nothing.
+the page can reach its names and they collide with nothing. **Superseded 2026-09-15** — the
+browser builds the SVG, and every colour and length in it is a constant in `sky.js`.
 
 ## 2026-09-11 — The chart's width is one number, and the caption is page text
+
+**Superseded 2026-09-15 in its mechanism, not its conclusion** — the width is still stated once
+in the `chart(width)` call, but it rides on the block as `data-width` and the browser reads it.
+See *The server sends no sky data* below.
 
 **The width is stated once, in the page's `chart(width)` call.** It goes two places from
 there: the query string of the `/sky/chart.svg` request, and the `width` and `height`
@@ -677,3 +689,36 @@ box, the idiom already used for `data-width` and `data-wide`: the browser is wha
 **The position is asked of the browser once per page view.** `positionOf()` holds the promise, so
 three blocks refreshing are three requests for data and one geolocation callback. A visitor does
 not move between two clicks on the same page.
+
+## 2026-09-15 — The server sends no sky data
+
+The browser had taken over the table, then the chart, and the server was still computing both
+and handing them to the page. `/sky/chart.svg` is deleted, `/info/sky` takes no parameters and
+has no mapping of its own, and `processSky` is gone: `/info/{name}` serves the page like every
+other page under `/info`.
+
+**One source per fact, and the answer is it.** A block's contents come from `/rest/sky/data`
+and nothing else. Everything the model used to carry — the table, the chart, the caption, the
+date, the ends of the calendar — was a second copy of something the endpoint already answers or
+a constant that belongs where it is read.
+
+**The date picker is a block like the other two.** `requestSkyData` collects the boxes in the
+scope beside the tables and the charts, and `renderDatePicker` writes the button's words, the
+input's value and its `min` and `max`. Thymeleaf renders the button empty and the input bare.
+The alternative was filling it from the `dateTime` the request already holds, which fills it
+sooner but leaves the calendar's ends to a second mechanism; one place writing the whole control
+was worth the wait. `openDatePicker` no longer writes the button on change — the answer does.
+
+**The calendar's ends are `sky.js` constants**, `FIRST_DAY_TEXT` and `LAST_DAY_TEXT`, 2020-01-01
+to 2029-12-31. They were `OffgridUtil.SKY_FIRST_DATE` and `SKY_LAST_DATE`, which still clamp
+`/rest/sky/data` at the ephemeris's own 1800-2050. Making the picker's ends follow what is on
+disk is `docs/todo.md`.
+
+**The caption is a literal in the fragment**, on the chart block as `data-caption`. It was a
+`private static final` in `OffgridWebProcessor` put on the model for one template to read, which
+is a Java constant taking a round trip to reach the only file that wants it.
+
+Deleted with the server-side chart: `SkyDataMaker`, `SkyDataChart`, `SkyDataTable`, `SkyData`,
+`SkyBody`, `BodyPosition`, the `drawing` fragment, `processSkyChart`, `makeChartImage`,
+`OffgridUtil.parseWidth`, the processor's Thymeleaf `templateEngine`, and the `.og-sky-chart img`
+rule in `site.css`. `SkyBodyAnalyser` and `SkyBodyDay` stay — they are the REST side's.

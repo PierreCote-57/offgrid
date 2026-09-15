@@ -131,9 +131,10 @@ the same JVM.
 **`/rest/sky/data` on `OffgridRestController`, through `processRequest`.** The first path
 proposed was `/info/sky/data`, which would have put it on the web controller beside the page:
 a method mapping cannot escape the controller's class-level `/rest`, so the path decided the
-controller. Going through `processRequest` is what `/sky/chart.svg` gives up — the answer
-extends `RestBaseAnswer`, so it carries its own timing and a failure is logged and answered
-500 in one place.
+controller. Going through `processRequest` is what an endpoint answering bytes gives up — the
+answer extends `RestBaseAnswer`, so it carries its own timing and a failure is logged and
+answered 500 in one place. `/image/{imageName}` and `/document/{documentName}` are the ones
+that pay it.
 
 **The parameters — `timezone`, `lat`, `lng`, and later `epochSecond` — arrive as text, null
 when absent.**

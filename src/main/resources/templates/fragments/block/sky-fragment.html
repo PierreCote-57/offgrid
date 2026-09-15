@@ -5,11 +5,10 @@
 		datePicker   the date, and the control that changes it, for the blocks in one element
 		chart        the element sky.js draws the chart into, at the width asked for
 		table        the element sky.js fills with rise, transit and set, and the observer
-		drawing      the chart itself, an SVG document, served at /sky/chart.svg
 
 	Each one carries the element the page lays out, so a page places a block with th:replace
 	and states nothing about it. The chart takes its width and the table takes isWide; the
-	datePicker reads the model.
+	datePicker takes the id of the element it drives.
 -->
 
 <!--
@@ -18,8 +17,12 @@
 	to nothing else. OG.openDatePicker opens it, hooked on the button's onclick.
 
 	scopeId is the id of the element holding the charts and tables this date drives, so a page may
-	carry several controls, each answering for its own block. A control given no id drives every
-	block on the page.
+	carry several controls, each answering for its own block. That element holds this control too,
+	which is how the day it was answered gets back onto the button. A control given no id drives
+	every block on the page.
+
+	The button is served blank and the input with no value and no ends: sky.js writes all of it
+	when the answer lands, the same way it fills a chart and a table.
 
 	Picking a day asks /rest/sky/data for it: nothing is submitted and the page never loads again,
 	which is why there is no form here and no coordinates ride along.
@@ -28,10 +31,8 @@
 	 th:attr="data-scope=${scopeId}">
 	<span class="og-sky-datebox-label">The sky on</span>
 
-	<button type="button" class="og-sky-date" onclick="OG.openDatePicker(this)"
-			th:text="${#temporals.format(skyTable.date, 'EEE yyyy-MM-dd')}">Mon 2026-09-07</button>
-	<input type="date" class="og-sky-date-input"
-		   th:value="${skyTable.date}" th:min="${skyFirstDate}" th:max="${skyLastDate}">
+	<button type="button" class="og-sky-date" onclick="OG.openDatePicker(this)"></button>
+	<input type="date" class="og-sky-date-input">
 </div>
 
 <!--
@@ -46,11 +47,12 @@
 	width it wants and changes nothing else.
 
 	The caption is a line at the bottom of the drawing, under the outermost orbit, so it sits as
-	close to the chart as the margin allows. Its words come from the model and ride on the block
-	as data-caption, the browser being what draws them.
+	close to the chart as the margin allows. Its words are stated here and ride on the block as
+	data-caption, the browser being what draws them.
 -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="chart(width)" class="og-sky-chart"
-	 th:attr="data-width=${width}, data-caption=${skyChartCaption}">
+	 data-caption="Not to scale — everything moves counterclockwise"
+	 th:attr="data-width=${width}">
 	<div class="og-sky-drawing" th:style="|width: ${width}px; height: ${width}px|"></div>
 </div>
 
@@ -67,54 +69,3 @@
 	<table></table>
 	<div class="og-sky-observer"></div>
 </div>
-
-<!--
-	The drawing on its own, served at /sky/chart.svg so the browser treats it as an image. It
-	is its own document: the palette and the label font live here rather than in site.css, and
-	nothing on the page reaches inside it. The chart fragment above is the img that points at
-	it.
-
-	No named entity may appear below — an SVG document is parsed as XML, which knows only the
-	five built-in ones. It carries no title or desc either: through an img tag the browser
-	never exposes them, and opened on its own it is named by its URL, like every other image
-	on the site.
--->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:th="http://www.thymeleaf.org" th:fragment="drawing(width)"
-	 th:with="positionMap=${skyChart.setCanvas(width)}"
-	 th:attr="viewBox=${skyChart.viewBox}" role="img">
-	<style>
-		svg {
-			--border-strong: #8c877d;
-			--coral: #c8553d;
-			--amber: #c08a2e;
-			--teal: #2f7e76;
-			--sun: #f5c400;
-			--moon: #ffffff;
-			--text: #243027;
-		}
-		.c-coral { fill: var(--coral); }
-		.c-amber { fill: var(--amber); }
-		.c-teal  { fill: var(--teal); }
-		.c-sun   { fill: var(--sun); }
-		.c-moon  { fill: var(--moon); stroke: var(--border-strong); stroke-width: 0.75; }
-		.ts {
-			font-size: 12px;
-			fill: var(--text);
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-		}
-	</style>
-
-	<circle th:each="body : ${skyChart.bodyList}" th:if="${body.parent != null}"
-			th:cx="${positionMap[body.parent.name].dotX}" th:cy="${positionMap[body.parent.name].dotY}"
-			th:r="${positionMap[body.name].orbitRadius}"
-			fill="none" stroke="var(--border-strong)" stroke-width="0.5"/>
-
-	<circle th:each="body : ${skyChart.bodyList}"
-			th:cx="${positionMap[body.name].dotX}" th:cy="${positionMap[body.name].dotY}"
-			th:r="${positionMap[body.name].dotRadius}"
-			th:class="${body.colourClass}"/>
-
-	<text th:each="body : ${skyChart.bodyList}" th:if="${body.labelText != null}" class="ts"
-		  th:x="${positionMap[body.name].labelX}" th:y="${positionMap[body.name].labelY}"
-		  th:attr="text-anchor=${positionMap[body.name].labelAnchor}" th:text="${body.labelText}"></text>
-</svg>

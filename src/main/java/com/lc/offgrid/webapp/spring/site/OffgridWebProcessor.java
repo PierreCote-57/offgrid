@@ -3,7 +3,6 @@ package com.lc.offgrid.webapp.spring.site;
 import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.offgrid.common.misc.QueryUtil;
-import com.lc.offgrid.common.misc.sky.SkyDataMaker;
 import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.*;
 import com.lc.offgrid.common.misc.files.ResourceFileManager.*;
@@ -14,10 +13,6 @@ import com.lc.offgrid.common.pojo.page.PageData;
 import com.lc.offgrid.common.pojo.part.Dataset;
 import com.lc.offgrid.common.pojo.part.GoogleMap;
 import com.lc.offgrid.common.pojo.part.Point;
-import com.lc.offgrid.common.pojo.part.SkyBody;
-import com.lc.offgrid.common.pojo.part.SkyData;
-import com.lc.offgrid.common.pojo.part.SkyDataChart;
-import com.lc.offgrid.common.pojo.part.SkyDataTable;
 import com.lc.offgrid.webapp.spring.tools.BaseWebController;
 import com.lc.offgrid.webapp.spring.tools.BaseWebProcessor;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,42 +27,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Component
 @Scope("prototype")
 public class OffgridWebProcessor extends BaseWebProcessor
 {
 	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
-
-	private static final String SKY_TEMPLATE = "fragments/block/sky-fragment";
-	private static final String SKY_CHART_FRAGMENT = "drawing";
-
-	private static final String SKY_CHART_CAPTION = "Not to scale — everything moves counterclockwise";
-	/** Rise, transit and set, made up, until the astronomy for them is written. */
-	private static final Map<String, String[]> PLACEHOLDER_TIMES = Map.of(
-			"Sun", new String[] {"06:41", "13:32 (46°)", "20:21"},
-			"Moon", new String[] {"22:07", "05:14 (52°)", "13:26"},
-			"Mercury", new String[] {"07:18", "13:55 (44°)", "20:33"},
-			"Venus", new String[] {"05:12", "12:24 (41°)", "19:37"},
-			"Mars", new String[] {"09:04", "15:11 (43°)", "21:19"},
-			"Jupiter", new String[] {"01:47", "09:33 (57°)", "17:20"},
-			"Saturn", new String[] {"19:52", "01:38 (32°)", "07:26"},
-			"Uranus", new String[] {"22:41", "06:12 (61°)", "13:44"},
-			"Neptune", new String[] {"19:33", "01:14 (35°)", "06:57"});
 
 	/**
 	 * Two lines of text on the site's paper, in the site's colours. The box is 3:2, the
@@ -91,14 +64,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	@Autowired
 	private DocumentFileManager documentManager;
-
-	@Autowired
-	private SpringTemplateEngine templateEngine;
-
-	public SpringTemplateEngine getTemplateEngine()
-	{
-		return templateEngine;
-	}
 
 	public ImageFileManager getImageManager()
 	{
@@ -143,156 +108,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 
 		return answer;
-	}
-
-	public String processSky(Model model, String path, Class<? extends PageData> clazz,
-			String latitudeText, String longitudeText, String dateText)
-	{
-		String answer = processPage(model, path, clazz);
-
-		double latitude = OffgridUtil.parseLatitude(latitudeText);
-		double longitude = OffgridUtil.parseLongitude(longitudeText);
-		LocalDate date = readDate(dateText);
-
-		SkyDataTable skyTable = makeSkyTable(latitude, longitude, date);
-		model.addAttribute("skyTable", skyTable);
-
-		// The caption sits under the chart as page text, so the page is handed the words.
-		model.addAttribute("skyChartCaption", SKY_CHART_CAPTION);
-
-		// The picker states the ends it may not go past, so the browser stops there itself.
-		model.addAttribute("skyFirstDate", OffgridUtil.SKY_FIRST_DATE);
-		model.addAttribute("skyLastDate", OffgridUtil.SKY_LAST_DATE);
-
-		return answer;
-	}
-
-	/**
-	 * A date off the query string, or today when it is missing or does not parse. A date the
-	 * ephemeris does not cover is answered with the end it passed, so a hand-edited URL gets
-	 * the nearest sky that can be computed rather than an error. The page shows the date it
-	 * used, so a clamped date is visible.
-	 */
-	private LocalDate readDate(String text)
-	{
-		if (null == text || text.isBlank())
-		{
-			return today();
-		}
-
-		LocalDate date;
-		try
-		{
-			date = LocalDate.parse(text.trim());
-		}
-		catch (DateTimeParseException failure)
-		{
-			LocalDate defaultValue = today();
-			getLogger().info("Sky page: date %s does not parse, using %s", text, defaultValue);
-			return defaultValue;
-		}
-
-		if (date.isBefore(OffgridUtil.SKY_FIRST_DATE))
-		{
-			getLogger().info("Sky page: date %s is before %s, using %s", text, OffgridUtil.SKY_FIRST_DATE, OffgridUtil.SKY_FIRST_DATE);
-			return OffgridUtil.SKY_FIRST_DATE;
-		}
-
-		if (date.isAfter(OffgridUtil.SKY_LAST_DATE))
-		{
-			getLogger().info("Sky page: date %s is after %s, using %s", text, OffgridUtil.SKY_LAST_DATE, OffgridUtil.SKY_LAST_DATE);
-			return OffgridUtil.SKY_LAST_DATE;
-		}
-		return date;
-	}
-
-	public ResponseEntity<Resource> processSkyChart(String widthText, String dateText)
-	{
-		int width = OffgridUtil.parseWidth(widthText);
-		LocalDate date = readDate(dateText);
-
-		SkyDataChart skyChart = makeSkyChart(date);
-		Resource chartResource = makeChartImage(skyChart, width);
-
-		ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, chartResource);
-		return answer;
-	}
-
-	/**
-	 * The chart fragment rendered on its own, as the bytes of a standalone SVG document.
-	 */
-	private Resource makeChartImage(SkyDataChart skyChart, int width)
-	{
-		Context context = new Context();
-		context.setVariable("skyChart", skyChart);
-		context.setVariable("width", width);
-
-		String svgText = getTemplateEngine().process(SKY_TEMPLATE, Set.of(SKY_CHART_FRAGMENT), context);
-		byte[] svgBytes = svgText.getBytes(StandardCharsets.UTF_8);
-
-		ByteArrayResource answer = new ByteArrayResource(svgBytes);
-		return answer;
-	}
-
-	/**
-	 * The chart for one date. It is heliocentric, so it takes no observer.
-	 */
-	private SkyDataChart makeSkyChart(LocalDate date)
-	{
-		SkyDataMaker skyDataMaker = new SkyDataMaker();
-		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
-
-		SkyDataChart skyChart = new SkyDataChart();
-		skyChart.setDate(date);
-		skyChart.setBodyList(bodyList);
-
-		return skyChart;
-	}
-
-	/**
-	 * The table for one date: where the visitor says they are, the clock they read, and the
-	 * same bodies the chart draws. The times on them are still made up.
-	 */
-	private SkyDataTable makeSkyTable(double latitude, double longitude, LocalDate date)
-	{
-		SkyDataMaker skyDataMaker = new SkyDataMaker();
-		List<SkyBody> bodyList = skyDataMaker.makeBodyList(date);
-
-		SkyDataTable skyTable = new SkyDataTable();
-		skyTable.setDate(date);
-		skyTable.setBodyList(bodyList);
-		skyTable.setLatitude(latitude);
-		skyTable.setLongitude(longitude);
-		skyTable.setTimeZone(ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE));
-
-		applyPlaceholderTimes(skyTable);
-		return skyTable;
-	}
-
-	private LocalDate today()
-	{
-		ZoneId timeZone = ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE);
-		LocalDate date = LocalDate.now(timeZone);
-		return date;
-	}
-
-	/**
-	 * Made-up rise, transit and set times, keyed by body name, until the astronomy for them is
-	 * written.
-	 */
-	private void applyPlaceholderTimes(SkyData skyData)
-	{
-		for (SkyBody skyBody : skyData.getBodyList())
-		{
-			String[] timeList = PLACEHOLDER_TIMES.get(skyBody.getName());
-			if (null == timeList)
-			{
-				continue;
-			}
-			skyBody.setRises(timeList[0]);
-			skyBody.setTransit(timeList[1]);
-			skyBody.setSets(timeList[2]);
-		}
 	}
 
 	/**

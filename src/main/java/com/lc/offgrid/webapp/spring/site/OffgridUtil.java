@@ -30,11 +30,6 @@ public class OffgridUtil
 	public static final LocalDate SKY_FIRST_DATE = LocalDate.of(1800, 1, 1);
 	public static final LocalDate SKY_LAST_DATE = LocalDate.of(2050, 12, 31);
 
-	/** The chart's width when the caller states none, and the range it will draw at. */
-	public static final int DEFAULT_CHART_WIDTH = 430;
-	public static final int MINIMUM_CHART_WIDTH = 200;
-	public static final int MAXIMUM_CHART_WIDTH = 2000;
-
 	private static final BasicLogger LOGGER		= BasicLogger.getLogger(OffgridUtil.class);
 
 	public static BasicLogger getLogger()
@@ -156,34 +151,5 @@ public class OffgridUtil
 			return lastEpochSecond;
 		}
 		return epochSecond;
-	}
-
-	/**
-	 * A width off the query string, or the default when it is missing, unparseable or outside
-	 * what the drawing is legible at.
-	 */
-	public static int parseWidth(String text)
-	{
-		int width;
-		try
-		{
-			width = Integer.parseInt(text.trim());
-		}
-		catch (Exception failure)
-		{
-			if (null != text && !text.isBlank())
-			{
-				getLogger().info("parseWidth('%s') could not be parsed, using '%s'", text, DEFAULT_CHART_WIDTH);
-			}
-			width = DEFAULT_CHART_WIDTH;
-		}
-
-		if (width < MINIMUM_CHART_WIDTH || width > MAXIMUM_CHART_WIDTH)
-		{
-			getLogger().info("parseWidth('%s') is outside %s to %s, using '%s'",
-					text, MINIMUM_CHART_WIDTH, MAXIMUM_CHART_WIDTH, DEFAULT_CHART_WIDTH);
-			return DEFAULT_CHART_WIDTH;
-		}
-		return width;
 	}
 }
