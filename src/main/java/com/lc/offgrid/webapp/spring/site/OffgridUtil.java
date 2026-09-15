@@ -22,11 +22,7 @@ public class OffgridUtil
 	public static final double MAXIMUM_LATITUDE = 90.0;
 	public static final double MAXIMUM_LONGITUDE = 180.0;
 
-	/**
-	 * What the ephemeris covers. Ephemeris draws on the JPL approximate elements, which are
-	 * stated as valid 1800-2050; outside that its positions are wrong rather than rough, so a
-	 * date past either end is answered with that end.
-	 */
+	/** The ends parseEpochSecond answers with: a moment past either one is given that end. */
 	public static final LocalDate SKY_FIRST_DATE = LocalDate.of(1800, 1, 1);
 	public static final LocalDate SKY_LAST_DATE = LocalDate.of(2050, 12, 31);
 

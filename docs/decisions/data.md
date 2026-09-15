@@ -498,10 +498,12 @@ stops at the package line: a part nests inside a part, never inside a page.
 
 ## 2026-09-08 — The sky table's positions come from JPL Horizons, cached as files
 
-`Ephemeris` computes positions from the JPL approximate elements, which is enough for the
+`Ephemeris` computed positions from the JPL approximate elements, which was enough for the
 chart's angles and was going to need a lunar latitude and distance series, a rotation to the
 equator, sidereal time and a per-body horizon altitude before the table could be filled.
 Horizons answers all of that from one source, so the table takes its numbers from there.
+`Ephemeris` was deleted on 2026-09-15 with the rest of `com.lc.basics.tools.astronomy`, once
+the chart's angles came from Horizons too.
 
 **One file per body per year**, under `{folder.local}/ephemeris/<year>/<body>.csv` — the
 comma-separated form Horizons writes with `CSV_FORMAT='YES'` and `ANG_FORMAT='DEG'`, one row a

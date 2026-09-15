@@ -70,9 +70,8 @@ at a time or as a map over the nine.
 The table is done, on 2026-09-12, and the chart and the teardown on 2026-09-15: `sky.js` draws
 every block from `/rest/sky/data`, the `Sky*` POJOs and `SkyDataMaker` are deleted, and the
 2026-09-12 and 2026-09-15 entries in `docs/decisions/site.md` and `apis.md` state how. What is
-left of the teardown is `com.lc.basics.tools.astronomy`: `Body` and `EclipticPosition` have no
-caller outside that package now, and `Ephemeris` has one, `OffgridUtil`. #61 holds what the
-answer still has to carry.
+`com.lc.basics.tools.astronomy` went with them, `Ephemeris` included. #61 holds what the answer
+still has to carry.
 
 One more that belongs here rather than in the implementation: the constellation is carried as
 the three-letter code, and turning it into a name a reader knows is still to do.
