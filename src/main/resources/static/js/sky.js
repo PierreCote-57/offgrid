@@ -741,6 +741,22 @@
 	}
 
 	/*
+	 * The call the endpoint reads. A parameter it is not given falls back on the server, which is
+	 * what a refused position comes to.
+	 */
+	function makeDataUrl(dateTime, position) {
+		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		var epochSecond = Math.floor(dateTime.getTime() / 1000);
+
+		var url = DATA_URL + "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
+		if (position) {
+			url = url + "&lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+		}
+
+		return url;
+	}
+
+	/*
 	 * Ask for the sky at one moment and fill the blocks inside one element with the answer. The
 	 * scope is what a date control states it drives; given none, the whole page answers, which is
 	 * what the first load wants.
@@ -755,22 +771,6 @@
 		positionOf().then(function (position) {
 			requestSkyData(dateTime, position, scope);
 		});
-	}
-
-	/*
-	 * The call the endpoint reads. A parameter it is not given falls back on the server, which is
-	 * what a refused position comes to.
-	 */
-	function makeDataUrl(dateTime, position) {
-		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		var epochSecond = Math.floor(dateTime.getTime() / 1000);
-
-		var url = DATA_URL + "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
-		if (position) {
-			url = url + "&lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
-		}
-
-		return url;
 	}
 
 	// Ask, and fill every block inside the scope with what comes back.

@@ -1,5 +1,7 @@
 package com.lc.offgrid.common.misc.astronomy.planet;
 
+import com.lc.offgrid.webapp.spring.site.OffgridUtil;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,7 +37,7 @@ import java.util.Map;
  * the window is a caller's mistake and throws.
  *
  * One of these serves one request and then goes away. It is not a bean, so the local folder
- * arrives as a constructor parameter.
+ * comes from OffgridUtil, which holds it statically.
  */
 public class HorizonsEphemeris
 {
@@ -44,6 +46,12 @@ public class HorizonsEphemeris
 
 	/** The path of one body's file, under the local folder: year, then body. */
 	private static final String FILE_PATH = "%1$s/%2$s/%3$d/%4$s.csv";
+
+	/** The folder the years sit in, under the local folder. */
+	private static final String YEAR_FOLDER_PATH = "%1$s/%2$s";
+
+	/** What readYear answers for a name that is not a year. */
+	private static final int NO_YEAR = -1;
 
 	/** How many days on each side of the date are read. */
 	private static final int WINDOW_DAY_COUNT = 3;
@@ -62,7 +70,6 @@ public class HorizonsEphemeris
 
 	private static final double DEGREES_AROUND = 360.0;
 
-	private final String						dataRootFolder;
 	private final LocalDate						date;
 	private final Instant						fromInstant;
 	private final Instant						toInstant;
@@ -71,9 +78,8 @@ public class HorizonsEphemeris
 	/**
 	 * Reads every body's rows for the date and the three days on each side of it.
 	 */
-	public HorizonsEphemeris(String dataRootFolder, LocalDate date) throws IOException, ParseException
+	public HorizonsEphemeris(LocalDate date) throws IOException, ParseException
 	{
-		this.dataRootFolder = dataRootFolder;
 		this.date = date;
 
 		LocalDate firstDate = date.minusDays(WINDOW_DAY_COUNT);
@@ -87,9 +93,67 @@ public class HorizonsEphemeris
 	/**
 	 * The folder the ephemeris files are read from, which is {@code folder.local}.
 	 */
-	public String getDataRootFolder()
+	public static String getDataRootFolder()
 	{
-		return dataRootFolder;
+		return OffgridUtil.getDataRootFolder();
+	}
+
+	/**
+	 * The first and last year there are ephemeris files for, read from the folder the years sit
+	 * in. A name that is not a year is skipped, and a folder with nothing in it answers null:
+	 * there is no range to state, and a pair of zeroes would read as one.
+	 */
+	public static int[] getYearRange()
+	{
+		String rootFolder = getDataRootFolder();
+		String path = String.format(YEAR_FOLDER_PATH, rootFolder, EPHEMERIS_FOLDER);
+		File[] fileList = new File(path).listFiles();
+
+		int firstYear = Integer.MAX_VALUE;
+		int lastYear = Integer.MIN_VALUE;
+
+		if (null != fileList)
+		{
+			for (File file : fileList)
+			{
+				int year = readYear(file);
+				if (NO_YEAR == year)
+				{
+					continue;
+				}
+				firstYear = Math.min(firstYear, year);
+				lastYear = Math.max(lastYear, year);
+			}
+		}
+
+		int[] yearRange = lastYear < firstYear
+				? null
+				: new int[] {firstYear, lastYear};
+		return yearRange;
+	}
+
+	/**
+	 * The year a folder is named for, or NO_YEAR when it is not a folder or its name is not a
+	 * number.
+	 */
+	private static int readYear(File file)
+	{
+		if (!file.isDirectory())
+		{
+			return NO_YEAR;
+		}
+
+		String name = file.getName();
+		int year;
+		try
+		{
+			year = Integer.parseInt(name);
+		}
+		catch (NumberFormatException failure)
+		{
+			return NO_YEAR;
+		}
+		return year;
 	}
 
 	/**

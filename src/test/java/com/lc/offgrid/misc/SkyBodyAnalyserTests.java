@@ -243,7 +243,7 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	 */
 	private SkyBodyAnalyser makeAnalyser(ZonedDateTime dateTime)
 	{
-		SkyBodyAnalyser analyser = new SkyBodyAnalyser(getDataRootFolder(), dateTime,
+		SkyBodyAnalyser analyser = new SkyBodyAnalyser(dateTime,
 				OffgridUtil.DEFAULT_LATITUDE, OffgridUtil.DEFAULT_LONGITUDE);
 		return analyser;
 	}

@@ -1,6 +1,8 @@
 package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,7 +13,12 @@ import java.time.ZonedDateTime;
 /**
  * What the site needs in more than one place and no one class owns: the values it is built
  * around, and the small operations on them.
+ *
+ * It is a component only so that Spring has an instance to inject {@code folder.local} into.
+ * Everything here is static, including that folder: a class that is not a bean — an ephemeris
+ * built to serve one request, say — needs the path and has nowhere to be given it.
  */
+@Component
 public class OffgridUtil
 {
 	/** The 50th parallel marker in Campbell River, until the caller says otherwise. */
@@ -27,6 +34,24 @@ public class OffgridUtil
 	public static final LocalDate SKY_LAST_DATE = LocalDate.of(2050, 12, 31);
 
 	private static final BasicLogger LOGGER		= BasicLogger.getLogger(OffgridUtil.class);
+
+	private static String dataRootFolder;
+
+	/**
+	 * Spring calls this once at startup, which is what puts {@code folder.local} where a static
+	 * reader can get at it. An instance method because Spring does not inject a static field.
+	 */
+	@Value("${folder.local}")
+	public void setDataRootFolder(String dataRootFolder)
+	{
+		OffgridUtil.dataRootFolder = dataRootFolder;
+	}
+
+	/** The local folder, which holds images, documents, logs and the ephemeris. */
+	public static String getDataRootFolder()
+	{
+		return dataRootFolder;
+	}
 
 	public static BasicLogger getLogger()
 	{

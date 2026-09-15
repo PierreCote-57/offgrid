@@ -68,7 +68,7 @@ public class OffgridRestProcessor
 
 		getLogger().debug("processSkyData(%s, %s, %s)", dateTime, latitude, longitude);
 
-		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(getDataRootFolder(), dateTime, latitude, longitude);
+		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(dateTime, latitude, longitude);
 
 		SkyInfoRestAnswer	skyAnswer	= new SkyInfoRestAnswer(dateTime, latitude, longitude);
 		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());

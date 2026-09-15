@@ -34,8 +34,8 @@ public class SkyBodyAnalyser
 	private static final Duration SAMPLE_STEP = Duration.ofMinutes(2);
 
 	private final ZonedDateTime		dateTime;
-	private final double			latitude;
-	private final double			longitude;
+	private final Double			latitude;
+	private final Double			longitude;
 	private final HorizonsEphemeris	ephemeris;
 	private final Instant			instant;
 	private final HorizonsPosition	sunPosition;
@@ -50,7 +50,11 @@ public class SkyBodyAnalyser
 	 * An ephemeris that cannot be read is a runtime failure: nothing a caller states can make
 	 * a missing or malformed file readable, so there is nothing for it to catch.
 	 */
-	public SkyBodyAnalyser(String dataRootFolder, ZonedDateTime dateTime, double latitude, double longitude)
+	public SkyBodyAnalyser(ZonedDateTime dateTime)
+	{
+		this(dateTime, null, null);
+	}
+	public SkyBodyAnalyser(ZonedDateTime dateTime, Double latitude, Double longitude)
 	{
 		this.dateTime = dateTime;
 		this.latitude = latitude;
@@ -59,13 +63,13 @@ public class SkyBodyAnalyser
 		LocalDate localDate = dateTime.toLocalDate();
 		try
 		{
-			this.ephemeris = new HorizonsEphemeris(dataRootFolder, localDate);
+			this.ephemeris = new HorizonsEphemeris(localDate);
 		}
 		catch (Exception exception)
 		{
 			throw new BasicRuntimeException(exception,
-					"SkyBodyAnalyser('%1$s', %2$s, %3$s, %4$s) could not read the ephemeris",
-					dataRootFolder, dateTime, latitude, longitude);
+					"SkyBodyAnalyser(%1$s, %2$s, %3$s) could not read the ephemeris",
+					dateTime, latitude, longitude);
 		}
 
 		this.instant = dateTime.toInstant();
@@ -73,17 +77,27 @@ public class SkyBodyAnalyser
 		this.earthPosition = new HorizonsPosition(getInstant(), 0.0, 0.0, 0.0, null, null);
 	}
 
+	/**
+	 * The first and last year an analyser can be built for, which is what there are ephemeris
+	 * files for. Null when there are none.
+	 */
+	public static int[] getYearRange()
+	{
+		int[] yearRange = HorizonsEphemeris.getYearRange();
+		return yearRange;
+	}
+
 	public ZonedDateTime getDateTime()
 	{
 		return dateTime;
 	}
 
-	public double getLatitude()
+	public Double getLatitude()
 	{
 		return latitude;
 	}
 
-	public double getLongitude()
+	public Double getLongitude()
 	{
 		return longitude;
 	}
