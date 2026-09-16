@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 66**
+**next id: 67**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -117,3 +117,8 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 `HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
+
+#66 State what range the magnitude strip covers, or widen it. `static/images/magnitude-scale.svg`
+runs 1.0 to 4.0, and the table it explains holds the Sun at about -26 and Neptune at +7.8, so
+every body on the page but the faintest is off the end of it. Either the strip grows to the range
+the rows actually show, or the footnote says it is a sample of the scale and not the whole of it.

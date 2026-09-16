@@ -172,3 +172,30 @@ a page writes the name and nothing else.
 Rejected: a green left rule beside the words, and a panel of `--brand-soft` behind them —
 neither earned the colour. Also rejected: centring the name under the quote's own centre, and
 a fixed 640px measure, which capped the text instead of letting the page choose.
+
+## 2026-09-16 — The magnitude footnote shows the scale it describes
+
+The Magnitude column carries a `<sup>1</sup>`, and the note it points at is a three-column
+table: the words on the left, the scale itself centred in the middle column, the third empty.
+Equal thirds, stated on `col` elements the way a quote states its width.
+
+**The strip is a night field.** Brightness only reads as brightness against black — on paper a
+fainter star would have to be drawn *darker*, which is backwards. It is the one dark surface on
+the site, and it is this small because it is a legend rather than a picture of the sky.
+
+**The greys are the light, not the number.** Seven circles, one per half magnitude from 1.0 to
+4.0, at 255 × 10⁻⁰·²ᵏ rounded: 255, 160, 102, 64, 40, 26, 16. Half a magnitude is 1.585 times
+the light, so the ramp is geometric. A linear ramp — 255 down to 0 in equal steps of 42.5 — was
+drawn beside it and rejected: it shows the number falling evenly, which is not what the eye
+sees. The circles are all one size, so brightness is the only thing changing.
+
+**16 at magnitude 4.0**, where Wikipedia's own table ends on 0. The formula gives 16.09 there;
+the 0 is a floor they chose for the end of a table, not what the scale says.
+
+**It is a file placed with `<img>`, not inline SVG**, so a reader can open it in a tab like any
+other image. That is why its colours are in the file and not in `site.css`, against the rule the
+warning sign set: a drawing loaded by `<img>` is a document on its own and never sees the page's
+stylesheet. Inline SVG would have followed the palette and been unopenable.
+
+The strip is a block in its cell rather than an inline image, so the row's spare height falls
+evenly above and below it instead of all of it landing above the text's baseline.

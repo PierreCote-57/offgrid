@@ -83,7 +83,9 @@
 		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
 		{ heading: "Orbit|Period",        width: 60, value: "bodyMap.periodDay" },
 		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadius" },
-		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" }
+		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" },
+		{ heading: "Sunlit|Mag<sup>1</sup>",
+		                                  width: 60, value: "skyBodyDayMap.apparentMagnitude" }
 	];
 
 	// How a value is written, by the last segment of the path that found it. A field with no
@@ -94,7 +96,8 @@
 		elevation: degreeText,
 		litFraction: percentText,
 		periodDay: periodText,
-		orbitRadius: distanceText
+		orbitRadius: distanceText,
+		apparentMagnitude: magnitudeText
 	};
 
 	// A kind of body: dotRadius as a percent of the chart radius, scaled for the figure.
@@ -206,6 +209,12 @@
 		return text;
 	}
 
+	// Apparent magnitude, one decimal: lower is brighter, and Venus reaches -4.9.
+	function magnitudeText(value, timeZone) {
+		var text = value.toFixed(1);
+		return text;
+	}
+
 	/*
 	 * The value one path names for one body.
 	 *
@@ -305,7 +314,7 @@
 			if (group === "") {
 				var aloneCell = document.createElement("th");
 				aloneCell.rowSpan = 2;
-				aloneCell.textContent = headingOf(columnList[index]);
+				aloneCell.innerHTML = headingOf(columnList[index]);
 				groupRow.appendChild(aloneCell);
 				continue;
 			}
@@ -317,12 +326,12 @@
 
 			var groupCell = document.createElement("th");
 			groupCell.colSpan = span;
-			groupCell.textContent = group;
+			groupCell.innerHTML = group;
 			groupRow.appendChild(groupCell);
 
 			for (var inner = 0; inner < span; inner++) {
 				var cell = document.createElement("th");
-				cell.textContent = headingOf(columnList[index + inner]);
+				cell.innerHTML = headingOf(columnList[index + inner]);
 				columnRow.appendChild(cell);
 			}
 

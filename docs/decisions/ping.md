@@ -28,10 +28,7 @@ every pass and a log appended to. It is a plain `@Component` with its own
 The question the app answers is "can I talk to anything from here", so a host that stops
 answering is noise and every host stopping at once is the signal.
 
-One ping per pass, one host, drawn at random from the list each pass. The pass length is a
-`PingInterval`, asked for with `queryEnum` when Monitor starts rather than held as a constant,
-because it is tuned by hand: a long stay wants the minute and a fault being chased wants ten
-seconds. An earlier version
+One ping per pass, one host, drawn at random from the list each pass. An earlier version
 pinged all twenty in parallel; it was dropped for load. A single silent minute is therefore
 ambiguous by design — the draw moves on, and a dead link goes quiet across hosts while a
 dead host does not.
@@ -74,14 +71,7 @@ This is also why `ping.sh` runs a plain `java` after `./mvnw compile` instead of
 
 ## 2026-09-15 — Statistics are reported per stay
 
-A *stay* is a run of log rows. What ends it, and the columns it prints in, both belong to a
-`PingReport` — those two are the whole of what the reports do not share, so a third report is
-a third constant. Overview ends a stay when the wifi name changes and leads with the network;
-ByDay ends it at midnight and prints the date, the three counts, and last the networks the
-day held — no start, end or duration, because the date already says when and a day is a day.
-Answered, Pings, Success, Min and Max are one shared format string sitting in the same place
-in both. Min and Max are over the rows that answered, and a stay nothing answered prints two
-blanks — the same reason the log leaves `ms` empty rather than writing a stand-in.
+A *stay* is a run of log rows. What ends it is the `PingReport` being printed.
 
 **A hole in the rows does not end it.** A five-minute gap did, until an overnight run came
 back as 40 rows for two networks: the Mac naps, so the same network split every sixteen
@@ -107,3 +97,30 @@ width, so the report pastes into Excel as three cells a formula can reach — `2
 
 Duration is left-aligned, alone among the numbers, because `TimeUnits.MS.format` returns
 ragged text: right-aligning lines up one row's `sec` with another's `min`.
+
+## 2026-09-16 — The interval is chosen, and a report is an enum constant
+
+The pass length is a `PingInterval`, asked for with `queryEnum` when Monitor starts rather than
+held as a constant, because it is tuned by hand: a long stay wants the minute, a fault being
+chased wants ten seconds.
+
+A statistics report is a `PingReport` constant, and it carries both halves of what varies —
+what ends a stay, and the columns the stays print in. Nothing else differs, so a third report
+is a third constant.
+
+**Overview** ends a stay when the wifi name changes, and leads with Network, Start, End,
+Duration. **ByDay** ends it at midnight and leads with the date alone: no start, end or
+duration, because the date already says when and a day is a day. ByDay's last column is every
+network the day held, which is the one thing the day grouping loses and the only place it is
+wanted.
+
+Success, Failure, Total, Rate, Min and Max sit between the two, as one shared format string in
+the same place in both. Rate is Success/Total; the only other reading would be its complement,
+the packet loss `ping` itself prints. Min and Max are over the rows that answered, and a stay
+nothing answered prints two blanks — the same reason the log leaves `ms` empty rather than
+writing a stand-in.
+
+`PingStay` holds its rows and nothing else. It answers the name it opened on and every name it
+touched from them, rather than carrying a copy of what the rows already say.
+
+Start and End are `HH:mm`. A stay is hours long, so the seconds were noise in the column.

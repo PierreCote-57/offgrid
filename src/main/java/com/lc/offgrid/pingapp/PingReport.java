@@ -7,7 +7,7 @@ import com.lc.basics.tools.units.TimeUnits;
  * One statistics report: what ends a stay, and the columns its stays are printed in. Those two
  * are the whole of what the reports do not share, so a third report is a third constant.
  * <p>
- * Answered, Pings, Success, Min and Max are the same in every report and carried by
+ * Success, Failure, Total, Rate, Min and Max are the same in every report and carried by
  * FORMAT_TAIL; a constant supplies what comes before it, and what comes after.
  */
 @SuppressWarnings("PMD.SystemPrintln")		// This IS a command line application!
@@ -27,7 +27,7 @@ public enum PingReport
 				public void reportHeader()
 				{
 					System.out.printf(getFormatLine(), "Network", "Start", "End", "Duration",
-							"Answered", "Pings", "Success", "Min", "Max");
+							"Success", "Failure", "Total", "Rate", "Min", "Max");
 				}
 
 				@Override
@@ -35,8 +35,9 @@ public enum PingReport
 				{
 					System.out.printf(getFormatLine(), stay.getWifiName(),
 							formatDateTime(stay.getMsStart()), formatTimeOfDay(stay.getMsEnd()),
-							formatDuration(stay), formatAnswered(stay), formatPings(stay),
-							formatSuccess(stay), formatMin(stay), formatMax(stay));
+							formatDuration(stay), formatCountSuccess(stay), formatCountFailure(stay),
+							formatCountTotal(stay), formatRate(stay),
+							formatMin(stay), formatMax(stay));
 				}
 			},
 
@@ -56,7 +57,7 @@ public enum PingReport
 				public void reportHeader()
 				{
 					System.out.printf(getFormatLine(), "Date",
-							"Answered", "Pings", "Success", "Min", "Max", "Networks");
+							"Success", "Failure", "Total", "Rate", "Min", "Max", "Networks");
 				}
 
 				/** The date, and last the networks the day held, however many that is. */
@@ -64,13 +65,14 @@ public enum PingReport
 				public void reportStay(PingStay stay)
 				{
 					System.out.printf(getFormatLine(), formatDay(stay.getMsStart()),
-							formatAnswered(stay), formatPings(stay), formatSuccess(stay),
+							formatCountSuccess(stay), formatCountFailure(stay),
+							formatCountTotal(stay), formatRate(stay),
 							formatMin(stay), formatMax(stay), formatNetworkList(stay));
 				}
 			};
 
-	// Answered, Pings, Success, Min, Max — what every report carries, in the same place in each.
-	private static final String		FORMAT_TAIL		= " %8s %8s %8s %9s %9s";
+	// Success, Failure, Total, Rate, Min, Max — what every report carries, same place in each.
+	private static final String		FORMAT_TAIL		= " %8s %8s %8s %8s %9s %9s";
 
 	private final String			formatHead;
 	private final String			formatSuffix;
@@ -111,13 +113,20 @@ public enum PingReport
 		return text;
 	}
 
-	public static String formatAnswered(PingStay stay)
+	public static String formatCountSuccess(PingStay stay)
 	{
 		String		text		= String.format("%,d", stay.getCountReplied());
 		return text;
 	}
 
-	public static String formatPings(PingStay stay)
+	public static String formatCountFailure(PingStay stay)
+	{
+		int			countFailure	= stay.getRowList().size() - stay.getCountReplied();
+		String		text			= String.format("%,d", countFailure);
+		return text;
+	}
+
+	public static String formatCountTotal(PingStay stay)
 	{
 		String		text		= String.format("%,d", stay.getRowList().size());
 		return text;
@@ -150,7 +159,7 @@ public enum PingReport
 		return text;
 	}
 
-	public static String formatSuccess(PingStay stay)
+	public static String formatRate(PingStay stay)
 	{
 		int			countRow		= stay.getRowList().size();
 		double		percentReplied	= 100.0 * stay.getCountReplied() / countRow;

@@ -18,14 +18,14 @@
 		your eyes tune themselves for the ambient light level created by modern life,
 		it's no wonder we are used to seeing only a few stars.
 	</p>
-
+<!--
 	<blockquote class="og-quote" style="width: 45%">
 		Astronomy compels the soul to look upwards and leads us from this world to another.
 		<og-author>
 			Plato, 428–347 BC
 		</og-author>
 	</blockquote>
-
+-->
 	<p>
 		Get away from the city, in one of BC's wonderful parks, look up,
 		and let yourself be transformed through a world full of stars.
@@ -45,6 +45,38 @@
 		<summary>The planets, details</summary>
 		<div th:replace="~{fragments/block/sky-fragment :: datePicker('sky-details')}"></div>
 		<div th:replace="~{fragments/block/sky-fragment :: table(true)}"></div>
+		<!--
+			The magnitude footnote and the scale it describes: the words state what the number
+			means, the strip shows it, and the three columns are equal so the strip sits in the
+			middle of the page under the table it explains. The page states the widths on the
+			cols, the way a quote states its own.
+
+			The strip is its own file, static/images/magnitude-scale.svg, so a reader can open
+			it in a tab like any other image and so the drawing carries its own colours.
+		-->
+		<table class="og-sky-magnitude">
+			<colgroup>
+				<col style="width: 33.33%">
+				<col style="width: 33.33%">
+				<col style="width: 33.33%">
+			</colgroup>
+			<tr>
+				<td>
+					<sup>1</sup>See
+					<a href="https://en.wikipedia.org/wiki/Magnitude_%28astronomy%29">
+						Wikipedia for magnitude
+					</a>
+					<br />
+					(1 = bright; 3 = barely visible)
+				</td>
+				<td class="og-sky-magnitude-cell">
+					<img th:src="@{/images/magnitude-scale.svg}" width="300" height="52"
+						 alt="Magnitude 1 to 4, drawn as brightness on a night field">
+				</td>
+				<td></td>
+			</tr>
+		</table>
+
 	</details>
 
 	<details class="og-sky-wide" id="sky-wide-chart">

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	The apparent magnitude scale, one circle per half-magnitude from 1.0 to 4.0 on a night field.
+
+	Each circle's grey is the light that reaches the eye: half a magnitude brighter is 1.585
+	times as much, so the levels are 255 x 10^-0.2k, rounded — 255, 160, 102, 64, 40, 26, 16.
+	The colours are in the file rather than in site.css, because a file placed with <img> is
+	loaded on its own and never sees the page's stylesheet.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="52" viewBox="0 0 300 52">
+	<rect x="0" y="0" width="300" height="52" rx="4" fill="#000000"/>
+
+	<circle cx="18"  cy="22" r="9" fill="#ffffff"/>
+	<circle cx="62"  cy="22" r="9" fill="#a0a0a0"/>
+	<circle cx="106" cy="22" r="9" fill="#666666"/>
+	<circle cx="150" cy="22" r="9" fill="#404040"/>
+	<circle cx="194" cy="22" r="9" fill="#282828"/>
+	<circle cx="238" cy="22" r="9" fill="#1a1a1a"/>
+	<circle cx="282" cy="22" r="9" fill="#101010"/>
+
+	<g fill="#9a9a9a" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" text-anchor="middle">
+		<text x="18"  y="45">1</text>
+		<text x="106" y="45">2</text>
+		<text x="194" y="45">3</text>
+		<text x="282" y="45">4</text>
+	</g>
+</svg>

@@ -1471,3 +1471,18 @@ body:has(.og-chat-page) {
 .og-sky-observer { text-align: center; }
 
 .og-sky-observer p { margin: 0; }
+
+/* The footnote and its strip share a row of equal columns. Fixed layout makes the widths the
+   page states on the cols bind, and the strip is centred in the middle one. */
+.og-sky-magnitude {
+	width: 100%;
+	table-layout: fixed;
+}
+
+/* The strip is a block rather than an inline image, so it centres in its cell instead of
+   standing on the text's baseline: what the row adds above it, it adds below it too. */
+.og-sky-magnitude-cell img {
+	display: block;
+	margin: 0 auto;
+}
+

@@ -96,3 +96,19 @@ native's name. Naming neither throws rather than writing over the original.
 a phone portrait comes back sideways. `toResource` always writes JPEG while the suffix form
 keeps the source's extension, so a PNG source would produce JPEG bytes under a `.png` name.
 
+
+## 2026-09-16 — A drawing the site ships is a resource; a photograph is not
+
+`static/images/` is new, and `magnitude-scale.svg` is the first thing in it. It is served by
+Spring's own static handler at `/images/{name}` and has nothing to do with `/image/{name}`,
+which stays what the 2026-08-25 entry made it: the reader of `folder.local/images`.
+
+**The line is where the file comes from.** A photograph arrives after the build, carries EXIF,
+is asked for by size and opens in a lightbox — it is content, and content lives outside the jar.
+A drawing is authored with the page that places it, changes when that page changes, and has no
+size variants to make. Shipping it in the resource tree means the page and its drawing are one
+commit and one deployment.
+
+Rejected: putting the drawing under `folder.local/images` so a single route answers for every
+image. One route is tidy, but it would make a file that belongs to a page deploy by hand,
+separately from the page, with no version tying the two together.
