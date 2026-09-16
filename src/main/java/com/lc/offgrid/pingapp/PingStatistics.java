@@ -2,8 +2,6 @@ package com.lc.offgrid.pingapp;
 
 import com.lc.basics.container.AbstractContainer;
 import com.lc.basics.tools.file.BasicFileReader;
-import com.lc.basics.tools.time.WallClock;
-import com.lc.basics.tools.units.TimeUnits;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +9,8 @@ import java.util.List;
 
 /**
  * Reads the ping log back and reports one line per stay, oldest first so the newest stay is
- * the one still on screen when the printing stops. What ends a stay is the `PingGrouping` it
- * is handed, and that is the only difference between the reports.
+ * the one still on screen when the printing stops. The `PingReport` it is handed owns both
+ * halves of what varies: what ends a stay, and the columns it is printed in.
  */
 @SuppressWarnings("PMD.SystemPrintln")		// This IS a command line application!
 public class PingStatistics
@@ -29,38 +27,9 @@ public class PingStatistics
 		return pingFileManager;
 	}
 
-	// One row, one line, one number per column so a column reads down the page. The end
-	// carries no date: a stay that runs past midnight says so in its duration, and a fixed
-	// width is what keeps the columns lined up.
-	private static final String		FORMAT_LINE			=
-			"%-20s %-19s %-8s %-14s %8s %8s %8s%n";
-
-	private static void reportHeader()
+	public void report(PingReport pingReport)
 	{
-		System.out.println();
-		System.out.printf(FORMAT_LINE,
-				"Network", "Start", "End", "Duration", "Answered", "Pings", "Success");
-	}
-
-	private static void reportStay(PingStay stay)
-	{
-		int			countRow		= stay.getRowList().size();
-		int			countReplied	= stay.getCountReplied();
-		double		percentReplied	= 100.0 * countReplied / countRow;
-		String		textStart		= formatDateTime(stay.getMsStart());
-		String		textEnd			= formatTimeOfDay(stay.getMsEnd());
-		String		textDuration	= TimeUnits.MS.format(stay.getMsEnd() - stay.getMsStart());
-		String		textAnswered	= String.format("%,d", countReplied);
-		String		textRow			= String.format("%,d", countRow);
-		String		textPercent		= String.format("%.1f%%", percentReplied);
-
-		System.out.printf(FORMAT_LINE, stay.getWifiName(),
-				textStart, textEnd, textDuration, textAnswered, textRow, textPercent);
-	}
-
-	public void report(PingGrouping pingGrouping)
-	{
-		List<PingStay>		stayList		= readStayList(pingGrouping);
+		List<PingStay>		stayList		= readStayList(pingReport);
 		if (stayList.isEmpty())
 		{
 			AbstractContainer.timeStamp("Nothing logged yet in %s",
@@ -68,16 +37,17 @@ public class PingStatistics
 		}
 		else
 		{
-			reportHeader();
+			System.out.println();
+			pingReport.reportHeader();
 			for (PingStay stay : stayList)
 			{
-				reportStay(stay);
+				pingReport.reportStay(stay);
 			}
 		}
 	}
 
 	// The stays in the order they were logged, which is the order they are printed.
-	private List<PingStay> readStayList(PingGrouping pingGrouping)
+	private List<PingStay> readStayList(PingReport pingReport)
 	{
 		String				filename		= getPingFileManager().getPingLogFilename();
 		File				file			= new File(filename);
@@ -94,9 +64,9 @@ public class PingStatistics
 				PingLogRow	row			= PingLogRow.parse(line);
 				if (null != row)
 				{
-					if (null == stay || pingGrouping.isStayEnded(stay, row))
+					if (null == stay || pingReport.isStayEnded(stay, row))
 					{
-						stay = new PingStay(row.getWifiName());
+						stay = new PingStay();
 						stayList.add(stay);
 					}
 					stay.add(row);
@@ -104,19 +74,5 @@ public class PingStatistics
 			}
 		}
 		return stayList;
-	}
-
-	private static String formatDateTime(long msTime)
-	{
-		String		text		= WallClock.formatTime(
-				WallClock.FormatDate.INTL, WallClock.FormatTime.HMS, msTime);
-		return text;
-	}
-
-	private static String formatTimeOfDay(long msTime)
-	{
-		String		text		= WallClock.formatTime(
-				WallClock.FormatDate.None, WallClock.FormatTime.HMS, msTime);
-		return text;
 	}
 }

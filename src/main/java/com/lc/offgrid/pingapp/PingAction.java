@@ -31,7 +31,7 @@ public enum PingAction implements AbstractAction<PingContainer>
 				public void execute(PingContainer container) throws Exception
 				{
 					PingStatistics		statistics		= new PingStatistics(container.getPingFileManager());
-					statistics.report(PingGrouping.Overview);
+					statistics.report(PingReport.Overview);
 				}
 			},
 
@@ -41,7 +41,7 @@ public enum PingAction implements AbstractAction<PingContainer>
 				public void execute(PingContainer container) throws Exception
 				{
 					PingStatistics		statistics		= new PingStatistics(container.getPingFileManager());
-					statistics.report(PingGrouping.ByDay);
+					statistics.report(PingReport.ByDay);
 				}
 			},
 

@@ -74,10 +74,14 @@ This is also why `ping.sh` runs a plain `java` after `./mvnw compile` instead of
 
 ## 2026-09-15 — Statistics are reported per stay
 
-A *stay* is a run of log rows on one wifi name. What ends it is a `PingGrouping`, and that is
-the only thing the two statistics reports do not share: Overview ends a stay when the wifi
-name changes, ByDay ends it at midnight. Same rows, same columns, cut in a different place —
-a third report is a third constant.
+A *stay* is a run of log rows. What ends it, and the columns it prints in, both belong to a
+`PingReport` — those two are the whole of what the reports do not share, so a third report is
+a third constant. Overview ends a stay when the wifi name changes and leads with the network;
+ByDay ends it at midnight and prints the date, the three counts, and last the networks the
+day held — no start, end or duration, because the date already says when and a day is a day.
+Answered, Pings, Success, Min and Max are one shared format string sitting in the same place
+in both. Min and Max are over the rows that answered, and a stay nothing answered prints two
+blanks — the same reason the log leaves `ms` empty rather than writing a stand-in.
 
 **A hole in the rows does not end it.** A five-minute gap did, until an overnight run came
 back as 40 rows for two networks: the Mac naps, so the same network split every sixteen
