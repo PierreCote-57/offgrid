@@ -74,15 +74,19 @@ This is also why `ping.sh` runs a plain `java` after `./mvnw compile` instead of
 
 ## 2026-09-15 — Statistics are reported per stay
 
-A *stay* is a contiguous run of log rows on one wifi name. It ends when the name changes —
-you moved — or when the rows stop for more than five minutes, which says the monitor was off
-rather than the network was down.
+A *stay* is a run of log rows on one wifi name. What ends it is a `PingGrouping`, and that is
+the only thing the two statistics reports do not share: Overview ends a stay when the wifi
+name changes, ByDay ends it at midnight. Same rows, same columns, cut in a different place —
+a third report is a third constant.
 
-**The five minutes is wall clock and cannot key off the pass interval**: the interval is
-chosen each time Monitor starts, and a log holds rows written at whatever it was that day.
+**A hole in the rows does not end it.** A five-minute gap did, until an overnight run came
+back as 40 rows for two networks: the Mac naps, so the same network split every sixteen
+minutes at nothing the network did. The gap says the monitor was off, which is not an answer
+to "how is the wifi here" — and that is the only question this report asks.
 
-The same network reached twice stays two stays, because "how was the wifi at that place last
-Tuesday" is the question being asked.
+The same network reached twice is therefore one stay, and the Duration column spans the hours
+the monitor was down. "How was the wifi at that place last Tuesday" is a per-visit question
+and gets a report of its own.
 
 **Oldest first.** Newest-first was the first instinct and it is wrong for a terminal: the
 newest block would scroll off the top.

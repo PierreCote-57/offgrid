@@ -498,12 +498,10 @@ stops at the package line: a part nests inside a part, never inside a page.
 
 ## 2026-09-08 — The sky table's positions come from JPL Horizons, cached as files
 
-`Ephemeris` computed positions from the JPL approximate elements, which was enough for the
-chart's angles and was going to need a lunar latitude and distance series, a rotation to the
-equator, sidereal time and a per-body horizon altitude before the table could be filled.
-Horizons answers all of that from one source, so the table takes its numbers from there.
-`Ephemeris` was deleted on 2026-09-15 with the rest of `com.lc.basics.tools.astronomy`, once
-the chart's angles came from Horizons too.
+The JPL approximate elements were enough for the chart's angles, and were going to need a lunar
+latitude and distance series, a rotation to the equator, sidereal time and a per-body horizon
+altitude before the table could be filled. Horizons answers all of that from one source, so
+everything takes its numbers from there, the chart's angles included.
 
 **One file per body per year**, under `{folder.local}/ephemeris/<year>/<body>.csv` — the
 comma-separated form Horizons writes with `CSV_FORMAT='YES'` and `ANG_FORMAT='DEG'`, one row a
@@ -649,9 +647,9 @@ there is no refraction, no solar or lunar disc and no parallax, and the directio
 against the sidereal time of the day, which in 2026 puts a transit about a minute and a half off
 what an almanac prints.
 
-**Nothing outside `misc/sky` and `misc/astronomy/planet` constrains these classes.** They replace
-the `Sky*` POJOs and `SkyDataMaker` rather than fit beside them — and as of 2026-09-15 those are
-deleted, so `SkyBodyAnalyser` and `SkyBodyDay` are what `misc/sky` holds.
+**Nothing outside `misc/sky` and `misc/astronomy/planet` constrains these classes.** They
+replaced the page's own POJOs rather than fit beside them, and those are gone: `SkyBodyAnalyser`
+and `SkyBodyDay` are what `misc/sky` holds.
 
 ## 2026-09-10 — The observer's moment belongs to Horizons
 

@@ -477,45 +477,6 @@ So there was never a word to choose between. The folder, the template folder and
 
 ## 2026-09-07 — The sky page
 
-**Superseded 2026-09-15 down to *Label placement*** — the server drew the chart, at its own
-URL, from its own POJOs. The browser draws it now and none of that code is left. See *The
-server sends no sky data* below.
-
-Two server calls, and they answer different things. `/info/sky` renders the page and knows
-about the observer; `/sky/chart.svg` answers one image and does not, because heliocentric
-positions do not depend on where the reader stands. Neither hands the other's data to its
-template.
-
-**The chart is an image at its own URL, not inline SVG.** That is what lets a reader open it on
-its own, which inline markup cannot offer. The cost is real and was accepted: an SVG loaded
-through `<img>` is its own document, so the page's CSS cannot reach inside it and its palette
-lives in the fragment.
-
-**It carries no `<title>` or `<desc>`.** Through `<img>` a browser never exposes them, and
-opened on its own an image is named by its URL — which is what every JPEG on this site already
-does. The `alt` on the page does the accessibility work.
-
-**The width belongs to the template.** The chart fragment takes it as a parameter and calls
-`SkyDataChart.setCanvas(width)`, which answers a map of positions keyed by body name. Nothing
-in `SkyBody` is a length: the two radii are fractions, and the same body drawn at two widths
-has two positions. That is why the page can show a 430 chart beside the table and a 1024 one in
-a `<details>` without a second set of anything.
-
-Thymeleaf renders a template on one thread in document order, so two calls at two widths are
-safe: the first is fully written before the second replaces the map.
-
-**`SkyData` holds only what both renderings share** — the date and the body list.
-`SkyDataChart` adds the canvas, `SkyDataTable` the observer. The split exists
-because one object serving both meant the table's template saw the drawing and the SVG's saw
-the observer.
-
-**Label placement rejects a candidate that shares a column with a placed label and sits within
-a line height of it.** A box test alone passes two labels that never touch and still read as one
-stacked block; that rule is what replaces the skill's "look at the result and override where it
-reads badly", which a server cannot do. What it cannot fix is two planets in conjunction at a
-small canvas — see `docs/todo.md` #53. **Superseded 2026-09-15** — the rule went with
-`SkyDataMaker`. `sky.js` centres every label above its dot and tries no other position.
-
 **The place name is reverse geocoded in the browser, through the Maps JavaScript API.** The
 geocoding web service refuses a referrer-restricted key outright, and the site's key is one.
 The server never claims a name it cannot know: the page renders with coordinates, and the name
@@ -532,16 +493,6 @@ not in `sky.html`, so the row is two lines and the page reads as content. `th:re
 the host div, which is what makes that work; it is also why a block needing a per-use size uses
 `th:insert` instead, the way the map fragment does. `chart` takes its width and `table` takes
 `isWide`; `datePicker` takes the id of the element it drives.
-
-**The date is a request parameter, and the heading is the control that sets it**
-(2026-09-07). **Superseded 2026-09-15** — `/info/sky` takes no parameters at all now, and there
-is no mapping for it: `/info/{name}` serves the page. See *The server sends no sky data* below.
-`/info/sky` took `date` beside `latitude` and `longitude`, read the same lenient
-way: missing or unparseable is today, and a date outside what `Ephemeris` covers — the JPL
-elements are stated valid 1800-2050 — is answered with the end it passed rather than an error.
-The page shows the date it used, so a clamped date is visible without a message. `/sky/chart.svg`
-takes `date` too, because the browser fetches it as a separate request that would otherwise draw
-today beside another day's table.
 
 **No calendar is ours.** The `datePicker` fragment is a `<button>` over a transparent 1px
 `<input type="date">`, and the click calls `input.showPicker()`. The browser draws its own
@@ -591,33 +542,20 @@ and `ChecklistElementProcessor`, which writes three class names in Java.
 **State classes stay bare** — `is-active`, `has-submenu`. They say what an element currently
 is, not what it is; `og-is-active` reads as a thing.
 
-The chart SVG keeps its own `ts` and `c-*`. It is served as its own document, so nothing on
-the page can reach its names and they collide with nothing. **Superseded 2026-09-15** — the
-browser builds the SVG, and every colour and length in it is a constant in `sky.js`.
+## 2026-09-11 — The chart's width is one number, and the caption is its own line
 
-## 2026-09-11 — The chart's width is one number, and the caption is page text
+**The width is stated once, in the page's `chart(width)` call.** It rides on the block as
+`data-width` and the browser reads it, and it is the drawing element's own width and height, so
+the space is held from the first paint. `site.css` states no length for it at all — `flex: 0 0
+430px` was the same number written twice, and either it was kept in step by hand or the browser
+scaled the drawing to whatever the CSS said. A page places the chart at any width and changes
+nothing else, which is what the 430 beside the table and the 1024 in the `<details>` already
+wanted.
 
-**Superseded 2026-09-15 in its mechanism, not its conclusion** — the width is still stated once
-in the `chart(width)` call, but it rides on the block as `data-width` and the browser reads it.
-See *The server sends no sky data* below.
+**The drawing is square**, which is what lets one number set both attributes.
 
-**The width is stated once, in the page's `chart(width)` call.** It goes two places from
-there: the query string of the `/sky/chart.svg` request, and the `width` and `height`
-attributes of the `img` itself, which is what makes the image exactly that size. `site.css`
-states no length for it at all — `flex: 0 0 430px` was the same number written twice, and
-either it was kept in step by hand or the browser scaled the drawing to whatever the CSS said.
-A page now places the chart at any width and changes nothing else, which is what the 430
-beside the table and the 1024 in the `<details>` already wanted.
-
-**The drawing is square.** `SkyDataChart.getHeight()` answers the width, and the band that
-used to sit under it — `CAPTION_STRIP`, `CAPTION_BASELINE`, `captionX`, `captionY` — is gone,
-along with the caption `<text>` and the `caption` on the chart. A square is what lets one
-number set both attributes.
-
-**The caption is a `<p>` under the image, on the model as `skyChartCaption`.** Inside the SVG
-it scaled with the drawing, so the same words read at a different size in the 430 chart and the
-1024 one; as page text it reads at the page's size in both, and it can be selected. It is
-`OffgridWebProcessor`'s own string either way.
+**The caption rides on the block as `data-caption`.** It is a literal in the fragment: one
+template reads it, and a constant that only one file wants belongs in that file.
 
 ## 2026-09-12 — The sky table is drawn in the browser
 
@@ -654,12 +592,6 @@ padding on the cells, the table's own width set from the sum of the list, and th
 bind. Anything that quietly adds to a stated width makes the author's arithmetic useless: seven
 columns of 50 have to fit wherever two of 175 fit.
 
-**The call carries the four parameters.** `loadSkyData(dateTime, scopeElement)` asks
-`positionOf()` first, because a position answers by callback, then requests `timezone` from
-`Intl`, `epochSecond` from the date, and `lat`/`lng` only when a position came back — a refusal
-leaves them off and the server answers for its marker, which is what the menu's sky link already
-settles for. **Superseded 2026-09-15** — there are two calls, and only one of them waits on the
-position. See *The chart does not wait for the visitor's position* below.
 ## 2026-09-12 — A date control drives the blocks in one element
 
 The page carries one date control per `<details>` rather than one for the page, because a control
@@ -694,9 +626,9 @@ not move between two clicks on the same page.
 ## 2026-09-15 — The server sends no sky data
 
 The browser had taken over the table, then the chart, and the server was still computing both
-and handing them to the page. `/sky/chart.svg` is deleted, `/info/sky` takes no parameters and
-has no mapping of its own, and `processSky` is gone: `/info/{name}` serves the page like every
-other page under `/info`.
+and handing them to the page. `/info/sky` takes no parameters and has no mapping of its own:
+`/info/{name}` serves it like every other page under `/info`, and the sky page is now a template
+with no Java behind it.
 
 **One source per fact, and the answer is it.** A block's contents come from the sky endpoints
 and nothing else. Everything the model used to carry — the table, the chart, the caption, the
@@ -715,14 +647,9 @@ to 2029-12-31. They were `OffgridUtil.SKY_FIRST_DATE` and `SKY_LAST_DATE`, which
 `/rest/sky/observer` at the ephemeris's own 1800-2050. Making the picker's ends follow what is on
 disk is `docs/todo.md`.
 
-**The caption is a literal in the fragment**, on the chart block as `data-caption`. It was a
-`private static final` in `OffgridWebProcessor` put on the model for one template to read, which
-is a Java constant taking a round trip to reach the only file that wants it.
-
-Deleted with the server-side chart: `SkyDataMaker`, `SkyDataChart`, `SkyDataTable`, `SkyData`,
-`SkyBody`, `BodyPosition`, the `drawing` fragment, `processSkyChart`, `makeChartImage`,
-`OffgridUtil.parseWidth`, the processor's Thymeleaf `templateEngine`, and the `.og-sky-chart img`
-rule in `site.css`. `SkyBodyAnalyser` and `SkyBodyDay` stay — they are the REST side's.
+**A constant that one template reads lives in that template.** The caption was a
+`private static final` in `OffgridWebProcessor` put on the model for one fragment, which is a
+Java constant taking a round trip to reach the only file that wants it.
 
 ## 2026-09-15 — The chart does not wait for the visitor's position
 
@@ -741,10 +668,9 @@ requesting and the filling read separately. `fetchSkyData(url)` holds what both 
 the ok-check, the parse and the timing log — and on failure logs and returns a promise that
 never settles, so a handler runs on an answer or not at all.
 
-**The menu's sky link is a plain anchor again.** `OG.openSky` asked the browser for a position
-before navigating, so it could put `latitude` and `longitude` on the `/info/sky` URL — and the
-page stopped reading them when its parameters went. `goToSky`, `askAndGo` and their logging went
-with it. The position is asked for once, by `sky.js`, where it is used.
+**The menu's sky link is a plain anchor.** It asked the browser for a position before
+navigating, to put the coordinates on the URL; nothing on the page reads a coordinate off a URL
+now. The position is asked for once, by `sky.js`, where it is used.
 
 **The blocks are found once, before either fetch, and travel as one `blockMap`** of
 `tableList`, `chartList` and `pickerList`. Both handlers take the same `(data, blockMap)` and

@@ -25,13 +25,23 @@ public enum PingAction implements AbstractAction<PingContainer>
 				}
 			},
 
-	Statistics
+	Statistics_overview
 			{
 				@Override
 				public void execute(PingContainer container) throws Exception
 				{
 					PingStatistics		statistics		= new PingStatistics(container.getPingFileManager());
-					statistics.report();
+					statistics.report(PingGrouping.Overview);
+				}
+			},
+
+	Statistics_by_day
+			{
+				@Override
+				public void execute(PingContainer container) throws Exception
+				{
+					PingStatistics		statistics		= new PingStatistics(container.getPingFileManager());
+					statistics.report(PingGrouping.ByDay);
 				}
 			},
 

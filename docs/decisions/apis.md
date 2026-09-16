@@ -128,9 +128,7 @@ the same JVM.
 
 ## 2026-09-10 — The sky endpoint, and the shape a time takes on the wire
 
-**Superseded 2026-09-15** — there are two sky endpoints now, and no `/rest/sky/data`. Everything below about the path, the parameters and the answer still holds; it holds twice. See *Two sky endpoints, split by what they depend on* below.
-
-**`/rest/sky/data` on `OffgridRestController`, through `processRequest`.** The first path
+**The sky endpoints are on `OffgridRestController`, through `processRequest`.** The first path
 proposed was `/info/sky/data`, which would have put it on the web controller beside the page:
 a method mapping cannot escape the controller's class-level `/rest`, so the path decided the
 controller. Going through `processRequest` is what an endpoint answering bytes gives up — the
@@ -187,16 +185,16 @@ number. The cost is on the client, where a `Date` is built from milliseconds.
 stated on `SKY_FIRST_DATE`: outside the JPL elements' stated range the positions are wrong
 rather than rough. It lands in `parseEpochSecond` because that is where a date first exists.
 
-**`SkyInfoRestAnswer` is constructed from the `ZonedDateTime` and stores the two parts.** (`SkyRestAnswer` since 2026-09-15, with the coordinates on the observer answer only.)
-Handing it the moment keeps the splitting in one place; storing `epochSecond` and `ZoneId` is
-what goes on the wire, and the client puts them back together. The observer's `latitude` and
-`longitude` ride beside them, so the answer states what the request was read as — every
+**An answer is constructed from the `ZonedDateTime` and stores the two parts.** Handing it the
+moment keeps the splitting in one place; storing `epochSecond` and `ZoneId` is what goes on the
+wire, and the client puts them back together. The observer's `latitude` and `longitude` ride
+beside them on the answer that has them, so it states what the request was read as — every
 parameter falls back silently, and without the echo a caller cannot tell a fallback from a
 value it sent.
 
-**The analyser's two maps go on the answer as they are**, `getSunAngleMap` and
-`getSkyBodyDayMap`, through setters rather than the constructor: they are what the endpoint
-was built to answer, and a setter keeps the constructor to the observer. Both are keyed by
+**The analyser's maps go on the answer as they are**, `getSunAngleMap` and `getSkyBodyDayMap`,
+through setters rather than the constructor: they are what each endpoint was built to answer,
+and a setter keeps the constructor to the moment and the place. Both are keyed by
 `HorizonsBody`, so Jackson writes the constant names as the JSON keys.
 
 ## 2026-09-12 — What the browser needs the answer to state
@@ -221,7 +219,7 @@ its own orbit.
 
 ## 2026-09-15 — Two sky endpoints, split by what they depend on
 
-`/rest/sky/data` answered the whole sky in one call, so the browser could not ask for any of it
+One endpoint answered the whole sky in one call, so the browser could not ask for any of it
 until it knew where the visitor stood. The chart and the date control need no observer, and
 they were waiting behind a geolocation prompt that a visitor may take seconds to answer, or
 never.
@@ -234,8 +232,8 @@ once the position is in.
 
 **Two answers over one base.** `SkyRestAnswer` holds what both state — the moment, and
 `bodyMap` — and `SkyPositionsRestAnswer` adds `sunAngleMap`, `SkyObserverRestAnswer` the
-coordinates and `skyBodyDayMap`. It is the split `SkyData` / `SkyDataChart` / `SkyDataTable`
-had, for the same reason: one object serving both meant each caller saw the other's data.
+coordinates and `skyBodyDayMap`. One object serving both meant each caller saw the other's
+data — the same reason the page's own POJOs were split before them.
 
 **`bodyMap` is on both, not on one.** The table reads `bodyMap.name`, `bodyMap.parent` and
 `bodyMap.periodDay` and renders off the observer answer alone. On one answer only, a handler

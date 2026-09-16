@@ -11,16 +11,12 @@ import java.util.List;
 
 /**
  * Reads the ping log back and reports one line per stay, oldest first so the newest stay is
- * the one still on screen when the printing stops.
+ * the one still on screen when the printing stops. What ends a stay is the `PingGrouping` it
+ * is handed, and that is the only difference between the reports.
  */
 @SuppressWarnings("PMD.SystemPrintln")		// This IS a command line application!
 public class PingStatistics
 {
-	// A hole this long means the monitor was not running. It is wall clock on purpose: the
-	// pass interval is chosen when Monitor starts, and a log holds rows written at whatever it
-	// was that day.
-	private static final long		MS_GAP_STAY			= 5 * 60 * 1000L;
-
 	private final PingFileManager	pingFileManager;
 
 	public PingStatistics(PingFileManager pingFileManager)
@@ -62,9 +58,9 @@ public class PingStatistics
 				textStart, textEnd, textDuration, textAnswered, textRow, textPercent);
 	}
 
-	public void report()
+	public void report(PingGrouping pingGrouping)
 	{
-		List<PingStay>		stayList		= readStayList();
+		List<PingStay>		stayList		= readStayList(pingGrouping);
 		if (stayList.isEmpty())
 		{
 			AbstractContainer.timeStamp("Nothing logged yet in %s",
@@ -81,7 +77,7 @@ public class PingStatistics
 	}
 
 	// The stays in the order they were logged, which is the order they are printed.
-	private List<PingStay> readStayList()
+	private List<PingStay> readStayList(PingGrouping pingGrouping)
 	{
 		String				filename		= getPingFileManager().getPingLogFilename();
 		File				file			= new File(filename);
@@ -98,7 +94,7 @@ public class PingStatistics
 				PingLogRow	row			= PingLogRow.parse(line);
 				if (null != row)
 				{
-					if (null == stay || isStayEnded(stay, row))
+					if (null == stay || pingGrouping.isStayEnded(stay, row))
 					{
 						stay = new PingStay(row.getWifiName());
 						stayList.add(stay);
@@ -108,16 +104,6 @@ public class PingStatistics
 			}
 		}
 		return stayList;
-	}
-
-	// A stay ends when the network changes, or when the rows stop long enough to say the
-	// monitor was off rather than the network was down.
-	private static boolean isStayEnded(PingStay stay, PingLogRow row)
-	{
-		boolean		isMoved			= !stay.getWifiName().equals(row.getWifiName());
-		long		msGap			= row.getMsTime() - stay.getMsEnd();
-		boolean		isEnded			= isMoved || MS_GAP_STAY < msGap;
-		return isEnded;
 	}
 
 	private static String formatDateTime(long msTime)
