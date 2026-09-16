@@ -7,6 +7,8 @@
 package com.lc.basics.tools.misc;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.basics.tools.os.CommandExecutor;
+import com.lc.basics.tools.os.ExecResponse;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -267,5 +269,25 @@ public class BasicTools
 		MemoryUsage u	= MEMORY_BEAN.getHeapMemoryUsage();
 
 		return (int) ((u.getUsed() * 100) / u.getMax());
+	}
+
+	private static final String WIFI_NAME_COMMAND = "WIFI_INT=$(networksetup -listallhardwareports | awk '/Wi-Fi|AirPort/{getline; print $NF}')\n" +
+			"networksetup -listpreferredwirelessnetworks \"$WIFI_INT\" | sed -n '2s/^\\t//p'\n";
+	public static String getWifiName()
+	{
+		try
+		{
+			String[] cmd = {
+					"/bin/zsh",
+					"-c",
+					WIFI_NAME_COMMAND
+			};
+			ExecResponse response = CommandExecutor.exec(cmd);
+			return response.getResponse().trim();
+		}
+		catch (BasicException e)
+		{
+			return "Unknown";
+		}
 	}
 }

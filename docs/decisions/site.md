@@ -623,7 +623,7 @@ it scaled with the drawing, so the same words read at a different size in the 43
 
 **Thymeleaf produces the minimum the JS knows how to fill, and no data.** The `table` fragment
 is a `div.og-sky-table` holding an empty `<table>` and an empty `div.og-sky-observer`; `sky.js`
-builds the rows, the observer line and the place name from what `/rest/sky/data` answers. The
+builds the rows, the observer line and the place name from what `/rest/sky/observer` answers. The
 point is the second call: the page can ask again — another date, another place — and only this
 block changes. What it costs is the first paint, since an empty block shows nothing until the
 answer arrives and nothing at all without JS.
@@ -698,7 +698,7 @@ and handing them to the page. `/sky/chart.svg` is deleted, `/info/sky` takes no 
 has no mapping of its own, and `processSky` is gone: `/info/{name}` serves the page like every
 other page under `/info`.
 
-**One source per fact, and the answer is it.** A block's contents come from `/rest/sky/data`
+**One source per fact, and the answer is it.** A block's contents come from the sky endpoints
 and nothing else. Everything the model used to carry — the table, the chart, the caption, the
 date, the ends of the calendar — was a second copy of something the endpoint already answers or
 a constant that belongs where it is read.
@@ -712,7 +712,7 @@ was worth the wait. `openDatePicker` no longer writes the button on change — t
 
 **The calendar's ends are `sky.js` constants**, `FIRST_DAY_TEXT` and `LAST_DAY_TEXT`, 2020-01-01
 to 2029-12-31. They were `OffgridUtil.SKY_FIRST_DATE` and `SKY_LAST_DATE`, which still clamp
-`/rest/sky/data` at the ephemeris's own 1800-2050. Making the picker's ends follow what is on
+`/rest/sky/observer` at the ephemeris's own 1800-2050. Making the picker's ends follow what is on
 disk is `docs/todo.md`.
 
 **The caption is a literal in the fragment**, on the chart block as `data-caption`. It was a
@@ -740,6 +740,11 @@ going to.
 requesting and the filling read separately. `fetchSkyData(url)` holds what both calls share —
 the ok-check, the parse and the timing log — and on failure logs and returns a promise that
 never settles, so a handler runs on an answer or not at all.
+
+**The menu's sky link is a plain anchor again.** `OG.openSky` asked the browser for a position
+before navigating, so it could put `latitude` and `longitude` on the `/info/sky` URL — and the
+page stopped reading them when its parameters went. `goToSky`, `askAndGo` and their logging went
+with it. The position is asked for once, by `sky.js`, where it is used.
 
 **The blocks are found once, before either fetch, and travel as one `blockMap`** of
 `tableList`, `chartList` and `pickerList`. Both handlers take the same `(data, blockMap)` and

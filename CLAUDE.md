@@ -27,6 +27,8 @@ code conventions. Those rules apply here in full and are not repeated below.
   - [build.md](docs/decisions/build.md) — before changing the stack, the pom, the build or
     the deployment path to FullHost.
   - [apis.md](docs/decisions/apis.md) — before changing `/mcp` or `/rest`.
+  - [ping.md](docs/decisions/ping.md) — before touching the ping app, its host list or its
+    log.
   - [local-files.md](docs/decisions/local-files.md) — before touching images, documents, or
     how anything under `folder.local` is delivered.
   - [logging-errors.md](docs/decisions/logging-errors.md) — before changing a log line, a log

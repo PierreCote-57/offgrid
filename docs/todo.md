@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 65**
+**next id: 66**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -57,18 +57,17 @@ loopback and nothing else can; on FullHost it is on the open internet, and a too
 anyone who posts to it. The question outlives the implementation — it has to be answered for
 whatever serves `/mcp`, not for the server that was removed.
 
-#48 Compute the rise, transit and set times. The page is built and served at `/info/sky`; the
-chart is real, the table is not — `OffgridWebProcessor.PLACEHOLDER_TIMES` is nine hardcoded rows
-that `applyPlaceholderTimes` puts onto the bodies. The positions come from JPL Horizons; the
+#48 Compute the rise, transit and set times. The page is built and served at `/info/sky`. The
+positions come from JPL Horizons; the
 three 2026-09-08 and 2026-09-09 entries in `docs/decisions/data.md` hold the file layout, the
 class shapes and everything settled.
 
-`SkyBodyAnalyser` in `common/misc/sky` computes all of it: built for a folder, a `ZonedDateTime`, a
-latitude and a longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
+`SkyBodyAnalyser` in `common/misc/sky` computes all of it: built for a `ZonedDateTime` and a
+latitude and longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
 at a time or as a map over the nine.
 
 The table is done, on 2026-09-12, and the chart and the teardown on 2026-09-15: `sky.js` draws
-every block from `/rest/sky/data`, the `Sky*` POJOs and `SkyDataMaker` are deleted, and the
+every block from the sky endpoints, the `Sky*` POJOs and `SkyDataMaker` are deleted, and the
 2026-09-12 and 2026-09-15 entries in `docs/decisions/site.md` and `apis.md` state how. What is
 `com.lc.basics.tools.astronomy` went with them, `Ephemeris` included. #61 holds what the answer
 still has to carry.
@@ -102,9 +101,9 @@ it.
 that all CSS lengths are px, and the conversion recorded there on 2026-08-25 left values
 behind — run the count before deciding how big the pass is.
 
-#56 Work the sky table's columns once #48 lands. The widths on the headings in
-`templates/fragments/block/sky-fragment.html` were eyeballed off `PLACEHOLDER_TIMES`, and the
-Transit cell's `13:32 (46°)` shape is a placeholder's shape, not a computed one. Re-size them
+#56 Work the sky table's columns once #48 lands. The widths in `NARROW_COLUMN_LIST` and
+`WIDE_COLUMN_LIST` in `sky.js` were eyeballed off the placeholder times the server used to send,
+so the Transit cell is sized for a placeholder's shape rather than a computed one. Re-size them
 against real values, and decide then what each column shows.
 
 #57 Keep the sky date's transparent input out of the tab order without breaking dismissal.
@@ -121,4 +120,3 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 `HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
-
