@@ -15,7 +15,6 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
-import com.lc.basics.tools.misc.BasicRuntimeException;
 import org.springframework.http.MediaType;
 
 import java.io.File;
@@ -32,8 +31,19 @@ import java.util.Map;
  */
 public class ImageMetadataExtractor
 {
-	/** EXIF orientation 1 = stored the way it is meant to be viewed. */
-	public static final int		ORIENTATION_NORMAL		= 1;
+	/**
+	 * EXIF orientation, 1 through 8: how the stored pixel grid has to be turned before it is
+	 * viewed. Normal is stored the way it is meant to be seen, the rotations are clockwise,
+	 * and transpose and transverse are the two diagonal flips.
+	 */
+	public static final int		ORIENTATION_NORMAL			= 1;
+	public static final int		ORIENTATION_FLIP_HORIZONTAL	= 2;
+	public static final int		ORIENTATION_ROTATE_180		= 3;
+	public static final int		ORIENTATION_FLIP_VERTICAL	= 4;
+	public static final int		ORIENTATION_TRANSPOSE		= 5;
+	public static final int		ORIENTATION_ROTATE_90		= 6;
+	public static final int		ORIENTATION_TRANSVERSE		= 7;
+	public static final int		ORIENTATION_ROTATE_270		= 8;
 
 	/**
 	 * Everything one image file says about itself. A file that cannot be read at all throws; a

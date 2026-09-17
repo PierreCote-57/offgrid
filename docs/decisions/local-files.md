@@ -92,10 +92,6 @@ a copy lands is separate from making one, so it answers a `File` without opening
 which keys on the base name across the whole tree and would let a 640px copy answer to the
 native's name. Naming neither throws rather than writing over the original.
 
-**Known gaps in what is built.** `open` uses `ImageIO.read`, which ignores EXIF orientation, so
-a phone portrait comes back sideways. `toResource` always writes JPEG while the suffix form
-keeps the source's extension, so a PNG source would produce JPEG bytes under a `.png` name.
-
 
 ## 2026-09-16 — A drawing the site ships is a resource; a photograph is not
 

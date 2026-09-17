@@ -18,12 +18,13 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
@@ -31,7 +32,6 @@ import java.util.Iterator;
  * Makes a smaller copy of one image. The file and the pixels being worked on are held as state,
  * so the steps — open, modify, then toResource or write — can be called one at a time, and
  * resize is open, modify and toResource in order.
- *
  * One image at a time: a caller works it with its own instance rather than sharing one.
  *
  * @author Pierre
@@ -75,14 +75,15 @@ public class ImageCompressor
 	}
 
 	/**
-	 * Reads the file and takes its pixels as the image being worked on. A file that cannot be
-	 * read as an image throws.
+	 * Reads the file and takes its pixels as the image being worked on, turned upright by the
+	 * EXIF orientation, which ImageIO does not apply. A file that cannot be read as an image
+	 * throws.
 	 */
 	public void open(File fileFrom)
 	{
 		BufferedImage openedImage;
 		ImageMetadata metadata = ImageMetadataExtractor.getImageMetadata(fileFrom);
-		boolean isLegal = metadata.isLegal();
+		boolean isLegal = null != metadata && metadata.isLegal();
 		if (!isLegal)
 		{
 			throw new BasicRuntimeException("Illegal image: %s", fileFrom);
@@ -106,8 +107,74 @@ public class ImageCompressor
 			throw new BasicRuntimeException(message);
 		}
 
+		int				orientation		= metadata.getOrientation();
+		BufferedImage	orientedImage	= orient(openedImage, orientation);
+
 		setFileFrom(fileFrom);
-		setImage(openedImage);
+		setImage(orientedImage);
+	}
+
+	/**
+	 * The pixels turned the way the EXIF orientation says they are meant to be viewed. Anything
+	 * other than 1 through 8 leaves them as they are.
+	 */
+	public static BufferedImage orient(BufferedImage sourceImage, int orientation)
+	{
+		int				sourceWidth		= sourceImage.getWidth();
+		int				sourceHeight	= sourceImage.getHeight();
+		AffineTransform	transform		= new AffineTransform();
+		BufferedImage	answer			= sourceImage;
+
+		switch (orientation)
+		{
+		case ImageMetadataExtractor.ORIENTATION_FLIP_HORIZONTAL:
+			transform.scale(-1.0, 1.0);
+			transform.translate(-sourceWidth, 0);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_ROTATE_180:
+			transform.translate(sourceWidth, sourceHeight);
+			transform.rotate(Math.PI);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_FLIP_VERTICAL:
+			transform.scale(1.0, -1.0);
+			transform.translate(0, -sourceHeight);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_TRANSPOSE:
+			transform.rotate(-Math.PI / 2.0);
+			transform.scale(-1.0, 1.0);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_ROTATE_90:
+			transform.translate(sourceHeight, 0);
+			transform.rotate(Math.PI / 2.0);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_TRANSVERSE:
+			transform.scale(-1.0, 1.0);
+			transform.translate(-sourceHeight, sourceWidth);
+			transform.rotate(3.0 * Math.PI / 2.0);
+			break;
+
+		case ImageMetadataExtractor.ORIENTATION_ROTATE_270:
+			transform.translate(0, sourceWidth);
+			transform.rotate(3.0 * Math.PI / 2.0);
+			break;
+
+		default:
+			break;
+		}
+
+		if (!transform.isIdentity())
+		{
+			AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+
+			answer = operation.filter(sourceImage, null);
+		}
+
+		return answer;
 	}
 
 	/**

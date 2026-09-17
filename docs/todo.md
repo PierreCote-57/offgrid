@@ -37,21 +37,6 @@ still outstanding in `m-van.json` and `m-bronco.json`.
 #7 Author `templates/hardware/howto/water.html` — it is still the placeholder text the port
 left behind. Everything else that came from GettingLost is in.
 
-#22 Make `/image/{imageName}` honour the `size` it is handed. `processImage` still answers the
-native file whatever it is asked for — that call site is the whole of what is left in the
-server. `ImageSize` now carries each size's box and knows how to produce one (`resize` writes a
-file, `toResource` answers bytes, `Native` overrides both to leave the original alone), and
-`ImageCompressor` does the work; see the two 2026-09-05 entries in `docs/decisions/`.
-
-Open with it: on the fly or from disk. On the fly costs a full-resolution decode per request —
-a 6000x4000 shot is about 96MB of heap held for the length of one request, and a gallery page
-fires one request per thumbnail, concurrently. It also repeats on every reload, because
-`makeResponseOk` sets the content type and no `Cache-Control` or `ETag`. Serving from disk is
-what `resize` already writes.
-
-Then, in the same feature: `open` ignores EXIF orientation, so a phone portrait is served
-sideways; and the suffix form keeps the source extension while `toResource` always writes JPEG.
-
 #42 Decide how `/mcp` is protected before it is deployed. Locally a client reaches it over
 loopback and nothing else can; on FullHost it is on the open internet, and a tool answers
 anyone who posts to it. The question outlives the implementation — it has to be answered for

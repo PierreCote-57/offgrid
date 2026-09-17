@@ -45,11 +45,11 @@ public enum OffgridAction implements AbstractAction<OffgridContainer>
 						}
 						catch (BasicRuntimeException e)
 						{
-							System.out.printf("*** Failed to process image file: %s\n%s",name, e.getMessageChain());
+							System.out.printf("*** Failed to process image file: %s\n%s\n",name, e.getMessageChain());
 						}
 						catch (Exception e)
 						{
-							System.out.printf("Failed to process image file: %s\n%s", name, e.getMessage());
+							System.out.printf("*** Failed to process image file: %s\n%s\n", name, e.getMessage());
 						}
 						return true;
 					});

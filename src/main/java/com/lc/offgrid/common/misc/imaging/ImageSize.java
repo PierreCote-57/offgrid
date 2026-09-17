@@ -38,7 +38,13 @@ public enum ImageSize
 			return answer;
 		}
 
-		/** The file's own bytes, read as they are rather than decoded and written again. */
+		@Override
+		public File makeFileTo(File fileFrom)
+		{
+			return fileFrom;
+		}
+
+			/** The file's own bytes, read as they are rather than decoded and written again. */
 		@Override
 		public Resource toResource(File fileFrom, double quality)
 		{
