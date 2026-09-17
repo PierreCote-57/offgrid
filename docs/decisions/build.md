@@ -87,7 +87,11 @@ separate kind of thing to be deployed on its own terms — it belongs where its 
 
 ## 2026-09-05 — Three package roots, two mains
 
-`com.lc.offgrid` holds nothing but the launchers. Below it, `webapp` is what the site needs,
+**Extended 2026-09-15** — `pingapp` is a fourth root with a third main,
+`OffgridApplicationPing`, sitting inside it rather than beside the other two. See
+`ping.md`. Everything else here still holds.
+
+`com.lc.offgrid` holds nothing but the site and CLI launchers. Below it, `webapp` is what the site needs,
 `cliapp` is what a command-line run needs, and `common` is what both need. Each launcher is a
 `@SpringBootApplication` naming its own `scanBasePackages` — common plus its own — so neither
 scans the package the launchers sit in and neither picks the other up. That is what makes a

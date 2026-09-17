@@ -85,10 +85,10 @@ its own or the compressor's — and `modify` handed back the very object `open` 
 whenever the image already fitted. Stateful means it cannot be a shared singleton the way
 `ImageFileManager` is, which is the trade the shape accepts.
 
-**A derived file is named by folder and by suffix, and `makeFileTo` is static.** Deciding where
-a copy lands is separate from making one, so it answers a `File` without opening anything.
-`ImageSize.resize` passes the lower-cased size name as both, putting `van/IMG_1234.jpg` at
-`small/IMG_1234-small.jpg`: the folder alone would collide in `AbstractFileManager`'s name map,
+**A derived file is named by folder and by suffix, and `makeFileTo` opens nothing.** Deciding
+where a copy lands is separate from making one, so it answers a `File` without reading the
+image. It takes the lower-cased size name for both, putting `_native/van/IMG_1234.jpg` at
+`small/van/IMG_1234-small.jpg`: the folder alone would collide in `AbstractFileManager`'s name map,
 which keys on the base name across the whole tree and would let a 640px copy answer to the
 native's name. Naming neither throws rather than writing over the original.
 

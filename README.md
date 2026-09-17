@@ -27,10 +27,16 @@ The command-line run is `OffgridApplicationCLI`, the other main in `com.lc.offgr
 
 | Path | Holds |
 | --- | --- |
-| `src/main/java/com/logicielcote/offgrid` | Application and controllers |
+| `src/main/java/com/lc/offgrid` | The application: the two mains, and `cliapp`, `common`, `pingapp`, `webapp` |
+| `src/main/java/com/lc/basics` | Tools that are not offgrid's: `container`, `monitoring`, `tools` |
 | `src/main/resources/templates` | Thymeleaf templates |
-| `src/main/resources/static` | Static assets |
-| `src/main/resources/application.properties` | Configuration |
+| `src/main/resources/static` | The css, js and drawings the site ships |
+| `src/main/resources/data` | The site's content, as JSON |
+| `src/main/resources/external` | Files as their supplier published them, and the older shapes they replaced |
+| `src/main/resources/application.properties` | Spring settings that hold whatever the profile |
+| `src/main/resources/application.yaml` | Site settings, with `application-local.yaml` and `application-host.yaml` per profile |
+| `src/main/resources/log4j2-spring.xml` | Where the logs are written |
+| `folder.local` | Outside the repo, named per profile: `images/`, `documents/` and `logs/` |
 
 ## Stack
 

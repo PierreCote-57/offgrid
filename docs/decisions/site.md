@@ -366,7 +366,7 @@ link is in the page as it arrives. `paintBackLink`, `browserReferrer`, `galleryN
 The rule it came from: the reason for putting work in the browser has to be something the
 server genuinely cannot know. The referrer was never that.
 
-Two model attributes carry it, `backQuery` and `PageTitle` — the query the gallery is
+Two model attributes carry it, `backQuery` and `backName` — the query the gallery is
 restored with, and what that gallery is called. The path is constant, so the fragment writes
 it. The fragment takes no parameter: a page is reached from one gallery, so there is never a
 second back link to name.

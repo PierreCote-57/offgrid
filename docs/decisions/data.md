@@ -50,8 +50,7 @@ a wash: six annotations either way (`@SerializedName` vs `@JsonProperty`), both 
 by the rename pass — the table is in *Standing rule — convert every JSON file brought in
 from GettingLost*, below.
 
-`PageDataJacksonReadTest` is kept as the worked comparison — the same files, the same
-records, read by Jackson — so the choice can be re-examined without reconstructing it.
+The Jackson comparison was not kept. `PageDataReadTest` reads the same files with Gson.
 
 Boot 4 ships Jackson 3, whose package is `tools.jackson`, not `com.fasterxml.jackson`. Worth
 knowing before reading any Jackson answer written before 2025.

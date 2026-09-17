@@ -42,48 +42,9 @@ loopback and nothing else can; on FullHost it is on the open internet, and a too
 anyone who posts to it. The question outlives the implementation — it has to be answered for
 whatever serves `/mcp`, not for the server that was removed.
 
-#48 Compute the rise, transit and set times. The page is built and served at `/info/sky`. The
-positions come from JPL Horizons; the
-three 2026-09-08 and 2026-09-09 entries in `docs/decisions/data.md` hold the file layout, the
-class shapes and everything settled.
-
-`SkyBodyAnalyser` in `common/misc/sky` computes all of it: built for a `ZonedDateTime` and a
-latitude and longitude, it answers the chart's Sun angle and a `SkyBodyDay` per body, one body
-at a time or as a map over the nine.
-
-`sky.js` draws every block from the sky endpoints; the 2026-09-12 and 2026-09-15 entries in
-`docs/decisions/site.md` and `apis.md` state how. #61 holds what the answer still has to carry.
-
-#49 Fix `README.md`'s Layout table. It names the package
-`src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
-predates `src/main/resources/data`, the profile yamls beside `application.properties`, and
-the `folder.local` root holding `images/`, `documents/` and `logs/`. Read the whole table
-against the tree rather than fixing the one row.
-
-#51 Decide whether the lightbox stays at the Large box. The overlay is capped at 75vh, and
-Large is the biggest thing served — a visitor paging a gallery with the arrow keys pays it per
-step. Medium's box is the alternative. Since the "Full size" link went to the bare URL on
-2026-09-06, nothing asks for Large at all.
-
-#53 Low priority. Give a crowded chart label somewhere to go. The server's chart tried eight
-positions and took the first that cleared; on days when two planets are in conjunction as seen
-from above, none clears and the two texts print on top of each other. `sky.js` draws the chart
-now and tries none of them, so the labels overlap on those days rather than moving. A sweep of 2026-01-01 to
-2028-12-31 hit it on 60 days of 1096, longest run 3 to 23 February 2027 — Mercury/Venus and
-Earth/Mars account for most of them. 10 February 2027 is a date to draw when checking it.
-
-It is a width problem, not a placement one: the same sweep at a 1024 canvas fails on no day at
-all, because the orbits scale and the 12px labels do not — draw one date at both widths to see
-it.
-
 #55 Convert the remaining `rem` lengths in `site.css` to px. `docs/decisions/look.md` rules
 that all CSS lengths are px, and the conversion recorded there on 2026-08-25 left values
 behind — run the count before deciding how big the pass is.
-
-#56 Work the sky table's columns once #48 lands. The widths in `NARROW_COLUMN_LIST` and
-`WIDE_COLUMN_LIST` in `sky.js` were eyeballed off the placeholder times the server used to send,
-so the Transit cell is sized for a placeholder's shape rather than a computed one. Re-size them
-against real values, and decide then what each column shows.
 
 #57 Keep the sky date's transparent input out of the tab order without breaking dismissal.
 `.og-sky-date-input` in `site.css` is 1px and transparent, and it has to stay focusable and take
@@ -99,8 +60,3 @@ for the ecliptic angle and the lit fraction. Two five-line helpers, duplicated b
 `HORIZON_ELEVATION`, which is a point at geometric zero: an almanac's sunrise carries refraction
 and half a disc with it, so the two differ by minutes at the 50th parallel. Until this is in, a
 test cannot assert an almanac time for a rise or a set — transit is unaffected.
-
-#66 State what range the magnitude strip covers, or widen it. `static/images/magnitude-scale.svg`
-runs 1.0 to 4.0, and the table it explains holds the Sun at about -26 and Neptune at +7.8, so
-every body on the page but the faintest is off the end of it. Either the strip grows to the range
-the rows actually show, or the footnote says it is a sample of the scale and not the whole of it.
