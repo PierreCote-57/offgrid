@@ -1,5 +1,6 @@
 package com.lc.offgrid.common.misc.sky;
 
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
 
@@ -26,14 +27,15 @@ public class SkyBodyDay
 	/** Apparent visual magnitude, or null where Horizons does not state one. */
 	private final Double	apparentMagnitude;
 
-	/** The three-letter IAU constellation the body sits in. */
-	private final String	constellation;
+	/** The constellation the body sits in, or null where Horizons named one that is not one of the 88. */
+	private final Constellation	constellation;
 
 	/** How much of the disc is lit, from 0 to 1. */
 	private final double	litFraction;
 
 	public SkyBodyDay(Map<HorizonsMomentName, HorizonsMoment> momentMap, double distance,
-			double orbitRadius, Double apparentMagnitude, String constellation, double litFraction)
+			double orbitRadius, Double apparentMagnitude, Constellation constellation,
+			double litFraction)
 	{
 		this.momentMap = momentMap;
 		this.distance = distance;
@@ -63,7 +65,7 @@ public class SkyBodyDay
 		return apparentMagnitude;
 	}
 
-	public String getConstellation()
+	public Constellation getConstellation()
 	{
 		return constellation;
 	}

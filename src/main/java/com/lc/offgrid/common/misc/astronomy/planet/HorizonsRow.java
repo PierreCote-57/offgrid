@@ -1,5 +1,7 @@
 package com.lc.offgrid.common.misc.astronomy.planet;
 
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +44,9 @@ import java.util.TimeZone;
  *
  * A magnitude is printed as n.a. outside the phase angles the model covers, so the two
  * brightness fields are Double and answer null there. Everything else is always printed.
+ *
+ * The constellation column is read as a Constellation, and a code that is not one of the 88
+ * answers null rather than failing the row: the rest of the line is still good.
  */
 public class HorizonsRow
 {
@@ -66,7 +71,7 @@ public class HorizonsRow
 	private final double	solarElongation;
 	private final String	elongationFlag;
 	private final double	phaseAngle;
-	private final String	constellation;
+	private final Constellation	constellation;
 
 	/**
 	 * Reads one row. The line is the whole comma-separated record between $$SOE and $$EOE.
@@ -87,7 +92,7 @@ public class HorizonsRow
 		this.solarElongation = parseNumber(fieldList[9]);
 		this.elongationFlag = fieldList[10].trim();
 		this.phaseAngle = parseNumber(fieldList[11]);
-		this.constellation = fieldList[12].trim();
+		this.constellation = parseConstellation(fieldList[12]);
 	}
 
 	/**
@@ -189,9 +194,10 @@ public class HorizonsRow
 	}
 
 	/**
-	 * The three-letter IAU constellation the target sits in.
+	 * The constellation the target sits in, or null where the column held a code that is not
+	 * one of the 88.
 	 */
-	public String getConstellation()
+	public Constellation getConstellation()
 	{
 		return constellation;
 	}
@@ -210,6 +216,21 @@ public class HorizonsRow
 		String text = field.trim();
 		double number = Double.parseDouble(text);
 		return number;
+	}
+
+	private static Constellation parseConstellation(String field)
+	{
+		String text = field.trim();
+		Constellation constellation;
+		try
+		{
+			constellation = Constellation.valueOf(text);
+		}
+		catch (IllegalArgumentException exception)
+		{
+			constellation = null;
+		}
+		return constellation;
 	}
 
 	private static Double parseOptionalNumber(String field)

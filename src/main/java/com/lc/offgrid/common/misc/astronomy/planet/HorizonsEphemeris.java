@@ -1,5 +1,6 @@
 package com.lc.offgrid.common.misc.astronomy.planet;
 
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
 import com.lc.offgrid.webapp.spring.site.OffgridUtil;
 
 import java.io.File;
@@ -386,7 +387,7 @@ public class HorizonsEphemeris
 		}
 
 		HorizonsRow closestRow = fraction < 0.5 ? firstRow : secondRow;
-		String constellation = closestRow.getConstellation();
+		Constellation constellation = closestRow.getConstellation();
 		Double apparentMagnitude = closestRow.getApparentMagnitude();
 
 		HorizonsPosition position = new HorizonsPosition(instant, rightAscension, declination, range,

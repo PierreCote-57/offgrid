@@ -60,11 +60,11 @@
 		{ heading: "Current|Bearing",     width: 70, value: "NOW.bearing" },
 		{ heading: "Current|Elevation",   width: 70, value: "NOW.elevation" },
 		{ heading: "Rise|Time",           width: 60, value: "RISE.epochSecond" },
-//		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
-		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
+		{ heading: "Rise|Bearing",        width: 60, value: "RISE.bearing" },
+//		{ heading: "Transit|Time",        width: 60, value: "TRANSIT.epochSecond" },
 //		{ heading: "Transit|Elevation",   width: 60, value: "TRANSIT.elevation" },
 		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
-//		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
+		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
 		{ heading: "Sunlit",              width: 60, value: "skyBodyDayMap.litFraction" },
 //		{ heading: "Period",              width: 50, value: "bodyMap.periodDay" }
 	];
@@ -85,7 +85,8 @@
 		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadius" },
 		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" },
 		{ heading: "Sunlit|Mag<sup>1</sup>",
-		                                  width: 60, value: "skyBodyDayMap.apparentMagnitude" }
+		                                  width: 60, value: "skyBodyDayMap.apparentMagnitude" },
+		{ heading: "Constellation",       width: 60, value: "skyBodyDayMap.constellation.latinName" }
 	];
 
 	// How a value is written, by the last segment of the path that found it. A field with no

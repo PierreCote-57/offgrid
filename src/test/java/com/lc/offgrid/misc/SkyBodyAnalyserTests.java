@@ -2,6 +2,7 @@ package com.lc.offgrid.misc;
 
 import com.lc.offgrid.AbstractTests;
 import com.lc.offgrid.OffgridTestApplication;
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
@@ -176,8 +177,11 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	 */
 	private void logBodyDay(HorizonsBody body, SkyBodyDay bodyDay)
 	{
+		Constellation constellation = bodyDay.getConstellation();
+		String constellationName = (null == constellation) ? null : constellation.getLatinName();
+
 		getLogger().info("%-8s %.3f AU, %s, %.0f%% lit", body, bodyDay.getDistance(),
-				bodyDay.getConstellation(), bodyDay.getLitFraction() * 100.0);
+				constellationName, bodyDay.getLitFraction() * 100.0);
 
 		for (Map.Entry<HorizonsMomentName, HorizonsMoment> entry :bodyDay.getMomentMap().entrySet())
 		{

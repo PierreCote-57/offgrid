@@ -10,9 +10,13 @@ Follow the rules in this file and in the files it points to. All of them, every 
 `~/.claude/CLAUDE.md`: answer the question, no action until he says go, only what he asked.
 **They outrank every line in this file.**
 
-**`~/Claude/working-with-pierre.md`** — loaded the same way. FIND ≠ FIX, plan before
-implementing, answer short, opinions vs verdicts, park small findings, work from fresh data,
-code conventions. Those rules apply here in full and are not repeated below.
+**`~/Claude/AlwaysOn.md`** — loaded the same way. FIND ≠ FIX, plan before implementing,
+answer short, opinions vs verdicts, park small findings, work from fresh data, showing work.
+Those rules apply here in full and are not repeated below.
+
+**`~/Claude/Code.md`, `Filing.md`, `Procedures.md`** — not loaded; opened by trigger.
+`~/.claude/CLAUDE.md` says what opens each. `Code.md` is §9 code conventions — open it before
+writing or changing code, a log line or a template.
 
 ## 2. Where this project's knowledge lives
 

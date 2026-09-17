@@ -1,5 +1,7 @@
 package com.lc.offgrid.common.misc.astronomy.planet;
 
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
+
 import java.time.Instant;
 
 /**
@@ -24,11 +26,11 @@ public class HorizonsPosition
 	private final double	rightAscension;
 	private final double	declination;
 	private final double	range;
-	private final String	constellation;
+	private final Constellation	constellation;
 	private final Double	apparentMagnitude;
 
 	public HorizonsPosition(Instant instant, double rightAscension, double declination, double range,
-			String constellation, Double apparentMagnitude)
+			Constellation constellation, Double apparentMagnitude)
 	{
 		this.instant = instant;
 		this.rightAscension = rightAscension;
@@ -72,10 +74,10 @@ public class HorizonsPosition
 	}
 
 	/**
-	 * The three-letter IAU constellation the body sits in, taken from the closer of the two
-	 * rows: a name does not average with another name.
+	 * The constellation the body sits in, taken from the closer of the two rows: a name does
+	 * not average with another name. Null where that row held a code that is not one of the 88.
 	 */
-	public String getConstellation()
+	public Constellation getConstellation()
 	{
 		return constellation;
 	}

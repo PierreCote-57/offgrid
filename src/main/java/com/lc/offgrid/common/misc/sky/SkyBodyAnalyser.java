@@ -1,6 +1,7 @@
 package com.lc.offgrid.common.misc.sky;
 
 import com.lc.basics.tools.misc.BasicRuntimeException;
+import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsEphemeris;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
@@ -168,7 +169,7 @@ public class SkyBodyAnalyser
 		double distance = position.getRange();
 		double orbitRadius = position.getOrbitRadius(parentPosition);
 		Double apparentMagnitude = position.getApparentMagnitude();
-		String constellation = position.getConstellation();
+		Constellation constellation = position.getConstellation();
 		double litFraction = position.getLitFraction(getSunPosition());
 
 		SkyBodyDay bodyDay = new SkyBodyDay(momentMap, distance, orbitRadius, apparentMagnitude,
