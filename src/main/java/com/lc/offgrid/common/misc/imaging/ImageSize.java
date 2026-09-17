@@ -45,6 +45,12 @@ public enum ImageSize
 			Resource answer = new FileSystemResource(fileFrom);
 			return answer;
 		}
+
+		@Override
+		public String getImageName(String nameFrom)
+		{
+			return nameFrom;
+		}
 	};
 
 	private final int width;
@@ -93,6 +99,11 @@ public enum ImageSize
 		String suffix = nameTemp.substring(index + 1);
 		String nameTo = String.format("%s-%s.%s", prefix, name().toLowerCase(Locale.ROOT), "jpg");
 		return new File(nameTo);
+	}
+
+	public String getImageName(String nameFrom)
+	{
+		return String.format("%s-%s", nameFrom, name());
 	}
 
 	/**

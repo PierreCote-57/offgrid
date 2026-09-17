@@ -69,9 +69,6 @@ at a time or as a map over the nine.
 `sky.js` draws every block from the sky endpoints; the 2026-09-12 and 2026-09-15 entries in
 `docs/decisions/site.md` and `apis.md` state how. #61 holds what the answer still has to carry.
 
-One more that belongs here rather than in the implementation: the constellation is carried as
-the three-letter code, and turning it into a name a reader knows is still to do.
-
 #49 Fix `README.md`'s Layout table. It names the package
 `src/main/java/com/logicielcote/offgrid`; the tree is `com/lc/offgrid`. The table also
 predates `src/main/resources/data`, the profile yamls beside `application.properties`, and

@@ -120,8 +120,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 //		imageName = FIXED_IMAGE;
 		try
 		{
-			ImageFileManager manager = getImageManager();
-			ImageMetadata metadata = manager.getImageMetadata(imageName);
+			ImageMetadata metadata = findImageFile(imageName, imageSize);
 			File imageFile = metadata.getFile();
 			FileSystemResource imageResource = new FileSystemResource(imageFile);
 			MediaType mediaType = metadata.getMediaType();
@@ -132,11 +131,29 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		catch (Exception e)
 		{
 			getLogger().info("Unable to locate image %s", imageName);
-
 			Resource messageImage = makeMessageImage("Not found", imageName);
 			ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, messageImage);
 			return answer;
 		}
+	}
+
+	private ImageMetadata findImageFile(String imageName, ImageSize imageSize)
+	{
+		ImageFileManager manager = getImageManager();
+
+		ImageMetadata metadata = null;
+		for (int iSize = imageSize.ordinal(); iSize < ImageSize.values().length; iSize++)
+		{
+			ImageSize size = ImageSize.values()[iSize];
+			String name = size.getImageName(imageName);
+			metadata = manager.getImageMetadata(name);
+			if (null != metadata)
+			{
+				break;
+			}
+		}
+
+		return metadata;
 	}
 
 	/**

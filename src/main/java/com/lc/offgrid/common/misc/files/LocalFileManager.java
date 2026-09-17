@@ -22,8 +22,6 @@ public class LocalFileManager extends AbstractFileManager
 	@Component
 	public static class ImageFileManager extends LocalFileManager
 	{
-		private static final ImageMetadataExtractor EXTRACTOR = new ImageMetadataExtractor();
-
 		public ImageFileManager()
 		{
 			super("/images");
@@ -34,7 +32,7 @@ public class LocalFileManager extends AbstractFileManager
 		{
 			try
 			{
-				ImageMetadata metadata = EXTRACTOR.getImageMetadata(file);
+				ImageMetadata metadata = ImageMetadataExtractor.getImageMetadata(file);
 				return metadata != null;
 			}
 			catch (Exception e)
@@ -52,7 +50,7 @@ public class LocalFileManager extends AbstractFileManager
 			File file = getFile(name);
 			ImageMetadata imageMetadata = null == file
 					? null
-					: EXTRACTOR.getImageMetadata(file);
+					: ImageMetadataExtractor.getImageMetadata(file);
 			return imageMetadata;
 		}
 	}
