@@ -439,7 +439,7 @@ public class HorizonsEphemeris
 	/**
 	 * An angle brought back into 0 to 360.
 	 */
-	private double normalise(double degrees)
+	public static double normalise(double degrees)
 	{
 		double remainder = degrees % DEGREES_AROUND;
 		if (remainder < 0.0)
@@ -452,7 +452,7 @@ public class HorizonsEphemeris
 	/**
 	 * A cosine or a sine held inside -1 to 1, where rounding can put it just outside.
 	 */
-	private double clamp(double value)
+	public static double clamp(double value)
 	{
 		double clamped = Math.max(-1.0, Math.min(1.0, value));
 		return clamped;

@@ -159,13 +159,13 @@ li {
 	padding: 3px 24px 3px 0;
 	vertical-align: top;
 	color: var(--faded);
-	font-size: 0.88rem;
+	font-size: 14px;
 }
 
 .og-fishing-value {
 	padding: 3px 0;
 	vertical-align: top;
-	font-size: 0.9rem;
+	font-size: 14px;
 }
 
 .og-fishing a {
@@ -705,7 +705,7 @@ main tbody tr:last-child td {
 	align-items: center;
 	justify-content: center;
 	background: rgba(0, 0, 0, 0.85);
-	padding: 3.25rem 2rem 2rem;
+	padding: 52px 32px 32px;
 	box-sizing: border-box;
 }
 
@@ -736,40 +736,40 @@ main tbody tr:last-child td {
 }
 
 .og-lightbox-caption {
-	margin-top: 0.75rem;
+	margin-top: 12px;
 	max-width: 60ch;
 	color: #eee;
-	font-size: 0.9rem;
+	font-size: 14px;
 	text-align: center;
 }
 
 .og-lightbox-hires {
 	align-self: stretch;
-	margin-top: 0.5rem;
+	margin-top: 8px;
 	color: #ddd;
-	font-size: 0.85rem;
+	font-size: 14px;
 	text-align: right;
 }
 
 .og-lightbox-counter {
 	position: absolute;
-	top: 1rem;
+	top: 16px;
 	left: 50%;
 	transform: translateX(-50%);
 	color: #ddd;
-	font-size: 0.85rem;
+	font-size: 14px;
 	letter-spacing: 0.03em;
 }
 
 .og-lightbox-close {
 	position: absolute;
-	top: 0.5rem;
-	right: 0.9rem;
-	padding: 0.25rem 0.5rem;
+	top: 8px;
+	right: 14px;
+	padding: 4px 8px;
 	border: none;
 	background: none;
 	color: #fff;
-	font-size: 2.5rem;
+	font-size: 40px;
 	line-height: 1;
 	cursor: pointer;
 }
@@ -782,12 +782,12 @@ main tbody tr:last-child td {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
-	padding: 0.25rem 1rem;
+	padding: 4px 16px;
 	border: none;
 	border-radius: 6px;
 	background: rgba(0, 0, 0, 0.35);
 	color: #fff;
-	font-size: 3rem;
+	font-size: 48px;
 	line-height: 1;
 	cursor: pointer;
 }
@@ -797,11 +797,11 @@ main tbody tr:last-child td {
 }
 
 .og-lightbox-prev {
-	left: 0.75rem;
+	left: 12px;
 }
 
 .og-lightbox-next {
-	right: 0.75rem;
+	right: 12px;
 }
 
 /* A thumbnail link is the image and nothing else — no underline, no link colour. */
@@ -823,7 +823,7 @@ a.og-photo-link {
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 12px;
-	margin: 0 0 1rem;
+	margin: 0 0 16px;
 }
 
 /* Match-count readout — not a control, so no pill. margin-left:auto floats it to the right
@@ -832,7 +832,7 @@ a.og-photo-link {
 .og-lb-count {
 	margin-left: auto;
 	font-weight: 600;
-	font-size: 1.15rem;
+	font-size: 18px;
 	color: var(--brand-deep);
 }
 
@@ -851,7 +851,7 @@ a.og-photo-link {
 	background-color: #fff;
 	color: var(--brand-deep);
 	font-family: inherit;
-	font-size: 0.95rem;
+	font-size: 15px;
 }
 
 /* The three data-axis filters share their inner padding. The view toggle is excluded: its
@@ -959,14 +959,14 @@ a.og-photo-link {
 .og-lb-booklet {
 	box-sizing: border-box;
 	height: 34px;
-	padding: 0 1rem;
+	padding: 0 16px;
 	display: inline-flex;
 	align-items: center;
 	border: 1px solid var(--brand-deep);
 	border-radius: 6px;
 	background: var(--brand);
 	color: var(--bar-text);
-	font-size: 0.95rem;
+	font-size: 15px;
 	font-weight: 600;
 	text-decoration: none;
 	transition: background 0.15s ease;
@@ -987,15 +987,15 @@ a.og-photo-link {
 	width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
-	margin-top: 0.25rem;
+	margin-top: 4px;
 }
 
 .og-lb-table th,
 .og-lb-table td {
 	border: 1px solid var(--rule);
-	padding: 0.3rem 0.6rem;
+	padding: 5px 10px;
 	vertical-align: top;
-	font-size: 0.9rem;
+	font-size: 14px;
 	overflow-wrap: break-word;
 }
 
@@ -1011,10 +1011,10 @@ a.og-photo-link {
 
 /* Footnotes sit under the table, at the page's own width — only the table scrolls. */
 .og-lb-footnotes {
-	font-size: 0.8rem;
+	font-size: 13px;
 	color: var(--faded);
-	margin: 0.4rem 0 0;
-	padding-left: 1.5rem;
+	margin: 6px 0 0;
+	padding-left: 24px;
 }
 
 /* ---- the grid view -------------------------------------------------------------------
@@ -1024,8 +1024,8 @@ a.og-photo-link {
 .og-lb-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	gap: 1.5rem;
-	margin: 1.5rem 0;
+	gap: 24px;
+	margin: 24px 0;
 }
 
 @media (max-width: 900px) {
@@ -1055,14 +1055,14 @@ a.og-photo-link {
 }
 
 .og-gallery-card-title {
-	margin: 0.6rem 0 0.3rem;
-	font-size: 1.15rem;
+	margin: 10px 0 5px;
+	font-size: 18px;
 	color: var(--brand-deep);
 }
 
 .og-gallery-card-teaser {
 	margin: 0;
-	font-size: 0.95rem;
+	font-size: 15px;
 	color: var(--text);
 	line-height: 1.4;
 }
@@ -1108,25 +1108,25 @@ a.og-photo-link {
 /* The block owns the space after itself: either row can be the last one, so the gap is
    written once on the wrapper instead of twice on the rows. */
 .og-tags {
-	margin-bottom: 1rem;
+	margin-bottom: 16px;
 }
 
 .og-tagrow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 1rem;
+	gap: 16px;
 }
 
 .og-tagrow-group {
 	display: inline-flex;
 	flex-wrap: wrap;
-	gap: 0.35rem;
+	gap: 6px;
 	align-items: center;
 }
 
 .og-tagrow-keywords {
-	margin-top: 0.4rem;
+	margin-top: 6px;
 }
 
 /* A vocabulary with no colour of its own. Its fill and its ink come from TAG_COLORS like
@@ -1147,9 +1147,9 @@ a.og-photo-link {
    only two of the three. It is punctuation, not part of either link, so it takes the page's
    ink and none of the link's decoration. */
 .og-linkrow {
-	font-size: 1.1rem;
+	font-size: 18px;
 	margin-top: 0;
-	margin-bottom: 1.5rem;
+	margin-bottom: 24px;
 }
 
 .og-linkrow a:not(:first-of-type)::before {
@@ -1180,9 +1180,9 @@ a.og-photo-link {
 .og-map-caption {
 	flex: none;
 	min-height: 1.4em;
-	margin: 0.4rem 0 0;
+	margin: 6px 0 0;
 	text-align: center;
-	font-size: 0.9rem;
+	font-size: 14px;
 }
 
 /* ---- the chat page -------------------------------------------------------------------
@@ -1300,7 +1300,7 @@ body:has(.og-chat-page) {
    duration on the answer. Each follows its bubble's edge. */
 .og-chat-timing {
 	margin-top: 4px;
-	font-size: 0.8rem;
+	font-size: 13px;
 	color: var(--faded);
 }
 

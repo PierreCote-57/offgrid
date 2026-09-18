@@ -20,8 +20,6 @@ public class HorizonsPosition
 	/** What is lit of a body that shines by itself. */
 	private static final double FULLY_LIT = 1.0;
 
-	private static final double DEGREES_AROUND = 360.0;
-
 	private final Instant	instant;
 	private final double	rightAscension;
 	private final double	declination;
@@ -105,7 +103,7 @@ public class HorizonsPosition
 
 		double radians = Math.atan2(eclipticVector[1], eclipticVector[0]);
 		double degrees = Math.toDegrees(radians);
-		double angle = normalise(degrees);
+		double angle = HorizonsEphemeris.normalise(degrees);
 		return angle;
 	}
 
@@ -146,7 +144,7 @@ public class HorizonsPosition
 		else
 		{
 			double dotProduct = dot(bodyToEarth, bodyToSun);
-			double cosine = clamp(dotProduct / (earthLength * sunLength));
+			double cosine = HorizonsEphemeris.clamp(dotProduct / (earthLength * sunLength));
 			litFraction = (1.0 + cosine) / 2.0;
 		}
 
@@ -201,27 +199,5 @@ public class HorizonsPosition
 		double dotProduct = dot(vector, vector);
 		double length = Math.sqrt(dotProduct);
 		return length;
-	}
-
-	/**
-	 * An angle brought back into 0 to 360.
-	 */
-	private static double normalise(double degrees)
-	{
-		double remainder = degrees % DEGREES_AROUND;
-		if (remainder < 0.0)
-		{
-			remainder = remainder + DEGREES_AROUND;
-		}
-		return remainder;
-	}
-
-	/**
-	 * A cosine or a sine held inside -1 to 1, where rounding can put it just outside.
-	 */
-	private static double clamp(double value)
-	{
-		double clamped = Math.max(-1.0, Math.min(1.0, value));
-		return clamped;
 	}
 }
