@@ -42,8 +42,3 @@ still outstanding in `m-van.json` and `m-bronco.json`.
 `.og-sky-date-input` in `site.css` is 1px and transparent, and it has to stay focusable and take
 pointer events or Safari will not close the calendar on Escape. Today that costs a tab stop on
 something invisible: a keyboard user tabs to the button, then to nothing they can see.
-
-#60 Apply the rise and set offset for the Sun and the Moon. `SkyBodyAnalyser.findRise` and
-`findSet` cross an elevation of `0.0`, which is geometric zero: an almanac's sunrise carries
-refraction and half a disc with it, so the two differ by minutes at the 50th parallel. Until
-this is in, a test cannot assert an almanac time for a rise or a set — transit is unaffected.
