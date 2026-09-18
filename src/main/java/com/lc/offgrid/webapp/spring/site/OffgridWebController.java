@@ -89,10 +89,10 @@ public class OffgridWebController extends BaseWebController
 	}
 
 	@GetMapping("/blog")
-	public String blogList(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String blog(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
 		String path = String.format("/blog");
-		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processBlog(model, path, PageData.class));
 	}
 
 	@GetMapping("/blog/{name}")

@@ -135,5 +135,9 @@ the line for a message that says less. The browser page needs no guard either �
 already reports the URL and the status where the list would be, and its page render reads
 `datasets.json` first, so a broken file stops the page before the data call is ever made.
 
-**A missing file is logged INFO in the processor.** The server did not fail; it answered, with
-a placeholder image or a 404. WARN is for the server's own trouble, which this is not.
+**INFO is a URL issue, WARN is a content issue.** Neither is the server's own trouble, which
+is what ERROR is for, so the split is about whose mistake the log is reporting. A name that
+resolves nothing — `/image/{imageName}`, `/document/{documentName}`,
+`/shared/browser/data/{id}` are all path variables — came from a hand-edited URL and is INFO.
+A file this repo owns that is wrong — a blog entry with no date, a dataset row whose `file`
+pointer will not read — is WARN, because it is a defect someone here has to go and fix.

@@ -3,8 +3,7 @@
 <div th:replace="~{fragments/site/header}"></div>
 
 <main>
-	<h1 th:text="${PageName}">Rathtrevor, June</h1>
-	<p class="og-dateline" th:text="${pageData.date}">2026-06-17</p>
+	<div th:replace="~{fragments/block/blog-header :: blogHeader}"></div>
 
 	<div class="og-blog">
 		<p style="margin-top:0;">
@@ -12,7 +11,9 @@
 			At low tide, the beach really goes on forever.
 		</p>
 		<p>
-			To say the trip was a disappointement is an understatement.
+			To say the trip was a
+			<strike>disappointement</strike>
+			learning experience is an understatement.
 			Issues encountered:
 		</p>
 		<ol>

@@ -694,3 +694,27 @@ the list page and the items it lists, named the same because they are the same f
 The sweep: `BlogPage`, `.og-blog`, `blogList` and `blog` in the controller, `templates/blog/`,
 `data/blog/`, the "← All blogs" link in all six, and the older entries in this file,
 `look.md` and `data.md` that named the old ones.
+
+## 2026-09-18 — The blog list is a fragment, and a post's head is the same row
+
+`fragments/block/blog-list.html :: blogList` draws the list and takes no parameter. Every
+other block fragment takes one because it selects which slice of `pageData` to draw —
+`notes('Shopping list')`, `gallery('our-van')`. There is only ever one blog list on a page,
+so the model attribute name is enough to find it, and **how many rows it draws is the
+processor's decision, not the fragment's**: `/blog` sets all of them under `blogList`, the
+home page sets the first three under the same name. A count parameter on the fragment would
+have put that policy in the template and still made the home page read every blog json to
+draw three.
+
+**The model carries `List<Map.Entry<String, BlogPage>>`.** The row needs the url segment,
+which is the json's file name, and `BlogPage` has no field for it — `name` is the title.
+Putting it on the POJO would have added a field no json carries. `Map.entry` is the JDK's
+own pair, so nothing was written to hold two values; a `Pair` from the classpath would have
+been someone else's transitive internal, since the pom declares neither commons-lang3 nor
+Spring Data.
+
+`fragments/block/blog-header.html :: blogHeader` is the head of one post, and it is the list's
+row reused: same `.og-blog-row`, `.og-blog-thumb` and `.og-blog-detail`, the page's own `<h1>`
+where the list has its link, and no excerpt — an excerpt stands in for a page the reader has
+not opened, and a post is that page. Each of the six posts calls it with one identical line,
+which is what retired `.og-dateline` and the six copies of the date format that went with it.

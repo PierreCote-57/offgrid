@@ -355,6 +355,86 @@ li {
 	line-height: 30px;
 }
 
+/* The blog list: a thumbnail on the left, and beside it three lines — the title with the
+   date at the far end of the same line, then two lines of the excerpt. The row is as tall
+   as the thumbnail, so a short excerpt does not close the gap between rows. */
+.og-blog-list {
+	margin: 8px 0 24px;
+}
+
+.og-blog-row {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+	margin-bottom: 20px;
+}
+
+.og-blog-thumb {
+	flex: none;
+	width: 120px;
+	height: 80px;
+	object-fit: cover;
+	border: 1px solid var(--rule);
+}
+
+.og-blog-detail {
+	flex: 1;
+	min-width: 0;
+}
+
+/* The title and the date are one flex row. The title's column is a fixed measure rather
+   than the space that is going, so the date starts at the same x on every row — a column to
+   scan down — without being pushed out to the page edge. The measure is in ch, so it tracks
+   the type size instead of a pixel guess, and a title longer than it ellipses. */
+.og-blog-line {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	margin: 0 0 4px;
+}
+
+.og-blog-line a {
+	flex: 0 0 34ch;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--brand-deep);
+	font-weight: 700;
+}
+
+.og-blog-date {
+	flex: none;
+	color: var(--faded);
+}
+
+/* Two lines and no more, whatever the excerpt says. */
+.og-blog-excerpt {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
+	margin: 0;
+	color: var(--text);
+}
+
+/* The head of a post: the same row as a list entry, carrying the page's own <h1> instead of
+   a link. The h1 keeps its own size and gives up its margin, the date sitting under it in
+   the space the thumbnail leaves. */
+.og-blog-header {
+	margin-bottom: 20px;
+}
+
+.og-blog-header h1 {
+	margin: 0;
+}
+
+.og-blog-header .og-blog-date {
+	display: block;
+	margin-top: 4px;
+}
+
 /* Checklists. The label, checkbox and text span are emitted by
    ChecklistElementProcessor; authors write bare <li> lines. The class carries the styling
    and selects the variant, so it stays on the list. */
@@ -436,14 +516,6 @@ li {
 .og-numcheck input[type="checkbox"]:checked ~ span:not(.og-num) {
 	text-decoration: line-through;
 	color: var(--faded);
-}
-
-/* A blog's dateline, right under the title and in the brand's hand. */
-.og-dateline {
-	margin: -8px 0 16px;
-	color: var(--faded);
-	font-family: "Bradley Hand", cursive;
-	font-size: 18px;
 }
 
 /* A pull quote: the words centred between two hairlines, and under them who said them, in

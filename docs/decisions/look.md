@@ -199,3 +199,24 @@ stylesheet. Inline SVG would have followed the palette and been unopenable.
 
 The strip is a block in its cell rather than an inline image, so the row's spare height falls
 evenly above and below it instead of all of it landing above the text's baseline.
+
+## 2026-09-18 — A date reads the same everywhere, and sits where its page needs it
+
+**Bradley Hand is the wordmark's, not the date's.** `.og-dateline` wore it at 18px and was
+hard to read; the date is now body type in `--faded`, the same as the list's. A date is a
+value, and a value the reader has to decode is one they stop on. The hand stays on the
+wordmark and the pull quote's attribution, where it is decoration rather than data.
+
+**The format is `MMMM d, yyyy`, never the raw `LocalDateTime`.** The post pages printed
+`${pageData.date}`, which renders `2026-08-15T07:00:00`.
+
+**Position follows the page, not the other way round.** On the list the date is right of the
+title in a fixed column, because there are many rows and a column is what the eye scans down.
+On a post there is one date and no column, so it stacks under the title, where it fills the
+space the thumbnail leaves beside a one-line heading instead of stranding itself at the page
+edge.
+
+**The list's title column is `34ch`, not `flex: 1`.** Letting the title take the space that
+is going pushed the date out to the page edge, far from the title it belongs to. A fixed
+measure keeps the date's left edge constant — still a column — while sitting just past the
+longest title. It is stated in `ch` so it tracks the type size, and a longer title ellipses.

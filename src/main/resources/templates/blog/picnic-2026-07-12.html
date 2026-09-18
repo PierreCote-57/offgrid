@@ -3,8 +3,7 @@
 <div th:replace="~{fragments/site/header}"></div>
 
 <main>
-	<h1 th:text="${PageName}">Picnic at Beavertail Lake</h1>
-	<p class="og-dateline" th:text="${pageData.date}">2026-07-12</p>
+	<div th:replace="~{fragments/block/blog-header :: blogHeader}"></div>
 
 	<div class="og-blog">
 		<p style="margin-top:0;">

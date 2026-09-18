@@ -54,4 +54,10 @@ public class PageData
 	{
 		return relatedDestinationList;
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("%s", getName());
+	}
 }

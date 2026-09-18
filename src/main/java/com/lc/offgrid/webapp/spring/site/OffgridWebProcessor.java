@@ -8,6 +8,7 @@ import com.lc.offgrid.common.misc.files.LocalFileManager.*;
 import com.lc.offgrid.common.misc.files.ResourceFileManager.*;
 import com.lc.offgrid.common.misc.imaging.ImageMetadata;
 import com.lc.offgrid.common.misc.imaging.ImageSize;
+import com.lc.offgrid.common.pojo.page.BlogPage;
 import com.lc.offgrid.common.pojo.page.DestinationPage;
 import com.lc.offgrid.common.pojo.page.PageData;
 import com.lc.offgrid.common.pojo.part.Dataset;
@@ -33,8 +34,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Component
 @Scope("prototype")
@@ -110,6 +116,40 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		return answer;
 	}
 
+	public String processBlog(Model model, String path, Class<? extends PageData> clazz)
+	{
+		String answer = processPage(model, path, clazz);
+
+		List<Map.Entry<String, BlogPage>> pageList = makeBlogList();
+		model.addAttribute("blogList", pageList);
+
+		return answer;
+	}
+	private List<Map.Entry<String, BlogPage>> makeBlogList()
+	{
+		List<Map.Entry<String, BlogPage>> pageList= new ArrayList<>();
+		for (Map.Entry<String, File> entry : getJsonManager().getNameMap().entrySet())
+		{
+			String name = entry.getKey();
+			File file = entry.getValue();
+			if (file.getPath().contains("/blog/"))
+			{
+				BlogPage blogPage = readPageJson(name, BlogPage.class);
+				if (null != blogPage.getDate())
+				{
+					Map.Entry<String, BlogPage> listEntry = new AbstractMap.SimpleEntry<>(name, blogPage);
+					pageList.add(listEntry);
+				}
+				else
+				{
+					getLogger().warn("Ignoring blog page with missing date: '%s'", name);
+				}
+			}
+		}
+		pageList.sort((o1, o2) -> -o1.getValue().getDate().compareTo(o2.getValue().getDate()));
+		return pageList;
+	}
+
 	/**
 	 * The bytes of one image, read from the image folder, which sits outside the resource tree.
 	 * A name with no file behind it answers a drawn image that says so, at 200, so the reason
@@ -130,7 +170,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 		catch (Exception e)
 		{
-			getLogger().info("Unable to locate image %s", imageName);
+			getLogger().info("Unable to locate image '%s'", imageName);
 			Resource messageImage = makeMessageImage("Not found", imageName);
 			ResponseEntity<Resource> answer = makeResponseOk(SVG_MEDIA_TYPE, messageImage);
 			return answer;
@@ -176,7 +216,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 		catch (Exception e)
 		{
-			getLogger().info("Unable to locate document %s", documentName);
+			getLogger().info("Unable to locate document '%s'", documentName);
 			throw makeNotFound("Unable to locate document %s", documentName);
 		}
 	}
@@ -207,7 +247,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		Dataset dataset = findDataset(id);
 		if (null == dataset)
 		{
-			getLogger().error("Unknown dataset: %s", id);
+			getLogger().info("Unknown dataset: '%s'", id);
 			throw makeNotFound("Unknown dataset: %s", id);
 		}
 
@@ -234,16 +274,19 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		if (pageData instanceof DestinationPage destinationPage)
 		{
 			Map<String, GoogleMap> map = destinationPage.getGoogleMap();
-			Point point = destinationPage.getLocation();
-			for (GoogleMap googleMap : map.values())
+			if (null != map)
 			{
-				if (null == googleMap.getLat())
+				Point point = destinationPage.getLocation();
+				for (GoogleMap googleMap : map.values())
 				{
-					googleMap.setLat(point.getLat());
-				}
-				if (null == googleMap.getLng())
-				{
-					googleMap.setLng(point.getLng());
+					if (null == googleMap.getLat())
+					{
+						googleMap.setLat(point.getLat());
+					}
+					if (null == googleMap.getLng())
+					{
+						googleMap.setLng(point.getLng());
+					}
 				}
 			}
 		}
@@ -269,7 +312,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 				}
 				catch (Exception e)
 				{
-					getLogger().error("Error reading file pointer: %s", fileText);
+					getLogger().warn("Error in dataset with %,d entries reading file pointer: '%s'",
+							pageList.size(), fileText);
 				}
 			}
 		}

@@ -13,4 +13,10 @@ public class BlogPage extends PageData
 	{
 		return date;
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("%s %s", getDate(), super.toString());
+	}
 }
