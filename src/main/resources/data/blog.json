@@ -1,0 +1,7 @@
+{
+	"name": "Blog",
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	}
+}
