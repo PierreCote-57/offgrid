@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 67**
+**next id: 68**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -28,12 +28,19 @@ next id from the header above and increment it. This numbering is independent of
    anyone who posts to it. The question outlives the implementation — it has to be answered for
    whatever serves `/mcp`, not for the server that was removed.
 
-#4 Build the blog listing and wire the menu. `fragments/site/menu.html` still has
-`href="#"` for Blog, while the six posts already link back to `/blog` and a post is served at
-`/posts/{name}`. Everything else in the menu is wired and served.
+#4 Fill in the blog listing. `/blog` is served, blank, from `templates/blog.html`, and the
+menu points at it. What it has to draw: one row per blog, the featured image at 120x80 on the
+left, and on the right the title bold with the date right-justified on the same line, over two
+lines of excerpt. Most recent first. The blog list comes from `JsonResourceFileManager`,
+filtered to the files under `data/blog`.
 
 #6 Answer the MCP tools and resources from the data. Spring AI serves `/mcp` now, and every
 answer under `com.lc.offgrid.webapp.mcp` is hard-coded: the image list and the image itself, the
 worst road in to a destination, and what the van and the Bronco are due for. The real
 answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
 still outstanding in `m-van.json` and `m-bronco.json`.
+
+#67 The `every-journey-has-a-first-step` excerpt ends in a literal `&hellip;`. `th:text` and
+`browser.js`'s `escapeHtml` both render those eight characters as themselves, so the browser
+cards already show them. Decide whether the entity comes out of the JSON or the excerpt is
+rewritten to end on a word.

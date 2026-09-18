@@ -257,26 +257,26 @@ cost, and the tree stops saying what a page is.
 `hardware/van` and `hardware/maintenance/van` are two different pages both named van. That
 is the folder doing its job.
 
-## 2026-08-26 — Posts, and the map that does not belong on one
+## 2026-08-26 — Blogs, and the map that does not belong on one
 
-The six posts are converted. `.og-post` — the lined paper written in the Texture pass and
-until now used by nothing — is what the body sits on, and the post's `date`, carried in all
+The six blogs are converted. `.og-blog` — the lined paper written in the Texture pass and
+until now used by nothing — is what the body sits on, and the blog's `date`, carried in all
 six JSON files and rendered by none of them, is a dateline in the brand's hand directly under
 the title.
 
-**No `googleMap` on a post.** Every WordPress post opened with one, and every GettingLost post
+**No `googleMap` on a blog.** Every WordPress blog opened with one, and every GettingLost blog
 JSON carried `googleMap.where`; the block is gone from all six templates and the data was not
-brought over. A post that needs to put its subject on a map links to the destination page,
+brought over. A blog that needs to put its subject on a map links to the destination page,
 which is the page that owns the map. So `googleMap` stays on `DestinationPage` and is not
 promoted to `PageData`.
 
 Links to pages that do not exist yet are written as the real `<a th:href="@{…}">` they will
-be — the three destination links, and the "← All posts" link that used to point at
+be — the three destination links, and the "← All blogs" link that used to point at
 `gettinglostonvi.wpcomstaging.com`. A link that is removed because its target is missing is a
 link nobody restores when the target arrives.
 
 `photo-gallery` now puts `id="og-photo-<gallery>-<itemId>"` on each figure. The ids were in
-the JSON all along and the fragment dropped them, which left the picnic post's link to its
+the JSON all along and the fragment dropped them, which left the picnic blog's link to its
 own photo pointing at nothing.
 
 ## 2026-08-26 — The browser page
@@ -351,7 +351,7 @@ are now full pages like the checklists: header, `<main>`, footer, and the Thymel
 `photo-ref`, `photo-gallery`, `photo`, `warning`, `note-list` and `back-to-gallery`.
 
 The `pageLink` block became the real `<a th:href="@{/hardware/checklists/arriving-campsite}">`
-it will be, following the rule the posts pass set.
+it will be, following the rule the blogs pass set.
 
 **Step lists carry `og-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
 that choice; awning, climate and water follow it. The lists in battery and power enumerate
@@ -466,14 +466,10 @@ choice, and the choice is no. The one page that used it is `destinations/lakes/e
 Recorded because the absence looks like a porting gap when offgrid is read against
 GettingLost, and it is not one.
 
-## 2026-08-31 — A blog is composed of posts
+## 2026-08-31 — A blog is composed of blogs
 
-Both words are right, and they name different things. The blog is the collection: one page,
-at `/blog`, and the menu item that points at it. A post is one item in it, served at
-`/posts/{name}`, authored under `templates/posts/` with its data under `data/posts/`.
-
-So there was never a word to choose between. The folder, the template folder and the route say
-`posts` because that is what they hold; the menu says Blog because that is what it opens.
+Superseded by 2026-09-17 below. This entry gave the collection and the item two different
+words, so the url and the folders disagreed. There is one word now, and it is blog.
 
 ## 2026-09-07 — The sky page
 
@@ -681,3 +677,20 @@ filled by either.
 
 Rejected: passing `scope` and letting each handler query. It costs a second pass over the DOM
 and puts the selectors in two places.
+
+## 2026-09-17 — Everything says blog
+
+`/blog` lists them and `/blog/{name}` is one of them, out of `templates/blog/` and
+`data/blog/`. Pierre's call, and it overrides the entry above: one word for the whole feature,
+in the url, the folders, the Java, the CSS and the link text. A second word for the item was
+the split the entry above reasoned its way into, and it is gone.
+
+Because url and folder are the same string, the path `OffgridWebController.blog` builds IS the
+url — that path is the view name, so one string answers for both.
+
+`templates/blog.html` sits beside `templates/blog/`, and `data/blog.json` beside `data/blog/`:
+the list page and the items it lists, named the same because they are the same feature.
+
+The sweep: `BlogPage`, `.og-blog`, `blogList` and `blog` in the controller, `templates/blog/`,
+`data/blog/`, the "← All blogs" link in all six, and the older entries in this file,
+`look.md` and `data.md` that named the old ones.

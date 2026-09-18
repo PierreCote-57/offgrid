@@ -6,7 +6,7 @@ import com.lc.offgrid.common.pojo.page.DestinationPage;
 import com.lc.offgrid.common.pojo.page.LakePage;
 import com.lc.offgrid.common.pojo.page.MaintenancePage;
 import com.lc.offgrid.common.pojo.page.PageData;
-import com.lc.offgrid.common.pojo.page.PostPage;
+import com.lc.offgrid.common.pojo.page.BlogPage;
 import com.lc.offgrid.webapp.spring.tools.BaseWebController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -88,11 +88,18 @@ public class OffgridWebController extends BaseWebController
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}
 
-	@GetMapping("/posts/{name}")
-	public String post(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	@GetMapping("/blog")
+	public String blogList(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		String path = String.format("/post/%1$s", name);
-		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PostPage.class));
+		String path = String.format("/blog");
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
+	}
+
+	@GetMapping("/blog/{name}")
+	public String blog(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
+	{
+		String path = String.format("/blog/%1$s", name);
+		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, BlogPage.class));
 	}
 
 	@GetMapping("/info/{name}")

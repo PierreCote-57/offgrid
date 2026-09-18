@@ -84,7 +84,7 @@ Three paper treatments now, one stylesheet, scoped by what the element is:
   `url()` data-URIs held in custom properties, so the drawing exists once.
 - **Grid** — quadrille at 15px, one weight, on `.og-checklist` and `.og-numcheck`. Not
   scientific graph paper: no fine sub-grid, no heavier majors.
-- **Lined** — horizontals at 30px on `.og-post`, with the copy sitting on the rulings.
+- **Lined** — horizontals at 30px on `.og-blog`, with the copy sitting on the rulings.
 
 All three stand on warm paper `#faf7f0`, which replaced white everywhere. Ruled blocks carry
 a rust edge down the left so they read as a page out of a notebook rather than as a panel.

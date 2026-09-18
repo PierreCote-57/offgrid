@@ -167,7 +167,7 @@ its own.
 ```
 PageData            name, featuredImage, excerpt, tags, noteList,
                     photoGalleries, relatedDestinationList
-  PostPage          date
+  BlogPage          date
   DestinationPage   location, googleMap
     AreaPage        —
       LakePage      fishingReferences
@@ -188,7 +188,7 @@ also the class a page with nothing special uses.
 | rec-site, camping | `CampSitePage` | 5 |
 | rec-site, day-use | `CampSitePage`, `campgroundData` null | 3 |
 | commercial campground | `CampSitePage` | 2 |
-| blog post | `PostPage` | 6 |
+| blog | `BlogPage` | 6 |
 | howto, checklist, about | `PageData` | 12 |
 
 The boundaries came out of the data, not from taxonomy. All 10 lake files carry
@@ -213,8 +213,8 @@ says `rec-site` for all 8, and only the map icon (`tent` vs `picnic`) hints at i
 tree may not encode a distinction the loader cannot see, so a day-use site is a `CampSitePage`
 with `campgroundData` null.
 
-**Posts lose `googleMap`.** A post links to the destination page in its content instead, via
-`relatedDestinationList`. A subject with no page of its own gets no link. `PostPage` therefore
+**Blogs lose `googleMap`.** A blog links to the destination page in its content instead, via
+`relatedDestinationList`. A subject with no page of its own gets no link. `BlogPage` therefore
 adds only `date`.
 
 `relatedDestinationList` is `List<String>` of page filenames; the target page supplies its own
@@ -236,7 +236,7 @@ All 56 JSON files in `resources/data` were converted in one pass, the registry's
 included. The rename table is under *No key mapping in the POJOs*; the structural moves were
 `links` into `campgroundData.referenceList`, `location.zoom` onto the googleMap entries that
 had none of their own, `tags: []` deleted from the 8 van files, empty `categories` deleted
-from the 6 posts, and four posts' `googleMap` becoming `relatedDestinationList`.
+from the 6 blogs, and four blogs' `googleMap` becoming `relatedDestinationList`.
 
 Two rounds, deliberately. The first pass renamed and moved but deleted nothing that had
 content in it, and reported what it had left behind. Pierre then ruled which of those were
@@ -376,7 +376,7 @@ with no campground in it lands there.
 PageData            name, featuredImage, excerpt, tags, noteMap,
                     photoGalleries, relatedDestinationList
   MaintenancePage   actualList
-  PostPage          date
+  BlogPage          date
   DestinationPage   location, googleMap, access
     LakePage        fishingReferences
     CampsitePage    campgroundData
@@ -471,11 +471,11 @@ A template renders the word, never the constant: both palettes in `og-constants.
 by what the JSON writes, so `tags.html` lower-cases the constant once into `badgeWord` and
 `roadWord`. `SHARP_ROCK` reaching `data-road` would have painted nothing.
 
-**Dates are dates.** `MaintenanceEntry.date` and `nextDueDate` are `LocalDate`; `PostPage.date`
-is a `LocalDateTime`, because a post happened at a time of day and a shop visit did not. The
+**Dates are dates.** `MaintenanceEntry.date` and `nextDueDate` are `LocalDate`; `BlogPage.date`
+is a `LocalDateTime`, because a blog happened at a time of day and a shop visit did not. The
 data already carried both shapes correctly and needed no migration. Gson has no opinion about
 `java.time`, so `LocalDateAdapter` and `LocalDateTimeAdapter` sit beside the shared Gson in
-`BaseFileHandler` and read and write the ISO text. A post's dateline now prints `T21:00`
+`BaseFileHandler` and read and write the ISO text. A blog's dateline now prints `T21:00`
 rather than `T21:00:00`, which is what `LocalDateTime` prints.
 
 ## 2026-09-01 — A vocabulary with one owner lives inside it

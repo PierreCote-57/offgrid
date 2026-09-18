@@ -6,7 +6,7 @@
 	<h1 th:text="${PageName}">Studying the van, part 1</h1>
 	<p class="og-dateline" th:text="${pageData.date}">2026-06-01</p>
 
-	<div class="og-post">
+	<div class="og-blog">
 		<p style="margin-top:0;">
 			So many buttons, so little time.
 		</p>
@@ -15,7 +15,7 @@
 		</p>
 	</div>
 
-	<div class="og-dest-back"><a th:href="@{/blog}">&larr; All posts</a></div>
+	<div class="og-dest-back"><a th:href="@{/blog}">&larr; All blogs</a></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

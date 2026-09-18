@@ -326,12 +326,12 @@ li {
 	margin-bottom: 40px;
 }
 
-/* The two paper rulings. Quadrille at 15px for a checklist, horizontals at 30px for a post.
+/* The two paper rulings. Quadrille at 15px for a checklist, horizontals at 30px for a blog.
    Both sit on the warm ground with a rust edge down the left, so a ruled block reads as a
    page torn out of a notebook rather than as a panel. */
 .og-checklist,
 .og-numcheck,
-.og-post {
+.og-blog {
 	background-color: #fdfbf4;
 	border-left: 3px solid var(--rust);
 	padding: 12px 20px 16px;
@@ -344,13 +344,13 @@ li {
 		repeating-linear-gradient(to right,  transparent 0 14px, var(--ruling) 14px 15px);
 }
 
-.og-post {
+.og-blog {
 	background-image:
 		repeating-linear-gradient(to bottom, transparent 0 29px, var(--ruling) 29px 30px);
 }
 
 /* Copy on lined paper has to sit on the ruling, so the rhythm is the line spacing. */
-.og-post p {
+.og-blog p {
 	margin: 0;
 	line-height: 30px;
 }
@@ -438,7 +438,7 @@ li {
 	color: var(--faded);
 }
 
-/* A post's dateline, right under the title and in the brand's hand. */
+/* A blog's dateline, right under the title and in the brand's hand. */
 .og-dateline {
 	margin: -8px 0 16px;
 	color: var(--faded);
