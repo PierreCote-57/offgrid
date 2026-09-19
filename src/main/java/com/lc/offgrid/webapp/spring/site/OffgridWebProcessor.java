@@ -103,6 +103,17 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		return path;
 	}
 
+	public String processHome(Model model, String path, Class<? extends PageData> clazz)
+	{
+		String answer = processPage(model, path, clazz);
+
+		List<Map.Entry<String, BlogPage>> pageList = makeBlogList();
+		pageList = pageList.subList(0, 3);
+		model.addAttribute("blogList", pageList);
+
+		return answer;
+	}
+
 	public String processBrowser(Model model, String path, Class<? extends PageData> clazz, String datasetName)
 	{
 		String answer = processPage(model, path, clazz);

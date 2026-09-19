@@ -60,7 +60,7 @@ public class OffgridWebController extends BaseWebController
 	public String home(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
 		String path = String.format("/index");
-		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
+		return processRequest(request, response, model, () -> getProcessor().processHome(model, path, PageData.class));
 	}
 
 	@GetMapping("/destinations/{type}/{name}")

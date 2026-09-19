@@ -3,11 +3,19 @@
 <div th:replace="~{fragments/site/header}"></div>
 
 <main>
-	<h1 th:text="${PageName}">placeholder</h1>
+
+	<div>
+		<div style="width:47%;float:left;margin:0 1.5rem 1rem 0;">
+			<div th:replace="~{fragments/block/photo :: photo('IMG_0627')}" ></div>
+		</div>
+	</div>
 
 	<p>
 		It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 	</p>
+	IMG_0627.jpg
+	<h1>Recent blogs</h1>
+	<div th:replace="~{fragments/block/blog-list :: blogList}"></div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>
