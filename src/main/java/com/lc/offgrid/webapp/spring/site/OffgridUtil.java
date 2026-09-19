@@ -133,7 +133,7 @@ public class OffgridUtil
 	 */
 	public static double parseLatitude(String text, ZoneId timeZone)
 	{
-		double defaultLatitude = getDefaultLatitude(timeZone);
+		double defaultLatitude = null == timeZone ? DEFAULT_LATITUDE : getDefaultLatitude(timeZone);
 		double latitude = parseDouble(text, defaultLatitude, MAXIMUM_LATITUDE);
 		return latitude;
 	}
@@ -143,7 +143,7 @@ public class OffgridUtil
 	 */
 	public static double parseLongitude(String text, ZoneId timeZone)
 	{
-		double defaultLongitude = getDefaultLongitude(timeZone);
+		double defaultLongitude = null == timeZone ? DEFAULT_LONGITUDE : getDefaultLongitude(timeZone);
 		double longitude = parseDouble(text, defaultLongitude, MAXIMUM_LONGITUDE);
 		return longitude;
 	}
@@ -165,21 +165,9 @@ public class OffgridUtil
 			{
 				getLogger().info("parseTimeZone('%s') is not a zone, using '%s'", text, getDefaultTimeZone());
 			}
-			timeZone = ZoneId.of(getDefaultTimeZone());
+			timeZone = null;
 		}
 		return timeZone;
-	}
-
-	/**
-	 * The moment the sky is asked for: the instant off the query string, read in the zone off
-	 * the query string. Each part falls back on its own.
-	 */
-	public static ZonedDateTime parseZonedDateTime(String epochSecondText, String timeZoneText)
-	{
-		long epochSecond = parseEpochSecond(epochSecondText);
-		ZoneId timeZone = parseTimeZone(timeZoneText);
-		ZonedDateTime dateTime = Instant.ofEpochSecond(epochSecond).atZone(timeZone);
-		return dateTime;
 	}
 
 	/**

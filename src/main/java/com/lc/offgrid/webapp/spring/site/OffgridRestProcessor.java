@@ -86,10 +86,12 @@ public class OffgridRestProcessor
 	{
 		Instant			instant			= Instant.ofEpochSecond(OffgridUtil.parseEpochSecond(epochSecondText));
 		ZoneId			zoneId			= OffgridUtil.parseTimeZone(timeZoneText);
-		ZonedDateTime	dateTime		= ZonedDateTime.ofInstant(instant, zoneId);
 
 		double			latitude		= OffgridUtil.parseLatitude(latitudeText, zoneId);
 		double			longitude		= OffgridUtil.parseLongitude(longitudeText, zoneId);
+
+		zoneId = null == zoneId ? ZoneId.of(OffgridUtil.getDefaultTimeZone()) : zoneId;
+		ZonedDateTime	dateTime		= ZonedDateTime.ofInstant(instant, zoneId);
 
 		getLogger().debug("processSkyObserver(%s, %s, %s)", dateTime, latitude, longitude);
 
