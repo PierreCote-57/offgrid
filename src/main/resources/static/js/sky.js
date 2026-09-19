@@ -756,10 +756,17 @@
 	 * what a refused position comes to.
 	 */
 	function makeMomentQuery(dateTime) {
-		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		var epochSecond = Math.floor(dateTime.getTime() / 1000);
 
-		var query = "?timezone=" + encodeURIComponent(timeZone) + "&epochSecond=" + epochSecond;
+		var query = "?epochSecond=" + epochSecond;
+		return query;
+	}
+
+	// The zone the browser is set to, which only the observer call is answered for.
+	function makeZoneQuery() {
+		var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+		var query = "&timezone=" + encodeURIComponent(timeZone);
 		return query;
 	}
 
@@ -772,7 +779,7 @@
 	// The observer's own sky. A refused position leaves the place off and the server answers for
 	// its marker.
 	function makeObserverUrl(dateTime, position) {
-		var url = OBSERVER_URL + makeMomentQuery(dateTime);
+		var url = OBSERVER_URL + makeMomentQuery(dateTime) + makeZoneQuery();
 		if (position) {
 			url = url + "&lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
 		}
@@ -791,6 +798,33 @@
 	function loadSkyData(dateTime, scopeElement) {
 		var scope = scopeElement || document;
 		requestSkyData(dateTime, scope);
+	}
+
+	/*
+	 * One call, answered as the object it carries. A failure is logged and the promise never
+	 * settles, so a handler runs on an answer or not at all.
+	 */
+	function fetchSkyData(url) {
+		var startedAt = Date.now();
+
+		var dataPromise = fetch(url)
+			.then(function (response) {
+				if (!response.ok) {
+					throw new Error("failed to load " + url + " (HTTP " + response.status + ")");
+				}
+				return response.json();
+			})
+			.then(function (skyData) {
+				log("Answered skyData after " + (Date.now() - startedAt) + "ms.");
+				return skyData;
+			})
+			.catch(function (failure) {
+				logError("fetchSkyData(" + url + ") failed after " + (Date.now() - startedAt)
+						+ "ms: " + failure.message);
+				return new Promise(function () {});
+			});
+
+		return dataPromise;
 	}
 
 	/*
@@ -824,41 +858,10 @@
 		});
 	}
 
-	/*
-	 * One call, answered as the object it carries. A failure is logged and the promise never
-	 * settles, so a handler runs on an answer or not at all.
-	 */
-	function fetchSkyData(url) {
-		var startedAt = Date.now();
-
-		var dataPromise = fetch(url)
-			.then(function (response) {
-				if (!response.ok) {
-					throw new Error("failed to load " + url + " (HTTP " + response.status + ")");
-				}
-				return response.json();
-			})
-			.then(function (skyData) {
-				log("Answered " + skyData.dateTimeText + " after " + (Date.now() - startedAt) + "ms.");
-				return skyData;
-			})
-			.catch(function (failure) {
-				logError("fetchSkyData(" + url + ") failed after " + (Date.now() - startedAt)
-						+ "ms: " + failure.message);
-				return new Promise(function () {});
-			});
-
-		return dataPromise;
-	}
-
 	// What the positions answer fills: the chart, and the day on the date control.
 	function processPosition(positionsData, blockMap) {
 		blockMap.chartList.forEach(function (chartElement) {
 			renderChart(chartElement, positionsData);
-		});
-
-		blockMap.pickerList.forEach(function (boxElement) {
-			renderDatePicker(boxElement, positionsData);
 		});
 	}
 
@@ -868,6 +871,10 @@
 			renderTable(tableElement, observerData);
 			renderObserver(tableElement, observerData);
 			lookUpPlace(tableElement, observerData);
+		});
+
+		blockMap.pickerList.forEach(function (boxElement) {
+			renderDatePicker(boxElement, observerData);
 		});
 	}
 

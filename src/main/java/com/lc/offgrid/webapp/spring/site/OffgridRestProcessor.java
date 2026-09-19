@@ -58,22 +58,20 @@ public class OffgridRestProcessor
 	}
 
 	/**
-	 * Where the bodies stand at the second it asks for, seen from above. It takes no observer,
-	 * so the caller asks for it without waiting for the browser to say where it is. Both
-	 * parameters arrive as text so a value that does not parse falls back to the default rather
+	 * Where the bodies stand at the second it asks for, seen from above. It takes no observer and
+	 * no zone, so the caller asks for it without waiting for the browser to say where it is. The
+	 * parameter arrives as text so a value that does not parse falls back to the default rather
 	 * than failing the request.
 	 */
-	public SkyPositionsRestAnswer processSkyPositions(String timeZoneText, String epochSecondText)
+	public SkyPositionsRestAnswer processSkyPositions(String epochSecondText)
 	{
 		Instant			instant			= Instant.ofEpochSecond(OffgridUtil.parseEpochSecond(epochSecondText));
-		ZoneId			zoneId			= OffgridUtil.parseTimeZone(timeZoneText);
-		ZonedDateTime	dateTime		= ZonedDateTime.ofInstant(instant, zoneId);
 
-		getLogger().debug("processSkyPositions(%s)", dateTime);
+		getLogger().debug("processSkyPositions(%s)", instant);
 
 		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(instant);
 
-		SkyPositionsRestAnswer	skyAnswer	= new SkyPositionsRestAnswer(dateTime);
+		SkyPositionsRestAnswer	skyAnswer	= new SkyPositionsRestAnswer();
 		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
 		return skyAnswer;
 	}

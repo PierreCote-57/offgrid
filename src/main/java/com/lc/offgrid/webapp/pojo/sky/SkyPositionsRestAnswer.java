@@ -2,7 +2,6 @@ package com.lc.offgrid.webapp.pojo.sky;
 
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 /**
@@ -13,11 +12,6 @@ import java.util.Map;
 public class SkyPositionsRestAnswer extends SkyRestAnswer
 {
 	private Map<HorizonsBody, Double>	sunAngleMap;
-
-	public SkyPositionsRestAnswer(ZonedDateTime dateTime)
-	{
-		super(dateTime);
-	}
 
 	public void setSunAngleMap(Map<HorizonsBody, Double> sunAngleMap)
 	{

@@ -45,18 +45,17 @@ public class OffgridRestController extends BaseRestController
 	}
 
 	/**
-	 * Where the bodies stand at the second it asks for, seen from above. It takes no place, so a
-	 * caller asks for it without waiting on the browser's position. Both parameters are optional,
-	 * and absent they are Campbell River's zone, now. They arrive as text so a value that does
-	 * not parse falls back rather than failing the request.
+	 * Where the bodies stand at the second it asks for, seen from above. It takes no place and no
+	 * zone, so a caller asks for it without waiting on the browser's position. The parameter is
+	 * optional, and absent it is now. It arrives as text so a value that does not parse falls
+	 * back rather than failing the request.
 	 */
 	@GetMapping("/sky/positions")
 	public ResponseEntity<SkyPositionsRestAnswer> skyPositions(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(required = false) String timezone,
 			@RequestParam(required = false) String epochSecond)
 	{
 		return processRequest(request, response,
-				() -> getProcessor().processSkyPositions(timezone, epochSecond));
+				() -> getProcessor().processSkyPositions(epochSecond));
 	}
 
 	/**
