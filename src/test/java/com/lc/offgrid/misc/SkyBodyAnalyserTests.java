@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SkyBodyAnalyserTests extends AbstractTests
 {
 	/** The observer: the 50th parallel marker in Campbell River. */
-	private static final ZoneId ZONE_ROOT = ZoneId.of(OffgridUtil.DEFAULT_TIME_ZONE);
+	private static final ZoneId ZONE_ROOT = ZoneId.of(OffgridUtil.getDefaultTimeZone());
 
 	/**
 	 * How far a crossing may sit from the value it crosses. The answer is the sample nearer to
@@ -133,7 +133,7 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	public void testSkyBodyDayMap(ZonedDateTime dateTime) throws Exception
 	{
 		SkyBodyAnalyser analyser = makeAnalyser(dateTime);
-		Map<HorizonsBody, SkyBodyDay> bodyDayMap = analyser.getSkyBodyDayMap();
+		Map<HorizonsBody, SkyBodyDay> bodyDayMap = analyser.getSkyBodyDayMap(ZONE_ROOT);
 
 		int bodyCount = ephemerisBodyCount();
 		assertEquals(bodyCount, bodyDayMap.size(), "getSkyBodyDayMap() answered a body short");
@@ -247,8 +247,8 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	 */
 	private SkyBodyAnalyser makeAnalyser(ZonedDateTime dateTime)
 	{
-		SkyBodyAnalyser analyser = new SkyBodyAnalyser(dateTime,
-				OffgridUtil.DEFAULT_LATITUDE, OffgridUtil.DEFAULT_LONGITUDE);
+		SkyBodyAnalyser analyser = new SkyBodyAnalyser(dateTime.toInstant(),
+				OffgridUtil.getDefaultLatitude(), OffgridUtil.getDefaultLongitude());
 		return analyser;
 	}
 }

@@ -1,9 +1,12 @@
 package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.offgrid.common.misc.external.ZoneTabLocator;
+import com.lc.offgrid.common.misc.geography.point.LatLonPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -21,10 +24,10 @@ import java.time.ZonedDateTime;
 @Component
 public class OffgridUtil
 {
-	/** The 50th parallel marker in Campbell River, until the caller says otherwise. */
-	public static final double DEFAULT_LATITUDE = 50.0;
-	public static final double DEFAULT_LONGITUDE = -125.230450;
-	public static final String DEFAULT_TIME_ZONE = "America/Vancouver";
+	/** The 50th parallel marker in Campbell River, where a caller whose zone names no place lands. */
+	private static final double DEFAULT_LATITUDE = 50.0;
+	private static final double DEFAULT_LONGITUDE = -125.230450;
+	private static final String DEFAULT_TIME_ZONE = "America/Vancouver";
 
 	public static final double MAXIMUM_LATITUDE = 90.0;
 	public static final double MAXIMUM_LONGITUDE = 180.0;
@@ -86,21 +89,62 @@ public class OffgridUtil
 		return value;
 	}
 
-	/**
-	 * The observer's latitude off the query string, or the marker's own.
-	 */
-	public static double parseLatitude(String text)
+	/** The zone a caller naming none is answered for. */
+	public static String getDefaultTimeZone()
 	{
-		double latitude = parseDouble(text, DEFAULT_LATITUDE, MAXIMUM_LATITUDE);
+		return DEFAULT_TIME_ZONE;
+	}
+
+	/** The marker's own latitude, which is where a caller stating no place at all lands. */
+	public static double getDefaultLatitude()
+	{
+		return DEFAULT_LATITUDE;
+	}
+
+	/** The marker's own longitude, the same way. */
+	public static double getDefaultLongitude()
+	{
+		return DEFAULT_LONGITUDE;
+	}
+
+	/**
+	 * The latitude of the zone's own principal location, or the marker's when the tzdb release
+	 * names no place for it.
+	 */
+	public static double getDefaultLatitude(ZoneId timeZone)
+	{
+		LatLonPoint point = ZoneTabLocator.getPointOf(timeZone.getId());
+		double latitude = (null == point) ? getDefaultLatitude() : point.getLatitudeDeg();
 		return latitude;
 	}
 
 	/**
-	 * The observer's longitude off the query string, or the marker's own.
+	 * The longitude of the zone's own principal location, the same way.
 	 */
-	public static double parseLongitude(String text)
+	public static double getDefaultLongitude(ZoneId timeZone)
 	{
-		double longitude = parseDouble(text, DEFAULT_LONGITUDE, MAXIMUM_LONGITUDE);
+		LatLonPoint point = ZoneTabLocator.getPointOf(timeZone.getId());
+		double longitude = (null == point) ? getDefaultLongitude() : point.getLongitudeDeg();
+		return longitude;
+	}
+
+	/**
+	 * The observer's latitude off the query string, or the zone's own.
+	 */
+	public static double parseLatitude(String text, ZoneId timeZone)
+	{
+		double defaultLatitude = getDefaultLatitude(timeZone);
+		double latitude = parseDouble(text, defaultLatitude, MAXIMUM_LATITUDE);
+		return latitude;
+	}
+
+	/**
+	 * The observer's longitude off the query string, or the zone's own.
+	 */
+	public static double parseLongitude(String text, ZoneId timeZone)
+	{
+		double defaultLongitude = getDefaultLongitude(timeZone);
+		double longitude = parseDouble(text, defaultLongitude, MAXIMUM_LONGITUDE);
 		return longitude;
 	}
 
@@ -119,9 +163,9 @@ public class OffgridUtil
 		{
 			if (null != text && !text.isBlank())
 			{
-				getLogger().info("parseTimeZone('%s') is not a zone, using '%s'", text, DEFAULT_TIME_ZONE);
+				getLogger().info("parseTimeZone('%s') is not a zone, using '%s'", text, getDefaultTimeZone());
 			}
-			timeZone = ZoneId.of(DEFAULT_TIME_ZONE);
+			timeZone = ZoneId.of(getDefaultTimeZone());
 		}
 		return timeZone;
 	}

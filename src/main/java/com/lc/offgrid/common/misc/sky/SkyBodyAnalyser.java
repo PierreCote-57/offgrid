@@ -11,6 +11,7 @@ import com.lc.offgrid.common.misc.astronomy.planet.HorizonsPosition;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -25,16 +26,16 @@ import java.util.function.ToDoubleFunction;
  * fraction, and the ephemeris answers where a body stands for an observer. What is here is the
  * day — which moments are asked for, and what is made of them.
  *
- * One of these is built for one moment, stated in the zone of the place asking about it, and
- * answers about that moment only. It serves one request and then goes away, so it is not a bean
- * and the local folder arrives as a constructor parameter.
+ * One of these is built for one moment, which carries no zone. A caller asking about a day
+ * states the zone that day is read in, since that is the only thing the zone decides. It serves
+ * one request and then goes away, so it is not a bean and the local folder arrives as a
+ * constructor parameter.
  */
 public class SkyBodyAnalyser
 {
 	/** How often the day is sampled when a crossing is looked for. */
 	private static final Duration SAMPLE_STEP = Duration.ofMinutes(2);
 
-	private final ZonedDateTime		dateTime;
 	private final Double			latitude;
 	private final Double			longitude;
 	private final HorizonsEphemeris	ephemeris;
@@ -43,38 +44,36 @@ public class SkyBodyAnalyser
 	private final HorizonsPosition	earthPosition;
 
 	/**
-	 * Reads the ephemeris for the local date the moment falls on, which is the day the caller is
-	 * asking about where the caller is. The latitude and longitude are that place, in degrees,
-	 * north and east positive: they are the horizon a body rises over. The Sun's position is
-	 * read here too, every angle and every lit fraction being measured against it.
+	 * Reads the ephemeris around the moment, a window wide enough for a local day anywhere. The
+	 * latitude and longitude are the observer's place, in degrees, north and east positive: they
+	 * are the horizon a body rises over. The Sun's position is read here too, every angle and
+	 * every lit fraction being measured against it.
 	 *
 	 * An ephemeris that cannot be read is a runtime failure: nothing a caller states can make
 	 * a missing or malformed file readable, so there is nothing for it to catch.
 	 */
-	public SkyBodyAnalyser(ZonedDateTime dateTime)
+	public SkyBodyAnalyser(Instant instant)
 	{
-		this(dateTime, null, null);
+		this(instant, null, null);
 	}
-	public SkyBodyAnalyser(ZonedDateTime dateTime, Double latitude, Double longitude)
+	public SkyBodyAnalyser(Instant instant, Double latitude, Double longitude)
 	{
-		this.dateTime = dateTime;
+		this.instant = instant;
 		this.latitude = latitude;
 		this.longitude = longitude;
 
-		LocalDate localDate = dateTime.toLocalDate();
 		try
 		{
-			this.ephemeris = new HorizonsEphemeris(localDate);
+			this.ephemeris = new HorizonsEphemeris(instant);
 		}
 		catch (Exception exception)
 		{
 			throw new BasicRuntimeException(exception,
 					"SkyBodyAnalyser(%1$s, %2$s, %3$s) could not read the ephemeris",
-					dateTime, latitude, longitude);
+					instant, latitude, longitude);
 		}
 
-		this.instant = dateTime.toInstant();
-		this.sunPosition = ephemeris.getPosition(HorizonsBody.SUN, instant);
+		this.sunPosition = ephemeris.getPosition(HorizonsBody.SUN, getInstant());
 		this.earthPosition = new HorizonsPosition(getInstant(), 0.0, 0.0, 0.0, null, null);
 	}
 
@@ -86,11 +85,6 @@ public class SkyBodyAnalyser
 	{
 		int[] yearRange = HorizonsEphemeris.getYearRange();
 		return yearRange;
-	}
-
-	public ZonedDateTime getDateTime()
-	{
-		return dateTime;
 	}
 
 	public Double getLatitude()
@@ -156,16 +150,16 @@ public class SkyBodyAnalyser
 
 	/**
 	 * One body's day at the observer's place: when it rises, transits and sets, and what it
-	 * looks like while it is up.
+	 * looks like while it is up. The zone is the one the day is read in.
 	 */
-	public SkyBodyDay getSkyBodyDay(HorizonsBody body)
+	public SkyBodyDay getSkyBodyDay(HorizonsBody body, ZoneId timeZone)
 	{
 		HorizonsPosition position = getEphemeris().getPosition(body, getInstant());
 		HorizonsPosition parentPosition = HorizonsBody.EARTH.equals(body.getParent())
 				? getEarthPosition()
 				: getSunPosition();
 
-		Map<HorizonsMomentName, HorizonsMoment> momentMap = makeMomentMap(body);
+		Map<HorizonsMomentName, HorizonsMoment> momentMap = makeMomentMap(body, timeZone);
 		double distance = position.getRange();
 		double orbitRadius = position.getOrbitRadius(parentPosition);
 		Double apparentMagnitude = position.getApparentMagnitude();
@@ -179,9 +173,10 @@ public class SkyBodyAnalyser
 
 	/**
 	 * Every body's day, in the order the enum states them. Only the bodies there is an ephemeris
-	 * to read are in it, which is what the table's rows are built from.
+	 * to read are in it, which is what the table's rows are built from. The zone is the one the
+	 * day is read in.
 	 */
-	public Map<HorizonsBody, SkyBodyDay> getSkyBodyDayMap()
+	public Map<HorizonsBody, SkyBodyDay> getSkyBodyDayMap(ZoneId timeZone)
 	{
 		Map<HorizonsBody, SkyBodyDay> bodyDayMap = new EnumMap<>(HorizonsBody.class);
 
@@ -192,7 +187,7 @@ public class SkyBodyAnalyser
 				continue;
 			}
 
-			SkyBodyDay bodyDay = getSkyBodyDay(body);
+			SkyBodyDay bodyDay = getSkyBodyDay(body, timeZone);
 			bodyDayMap.put(body, bodyDay);
 		}
 
@@ -203,9 +198,9 @@ public class SkyBodyAnalyser
 	 * The day's moments, each under its name. A crossing that does not happen on the day is a
 	 * null, and only the first of each is taken.
 	 */
-	private Map<HorizonsMomentName, HorizonsMoment> makeMomentMap(HorizonsBody body)
+	private Map<HorizonsMomentName, HorizonsMoment> makeMomentMap(HorizonsBody body, ZoneId timeZone)
 	{
-		List<HorizonsMoment> sampleList = makeSampleList(body);
+		List<HorizonsMoment> sampleList = makeSampleList(body, timeZone);
 		Map<HorizonsMomentName, HorizonsMoment> momentMap = new EnumMap<>(HorizonsMomentName.class);
 
 		momentMap.put(HorizonsMomentName.RISE, findRise(body, sampleList));
@@ -221,10 +216,10 @@ public class SkyBodyAnalyser
 	 * The body's place in the sky at every step of the observer's day, which is what a crossing
 	 * is looked for in. The step is the precision the answers carry.
 	 */
-	private List<HorizonsMoment> makeSampleList(HorizonsBody body)
+	private List<HorizonsMoment> makeSampleList(HorizonsBody body, ZoneId timeZone)
 	{
-		LocalDate localDate = getDateTime().toLocalDate();
-		ZonedDateTime dayStart = localDate.atStartOfDay(getDateTime().getZone());
+		LocalDate localDate = getInstant().atZone(timeZone).toLocalDate();
+		ZonedDateTime dayStart = localDate.atStartOfDay(timeZone);
 		ZonedDateTime dayEnd = dayStart.plusDays(1);
 
 		Instant endInstant = dayEnd.toInstant();

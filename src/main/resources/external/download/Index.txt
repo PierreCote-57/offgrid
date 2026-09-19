@@ -6,3 +6,5 @@ bc_exits_amenities.json: curl -o bc-exit-amenities.json 'https://-api.de/api/int
 
 bc_offramp.json: https://openmaps.gov.bc.ca/geo/pub/WHSE_BASEMAPPING.DRA_DGTL_ROAD_ATLAS_MPAR_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_BASEMAPPING.DRA_DGTL_ROAD_ATLAS_MPAR_SP&outputFormat=application/json&srsName=EPSG:4326&CQL_FILTER=HIGHWAY_EXIT_NUMBER%20IS%20NOT%20NULL%20AND%20ROAD_NAME_FULL%20LIKE%20%27%25Offramp%25%27
 
+zone1970.tab: https://www.iana.org/time-zones/releases/2026d
+

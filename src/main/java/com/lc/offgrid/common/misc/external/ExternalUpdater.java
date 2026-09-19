@@ -17,6 +17,10 @@ public class ExternalUpdater
 	private static final String	AMENITY_PATH	= "external/download/bc_exits_amenities.json";
 	private static final String	AMENITY_URL		= "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A600%5D%3B%0Anode%5B%22highway%22%3D%22motorway_junction%22%5D%2848.2%2C-139.1%2C60.1%2C-114.0%29-%3E.j%3B%0A%28%0Anwr%28around.j%3A1000%29%5B%22amenity%22~%22%5E%28fuel%7Crestaurant%7Cfast_food%7Ccafe%7Ctoilets%7Cdrinking_water%29%24%22%5D%3B%0Anwr%28around.j%3A1000%29%5B%22shop%22~%22%5E%28convenience%7Csupermarket%7Cdepartment_store%29%24%22%5D%3B%0Anwr%28around.j%3A1000%29%5B%22tourism%22~%22%5E%28hotel%7Cmotel%7Ccamp_site%29%24%22%5D%3B%0A%29%3B%0Aout%20center%20tags%3B%0A";
 
+	private static final String	ZONE_TAB_PATH	= "external/download/tzdata2026d/zone1970.tab";
+	private static final String	BACKWARD_PATH	= "external/download/tzdata2026d/backward";
+	private static final String	TZDATA_URL		= "https://www.iana.org/time-zones/releases/2026d";
+
 	public static String getRestStopPath()
 	{
 		return REST_STOP_PATH;
@@ -55,5 +59,20 @@ public class ExternalUpdater
 	public static String getAmenityUrl()
 	{
 		return AMENITY_URL;
+	}
+
+	public static String getZoneTabPath()
+	{
+		return ZONE_TAB_PATH;
+	}
+
+	public static String getBackwardPath()
+	{
+		return BACKWARD_PATH;
+	}
+
+	public static String getTzdataUrl()
+	{
+		return TZDATA_URL;
 	}
 }

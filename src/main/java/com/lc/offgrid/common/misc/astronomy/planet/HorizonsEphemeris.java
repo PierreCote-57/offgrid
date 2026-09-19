@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -71,7 +73,6 @@ public class HorizonsEphemeris
 
 	private static final double DEGREES_AROUND = 360.0;
 
-	private final LocalDate						date;
 	private final Instant						fromInstant;
 	private final Instant						toInstant;
 	private final Map<HorizonsBody, List<HorizonsRow>>	rowListMap;
@@ -79,16 +80,11 @@ public class HorizonsEphemeris
 	/**
 	 * Reads every body's rows for the date and the three days on each side of it.
 	 */
-	public HorizonsEphemeris(LocalDate date) throws IOException, ParseException
+	public HorizonsEphemeris(Instant instant) throws IOException, ParseException
 	{
-		this.date = date;
-
-		LocalDate firstDate = date.minusDays(WINDOW_DAY_COUNT);
-		LocalDate lastDate = date.plusDays(WINDOW_DAY_COUNT);
-		this.fromInstant = firstDate.atStartOfDay(ZoneOffset.UTC).toInstant();
-		this.toInstant = lastDate.atStartOfDay(ZoneOffset.UTC).toInstant();
-
-		this.rowListMap = readRowListMap(firstDate.getYear(), lastDate.getYear());
+		this.fromInstant = instant.minus(3, ChronoUnit.DAYS);
+		this.toInstant = instant.plus(3, ChronoUnit.DAYS);;
+		this.rowListMap = readRowListMap(fromInstant.atZone(ZoneOffset.UTC).getYear(), toInstant.atZone(ZoneOffset.UTC).getYear());
 	}
 
 	/**
@@ -155,14 +151,6 @@ public class HorizonsEphemeris
 			return NO_YEAR;
 		}
 		return year;
-	}
-
-	/**
-	 * The date this ephemeris was built for.
-	 */
-	public LocalDate getDate()
-	{
-		return date;
 	}
 
 	/**
@@ -465,8 +453,8 @@ public class HorizonsEphemeris
 	{
 		if (instant.isBefore(fromInstant) || instant.isAfter(toInstant))
 		{
-			String message = String.format("%1$s is outside the ephemeris built for %2$s, which runs %3$s to %4$s",
-					instant, date, fromInstant, toInstant);
+			String message = String.format("%s is outside the ephemeris which runs %s to %s",
+					instant, fromInstant, toInstant);
 			throw new IllegalArgumentException(message);
 		}
 	}

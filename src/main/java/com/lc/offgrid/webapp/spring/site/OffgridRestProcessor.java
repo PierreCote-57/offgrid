@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -63,11 +65,13 @@ public class OffgridRestProcessor
 	 */
 	public SkyPositionsRestAnswer processSkyPositions(String timeZoneText, String epochSecondText)
 	{
-		ZonedDateTime	dateTime		= OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText);
+		Instant			instant			= Instant.ofEpochSecond(OffgridUtil.parseEpochSecond(epochSecondText));
+		ZoneId			zoneId			= OffgridUtil.parseTimeZone(timeZoneText);
+		ZonedDateTime	dateTime		= ZonedDateTime.ofInstant(instant, zoneId);
 
 		getLogger().debug("processSkyPositions(%s)", dateTime);
 
-		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(dateTime);
+		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(instant);
 
 		SkyPositionsRestAnswer	skyAnswer	= new SkyPositionsRestAnswer(dateTime);
 		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
@@ -82,16 +86,19 @@ public class OffgridRestProcessor
 	public SkyObserverRestAnswer processSkyObserver(String timeZoneText, String latitudeText, String longitudeText,
 			String epochSecondText)
 	{
-		ZonedDateTime	dateTime		= OffgridUtil.parseZonedDateTime(epochSecondText, timeZoneText);
-		double			latitude		= OffgridUtil.parseLatitude(latitudeText);
-		double			longitude		= OffgridUtil.parseLongitude(longitudeText);
+		Instant			instant			= Instant.ofEpochSecond(OffgridUtil.parseEpochSecond(epochSecondText));
+		ZoneId			zoneId			= OffgridUtil.parseTimeZone(timeZoneText);
+		ZonedDateTime	dateTime		= ZonedDateTime.ofInstant(instant, zoneId);
+
+		double			latitude		= OffgridUtil.parseLatitude(latitudeText, zoneId);
+		double			longitude		= OffgridUtil.parseLongitude(longitudeText, zoneId);
 
 		getLogger().debug("processSkyObserver(%s, %s, %s)", dateTime, latitude, longitude);
 
-		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(dateTime, latitude, longitude);
+		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(instant, latitude, longitude);
 
 		SkyObserverRestAnswer	skyAnswer	= new SkyObserverRestAnswer(dateTime, latitude, longitude);
-		skyAnswer.setSkyBodyDayMap(skyBodyAnalyser.getSkyBodyDayMap());
+		skyAnswer.setSkyBodyDayMap(skyBodyAnalyser.getSkyBodyDayMap(zoneId));
 		return skyAnswer;
 	}
 }
