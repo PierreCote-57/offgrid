@@ -7,39 +7,28 @@ import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
 import java.util.Map;
 
 /**
- * One body's day, as an observer at one place sees it: where to look and when, and what it
- * looks like while it is up.
- *
- * Each moment is held under its name, and one that does not happen on the day is a null. The
- * times are epoch seconds: the zone they are shown in is the reader's business.
+ * A moment that does not happen on the day is a null.
  */
 public class SkyBodyDay
 {
-	/** The rise, the transit, the set and the moment that was asked about. */
 	private final Map<HorizonsMomentName, HorizonsMoment>	momentMap;
 
-	/** Distance from the observer, in astronomical units. */
-	private final double	distance;
-
-	/** Distance from the Sun, in astronomical units. */
-	private final double	orbitRadius;
-
-	/** Apparent visual magnitude, or null where Horizons does not state one. */
+	private final double	distanceAu;
+	private final double	orbitRadiusAu;
 	private final Double	apparentMagnitude;
 
 	/** The constellation the body sits in, or null where Horizons named one that is not one of the 88. */
 	private final Constellation	constellation;
 
-	/** How much of the disc is lit, from 0 to 1. */
 	private final double	litFraction;
 
-	public SkyBodyDay(Map<HorizonsMomentName, HorizonsMoment> momentMap, double distance,
-			double orbitRadius, Double apparentMagnitude, Constellation constellation,
+	public SkyBodyDay(Map<HorizonsMomentName, HorizonsMoment> momentMap, double distanceAu,
+			double orbitRadiusAu, Double apparentMagnitude, Constellation constellation,
 			double litFraction)
 	{
 		this.momentMap = momentMap;
-		this.distance = distance;
-		this.orbitRadius = orbitRadius;
+		this.distanceAu = distanceAu;
+		this.orbitRadiusAu = orbitRadiusAu;
 		this.apparentMagnitude = apparentMagnitude;
 		this.constellation = constellation;
 		this.litFraction = litFraction;
@@ -50,14 +39,14 @@ public class SkyBodyDay
 		return momentMap;
 	}
 
-	public double getDistance()
+	public double getDistanceAu()
 	{
-		return distance;
+		return distanceAu;
 	}
 
-	public double getOrbitRadius()
+	public double getOrbitRadiusAu()
 	{
-		return orbitRadius;
+		return orbitRadiusAu;
 	}
 
 	public Double getApparentMagnitude()

@@ -27,9 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * What the sky page asks `SkyBodyAnalyser` for, at one fixed place on one fixed day, so a run six
- * months from now answers what this run answers.
- *
  * The day is read from the ephemeris files under {@code folder.local}, and those cover the
  * years that have been fetched.
  */
@@ -38,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SkyBodyAnalyserTests extends AbstractTests
 {
-	/** The observer: the 50th parallel marker in Campbell River. */
 	private static final ZoneId ZONE_ROOT = ZoneId.of(OffgridUtil.getDefaultTimeZone());
 
 	/**
@@ -49,16 +45,12 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	private static final double ELEVATION_TOLERANCE = 1.0;
 	private static final double BEARING_TOLERANCE = 5.0;
 
-	/** The whole circle, which every angle is stated inside. */
 	private static final double DEGREES_AROUND = 360.0;
 
-	/** How a moment is written in a source, which is the observer's own clock. */
 	private static final DateTimeFormatter TEXT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-	/** What is written where a body has no such moment on the day. */
 	private static final String NO_MOMENT = "does not happen on the day";
 
-	/** Where the ephemeris files are read from, which the profile states. */
 	@Value("${folder.local}")
 	private String dataRootFolder;
 
@@ -67,9 +59,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		return dataRootFolder;
 	}
 
-	/**
-	 * A moment written as the observer's clock reads it, which is how a source states one.
-	 */
 	private static ZonedDateTime makeZDT(String text)
 	{
 		LocalDateTime localDateTime = LocalDateTime.parse(text, TEXT_FORMAT);
@@ -77,10 +66,7 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		return dateTime;
 	}
 
-	/**
-	 * The moments the Sun angles are asked for, each a fixed one: a day the files on disk cover,
-	 * so a run six months from now asks what this run asks.
-	 */
+	/** Fixed moments, on a day the files on disk cover, so every run asks the same thing. */
 	public static Object[][] SunAngleSource()
 	{
 		return new Object[][] {
@@ -88,9 +74,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		};
 	}
 
-	/**
-	 * The moments a body's day is asked for, fixed the same way.
-	 */
 	public static Object[][] BodyDaySource()
 	{
 		return new Object[][] {
@@ -154,9 +137,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		}
 	}
 
-	/**
-	 * How many bodies the maps are expected to hold: the ones there is an ephemeris to read.
-	 */
 	private static int ephemerisBodyCount()
 	{
 		int bodyCount = 0;
@@ -172,15 +152,12 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		return bodyCount;
 	}
 
-	/**
-	 * What the body looks like, then one line for each of the day's moments.
-	 */
 	private void logBodyDay(HorizonsBody body, SkyBodyDay bodyDay)
 	{
 		Constellation constellation = bodyDay.getConstellation();
 		String constellationName = (null == constellation) ? null : constellation.getLatinName();
 
-		getLogger().info("%-8s %.3f AU, %s, %.0f%% lit", body, bodyDay.getDistance(),
+		getLogger().info("%-8s %.3f AU, %s, %.0f%% lit", body, bodyDay.getDistanceAu(),
 				constellationName, bodyDay.getLitFraction() * 100.0);
 
 		for (Map.Entry<HorizonsMomentName, HorizonsMoment> entry :bodyDay.getMomentMap().entrySet())
@@ -192,10 +169,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		}
 	}
 
-	/**
-	 * What holds for every body on every day: the asked-for moment is always there, a crossing
-	 * that was found sits on the value it crosses, and the body is somewhere with some of it lit.
-	 */
 	private void checkBodyDay(HorizonsBody body, SkyBodyDay bodyDay)
 	{
 		Map<HorizonsMomentName, HorizonsMoment> momentMap = bodyDay.getMomentMap();
@@ -213,9 +186,9 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		HorizonsMoment transit = momentMap.get(HorizonsMomentName.TRANSIT);
 		checkCrossing(body, HorizonsMomentName.TRANSIT, transit, 180.0, BEARING_TOLERANCE, false);
 
-		double distance = bodyDay.getDistance();
-		String noDistance = String.format("%s answered a distance of %s AU", body, distance);
-		assertTrue(distance > 0.0, noDistance);
+		double distanceAu = bodyDay.getDistanceAu();
+		String noDistance = String.format("%s answered a distance of %s AU", body, distanceAu);
+		assertTrue(distanceAu > 0.0, noDistance);
 
 		double litFraction = bodyDay.getLitFraction();
 		boolean litInRange = litFraction >= 0.0 && litFraction <= 1.0;
@@ -223,10 +196,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		assertTrue(litInRange, badLit);
 	}
 
-	/**
-	 * A crossing that was found sits within a sample step's movement of the value it crosses. One
-	 * that does not happen on the day is null, and there is nothing to check.
-	 */
 	private void checkCrossing(HorizonsBody body, HorizonsMomentName name, HorizonsMoment moment,
 			double targetValue, double tolerance, boolean onElevation)
 	{
@@ -242,9 +211,6 @@ public class SkyBodyAnalyserTests extends AbstractTests
 		assertTrue(gap <= tolerance, tooFar);
 	}
 
-	/**
-	 * The analyser the tests ask, built for one moment at the fixed place.
-	 */
 	private SkyBodyAnalyser makeAnalyser(ZonedDateTime dateTime)
 	{
 		SkyBodyAnalyser analyser = new SkyBodyAnalyser(dateTime.toInstant(),

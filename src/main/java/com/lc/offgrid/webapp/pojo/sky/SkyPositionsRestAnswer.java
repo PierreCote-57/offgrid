@@ -5,9 +5,7 @@ import com.lc.offgrid.common.misc.astronomy.planet.HorizonsBody;
 import java.util.Map;
 
 /**
- * Where the bodies stand at a moment, seen from above. Nothing in it depends on where the
- * caller is, which is why it is its own answer: the request goes out as the page loads, rather
- * than after the browser has said where the visitor stands.
+ * Each body's angle at a moment, as seen from above: a plan view, not one observer's sky.
  */
 public class SkyPositionsRestAnswer extends SkyRestAnswer
 {

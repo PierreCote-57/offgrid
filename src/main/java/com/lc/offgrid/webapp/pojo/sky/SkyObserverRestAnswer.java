@@ -7,20 +7,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
-/**
- * What the sky does for one observer on one day: when each body rises, transits and sets, and
- * what it looks like while it is up. It opens with the moment and the place it was read as — a
- * parameter that does not parse falls back, so the answer states the values it actually used.
- *
- * The moment travels as the second and the zone it was read in, which the caller puts back
- * together. This is the only answer carrying a zone: the positions endpoint is never asked for
- * one.
- */
 public class SkyObserverRestAnswer extends SkyRestAnswer
 {
 	private long		epochSecond;
 	private ZoneId		timeZone;
-	/** The moment as the caller's own zone reads it, so the answer can be read. Nothing computes from it. */
+	/** There to be read: nothing computes from it. */
 	private String		dateTimeText;
 	private double		latitude;
 	private double		longitude;

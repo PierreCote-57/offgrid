@@ -47,3 +47,11 @@ sets that attribute to the first three of `makeBlogList`.
 #69 The date format `'MMMM d, yyyy'` is written in both `fragments/block/blog-list.html` and
 `fragments/block/blog-header.html`. Collapse it into a `dateline(date)` fragment they both
 call, so a post and its row can never disagree.
+
+#70 `SkyBodyAnalyser.getSunAngle` and `HorizonsPosition.getSunAngle` return degrees; per §9.8 the
+name should carry the unit. Rename both to `getSunAngleDeg`, which reaches outside the Sky* files.
+
+#71 `parseTimeZone` in `OffgridUtil` now answers null where it used to answer the default zone.
+Its javadoc still says it answers the marker's own, and its log line still says "using '<zone>'".
+Rewrite both to state that it answers null and the caller decides. The `Instant` and
+`ZonedDateTime` imports in that file are left over from `parseZonedDateTime` and are unused.

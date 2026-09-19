@@ -82,7 +82,7 @@
 		{ heading: "Set|Time",            width: 60, value: "SET.epochSecond" },
 		{ heading: "Set|Bearing",         width: 60, value: "SET.bearing" },
 		{ heading: "Orbit|Period",        width: 60, value: "bodyMap.periodDay" },
-		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadius" },
+		{ heading: "Orbit|Radius",        width: 70, value: "skyBodyDayMap.orbitRadiusAu" },
 		{ heading: "Sunlit|Fraction",     width: 60, value: "skyBodyDayMap.litFraction" },
 		{ heading: "Sunlit|Mag<sup>1</sup>",
 		                                  width: 60, value: "skyBodyDayMap.apparentMagnitude" },
@@ -97,7 +97,7 @@
 		elevation: degreeText,
 		litFraction: percentText,
 		periodDay: periodText,
-		orbitRadius: distanceText,
+		orbitRadiusAu: distanceText,
 		apparentMagnitude: magnitudeText
 	};
 
