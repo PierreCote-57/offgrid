@@ -22,7 +22,8 @@ public class NextMaintenanceTool extends AbstractOffgridMCP
 	private static final SimpleFilterString FILTER = new SimpleFilterString(null, "/maintenance/", null);
 
 	@McpTool(name = "next-maintenance",
-			description = "The next scheduled maintenance for the van and for the Bronco")
+			description = "The next scheduled maintenance for the van and for the Bronco",
+			generateOutputSchema = true)
 	public Map<String, NextDue> getNextMaintenance()
 	{
 		Map<String, File> fileMap = getJsonManager().filterMap(FILTER);

@@ -28,9 +28,3 @@ next id from the header above and increment it. This numbering is independent of
    anyone who posts to it. The question outlives the implementation — it has to be answered for
    whatever serves `/mcp`, not for the server that was removed.
 
-#6 Answer the MCP tools and resources from the data. Spring AI serves `/mcp` now, and every
-answer under `com.lc.offgrid.webapp.mcp` is hard-coded: the image list and the image itself, the
-worst road in to a destination, and what the van and the Bronco are due for. The real
-answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
-still outstanding in `m-van.json` and `m-bronco.json`.
-

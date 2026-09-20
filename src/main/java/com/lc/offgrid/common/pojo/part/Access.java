@@ -22,6 +22,7 @@ public class Access
 	 */
 	public enum RoadType
 	{
+		@SerializedName("unknown")		UNKNOWN,
 		@SerializedName("pavement")		PAVEMENT,
 
 		@SerializedName("unpaved")		UNPAVED,
@@ -161,9 +162,10 @@ public class Access
 	 * km is a Double so that a leg with no distance stated stays different from a leg measured
 	 * at zero: unpaved asserts a measured tail, and a null says nobody has measured it yet.
 	 */
-	public static class Leg
-	{
+	@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+	public static class Leg	{
 		private RoadType	type;
+		@org.jspecify.annotations.Nullable
 		private Double		km;
 
 		public Leg()

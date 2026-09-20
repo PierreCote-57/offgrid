@@ -33,6 +33,10 @@
 		},
 		"legList": [
 			{
+				"type": "pavement",
+				"km": 25
+			},
+			{
 				"type": "dirt",
 				"km": 0.5
 			}
