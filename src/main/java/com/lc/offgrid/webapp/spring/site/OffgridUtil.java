@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
@@ -197,5 +198,64 @@ public class OffgridUtil
 			return lastEpochSecond;
 		}
 		return epochSecond;
+	}
+
+	/**
+	 * The day the sky is asked about, or today where the caller is when it states none. A dot or
+	 * a slash between the parts is read as a dash, so 2026.09.25 and 2026/09/25 are the same day
+	 * as 2026-09-25. A day outside what the ephemeris covers is answered with the end it passed.
+	 */
+	public static LocalDate parseDate(String text, ZoneId timeZone)
+	{
+		ZoneId dateZone = null == timeZone ? ZoneId.of(DEFAULT_TIME_ZONE) : timeZone;
+		LocalDate localDate;
+		try
+		{
+			String dateText = text.trim().replace('.', '-').replace('/', '-');
+			localDate = LocalDate.parse(dateText);
+		}
+		catch (Exception failure)
+		{
+			if (null != text && !text.isBlank())
+			{
+				getLogger().info("parseDate('%s', %s) could not be parsed, using today", text, timeZone);
+			}
+			localDate = LocalDate.now(dateZone);
+		}
+
+		if (localDate.isBefore(SKY_FIRST_DATE))
+		{
+			getLogger().info("parseDate('%s', %s) is before %s, using it", text, timeZone, SKY_FIRST_DATE);
+			return SKY_FIRST_DATE;
+		}
+		if (localDate.isAfter(SKY_LAST_DATE))
+		{
+			getLogger().info("parseDate('%s', %s) is after %s, using it", text, timeZone, SKY_LAST_DATE);
+			return SKY_LAST_DATE;
+		}
+		return localDate;
+	}
+
+	/**
+	 * The time of day the sky is asked about, written HH:mm, or null when the caller states none.
+	 * Null rather than a default, the way parseTimeZone answers: a caller that named no time is
+	 * asking about the day rather than a moment in it, and only the caller can tell the two apart.
+	 */
+	public static LocalTime parseTime(String text)
+	{
+		LocalTime localTime;
+		try
+		{
+			localTime = LocalTime.parse(text.trim());
+		}
+		catch (Exception failure)
+		{
+			if (null != text && !text.isBlank())
+			{
+				getLogger().info("parseTime('%s') is not a time of day", text);
+			}
+			localTime = null;
+		}
+		return localTime;
 	}
 }

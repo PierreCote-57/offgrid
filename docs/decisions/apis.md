@@ -249,3 +249,60 @@ against the 0.5 to 1.5 seconds the position takes. The trade was made on those t
 latitude or the longitude — only `getSkyBodyDay` does — so the positions call builds it with
 the moment alone, and the two getters answer `Double` rather than `double` because there is now
 a case where there is no place to state.
+
+## 2026-09-20 — The sky over MCP, which is not the sky over REST
+
+**Two tools, both on `SkyTool`.** `dark-tonight` answers the camping question — sunset, the
+sunrise that ends that night, the Moon between them and how much of it is lit. `sky-bodies`
+answers the table. They share their four parameters and their reading of them, which is why
+they are two methods on one class rather than two classes.
+
+**`/rest/sky/positions` is not published.** `angleDegMap` is a plan-view angle per body: chart
+input. A language model has nothing to say with it, and the split that produced it was about
+the browser's geolocation prompt, which an MCP client does not have.
+
+**A day, not an epoch second.** A client holds `2026-09-25`, not a number, so `parseDate` joins
+`OffgridUtil` beside `parseEpochSecond` and reads a dot or a slash as a dash. Absent a time the
+day is worked at local noon: the calendar date `SkyBodyAnalyser` samples is then the day asked
+for whatever the zone's offset does that night.
+
+**`sky-bodies` takes a time of day and `dark-tonight` does not.** The time decides where a body
+stands, and darkness is a question about the whole night. Stated, it puts `bearing` and
+`elevation` on each row off the `NOW` moment `makeMomentMap` was already computing; absent, both
+are left off rather than answered from noon — `parseTime` returns null instead of a default, the
+way `parseTimeZone` does, because only the caller can tell a day from a moment in it. The
+unqualified names are what is left once `riseBearing` and `transitElevation` have taken theirs.
+A body under the horizon comes back with a negative elevation, which is the answer rather than
+an absence.
+
+**The sunrise that ends the night is the next day's.** `makeSampleList` walks one calendar day,
+so the RISE in a day's map is that morning's, hours before its SET. `dark-tonight` builds a
+second analyser on the following day to get the one a reader means, at the price of a second
+ephemeris read.
+
+**`HH:mm` on the observer's clock, with the zone named once.** The REST answers carry epoch
+seconds because a browser rebuilds a `Date` from them; the client here shows the text as it is,
+and nothing the sky answers is finer than a minute.
+
+**A moment that does not happen is left out of the answer, not written as a null.** It was a
+null first, and the client refused both tools: `[/moonsetText: null found, string expected]`.
+`JsonSchemaGenerator` builds on victools' `PLAIN_JSON` preset, which never emits
+`["string","null"]`, and its `PROPERTY_REQUIRED_BY_DEFAULT` is `true`, so dropping the field
+alone would have failed the other way. The pair that works is Jackson's, already on the
+classpath: `@JsonInclude(NON_NULL)` on the class drops it, and `@JsonProperty(required = false)`
+on the field is what `AbstractSpringAiSchemaModule.checkRequired` reads to let it be absent.
+Rejected: `@Schema(nullable = true)`, which the registered `Swagger2Module` honours but which
+adds swagger-annotations; and `generateOutputSchema = false`, which throws away the schema this
+server was rebuilt around.
+
+**New answers rather than `SkyObserverRestAnswer`.** It extends `RestBaseAnswer`, so
+`generateOutputSchema = true` would publish `timeBeginMS`, `timeDoneNS`, `durationNS` and
+`durationText` as part of the tool's contract. `SkyMcpAnswer` holds what both state — the day,
+the zone and the place read back — and the two answers add their own.
+
+**`lat`, `lng` and `timezone` are spelled as the REST endpoints spell them**, so one vocabulary
+covers both wires. `date` is the only name that is new, because the parameter it replaces is.
+
+**`SkyTool` uses none of the three file managers on `AbstractOffgridMCP`.** `HorizonsEphemeris`
+reads `folder.local` itself through `OffgridUtil.getDataRootFolder()`. It extends the base for
+the logger alone, which is the first sign the base may be two things.
