@@ -72,7 +72,7 @@ public class OffgridRestProcessor
 		SkyBodyAnalyser skyBodyAnalyser = new SkyBodyAnalyser(instant);
 
 		SkyPositionsRestAnswer	skyAnswer	= new SkyPositionsRestAnswer();
-		skyAnswer.setSunAngleMap(skyBodyAnalyser.getSunAngleMap());
+		skyAnswer.setAngleDegMap(skyBodyAnalyser.getAngleDegMap());
 		return skyAnswer;
 	}
 

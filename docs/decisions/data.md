@@ -656,7 +656,7 @@ and `SkyBodyDay` are what `misc/sky` holds.
 latitude, longitude)` is a peer of `getPosition`: it reads the position and turns that direction
 onto the observer's horizon, sidereal time and the hour angle being its own business the way the
 rows already were. The two answers that need no observer are the position's own:
-`HorizonsPosition.getSunAngle(sunPosition)` for the angle the chart draws, and
+`HorizonsPosition.getAngleDeg(originPosition)` for the angle the chart draws, and
 `getLitFraction(sunPosition)` for the disc, both taken from one position against another. What
 stays in `misc/sky` is the day — which moments are asked for, and the walking that finds them.
 

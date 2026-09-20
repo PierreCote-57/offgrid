@@ -67,7 +67,7 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	}
 
 	/** Fixed moments, on a day the files on disk cover, so every run asks the same thing. */
-	public static Object[][] SunAngleSource()
+	public static Object[][] AngleDegSource()
 	{
 		return new Object[][] {
 				new Object[] {makeZDT("2026-09-14 12:00")},
@@ -82,14 +82,14 @@ public class SkyBodyAnalyserTests extends AbstractTests
 	}
 
 	@ParameterizedTest
-	@MethodSource("SunAngleSource")
-	public void testSunAngleMap(ZonedDateTime dateTime) throws Exception
+	@MethodSource("AngleDegSource")
+	public void testAngleDegMap(ZonedDateTime dateTime) throws Exception
 	{
 		SkyBodyAnalyser analyser = makeAnalyser(dateTime);
-		Map<HorizonsBody, Double> angleMap = analyser.getSunAngleMap();
+		Map<HorizonsBody, Double> angleMap = analyser.getAngleDegMap();
 
 		int bodyCount = ephemerisBodyCount();
-		assertEquals(bodyCount, angleMap.size(), "getSunAngleMap() answered a body short");
+		assertEquals(bodyCount, angleMap.size(), "getAngleDegMap() answered a body short");
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
@@ -99,13 +99,13 @@ public class SkyBodyAnalyserTests extends AbstractTests
 			}
 
 			Double angle = angleMap.get(body);
-			String missing = String.format("getSunAngleMap() has no angle for %s", body);
+			String missing = String.format("getAngleDegMap() has no angle for %s", body);
 			assertNotNull(angle, missing);
 
-			getLogger().info("%-8s is %6.2f° around the ecliptic from the Sun", body, angle);
+			getLogger().info("%-8s is %6.2f° around the ecliptic from its parent", body, angle);
 
 			boolean inCircle = angle >= 0.0 && angle < DEGREES_AROUND;
-			String outside = String.format("getSunAngle(%s) answered %s, which is outside 0 to 360",
+			String outside = String.format("getAngleDeg(%s) answered %s, which is outside 0 to 360",
 					body, angle);
 			assertTrue(inCircle, outside);
 		}

@@ -9,14 +9,14 @@ import java.util.Map;
  */
 public class SkyPositionsRestAnswer extends SkyRestAnswer
 {
-	private Map<HorizonsBody, Double>	sunAngleMap;
+	private Map<HorizonsBody, Double>	angleDegMap;
 
-	public void setSunAngleMap(Map<HorizonsBody, Double> sunAngleMap)
+	public void setAngleDegMap(Map<HorizonsBody, Double> angleDegMap)
 	{
-		this.sunAngleMap = sunAngleMap;
+		this.angleDegMap = angleDegMap;
 	}
-	public Map<HorizonsBody, Double> getSunAngleMap()
+	public Map<HorizonsBody, Double> getAngleDegMap()
 	{
-		return sunAngleMap;
+		return angleDegMap;
 	}
 }

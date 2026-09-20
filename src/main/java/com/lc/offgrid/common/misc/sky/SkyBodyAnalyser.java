@@ -93,7 +93,7 @@ public class SkyBodyAnalyser
 	/**
 	 * The angle from a body's parent to the body, in degrees from 0 to 360, 0 being 3 o'clock.
 	 */
-	public double getSunAngle(HorizonsBody body)
+	public double getAngleDeg(HorizonsBody body)
 	{
 		// The only body without ephemeris is Earth
 		HorizonsPosition bodyPosition = body.hasEphemeris()
@@ -102,17 +102,17 @@ public class SkyBodyAnalyser
 		HorizonsPosition parentPosition = HorizonsBody.EARTH.equals(body.getParent())
 				? getEarthPosition()
 				: getSunPosition();
-		double angle = bodyPosition.getSunAngle(parentPosition);
+		double angle = bodyPosition.getAngleDeg(parentPosition);
 		return angle;
 	}
 
-	public Map<HorizonsBody, Double> getSunAngleMap()
+	public Map<HorizonsBody, Double> getAngleDegMap()
 	{
 		Map<HorizonsBody, Double> angleMap = new EnumMap<>(HorizonsBody.class);
 
 		for (HorizonsBody body : HorizonsBody.values())
 		{
-			double angle = getSunAngle(body);
+			double angle = getAngleDeg(body);
 			angleMap.put(body, angle);
 		}
 

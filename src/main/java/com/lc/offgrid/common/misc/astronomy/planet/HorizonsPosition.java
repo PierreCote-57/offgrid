@@ -90,16 +90,16 @@ public class HorizonsPosition
 	}
 
 	/**
-	 * The direction from the Sun to this body, in degrees from 0 to 360, taken in the ecliptic
-	 * plane. Both positions are seen from the Earth's centre, so one taken from the other is the
-	 * vector from the Sun to the body.
+	 * The direction from the given position to this body, in degrees from 0 to 360, taken in the
+	 * ecliptic plane. Both positions are seen from the Earth's centre, so one taken from the
+	 * other is the vector between the two bodies.
 	 */
-	public double getSunAngle(HorizonsPosition sunPosition)
+	public double getAngleDeg(HorizonsPosition originPosition)
 	{
 		double[] bodyVector = toVector();
-		double[] sunVector = sunPosition.toVector();
-		double[] sunToBody = subtract(bodyVector, sunVector);
-		double[] eclipticVector = toEcliptic(sunToBody);
+		double[] originVector = originPosition.toVector();
+		double[] originToBody = subtract(bodyVector, originVector);
+		double[] eclipticVector = toEcliptic(originToBody);
 
 		double radians = Math.atan2(eclipticVector[1], eclipticVector[0]);
 		double degrees = Math.toDegrees(radians);
@@ -109,7 +109,7 @@ public class HorizonsPosition
 
 	/**
 	 * How far this body stands from the Sun, in astronomical units: the length of the same
-	 * vector getSunAngle takes its direction from. For a body that orbits the Earth it is the
+	 * vector getAngleDeg takes its direction from. For a body that orbits the Earth it is the
 	 * distance from the Sun all the same, and not the size of its own orbit.
 	 */
 	public double getOrbitRadius(HorizonsPosition sunPosition)

@@ -6,12 +6,9 @@ import com.lc.offgrid.common.misc.geography.point.LatLonPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Constructor;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 /**
  * What the site needs in more than one place and no one class owns: the values it is built
@@ -148,10 +145,6 @@ public class OffgridUtil
 		return longitude;
 	}
 
-	/**
-	 * The zone off the query string, or the marker's own when it is missing or names no zone
-	 * the machine knows.
-	 */
 	public static ZoneId parseTimeZone(String text)
 	{
 		ZoneId timeZone;
@@ -163,7 +156,7 @@ public class OffgridUtil
 		{
 			if (null != text && !text.isBlank())
 			{
-				getLogger().info("parseTimeZone('%s') is not a zone, using '%s'", text, getDefaultTimeZone());
+				getLogger().info("parseTimeZone('%s') is not a zone", text);
 			}
 			timeZone = null;
 		}

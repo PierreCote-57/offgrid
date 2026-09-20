@@ -34,10 +34,8 @@ worst road in to a destination, and what the van and the Bronco are due for. The
 answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
 still outstanding in `m-van.json` and `m-bronco.json`.
 
-#70 `SkyBodyAnalyser.getSunAngle` and `HorizonsPosition.getSunAngle` return degrees; per §9.8 the
-name should carry the unit. Rename both to `getSunAngleDeg`, which reaches outside the Sky* files.
-
-#71 `parseTimeZone` in `OffgridUtil` now answers null where it used to answer the default zone.
-Its javadoc still says it answers the marker's own, and its log line still says "using '<zone>'".
-Rewrite both to state that it answers null and the caller decides. The `Instant` and
-`ZonedDateTime` imports in that file are left over from `parseZonedDateTime` and are unused.
+#71 `HorizonsPosition.getOrbitRadius` promises in its javadoc, and in the 2026-09-12 entry of
+`docs/decisions/apis.md`, that the Moon's value is its distance from the Sun and not the size of
+its own orbit. `SkyBodyAnalyser.getSkyBodyDay` passes the parent, so the Moon answers 0.0027 AU
+around the Earth — which is what the page's Orbit Radius column wants. Correct both texts, and
+decide whether the parameter stays `sunPosition`.

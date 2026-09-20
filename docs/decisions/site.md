@@ -729,12 +729,13 @@ Pierre's call, and the second departure from the one-fragment-per-file rule abov
 grounds as `sky-fragment.html`: a post's head is the list's row with the page's own `<h1>` in
 place of the link, so the file is named for the feature and not for any one fragment.
 
-**`dateline(date)` carries the span, the `og-blog-date` class and the format.** `'MMMM d, yyyy'`
-was written in both of the old files, so the same post's date could print one way in its header
-and another in its row. It takes the date as a parameter because its two callers hold it in two
-places — the list under the entry it is drawing, a post on `pageData` — which is the only thing
-that ever differed between the two lines.
+**`dateline(date)` carries the span, the `og-blog-date` class and the format.** The format was
+written in both of the old files, so the same post's date could print one way in its header and
+another in its row. What the format is and why is *A date reads the same everywhere* in
+[look.md](look.md); this entry only says that one fragment now owns it. It takes the date as a
+parameter because its two callers hold it in two places — the list under the entry it is drawing,
+a post on `pageData` — which is the only thing that ever differed between the two lines.
 
-The call from inside the file names the file rather than using a `::`-only selector: which
-template a bare selector resolves against, once the fragment carrying it has been inserted into
-a page, is not a thing to depend on.
+**A fragment calling another in its own file names the file**, `~{fragments/block/blog-fragment
+:: dateline(…)}`. An explicit path resolves the same wherever the calling fragment has been
+inserted into a page.

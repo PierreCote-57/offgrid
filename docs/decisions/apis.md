@@ -192,7 +192,7 @@ beside them on the answer that has them, so it states what the request was read 
 parameter falls back silently, and without the echo a caller cannot tell a fallback from a
 value it sent.
 
-**The analyser's maps go on the answer as they are**, `getSunAngleMap` and `getSkyBodyDayMap`,
+**The analyser's maps go on the answer as they are**, `getAngleDegMap` and `getSkyBodyDayMap`,
 through setters rather than the constructor: they are what each endpoint was built to answer,
 and a setter keeps the constructor to the moment and the place. Both are keyed by
 `HorizonsBody`, so Jackson writes the constant names as the JSON keys.
@@ -211,7 +211,7 @@ same nine constants is one more place to keep in step. The enum's javadoc now sa
 the period are ours, not Horizons': an ephemeris file states neither.
 
 **`orbitRadius` joined `SkyBodyDay`, beside `distance`.** It is the length of the very vector
-`getSunAngle` takes its direction from — body minus Sun, both geocentric — so the ephemeris
+`getAngleDeg` takes its direction from — body minus Sun, both geocentric — so the ephemeris
 already had it and only the angle was being kept. `distance` is from the observer and
 `orbitRadius` is from the Sun; for the Moon that is its distance from the Sun, not the size of
 its own orbit.
@@ -231,7 +231,7 @@ does for one observer that day. The browser asks for the first as the page loads
 once the position is in.
 
 **Two answers over one base.** `SkyRestAnswer` holds what both state — the moment, and
-`bodyMap` — and `SkyPositionsRestAnswer` adds `sunAngleMap`, `SkyObserverRestAnswer` the
+`bodyMap` — and `SkyPositionsRestAnswer` adds `angleDegMap`, `SkyObserverRestAnswer` the
 coordinates and `skyBodyDayMap`. One object serving both meant each caller saw the other's
 data — the same reason the page's own POJOs were split before them.
 
@@ -245,7 +245,7 @@ twice.
 window in its constructor, so two calls read them twice — measured at 29.5 ms per request,
 against the 0.5 to 1.5 seconds the position takes. The trade was made on those two numbers.
 
-**`SkyBodyAnalyser` gained a constructor with no observer.** `getSunAngleMap` never touched the
+**`SkyBodyAnalyser` gained a constructor with no observer.** `getAngleDegMap` never touched the
 latitude or the longitude — only `getSkyBodyDay` does — so the positions call builds it with
 the moment alone, and the two getters answer `Double` rather than `double` because there is now
 a case where there is no place to state.

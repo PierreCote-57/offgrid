@@ -585,7 +585,7 @@
 
 			var orbitRadius = (chartBody.orbitRadius / ORBIT_BASE_PERCENT) * (widthOrbit / 2);
 			var dotRadius = (chartBody.type.dotRadius / DOT_BASE_PERCENT) * (widthOrbit / 2);
-			var radians = skyData.sunAngleMap[bodyId] * Math.PI / 180;
+			var radians = skyData.angleDegMap[bodyId] * Math.PI / 180;
 			var dotX = aroundX + orbitRadius * Math.cos(radians);
 			var dotY = aroundY - orbitRadius * Math.sin(radians);
 
