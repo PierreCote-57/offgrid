@@ -1,24 +1,14 @@
 <!--
-	The page's own vocabularies, the ones the browser filters on.
+		badgeList    LEFT    what you would do there      (coloured)
+		road         RIGHT   what it costs to get there   (coloured, + km)
+		keywordList  BELOW   everything else              (plain)
 
-		badgeList    LEFT    what you would do there      (closed, coloured)
-		road         RIGHT   what it costs you to get there (closed, coloured, + km)
-		keywordList  BELOW   everything else              (open, plain)
+	typeList is deliberately absent: it filters, and the page already says what kind of place
+	it is.
 
-	Left and right are two different kinds of fact, so they read as two things rather than one
-	long row. typeList is deliberately absent: it filters, and the page already says what kind
-	of place it is.
-
-	The road word is not derived here — Access.getRoadLimitingLeg() walks the legs and answers
-	with one leg, so the template never sees a list. A destination reached along its edge has
-	no access at all, and the right-hand group is then empty.
-
-	The pill is one class here and on a gallery card, so the two cannot drift apart. The
-	colour is not written here — offgrid.js paints it from the one palette in og-constants.js.
-	Nothing renders at all when there is nothing to say.
-
-	A badge and a road are enum constants, and both palettes are keyed by the word a JSON file
-	writes, so each is lower-cased into the word once and the word is what reaches the markup.
+	og-tag is the same pill class a gallery card writes, and no colour is written here:
+	offgrid.js paints both from the one palette in og-constants.js. A badge and a road are
+	enum constants, lower-cased into the word those palettes are keyed by.
 -->
 <th:block xmlns:th="http://www.thymeleaf.org" th:with="roadLeg=${pageData.access?.roadLimitingLeg},
 		  roadWord=${roadLeg?.type?.name()?.toLowerCase()}">

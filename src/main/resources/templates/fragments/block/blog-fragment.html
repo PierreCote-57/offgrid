@@ -1,0 +1,33 @@
+<!--
+	blogList is List<Map.Entry<String, BlogPage>> — the key is the json's file name, which is
+	also the url segment, and the value is the page.
+-->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="blogList" class="og-blog-list">
+	<div class="og-blog-row" th:each="entry : ${blogList}">
+		<img class="og-blog-thumb" th:alt="${entry.value.name}" alt=""
+			 th:src="@{/image/{imageName}(imageName=${entry.value.featuredImage}, size='small')}" src="">
+		<div class="og-blog-detail">
+			<p class="og-blog-line">
+				<!--The link fragment emits the opening <a> only, so the </a> below is its partner. -->
+				<span th:replace="~{fragments/block/link :: link('/blog/' + ${entry.key})}"></span>
+					[[${entry.value.name}]]
+				</a>
+				<span th:replace="~{fragments/block/blog-fragment :: dateline(${entry.value.date})}"></span>
+			</p>
+			<p class="og-blog-excerpt" th:text="${entry.value.excerpt}">Two lines of the entry's own words,
+				cut off at the second one.</p>
+		</div>
+	</div>
+</div>
+
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="blogHeader" class="og-blog-row og-blog-header">
+	<img class="og-blog-thumb" th:alt="${PageName}" alt=""
+		 th:src="@{/image/{imageName}(imageName=${pageData.featuredImage}, size='small')}" src="">
+	<div class="og-blog-detail">
+		<h1 th:text="${PageName}">First try</h1>
+		<span th:replace="~{fragments/block/blog-fragment :: dateline(${pageData.date})}"></span>
+	</div>
+</div>
+
+<span xmlns:th="http://www.thymeleaf.org" th:fragment="dateline(date)" class="og-blog-date"
+	  th:text="${#temporals.format(date, 'MMMM d, yyyy')}">August 15, 2026</span>

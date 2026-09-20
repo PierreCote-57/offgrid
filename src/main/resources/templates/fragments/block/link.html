@@ -1,14 +1,13 @@
 <!--
-	The site's ONE link decision, as the opening <a> tag only. The caller writes whatever
-	goes between the tags and closes it, so an image link and a text link are the same call.
+	The site's ONE link decision, as the opening <a> tag ONLY — the caller writes the body and
+	closes it, so an image link and a text link are the same call.
 
 		external            -> new tab, rel=noopener
 		internal /document/ -> new tab, no rel (it is our own file)
 		internal page       -> this tab, bare anchor
 
-	th:attr drops an attribute whose expression is null, which is what leaves an internal
-	page link as a plain <a href>. The two variables sit on the th:block rather than on the
-	<a>, because that tag is deliberately never closed.
+	th:attr drops an attribute whose expression is null, which is what leaves an internal page
+	link as a plain <a href>. The variables sit on the th:block because the <a> is never closed.
 -->
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="link(url)"
    th:with="external=${!#strings.startsWith(url, '/')},

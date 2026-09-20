@@ -1,19 +1,11 @@
 <!--
-	Every link a campground carries, in one row: its site, its map, and where to book.
-
-	Three passes, in that order, because the row reads by what each link IS and not by the
-	order the file happens to list them. The homepage is the one entry whose word is not its
-	label — it always reads "Website".
-
-	A link with no url renders as plain text: a reservation that says how booking works, with
-	nothing to click, is a real entry. That is the th:unless branch on each of the three — the
-	link fragment takes a url and cannot be handed a null.
-
-	The separator lives in site.css, so the row reads the same whichever of the three a place
-	has. Nothing renders at all when the page carries no campgroundData.
+	Three passes over the same list, so the row reads in this order whatever order the file
+	lists them in. A reference with no url is a real entry — booking instructions with nothing
+	to click — and renders as the th:unless text, the link fragment taking no null.
 -->
 <p xmlns:th="http://www.thymeleaf.org" class="og-linkrow"
    th:if="${pageData.campgroundData != null}">
+	<!-- The homepage is the one entry whose word is fixed: it always reads "Website". -->
 	<th:block th:each="reference : ${pageData.campgroundData.referenceList}"
 			  th:if="${reference.type != null and reference.type.name() == 'HOMEPAGE'}"><th:block
 			th:if="${reference.url}"><span

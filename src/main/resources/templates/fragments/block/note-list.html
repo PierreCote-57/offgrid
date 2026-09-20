@@ -1,13 +1,7 @@
 <!--
-	One named block of further reading, asked for by the page: notes('Further readings') draws
-	pageData.noteMap["Further readings"].
-
-	The key IS the heading, so the block whose key is empty renders no <h3>. That is what a
-	block sitting inside its own <details> wants, the <summary> already being its heading.
-	There can be one such block on a page, which is all any page has ever needed.
-
-	A page with several blocks makes several calls, and the order of the calls is the order
-	they appear in. A name no block answers to renders nothing at all.
+	The noteMap key IS the heading, so a block keyed by the empty string renders no <h3> —
+	which is what a block sitting inside its own <details> wants, the <summary> being its
+	heading.
 -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="notes(noteName)" class="og-note-list"
 	 th:with="noteItemList=${pageData.noteMap == null ? null : pageData.noteMap.get(noteName)}">

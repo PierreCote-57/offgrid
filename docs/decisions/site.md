@@ -697,6 +697,9 @@ The sweep: `BlogPage`, `.og-blog`, `blogList` and `blog` in the controller, `tem
 
 ## 2026-09-18 — The blog list is a fragment, and a post's head is the same row
 
+**Both files are gone 2026-09-19** — the two fragments and the dateline they share are one
+file now, see the entry below. What each one draws did not change.
+
 `fragments/block/blog-list.html :: blogList` draws the list and takes no parameter. Every
 other block fragment takes one because it selects which slice of `pageData` to draw —
 `notes('Shopping list')`, `gallery('our-van')`. There is only ever one blog list on a page,
@@ -718,3 +721,20 @@ row reused: same `.og-blog-row`, `.og-blog-thumb` and `.og-blog-detail`, the pag
 where the list has its link, and no excerpt — an excerpt stands in for a page the reader has
 not opened, and a post is that page. Each of the six posts calls it with one identical line,
 which is what retired `.og-dateline` and the six copies of the date format that went with it.
+
+## 2026-09-19 — The blog's blocks share a file, and the dateline is one of them
+
+`fragments/block/blog-fragment.html` holds `blogList`, `blogHeader` and `dateline(date)`.
+Pierre's call, and the second departure from the one-fragment-per-file rule above, on the same
+grounds as `sky-fragment.html`: a post's head is the list's row with the page's own `<h1>` in
+place of the link, so the file is named for the feature and not for any one fragment.
+
+**`dateline(date)` carries the span, the `og-blog-date` class and the format.** `'MMMM d, yyyy'`
+was written in both of the old files, so the same post's date could print one way in its header
+and another in its row. It takes the date as a parameter because its two callers hold it in two
+places — the list under the entry it is drawing, a post on `pageData` — which is the only thing
+that ever differed between the two lines.
+
+The call from inside the file names the file rather than using a `::`-only selector: which
+template a bare selector resolves against, once the fragment carrying it has been inserted into
+a page, is not a thing to depend on.

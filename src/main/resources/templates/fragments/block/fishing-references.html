@@ -1,10 +1,9 @@
 <!--
-	What the province publishes about a lake.
+	Four rows, always all four: an empty row says NA rather than disappearing, so the table
+	says what is known AND what is not.
 
-	Four rows, always all four: a row with nothing in it says NA rather than disappearing,
-	so the table says what is known AND what is not. The stocking report is a link built
-	from the waterbody name — Go Fish BC wants the bare name, not a URL — and every lake on
-	this site is on Vancouver Island, so the region is fixed here.
+	Go Fish BC wants the bare waterbody name rather than a url, and every lake here is on
+	Vancouver Island, so the region is fixed into stockingUrl below.
 -->
 <div xmlns:th="http://www.thymeleaf.org" class="og-fishing"
 	 th:with="fishing=${pageData.fishingReferences},

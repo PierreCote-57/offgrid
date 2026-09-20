@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 70**
+**next id: 72**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -33,20 +33,6 @@ answer under `com.lc.offgrid.webapp.mcp` is hard-coded: the image list and the i
 worst road in to a destination, and what the van and the Bronco are due for. The real
 answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
 still outstanding in `m-van.json` and `m-bronco.json`.
-
-#67 The `every-journey-has-a-first-step` excerpt ends in a literal `&hellip;`. `th:text` and
-`browser.js`'s `escapeHtml` both render those eight characters as themselves, so the browser
-cards already show them. Decide whether the entity comes out of the JSON or the excerpt is
-rewritten to end on a word.
-
-#68 Draw the three most recent blogs on the home page. `templates/index.html` does not call
-`fragments/block/blog-list :: blogList`, which was built to be called from both. The fragment
-takes no parameter and reads `blogList` off the model, so the home page's processor method
-sets that attribute to the first three of `makeBlogList`.
-
-#69 The date format `'MMMM d, yyyy'` is written in both `fragments/block/blog-list.html` and
-`fragments/block/blog-header.html`. Collapse it into a `dateline(date)` fragment they both
-call, so a post and its row can never disagree.
 
 #70 `SkyBodyAnalyser.getSunAngle` and `HorizonsPosition.getSunAngle` return degrees; per §9.8 the
 name should carry the unit. Rename both to `getSunAngleDeg`, which reaches outside the Sky* files.
