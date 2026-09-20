@@ -13,10 +13,7 @@
 			"workName": "Recall, beep (probably) and oil change",
 			"workUrl": "/document/van-2026-08-17",
 			"costCad": 113.61,
-			"nextDue": {
-				"nextDueKm": 8000,
-				"nextDueDate": "2027-03-01"
-			}
+			"nextDue": null
 		},
 		{
 			"date": "2026-08-28",
@@ -26,10 +23,7 @@
 			"workName": "Upgrade batteries to 2x206 Ah Lithium (+Orion XS)",
 			"workUrl": "/document/INVOICE_1151_from_Van_Toys",
 			"costCad": 3245.76,
-			"nextDue": {
-				"nextDueKm": null,
-				"nextDueDate": null
-			}
+			"nextDue": null
 		}
 	],
 	"noteMap": {

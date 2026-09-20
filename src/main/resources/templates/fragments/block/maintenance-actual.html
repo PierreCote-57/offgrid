@@ -22,7 +22,9 @@
 		<tbody>
 		<tr th:each="entry : ${pageData.actualList}">
 			<td th:text="${entry.date}">Date</td>
-			<td th:text="${entry.odometerKm == null} ? '' : ${#numbers.formatInteger(entry.odometerKm, 1, 'COMMA') + ' km'}">Odometer</td>
+			<td th:text="${entry.odometerKm == null} ? '' : ${#numbers.formatInteger(entry.odometerKm, 1, 'COMMA') + ' km'}">
+				Odometer
+			</td>
 			<td>
 				<th:block th:if="${entry.shopUrl}"><span
 						th:replace="~{fragments/block/link :: link(${entry.shopUrl})}"></span>[[${entry.shopName}]]</a></th:block>
@@ -33,12 +35,16 @@
 						th:replace="~{fragments/block/link :: link(${entry.workUrl})}"></span>[[${entry.workName}]]</a></th:block>
 				<span th:unless="${entry.workUrl}" th:text="${entry.workName}">Work</span>
 			</td>
-			<td th:text="${entry.costCad == null} ? '' : ${'$' + #numbers.formatDecimal(entry.costCad, 1, 'COMMA', 2, 'POINT')}">Cost</td>
+			<td th:text="${entry.costCad == null} ? '' : ${'$' + #numbers.formatDecimal(entry.costCad, 1, 'COMMA', 2, 'POINT')}">
+				Cost
+			</td>
 			<td>
-				<span th:if="${entry.nextDueKm}"
-					  th:text="${#numbers.formatInteger(entry.nextDueKm, 1, 'COMMA') + ' km'}">Next km</span>
-				<br th:if="${entry.nextDueKm != null and entry.nextDueDate != null}"/>
-				<span th:if="${entry.nextDueDate}" th:text="${entry.nextDueDate}">Next date</span>
+				<span th:if="${entry.nextDue}">
+					<span th:if="${entry.nextDue.nextDueKm}"
+						  th:text="${#numbers.formatInteger(entry.nextDue.nextDueKm, 1, 'COMMA') + ' km'}">Next km</span>
+					<br th:if="${entry.nextDue.nextDueKm != null and entry.nextDue.nextDueDate != null}"/>
+					<span th:if="${entry.nextDue.nextDueDate}" th:text="${entry.nextDue.nextDueDate}">Next date</span>
+				</span>
 			</td>
 		</tr>
 		</tbody>

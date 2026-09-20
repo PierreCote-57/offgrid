@@ -8,15 +8,23 @@ import java.time.LocalDate;
  */
 public class MaintenanceEntry
 {
-	private LocalDate	date;
-	private Integer		odometerKm;
-	private String		shopName;
-	private String		shopUrl;
-	private String		workName;
-	private String		workUrl;
-	private Double		costCad;
-	private Integer		nextDueKm;
-	private LocalDate	nextDueDate;
+	private LocalDate date;
+	private Integer odometerKm;
+	private String shopName;
+	private String shopUrl;
+	private String workName;
+	private String workUrl;
+	private Double costCad;
+	private NextDue nextDue;
+
+	public MaintenanceEntry()
+	{
+
+	}
+	public MaintenanceEntry(NextDue nextDue)
+	{
+		this.nextDue = nextDue;
+	}
 
 	public LocalDate getDate()
 	{
@@ -53,13 +61,40 @@ public class MaintenanceEntry
 		return costCad;
 	}
 
-	public Integer getNextDueKm()
+	public NextDue getNextDue()
 	{
-		return nextDueKm;
+		return nextDue;
 	}
 
-	public LocalDate getNextDueDate()
+	public static class NextDue
 	{
-		return nextDueDate;
+		private Integer nextDueKm;
+		private LocalDate nextDueDate;
+
+		public NextDue()
+		{
+
+		}
+		public NextDue(Integer nextDueKm, LocalDate nextDueDate)
+		{
+			this.nextDueKm = nextDueKm;
+			this.nextDueDate = nextDueDate;
+		}
+
+		public Integer getNextDueKm()
+		{
+			return nextDueKm;
+		}
+
+		public LocalDate getNextDueDate()
+		{
+			return nextDueDate;
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("%d or %s", getNextDueKm(), getNextDueDate());
+		}
 	}
 }

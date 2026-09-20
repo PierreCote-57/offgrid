@@ -1,5 +1,5 @@
 {
-	"name": "Bronco maintenance",
+	"name": "Bronco",
 	"wpSettings": {
 		"published": true,
 		"comments": "open"
@@ -7,14 +7,16 @@
 	"actualList": [
 		{
 			"date": "2026-09-19",
-			"odometerKm": 4321,
+			"odometerKm": 536,
 			"shopName": "Marshall Ford",
 			"shopUrl": "https://www.stevemarshallfordcampbellriver.com",
-			"workName": "New car diagnostic",
-			"workUrl": "/document/bronco-2026-09-19",
+			"workName": "New car checkup",
+			"workUrl": null,
 			"costCad": 0.0,
-			"nextDueKm": 12800,
-			"nextDueDate": "2027-02-01"
+			"nextDue": {
+				"nextDueKm": 8000,
+				"nextDueDate": "2027-02-01"
+			}
 		}
 	],
 	"noteMap": {

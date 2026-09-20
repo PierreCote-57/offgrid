@@ -13,8 +13,38 @@ public class MaintenancePage extends PageData
 {
 	private List<MaintenanceEntry>	actualList;
 
+	public MaintenancePage(List<MaintenanceEntry> actualList)
+	{
+		this.actualList = actualList;
+	}
+
 	public List<MaintenanceEntry> getActualList()
 	{
 		return actualList;
+	}
+
+	public MaintenanceEntry getLastMaintenance()
+	{
+		List<MaintenanceEntry> list = getActualList();
+		if (null != list)
+		{
+			for (int i = list.size() - 1; i >= 0; i--)
+			{
+				MaintenanceEntry entry = list.get(i);
+				if (null != entry.getNextDue()
+						&& (null != entry.getNextDue().getNextDueDate()
+						|| null != entry.getNextDue().getNextDueKm()))
+				{
+					return entry;
+				}
+			}
+		}
+		return null;
+	}
+
+	public MaintenanceEntry.NextDue getNextMaintenance()
+	{
+		MaintenanceEntry entry = getLastMaintenance();
+		return null == entry ? null : entry.getNextDue();
 	}
 }
