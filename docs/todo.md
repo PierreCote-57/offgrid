@@ -34,8 +34,3 @@ worst road in to a destination, and what the van and the Bronco are due for. The
 answers: the limiting leg that `Access.getRoadLimitingLeg` builds, and the earliest entry
 still outstanding in `m-van.json` and `m-bronco.json`.
 
-#71 `HorizonsPosition.getOrbitRadius` promises in its javadoc, and in the 2026-09-12 entry of
-`docs/decisions/apis.md`, that the Moon's value is its distance from the Sun and not the size of
-its own orbit. `SkyBodyAnalyser.getSkyBodyDay` passes the parent, so the Moon answers 0.0027 AU
-around the Earth — which is what the page's Orbit Radius column wants. Correct both texts, and
-decide whether the parameter stays `sunPosition`.

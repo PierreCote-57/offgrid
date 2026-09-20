@@ -108,17 +108,17 @@ public class HorizonsPosition
 	}
 
 	/**
-	 * How far this body stands from the Sun, in astronomical units: the length of the same
-	 * vector getAngleDeg takes its direction from. For a body that orbits the Earth it is the
-	 * distance from the Sun all the same, and not the size of its own orbit.
+	 * How far this body stands from the given position, in astronomical units: the length of the
+	 * same vector getAngleDeg takes its direction from. Given a body's parent, that is the radius
+	 * of its own orbit.
 	 */
-	public double getOrbitRadius(HorizonsPosition sunPosition)
+	public double getOrbitRadius(HorizonsPosition originPosition)
 	{
 		double[] bodyVector = toVector();
-		double[] sunVector = sunPosition.toVector();
-		double[] sunToBody = subtract(bodyVector, sunVector);
+		double[] originVector = originPosition.toVector();
+		double[] originToBody = subtract(bodyVector, originVector);
 
-		double orbitRadius = length(sunToBody);
+		double orbitRadius = length(originToBody);
 		return orbitRadius;
 	}
 

@@ -211,10 +211,10 @@ same nine constants is one more place to keep in step. The enum's javadoc now sa
 the period are ours, not Horizons': an ephemeris file states neither.
 
 **`orbitRadius` joined `SkyBodyDay`, beside `distance`.** It is the length of the very vector
-`getAngleDeg` takes its direction from — body minus Sun, both geocentric — so the ephemeris
+`getAngleDeg` takes its direction from — body minus parent, both geocentric — so the ephemeris
 already had it and only the angle was being kept. `distance` is from the observer and
-`orbitRadius` is from the Sun; for the Moon that is its distance from the Sun, not the size of
-its own orbit.
+`orbitRadius` is from the body's parent; for the Moon that is the size of its own orbit around
+the Earth, not its distance from the Sun.
 
 
 ## 2026-09-15 — Two sky endpoints, split by what they depend on
