@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * What the road in to one destination is like at its worst.
  */
 @Component
-public class WorstRoadTool
+public class WorstRoadTool extends AbstractOffgridMCP
 {
 	@McpTool(name = "worst-road",
 			description = "The roughest stretch of road on the way in to a destination")

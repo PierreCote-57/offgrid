@@ -42,7 +42,7 @@ public class ClassFinder
 		URL url = ClassLoader.getSystemResource(resourceName);
 		String rootFolder = url.getFile().replace("/" + clazz.getSimpleName() + ".class", "");
 		Set<File> fileSet = FileFinder
-				.getFilenameSet(rootFolder, new SimpleFilenameFilter(null, null, null));
+				.getFilenameSet(rootFolder, new SimpleFilterFilename(null, null, null));
 		Set<Class> classSet = new TreeSet(CLASS_COMPARATOR);
 		for (File file : fileSet)
 		{
@@ -79,7 +79,7 @@ public class ClassFinder
 	public static Set<Class<?>> findClassSetInternal() throws Exception
 	{
 		getLogger().info("Looking for all classes in the classpath");
-		Set<String> filenameSet = findFileSet(new SimpleFilter(null, null, ".class"));
+		Set<String> filenameSet = findFileSet(new SimpleFilterString(null, null, ".class"));
 		Set<Class<?>> classSet = new TreeSet<>(Comparator.comparing(Class::getName));
 		for (String filename : filenameSet)
 		{
@@ -133,7 +133,7 @@ public class ClassFinder
 		}
 		return FILENAME_SET;
 	}
-	public static Set<String> findFileSet(SimpleFilter filter) throws Exception
+	public static Set<String> findFileSet(SimpleFilterString filter) throws Exception
 	{
 		Set<String> rawSet = findFileSet();
 		Set<String> filtered = rawSet.stream().filter(filter::accept).collect(Collectors.toSet());
@@ -243,45 +243,4 @@ public class ClassFinder
 	}
 
 
-
-
-
-	public static class SimpleFilter
-	{
-		private String m_prefix;
-		private String m_contains;
-		private String m_suffix;
-
-		public SimpleFilter(String prefix, String contains, String suffix)
-		{
-			m_prefix = prefix;
-			m_contains = contains;
-			m_suffix = suffix;
-		}
-
-		public boolean accept(String text)
-		{
-			boolean		isAccept		= true;
-
-			if (null != m_prefix)
-			{
-				isAccept = text.startsWith(m_prefix);
-			}
-			if (null != m_contains)
-			{
-				isAccept &= text.contains(m_contains);
-			}
-			if (null != m_suffix)
-			{
-				isAccept &= text.endsWith(m_suffix);
-			}
-			return isAccept;
-		}
-
-		@Override
-		public String toString()
-		{
-			return String.format("(%s,%s,%s)", m_prefix, m_contains, m_suffix);
-		}
-	}
 }

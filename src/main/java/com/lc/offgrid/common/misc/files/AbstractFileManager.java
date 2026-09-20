@@ -1,5 +1,7 @@
 package com.lc.offgrid.common.misc.files;
 
+import com.lc.basics.tools.file.ClassFinder;
+import com.lc.basics.tools.file.SimpleFilterString;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
@@ -17,10 +19,24 @@ public abstract class AbstractFileManager implements InitializingBean
 
 	abstract public String getRootFolder();
 
-
 	public Map<String, File> getNameMap()
 	{
 		return nameMap;
+	}
+
+	public Map<String, File> filterMap(SimpleFilterString filter)
+	{
+		Map<String, File> map = new TreeMap<>();
+		for (Map.Entry<String, File> entry : getNameMap().entrySet())
+		{
+			String name = entry.getKey();
+			File file = entry.getValue();
+			if (filter.accept(file.getAbsolutePath()))
+			{
+				map.put(name, file);
+			}
+		}
+		return map;
 	}
 
 	public File getFile(String name)

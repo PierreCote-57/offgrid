@@ -2,6 +2,7 @@ package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
+import com.lc.basics.tools.file.SimpleFilterString;
 import com.lc.offgrid.common.misc.QueryUtil;
 import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.*;
@@ -36,11 +37,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Component
 @Scope("prototype")
@@ -139,22 +137,18 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private List<Map.Entry<String, BlogPage>> makeBlogList()
 	{
 		List<Map.Entry<String, BlogPage>> pageList= new ArrayList<>();
-		for (Map.Entry<String, File> entry : getJsonManager().getNameMap().entrySet())
+		Map<String, File> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/blog/", null));
+		for (String name : filteredMap.keySet())
 		{
-			String name = entry.getKey();
-			File file = entry.getValue();
-			if (file.getPath().contains("/blog/"))
+			BlogPage blogPage = readPageJson(name, BlogPage.class);
+			if (null != blogPage.getDate())
 			{
-				BlogPage blogPage = readPageJson(name, BlogPage.class);
-				if (null != blogPage.getDate())
-				{
-					Map.Entry<String, BlogPage> listEntry = new AbstractMap.SimpleEntry<>(name, blogPage);
-					pageList.add(listEntry);
-				}
-				else
-				{
-					getLogger().warn("Ignoring blog page with missing date: '%s'", name);
-				}
+				Map.Entry<String, BlogPage> listEntry = new AbstractMap.SimpleEntry<>(name, blogPage);
+				pageList.add(listEntry);
+			}
+			else
+			{
+				getLogger().warn("Ignoring blog page with missing date: '%s'", name);
 			}
 		}
 		pageList.sort((o1, o2) -> -o1.getValue().getDate().compareTo(o2.getValue().getDate()));
