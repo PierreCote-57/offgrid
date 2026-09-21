@@ -1,12 +1,14 @@
 package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.offgrid.common.misc.claude.ClaudeManager;
 import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
 import com.lc.offgrid.webapp.pojo.chat.ChatMessage;
 import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
 import com.lc.offgrid.webapp.pojo.sky.SkyObserverRestAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyPositionsRestAnswer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -35,9 +37,21 @@ public class OffgridRestProcessor
 	// Initializer for tests. As WEB/bean, it gets from config
 	private String data_root_folder = "/Users/pierrecote/Working/offgrid";
 
+	// Initializer for tests. As WEB/bean, it gets from config
+	@Value("${anthropic.claude.key}")
+	private String claudeKey = "Not this";
+
+	@Autowired
+	private ClaudeManager claudeManager;
+
 	public String getDataRootFolder()
 	{
 		return data_root_folder;
+	}
+
+	public ClaudeManager getClaudeManager()
+	{
+		return claudeManager;
 	}
 
 	/**

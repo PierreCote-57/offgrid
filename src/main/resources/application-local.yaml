@@ -2,6 +2,7 @@
 # Local environment = everything on the local machine
 #
 
+
 # Static resources are edited while the app is running, so the browser must never keep a
 # copy: an edited stylesheet has to be the one that renders on the next request.
 spring:
@@ -13,6 +14,9 @@ spring:
   jackson:
     serialization:
       indent-output: true
+# To read secrets (e.g. Claude API key)
+  config:
+    import: "optional:file:${folder.local}/config/secrets.properties"
 
 BaseWebProcessor:
   siteName: "β-Going offgrid"
