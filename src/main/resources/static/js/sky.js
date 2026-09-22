@@ -33,11 +33,6 @@
 	// The year a period is stated in once it is longer than one.
 	var DAYS_IN_YEAR = 365.25;
 
-	// How long the browser is given to answer where the visitor is, and how old an answer it
-	// may reuse. The same numbers the menu's sky link waits on.
-	var POSITION_TIMEOUT_MS = 5000;
-	var POSITION_MAX_AGE_MS = 600000;
-
 	// What splits a heading's group from the heading itself: "Rise|Time" is the Time column of
 	// the Rise group. A heading may hold anything but this, and only the first one splits.
 	var HEADING_SEPARATOR = "|";
@@ -149,11 +144,6 @@
 	// The namespace an SVG element is created in. createElement() makes an HTML element of the
 	// same name, which the browser lays out but never draws.
 	var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-
-	// Where the visitor stands, asked of the browser once and reused for the rest of the page
-	// view: every block that asks again is another callback and another wait, and a visitor does
-	// not move between two clicks on the same page.
-	var positionPromise = null;
 
 	// One place builds the stamp, so no call site carries a time of its own.
 	function stamp() {
@@ -718,40 +708,6 @@
 	}
 
 	/*
-	 * Where the visitor stands, as a promise that is made once. Refused, timed out, unavailable
-	 * or simply not offered by the browser, it answers null, and a call carrying no coordinates
-	 * is answered for the server's marker — the same thing the menu's sky link settles for.
-	 */
-	function positionOf() {
-		if (positionPromise) {
-			return positionPromise;
-		}
-
-		positionPromise = new Promise(function (resolve) {
-			if (!navigator.geolocation) {
-				log("This browser states no position; the server's marker will answer.");
-				resolve(null);
-				return;
-			}
-
-			var startedAt = Date.now();
-			navigator.geolocation.getCurrentPosition(
-				function (position) {
-					log("Position after " + (Date.now() - startedAt) + "ms.");
-					resolve(position);
-				},
-				function (failure) {
-					log("No position after " + (Date.now() - startedAt) + "ms: " + failure.message
-							+ "; the server's marker will answer.");
-					resolve(null);
-				},
-				{ timeout: POSITION_TIMEOUT_MS, maximumAge: POSITION_MAX_AGE_MS });
-		});
-
-		return positionPromise;
-	}
-
-	/*
 	 * The call the endpoint reads. A parameter it is not given falls back on the server, which is
 	 * what a refused position comes to.
 	 */
@@ -849,7 +805,7 @@
 		});
 
 		log("Getting position");
-		positionOf().then(function (position) {
+		window.OG.positionOf().then(function (position) {
 			var observerUrl = makeObserverUrl(dateTime, position);
 			log("Asking " + observerUrl + " for the observer's sky.");
 			fetchSkyData(observerUrl).then(function (observerData) {

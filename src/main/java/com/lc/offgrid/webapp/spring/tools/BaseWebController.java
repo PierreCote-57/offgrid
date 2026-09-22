@@ -110,7 +110,7 @@ public class BaseWebController extends BaseController
 	 * for, what was served them, and how long it took. Tab separated, and the appender puts
 	 * the time in front of it.
 	 */
-	protected void logVisit(HttpServletRequest servletRequest, String viewName, long startTime)
+	public static void logVisit(HttpServletRequest servletRequest, String viewName, long startTime)
 	{
 		long		elapsedNs		= System.nanoTime() - startTime;
 		double		elapsedMs		= elapsedNs / 1000000.;

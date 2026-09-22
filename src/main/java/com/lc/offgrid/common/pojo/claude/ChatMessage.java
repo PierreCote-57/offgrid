@@ -1,4 +1,4 @@
-package com.lc.offgrid.webapp.pojo.chat;
+package com.lc.offgrid.common.pojo.claude;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

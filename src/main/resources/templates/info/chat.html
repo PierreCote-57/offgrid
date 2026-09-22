@@ -12,8 +12,13 @@
 					<div class="og-chat-text" x-text="message.text"></div>
 					<div class="og-chat-timing" x-show="message.timeText"
 						 x-text="message.timeText"></div>
-					<div class="og-chat-timing" x-show="message.durationText"
-						 x-text="'answered in ' + message.durationText"></div>
+					<div class="og-chat-timing" x-show="message.durationText">
+						<span x-text="'answered in ' + message.durationText"></span>
+						<span x-show="message.effectiveTokenText"
+							  x-text="' using ' + message.effectiveTokenText + ' effective tokens'"></span>
+						<span x-show="message.stopText"
+							  x-text="', stopped at ' + message.stopText"></span>
+					</div>
 				</div>
 			</template>
 			<div class="og-chat-bubble og-chat-assistant og-chat-waiting" x-show="busy">…</div>

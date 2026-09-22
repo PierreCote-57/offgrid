@@ -72,7 +72,7 @@ wire spelling on a `@JsonProperty` — the same shape as the Gson enums in `pojo
 the annotation Jackson reads. An unrecognised role is then a rejected request rather than a
 string that flows on unnoticed.
 
-**The answer shows the server's timing.** `ChatAnswer extends RestBaseAnswer`, so
+**The answer shows the server's timing.** `ChatRestAnswer extends RestBaseAnswer`, so
 `durationText` comes for free and is drawn under the bubble. It is the visible proof the
 reply came from the server: without it a JS bug that never calls the server looks exactly
 like success.
@@ -83,9 +83,12 @@ the file's shape. Switching MVC to Gson was considered and rejected: it would re
 keys to `RestBaseAnswer`'s `m_`-prefixed fields, and Spring AI would keep using Jackson for
 `/mcp` regardless, so there would still be two.
 
-**The wire shapes live in `webapp/pojo/chat`, the controller and processor in `webapp/spring/site`.**
-`ChatRequest`, `ChatMessage` and `ChatAnswer` are data, so they sit with the other POJOs;
-they are the first ones there annotated for Jackson rather than Gson, because they are the
+**The request lives in `common/pojo/claude`, the answer in `webapp/pojo/claude`, the controller
+and processor in `webapp/spring/site`.** `ChatRequest` and `ChatMessage` are what
+`ClaudeManager.chat()` reads, so they sit on the side that owns the question — the browser
+posting them is incidental, since Spring binds the JSON to whatever class the signature names.
+`ChatRestAnswer` cannot follow them: it extends `RestBaseAnswer`, whose timing belongs to the
+webapp. They are the first POJOs annotated for Jackson rather than Gson, because they are the
 only ones that travel over HTTP rather than out of a file.
 
 **`OffgridController` and `OffgridProcessor` gained a `Web`.** With a REST pair beside them

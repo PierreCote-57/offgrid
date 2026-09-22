@@ -27,6 +27,41 @@
 		return text.toLowerCase();
 	}
 
+	// The zone the browser is set to, which it states without asking the visitor for anything.
+	function zoneName() {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+
+	// What the bubble says when Claude answered with no text: the reason it stopped is the only
+	// thing there is to show, and an empty bubble states nothing at all.
+	function bubbleText(answer) {
+		if (answer.text) {
+			return answer.text;
+		}
+		var reason = answer.refusalText || answer.stopReason || "no reason stated";
+		return "(no text — " + reason + ")";
+	}
+
+	// The call's cost in whole effective tokens. An answer that states none shows none, rather
+	// than a NaN beside the duration.
+	function tokenText(effectiveToken) {
+		if ("number" !== typeof effectiveToken) {
+			return "";
+		}
+		return Math.round(effectiveToken).toLocaleString();
+	}
+
+	// What the page posts: the transcript, and what the browser can say about where and when the
+	// visitor is asking from. A refused position simply leaves the coordinates out.
+	function requestBody(messageList, position) {
+		var request = { messageList: messageList, timeZone: zoneName() };
+		if (position) {
+			request.latitudeDeg = position.coords.latitude;
+			request.longitudeDeg = position.coords.longitude;
+		}
+		return JSON.stringify(request);
+	}
+
 	document.addEventListener("alpine:init", function () {
 		Alpine.data("chat", function () {
 			return {
@@ -34,6 +69,12 @@
 				draft: "",
 				busy: false,
 				error: "",
+
+				// Asked at load rather than at the first message, so the browser's prompt and the
+				// wait for an answer are behind the visitor before they have typed anything.
+				init: function () {
+					window.OG.positionOf();
+				},
 
 				// The log shows the newest line, never the oldest: every push is followed by
 				// this, after the tick that draws it. Reading scrollHeight before Alpine has
@@ -61,12 +102,13 @@
 					this.scrollToBottom();
 
 					var component = this;
-					var body = JSON.stringify({ messageList: this.messageList });
 
-					fetch(CHAT_URL, {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: body
+					window.OG.positionOf().then(function (position) {
+						return fetch(CHAT_URL, {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: requestBody(component.messageList, position)
+						});
 					}).then(function (response) {
 						if (!response.ok) {
 							throw new Error("The server answered " + response.status + ".");
@@ -75,9 +117,11 @@
 					}).then(function (answer) {
 						component.messageList.push({
 							role: "assistant",
-							text: answer.text,
+							text: bubbleText(answer),
 							timeText: "",
-							durationText: answer.durationText
+							durationText: answer.durationText,
+							effectiveTokenText: tokenText(answer.effectiveToken),
+							stopText: "end_turn" === answer.stopReason ? "" : answer.stopReason
 						});
 					}).catch(function (failure) {
 						component.error = "No answer: " + failure.message;

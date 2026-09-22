@@ -28,15 +28,17 @@ public class BaseRestController extends BaseController
 			HttpServletResponse servletResponse,
 		Supplier<T> supplier)
 	{
+		long			timeBeginMS			= System.currentTimeMillis();
+		long			timeBeginNS			= System.nanoTime();
+
 		try
 		{
-			long			timeBeginMS			= System.currentTimeMillis();
-			long			timeBeginNS			= System.nanoTime();
-
 			T		response		= supplier.get();
 
 			response.begin(timeBeginMS, timeBeginNS);
 			response.markDone();
+
+			BaseWebController.logVisit(servletRequest, "", timeBeginNS);
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
@@ -44,6 +46,8 @@ public class BaseRestController extends BaseController
 		{
 			String		message		= buildFailureMessage(servletRequest, "Failed to process request");
 			getLogger().error(exception, message);
+
+			BaseWebController.logVisit(servletRequest, "exception", timeBeginNS);
 
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

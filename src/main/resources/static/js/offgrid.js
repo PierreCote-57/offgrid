@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 LogicielCote.COM All rights reserved.
  *
- * The site's shared rendering. What more than one place draws lives here, so a thing that
- * looks the same on a gallery card and on a page IS the same code.
+ * The site's shared code. What more than one place needs lives here, so a thing that looks
+ * the same on a gallery card and on a page IS the same code, and a question asked of the
+ * browser is asked in one voice.
  *
  * Colour is the first of these. A pill carries its word in data-tag or data-road and no
  * colour of its own; paintTags fills it from the palettes in og-constants.js. That is what
@@ -91,6 +92,51 @@
 			.replace(/>/g, "&gt;");
 		return escaped;
 	}
+
+	// How long the browser is given to answer where the visitor is, and how old an answer it may
+	// reuse.
+	var POSITION_TIMEOUT_MS = 5000;
+	var POSITION_MAX_AGE_MS = 600000;
+
+	// Asked of the browser once and reused for the rest of the page view: every caller that asks
+	// again is another callback and another wait, and a visitor does not move between two clicks
+	// on the same page.
+	var positionPromise = null;
+
+	/*
+	 * Where the visitor stands, as a promise that is made once. Refused, timed out, unavailable
+	 * or simply not offered by the browser, it answers null, and the caller settles for whatever
+	 * it does without one. The browser keeps the visitor's answer against the site, so a grant
+	 * made on one page is already given on the next.
+	 */
+	window.OG.positionOf = function () {
+		if (positionPromise) {
+			return positionPromise;
+		}
+
+		positionPromise = new Promise(function (resolve) {
+			if (!navigator.geolocation) {
+				console.log("[offgrid] This browser states no position.");
+				resolve(null);
+				return;
+			}
+
+			var startedAt = Date.now();
+			navigator.geolocation.getCurrentPosition(
+				function (position) {
+					console.log("[offgrid] Position after " + (Date.now() - startedAt) + "ms.");
+					resolve(position);
+				},
+				function (failure) {
+					console.log("[offgrid] No position after " + (Date.now() - startedAt) + "ms: "
+						+ failure.message + ".");
+					resolve(null);
+				},
+				{ timeout: POSITION_TIMEOUT_MS, maximumAge: POSITION_MAX_AGE_MS });
+		});
+
+		return positionPromise;
+	};
 
 	document.addEventListener("DOMContentLoaded", function () {
 		window.OG.paintTags();

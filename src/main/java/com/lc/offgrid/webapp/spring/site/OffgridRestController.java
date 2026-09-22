@@ -1,7 +1,7 @@
 package com.lc.offgrid.webapp.spring.site;
 
-import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
-import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
+import com.lc.offgrid.common.pojo.claude.ChatRequest;
+import com.lc.offgrid.webapp.pojo.claude.ChatRestAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyObserverRestAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyPositionsRestAnswer;
 import com.lc.offgrid.webapp.spring.tools.BaseRestController;
@@ -38,7 +38,7 @@ public class OffgridRestController extends BaseRestController
 	}
 
 	@PostMapping("/chat")
-	public ResponseEntity<ChatAnswer> chat(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<ChatRestAnswer> chat(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody ChatRequest chatRequest)
 	{
 		return processRequest(request, response, () -> getProcessor().processChat(chatRequest));

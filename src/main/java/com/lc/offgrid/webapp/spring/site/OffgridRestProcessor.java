@@ -2,14 +2,13 @@ package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.offgrid.common.misc.claude.ClaudeManager;
+import com.lc.offgrid.common.misc.claude.MessageParser;
 import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
-import com.lc.offgrid.webapp.pojo.chat.ChatAnswer;
-import com.lc.offgrid.webapp.pojo.chat.ChatMessage;
-import com.lc.offgrid.webapp.pojo.chat.ChatRequest;
+import com.lc.offgrid.common.pojo.claude.ChatRequest;
+import com.lc.offgrid.webapp.pojo.claude.ChatRestAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyObserverRestAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyPositionsRestAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -28,26 +27,17 @@ public class OffgridRestProcessor
 {
 	private static final BasicLogger LOGGER		= BasicLogger.getLogger(OffgridRestProcessor.class);
 
+	// Claude may answer in several text blocks. They are consecutive parts of one answer, so the
+	// reply carries all of them joined rather than the first one and a silent loss.
+	private static final String	ANSWER_BLOCK_SEPARATOR	= "\n\n";
+
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
 	}
 
-	@Value("${folder.local}")
-	// Initializer for tests. As WEB/bean, it gets from config
-	private String data_root_folder = "/Users/pierrecote/Working/offgrid";
-
-	// Initializer for tests. As WEB/bean, it gets from config
-	@Value("${anthropic.claude.key}")
-	private String claudeKey = "Not this";
-
 	@Autowired
 	private ClaudeManager claudeManager;
-
-	public String getDataRootFolder()
-	{
-		return data_root_folder;
-	}
 
 	public ClaudeManager getClaudeManager()
 	{
@@ -55,19 +45,23 @@ public class OffgridRestProcessor
 	}
 
 	/**
-	 * The chat's reply. This pass repeats the last line of the transcript back, so what is
-	 * being proven is the round trip rather than the answer.
+	 * The chat's reply: what Claude answered the last line of the transcript with. The answer
+	 * builds itself from the parser, so an answer with no text still states why.
 	 */
-	public ChatAnswer processChat(ChatRequest chatRequest)
+	public ChatRestAnswer processChat(ChatRequest chatRequest)
 	{
-		List<ChatMessage>	messageList		= chatRequest.getMessageList();
-		int					lastIndex		= messageList.size() - 1;
-		ChatMessage			lastMessage		= messageList.get(lastIndex);
-		String				text			= lastMessage.getText();
+		MessageParser		parser			= getClaudeManager().chat(chatRequest);
+		List<String>		answerTextList	= parser.getTextList();
+		ChatRestAnswer		chatAnswer		= new ChatRestAnswer();
 
-		getLogger().debug("Chat: %d message(s), echoing \"%s\"", messageList.size(), text);
+		chatAnswer.setBlockCount(answerTextList.size());
+		chatAnswer.setText(answerTextList.isEmpty() ? null
+				: String.join(ANSWER_BLOCK_SEPARATOR, answerTextList));
+		chatAnswer.setStopReason(parser.getStopReasonText());
+		chatAnswer.setRefusalText(parser.getRefusalText());
+		chatAnswer.setModelName(parser.getModelName());
+		chatAnswer.setEffectiveToken(parser.getEffectiveToken());
 
-		ChatAnswer			chatAnswer		= new ChatAnswer(text);
 		return chatAnswer;
 	}
 
