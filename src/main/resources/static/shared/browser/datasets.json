@@ -1,7 +1,7 @@
 [
 	{
-		"id": "destinations",
-		"file": "destinations.json",
+		"id": "destination",
+		"file": "destination.json",
 		"title": "Destinations",
 		"options": [
 			"view",

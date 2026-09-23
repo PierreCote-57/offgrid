@@ -36,3 +36,4 @@ What is left, in order:
    the coordinates goes in front of Claude is the author's decision, not the endpoint's.
  - An `.md` file sent to Claude with a chat request.
  - `getCost(Usage)` on `ClaudeModel`, the effective tokens priced in dollars.
+ - Rename the `folder.local` folder `documents` to `document` (`LocalFileManager("/documents")`), locally and on FullHost.

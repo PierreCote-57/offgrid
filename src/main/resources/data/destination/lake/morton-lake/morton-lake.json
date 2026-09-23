@@ -1,0 +1,44 @@
+{
+	"name": "Morton Lake",
+	"featuredImage": "IMG_0627",
+	"excerpt": "Small lake in Morton Lake Provincial Park north of Campbell River, with a rustic lakeside campground.",
+	"tags": {
+		"badgeList": [
+			"fishing"
+		],
+		"typeList": [
+			"lake"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 50.1253,
+		"lng": -125.4781,
+		"icon": "lake"
+	},
+	"googleMap": {
+		"road": {
+			"zoom": 12
+		}
+	},
+	"fishingReferences": {
+		"bcIdentifier": "00517SALM",
+		"areaKm2": 0.211,
+		"lakeChartMap": {
+			"BC Bathymetric (1977)": "https://a100.gov.bc.ca/pub/fidq/downloadBathymetricMap.do?filename=00294301.pdf"
+		},
+		"stockingName": ""
+	},
+	"noteMap": {
+		"Destinations": [
+			{
+				"name": "Morton Lake Park",
+				"url": "/destination/campground/morton-lake-park"
+			}
+		],
+		"Further readings": []
+	}
+}

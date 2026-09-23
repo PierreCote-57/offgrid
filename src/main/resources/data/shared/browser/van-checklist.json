@@ -1,26 +1,26 @@
 [
 	{
-		"file": "/hardware/checklists/arriving-campsite"
+		"file": "/hardware/checklist/arriving-campsite"
 	},
 	{
-		"file": "/hardware/checklists/arriving-home"
+		"file": "/hardware/checklist/arriving-home"
 	},
 	{
-		"file": "/hardware/checklists/departure-preparation"
+		"file": "/hardware/checklist/departure-preparation"
 	},
 	{
-		"file": "/hardware/checklists/dump"
+		"file": "/hardware/checklist/dump"
 	},
 	{
-		"file": "/hardware/checklists/leaving-campsite"
+		"file": "/hardware/checklist/leaving-campsite"
 	},
 	{
-		"file": "/hardware/checklists/power-usage"
+		"file": "/hardware/checklist/power-usage"
 	},
 	{
-		"file": "/hardware/checklists/pre-dropoff"
+		"file": "/hardware/checklist/pre-dropoff"
 	},
 	{
-		"file": "/hardware/checklists/water-usage"
+		"file": "/hardware/checklist/water-usage"
 	}
 ]

@@ -63,11 +63,11 @@ public class OffgridWebController extends BaseWebController
 		return processRequest(request, response, model, () -> getProcessor().processHome(model, path, PageData.class));
 	}
 
-	@GetMapping("/destinations/{type}/{name}")
+	@GetMapping("/destination/{type}/{name}")
 	public String destination(HttpServletRequest request, HttpServletResponse response, Model model,
 			@PathVariable String type, @PathVariable String name)
 	{
-		String path = String.format("/destinations/%1$s/%2$s", type, name);
+		String path = String.format("/destination/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}

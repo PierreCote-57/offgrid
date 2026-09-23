@@ -1,0 +1,55 @@
+{
+	"name": "Muchalat Lake (rec-site)",
+	"featuredImage": "under-construction",
+	"excerpt": "Under construction",
+	"tags": {
+		"badgeList": [],
+		"typeList": [
+			"rec-site"
+		]
+	},
+	"wpSettings": {
+		"published": true,
+		"comments": "open"
+	},
+	"location": {
+		"lat": 49.873601,
+		"lng": -126.162778,
+		"icon": "tent"
+	},
+	"googleMap": {
+		"road": {
+			"zoom": 15
+		}
+	},
+	"access": {
+		"haversineMap": {
+			"Campbell River": 70,
+			"Nanaimo": 180,
+			"Victoria": 260
+		}
+	},
+	"noteMap": {
+		"Further readings": [
+			{
+				"name": "Muchalat Lake (REC0258)",
+				"url": "https://sitesandtrailsbc.ca/resource/REC0258",
+				"description": [
+					"Sites & Trails BC"
+				]
+			},
+			{
+				"name": "Muchalat Lake",
+				"url": "/destination/lake/muchalat-lake"
+			}
+		]
+	},
+	"photoGalleries": {
+		"photos": {
+			"under-construction": {
+				"img": "under-construction",
+				"label": "Under construction"
+			}
+		}
+	}
+}

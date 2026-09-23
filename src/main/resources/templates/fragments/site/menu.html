@@ -1,13 +1,13 @@
 <nav xmlns:th="http://www.thymeleaf.org" class="og-menu">
 	<ul>
-		<li><a th:href="@{/shared/browser(dataset='destinations',view='grid')}">Destinations</a></li>
+		<li><a th:href="@{/shared/browser(dataset='destination',view='grid')}">Destinations</a></li>
 		<li class="has-submenu" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
 			<button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true">Hardware</button>
 			<ul class="og-submenu" x-show="open" x-cloak>
 				<li><a th:href="@{/hardware/van}">The van</a></li>
 				<li><a th:href="@{/hardware/maintenance/m-van}">&nbsp;&nbsp;-> maintenance</a></li>
 				<li><a th:href="@{/shared/browser(dataset='van-howto',view='grid',booklet='howto')}">&nbsp;&nbsp;-> Howto</a></li>
-				<li><a th:href="@{/shared/browser(dataset='van-checklist',view='grid',booklet='checklists')}">&nbsp;&nbsp;-> Checklist</a></li>
+				<li><a th:href="@{/shared/browser(dataset='van-checklist',view='grid',booklet='checklist')}">&nbsp;&nbsp;-> Checklist</a></li>
 				<li><a th:href="@{/hardware/bronco}">The Bronco</a></li>
 				<li><a th:href="@{/hardware/maintenance/m-bronco}">&nbsp;&nbsp;-> maintenance</a></li>
 			</ul>

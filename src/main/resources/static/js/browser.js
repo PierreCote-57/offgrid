@@ -58,7 +58,7 @@
 
 	// Defaults for a bare URL (no params). A present-but-invalid value is NOT defaulted over
 	// — it falls through to the graceful "unknown ..." handling.
-	var DEFAULT_DATASET = "destinations";
+	var DEFAULT_DATASET = "destination";
 	var DEFAULT_VIEW = "grid";
 
 	// Where the map view opens: northern Vancouver Island, wide enough to hold the whole

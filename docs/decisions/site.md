@@ -121,7 +121,7 @@ elements a renderer emitted, and Thymeleaf renders once.
 
 ## 2026-08-25 — Checklist pages: one route, a processor for the rows
 
-`/hardware/checklists/{name}` is one `@GetMapping` for the whole folder, not one per page.
+`/hardware/checklist/{name}` is one `@GetMapping` for the whole folder, not one per page.
 The name is the view name and the mirror folder both, so a new checklist is a template plus
 its data folder and nothing else. Per-page methods were the alternative and buy nothing here
 — the pages differ only in their content. The same shape is expected to hold wherever a
@@ -184,7 +184,7 @@ of the image question, and the back link has no list page to return to yet.
 
 `/hardware/{name}` serves the van and the Bronco. Two singleton pages rather than a folder of
 interchangeable ones, but the shape is identical — template plus data folder — so they get
-the parameterized route too. It sits above `/hardware/checklists/{name}`, which is a segment
+the parameterized route too. It sits above `/hardware/checklist/{name}`, which is a segment
 deeper and does not collide.
 
 The van page is `van`, not `van-overview`: its data folder came across as `data/hardware/van/`
@@ -350,7 +350,7 @@ every block written as a `data-block-type` marker for a renderer that does not e
 are now full pages like the checklists: header, `<main>`, footer, and the Thymeleaf fragments
 `photo-ref`, `photo-gallery`, `photo`, `warning`, `note-list` and `back-to-gallery`.
 
-The `pageLink` block became the real `<a th:href="@{/hardware/checklists/arriving-campsite}">`
+The `pageLink` block became the real `<a th:href="@{/hardware/checklist/arriving-campsite}">`
 it will be, following the rule the blogs pass set.
 
 **Step lists carry `og-numcheck`, enumerations stay plain `<ol>`.** `dump.html` had already made
@@ -461,7 +461,7 @@ DMS caption under the picture linking to `google.com/maps?q=lat,lng`.
 `fragments/block/photo` takes the filename and nothing else.
 
 Dropped deliberately: whether a picture says where it was taken is the content author's
-choice, and the choice is no. The one page that used it is `destinations/lakes/echo-lake`.
+choice, and the choice is no. The one page that used it is `destination/lake/echo-lake`.
 
 Recorded because the absence looks like a porting gap when offgrid is read against
 GettingLost, and it is not one.

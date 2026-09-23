@@ -8,9 +8,9 @@ public class QueryUtil
 	private static Map<String, String> DISPLAY_NAME_MAP = new TreeMap<>();
 	static
 	{
-		DISPLAY_NAME_MAP.put("destinations", "destinations");
+		DISPLAY_NAME_MAP.put("destination", "destinations");
 		DISPLAY_NAME_MAP.put("van-howto", "how to");
-		DISPLAY_NAME_MAP.put("van-checklists", "checklists");
+		DISPLAY_NAME_MAP.put("van-checklist", "checklists");
 	}
 
 	public static String extractQueryParam(String urlText)

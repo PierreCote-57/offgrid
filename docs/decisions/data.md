@@ -358,9 +358,9 @@ file, not a list of the keys today's data happens to write.
 
 ## 2026-08-30 — Morton Lake and Sproat Lake are campgrounds
 
-Both pages carry the `campground` block, so both moved from `destinations/parks/` to
-`destinations/campgrounds/` — templates and data folders — and their two pointers in
-`shared/browser/destinations.json` moved with them. This is the same ruling Elk Falls and
+Both pages carry the `campground` block, so both moved from `destination/parks/` to
+`destination/campgrounds/` — templates and data folders — and their two pointers in
+`shared/browser/destination.json` moved with them. This is the same ruling Elk Falls and
 Rathtrevor took on 2026-08-28: a campground inside a park is a campground page, and the park
 it sits in is a separate subject.
 
@@ -387,7 +387,7 @@ say that a lake or a park has no single spot to drive to: that is a fact about o
 the page leaves the field null. `parks` binds `DestinationPage`, a lake adds fishing, a
 campsite adds its campground data, and nothing else separates them.
 
-The registry always read this way — a row in `shared/browser/destinations.json` is a plain
+The registry always read this way — a row in `shared/browser/destination.json` is a plain
 map, and a row without `access` is simply a row without it. The Java tree was the only place
 the distinction was structural.
 
@@ -462,10 +462,14 @@ derives and no data file ever writes.
 place. Reading it off `ordinal()` would have buried a vehicle's configuration in a type.
 
 **The URL segment went singular**, so the type word and the route are one vocabulary rather
-than two: `/destinations/lake/echo-lake`, and `lakes`, `rec-sites` and `campgrounds` were
-renamed to their singular under both `data/destinations/` and `templates/destinations/`, with
+than two: `/destination/lake/echo-lake`, and `lakes`, `rec-sites` and `campgrounds` were
+renamed to their singular under both `data/destination/` and `templates/destination/`, with
 every link and every `file` pointer rewritten. Nothing outside the repo pointed at the old
 ones. `park` still has no folder — it is a type with no page yet, not a missing one.
+
+**Every name is singular** — folders, routes, browser dataset ids, data files and booklet
+names: `destination`, `hardware/checklist`, `van-checklist`. Only text a reader sees stays
+plural, such as the display names in `QueryUtil`.
 
 A template renders the word, never the constant: both palettes in `og-constants.js` are keyed
 by what the JSON writes, so `tags.html` lower-cases the constant once into `badgeWord` and
