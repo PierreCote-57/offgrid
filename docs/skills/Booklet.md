@@ -1,11 +1,11 @@
 ---
 name: booklet
-description: Build the checklist or howto booklet PDF — cover, table of contents, one page per page's howto section — into {folder.local}/documents/, where /document/<name> serves it. Use when Pierre asks to build, rebuild or refresh a booklet, e.g. "rebuild the checklist booklet", "make the howto PDF".
+description: Build the checklist or howto booklet PDF — cover, table of contents, one page per page's howto section — into {folder.local}/document/, where /document/<name> serves it. Use when Pierre asks to build, rebuild or refresh a booklet, e.g. "rebuild the checklist booklet", "make the howto PDF".
 ---
 
 # Booklet PDF for one kind
 
-The input is a kind, `checklist` or `howto`. The output is `{folder.local}/documents/<kind>.pdf`,
+The input is a kind, `checklist` or `howto`. The output is `{folder.local}/document/<kind>.pdf`,
 the file the browser's booklet link opens.
 
 ## Run

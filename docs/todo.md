@@ -20,7 +20,7 @@ next id from the header above and increment it. This numbering is independent of
    packaged jar — `ResourceFileManager` builds its root from it and `pom.xml` names no
    packaging, so the build is a Boot fat jar while the IDE runs off a directory.
  - Get the images and the documents onto the server. `folder.local` names the app's own root
-   on the machine, holding `images/`, `documents/` and `logs/`; the first two live outside
+   on the machine, holding `images/`, `document/` and `logs/`; the first two live outside
    the resource tree and have no delivery path, while JSON and HTML arrive by push and
    rebuild.
  - Decide how `/mcp` is protected before it is deployed. Locally a client reaches it over
@@ -36,4 +36,3 @@ What is left, in order:
    the coordinates goes in front of Claude is the author's decision, not the endpoint's.
  - An `.md` file sent to Claude with a chat request.
  - `getCost(Usage)` on `ClaudeModel`, the effective tokens priced in dollars.
- - Rename the `folder.local` folder `documents` to `document` (`LocalFileManager("/documents")`), locally and on FullHost.

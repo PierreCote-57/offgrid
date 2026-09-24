@@ -15,7 +15,7 @@ public class LocalFileManager extends AbstractFileManager
 	{
 		public DocumentFileManager()
 		{
-			super("/documents");
+			super("/document");
 		}
 	}
 

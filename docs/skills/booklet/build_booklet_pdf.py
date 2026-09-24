@@ -12,7 +12,7 @@ Two booklets are defined in BOOKLETS below and selected on the command line:
     python3 docs/skills/booklet/build_booklet_pdf.py checklist
     python3 docs/skills/booklet/build_booklet_pdf.py howto
 
-Add a path to override the default output, {folder.local}/documents/<kind>.pdf:
+Add a path to override the default output, {folder.local}/document/<kind>.pdf:
 
     python3 docs/skills/booklet/build_booklet_pdf.py howto _preview/howto.pdf
 
@@ -89,7 +89,7 @@ BOOKLETS = {
         "cover_title": "Checklists",
         "cover_subtitle": "Quick checklists, refer to howto for more details",
         "cover_image": "IMG_2773_crop.jpg",
-        "default_output": os.path.join(FOLDER_LOCAL, "documents", "checklist.pdf"),
+        "default_output": os.path.join(FOLDER_LOCAL, "document", "checklist.pdf"),
     },
     "howto": {
         "source_dir": _p("templates", "hardware", "howto"),
@@ -97,7 +97,7 @@ BOOKLETS = {
         "cover_title": "How To",
         "cover_subtitle": "Step-by-step instructions",
         "cover_image": "IMG_2773_crop.jpg",
-        "default_output": os.path.join(FOLDER_LOCAL, "documents", "howto.pdf"),
+        "default_output": os.path.join(FOLDER_LOCAL, "document", "howto.pdf"),
     },
 }
 
