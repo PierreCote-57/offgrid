@@ -353,7 +353,11 @@ def _markable(node):
 def _text(node):
     """Collapsed, XML-escaped text of a node (safe for reportlab Paragraph)."""
     marked = _markable(node)
-    escaped = _boxes(xml_escape(re.sub(r"\s+", " ", marked.get_text(" ", strip=True))))
+    collapsed = re.sub(r"\s+", " ", marked.get_text(" ", strip=True))
+    # get_text puts a space between every piece, so a comma after a replaced
+    # photo-ref would read "van , the".
+    collapsed = re.sub(r" ([,.:;!?)])", r"\1", collapsed)
+    escaped = _boxes(xml_escape(collapsed))
     escaped = re.sub(r"\s*" + BREAK_MARK + r"\s*", "<br/>", escaped)
     escaped = re.sub(BLANK_MARK_OPEN + r"(\d+)" + BLANK_MARK_CLOSE,
                      lambda m: _blank(int(m.group(1))), escaped)
