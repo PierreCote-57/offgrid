@@ -712,7 +712,6 @@ details > summary:focus:not(:focus-visible) {
 	float: right;
 	margin: 0 0 16px 16px;
 }
-
 /* A mini-gallery: a grid of captioned thumbnails. Its heading, and whether it sits inside a
    <details>, are the page's business, not the fragment's. */
 .og-gallery-grid {

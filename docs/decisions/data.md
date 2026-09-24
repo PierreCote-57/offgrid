@@ -438,7 +438,7 @@ bites, it gets revisited then.
 
 `note-list` therefore takes the block's name, and a page carrying several makes several calls
 whose order is the order they appear in. Every existing page was converted call for call, in
-the order its file listed the blocks; after that, order is the author's. `hardware/howto/water`
+the order its file listed the blocks; after that, order is the author's. `hardware/howto/water-connections`
 called the block with no notes behind it, and the call was dropped rather than given a name
 nothing answers to.
 

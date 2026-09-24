@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">How to: Water connections</h1>
+
+	<section data-howto-section="howto">
+		<details open>
+			<summary><h2 class="og-heading">
+				Looking at the blue hose connection on
+				<span th:replace="~{fragments/block/photo-ref :: ref('howto/van-side-view')}"></span>:
+			</h2></summary>
+			<div class="og-photo" style="width:50%;float:none;margin:0 0 16px 0;"
+				 th:insert="~{fragments/block/gallery-photo :: photo('howto/van-side-view')}"></div>
+			<ol>
+				<li>Hooks up to the coiled blue hose with special connector</li>
+				<li>
+					This hose is for rinsing and washing hands
+					after emptying the dirty water tanks.
+				</li>
+				<li>
+					Gets its water from City water if available, else van tank
+				</li>
+			</ol>
+			<br />
+		</details>
+		<details open>
+			<summary><h2 class="og-heading">
+				Looking at
+				<span th:replace="~{fragments/block/photo-ref :: ref('howto/water-hookup')}"></span>,
+				we see:
+			</h2></summary>
+			<div class="og-photo" style="width:50%;float:none;margin:0 0 16px 0;"
+				 th:insert="~{fragments/block/gallery-photo :: photo('howto/water-hookup')}"></div>
+			<ol>
+				<li>Fresh water connection</li>
+				<li>Black tank flush</li>
+				<li>City water connection</li>
+			</ol>
+		</details>
+<!--
+		<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
+-->
+	</section>
+	<br/>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

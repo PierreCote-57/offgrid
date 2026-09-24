@@ -9,9 +9,6 @@
 		"file": "/hardware/checklist/departure-preparation"
 	},
 	{
-		"file": "/hardware/checklist/dump"
-	},
-	{
 		"file": "/hardware/checklist/leaving-campsite"
 	},
 	{
@@ -19,6 +16,12 @@
 	},
 	{
 		"file": "/hardware/checklist/pre-dropoff"
+	},
+	{
+		"file": "/hardware/checklist/sewer-campground"
+	},
+	{
+		"file": "/hardware/checklist/sewer-station"
 	},
 	{
 		"file": "/hardware/checklist/water-usage"

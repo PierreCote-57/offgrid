@@ -1,0 +1,16 @@
+<!-- The photo a photo-ref names, "<gallery>/<itemId>", drawn full size in the box the page gives it. -->
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="photo(photoId)"
+		  th:with="galleryName=${#strings.substringBefore(photoId, '/')},
+				   itemId=${#strings.substringAfter(photoId, '/')}">
+	<th:block th:with="gallery=${pageData.photoGalleries == null ? null : pageData.photoGalleries.get(galleryName)},
+					   item=${gallery == null ? null : gallery.get(itemId)}">
+		<a th:if="${item != null}" class="og-photo-link" data-lightbox
+		   th:href="@{/image/{imageName}(imageName=${item.img})}"
+		   th:attr="data-caption=${item.label}" href="">
+			<img style="width:100%;display:block;" th:src="@{/image/{imageName}(imageName=${item.img}, size='medium')}"
+				 th:alt="${item.label}" src="" alt="">
+		</a>
+		<span th:if="${item == null}" class="og-block-unavailable-inline"
+			  th:text="'image unavailable: ' + ${photoId}">image unavailable</span>
+	</th:block>
+</th:block>
