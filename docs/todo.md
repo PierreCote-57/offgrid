@@ -28,8 +28,8 @@ next id from the header above and increment it. This numbering is independent of
    anyone who posts to it. The question outlives the implementation — it has to be answered for
    whatever serves `/mcp`, not for the server that was removed.
 
-#72 Finish the Claude message tools, then the input side of `chat()`. `MessageParser` wraps one
-`Message` and hands out what is worth reading from it; the class itself says which reads are in.
+#72 Finish the Claude message tools, then the input side of `chat()`. `ClaudeAnswer` wraps the
+`Message` of each round and hands out what is worth reading from it; the class itself says which reads are in.
 What is left, in order:
  - A private method in `ClaudeManager` that helps build a `MessageCreateParams`.
  - Make `chat()` smarter with history and context. What of the transcript, the time zone and

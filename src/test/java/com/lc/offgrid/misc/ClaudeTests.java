@@ -29,7 +29,7 @@ public class ClaudeTests extends AbstractTests
 	{
 		return new Object[][] {
 				new Object[] {ClaudeModel.OPUS,		 1_000L,	   500L,	   null,	   null,	   null,	3_500.0},
-				new Object[] {ClaudeModel.OPUS,		   100L,	   200L,	 8_000L,	   null,	   null,	1_900.0},
+				new Object[] {ClaudeModel.OPUS,		   100L,	   200L,	 8_000L,	   null,	   null,	1_500.0},
 				new Object[] {ClaudeModel.SONNET,	   500L,	   100L,	   null,	 4_000L,	     0L,	6_000.0},
 				new Object[] {ClaudeModel.HAIKU,	   200L,	    50L,	 1_000L,	     0L,	 2_000L,	4_550.0},
 				new Object[] {ClaudeModel.FABLE,	   300L,	   400L,	10_000L,	 1_000L,	 2_000L,	7_800.0},

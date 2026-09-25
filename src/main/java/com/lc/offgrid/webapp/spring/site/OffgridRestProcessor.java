@@ -2,7 +2,7 @@ package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.offgrid.common.misc.claude.ClaudeManager;
-import com.lc.offgrid.common.misc.claude.MessageParser;
+import com.lc.offgrid.common.misc.claude.ClaudeAnswer;
 import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.common.pojo.claude.ChatRequest;
 import com.lc.offgrid.webapp.pojo.claude.ChatRestAnswer;
@@ -46,21 +46,21 @@ public class OffgridRestProcessor
 
 	/**
 	 * The chat's reply: what Claude answered the last line of the transcript with. The answer
-	 * builds itself from the parser, so an answer with no text still states why.
+	 * builds itself from Claude's, so an answer with no text still states why.
 	 */
 	public ChatRestAnswer processChat(ChatRequest chatRequest)
 	{
-		MessageParser		parser			= getClaudeManager().chat(chatRequest);
-		List<String>		answerTextList	= parser.getTextList();
+		ClaudeAnswer		claudeAnswer	= getClaudeManager().chat(chatRequest);
+		List<String>		answerTextList	= claudeAnswer.getTextList();
 		ChatRestAnswer		chatAnswer		= new ChatRestAnswer();
 
 		chatAnswer.setBlockCount(answerTextList.size());
 		chatAnswer.setText(answerTextList.isEmpty() ? null
 				: String.join(ANSWER_BLOCK_SEPARATOR, answerTextList));
-		chatAnswer.setStopReason(parser.getStopReasonText());
-		chatAnswer.setRefusalText(parser.getRefusalText());
-		chatAnswer.setModelName(parser.getModelName());
-		chatAnswer.setEffectiveToken(parser.getEffectiveToken());
+		chatAnswer.setStopReason(claudeAnswer.getStopReasonText());
+		chatAnswer.setRefusalText(claudeAnswer.getRefusalText());
+		chatAnswer.setModelName(claudeAnswer.getModelName());
+		chatAnswer.setEffectiveToken(claudeAnswer.getEffectiveToken());
 
 		return chatAnswer;
 	}

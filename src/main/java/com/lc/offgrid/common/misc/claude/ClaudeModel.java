@@ -10,16 +10,34 @@ import com.anthropic.models.messages.Usage;
  */
 public enum ClaudeModel
 {
-	OPUS	("claude-opus-5",		 5.00),
+	OPUS	("claude-opus-5-5",		 4.00)
+	{
+		// The published rate: Opus 5.5 reads its cache at half the usual rate.
+		@Override
+		public double getCacheReadRatio()
+		{
+			return 0.05;
+		}
+	},
+	OPUS_5	("claude-opus-5",		 5.00),
 	SONNET	("claude-sonnet-5",		 2.00),
 	HAIKU	("claude-haiku-4-5",	 1.00),
 	FABLE	("claude-fable-5-1",	10.00)
 	{
-		// The published rate: Fable 5.1 reads its cache at a quarter of what the others charge.
+		// The published rate: Fable 5.1 reads its cache at a quarter of the usual rate.
 		@Override
 		public double getCacheReadRatio()
 		{
 			return 0.025;
+		}
+	},
+	UNKNOWN	(null,					 0.00)
+	{
+		// A model no constant names has no published rate to count its tokens by.
+		@Override
+		public double getEffectiveToken(Usage usage)
+		{
+			return 0.0;
 		}
 	}
 	;
@@ -33,6 +51,22 @@ public enum ClaudeModel
 	{
 		this.modelId				= modelId;
 		this.costPerMillionToken	= costPerMillionToken;
+	}
+
+	// UNKNOWN has no id, so it is only ever the fallback, never a match.
+	public static ClaudeModel of(String modelId)
+	{
+		ClaudeModel	model	= UNKNOWN;
+
+		for (ClaudeModel candidate : values())
+		{
+			if (null != candidate.getModelId() && candidate.getModelId().equals(modelId))
+			{
+				model = candidate;
+				break;
+			}
+		}
+		return model;
 	}
 
 	// What the API is asked for, which is not the constant's own name.

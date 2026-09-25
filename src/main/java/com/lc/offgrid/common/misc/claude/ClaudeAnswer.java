@@ -2,6 +2,7 @@ package com.lc.offgrid.common.misc.claude;
 
 import com.anthropic.models.messages.ContentBlock;
 import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.RefusalStopDetails;
 import com.anthropic.models.messages.StopReason;
 import com.anthropic.models.messages.TextBlock;
@@ -11,25 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MessageParser
+/**
+ * What one call to Claude asked and what came back. A call that runs tools takes several rounds,
+ * one Message each, oldest first; the last one is the answer.
+ */
+public class ClaudeAnswer
 {
-	private ClaudeModel	model;
-	private Message		message;
+	private MessageCreateParams	params;
+	private List<Message>		messageList;
 
-	public MessageParser(ClaudeModel model, Message message)
+	public ClaudeAnswer(MessageCreateParams params, List<Message> messageList)
 	{
-		this.model = model;
-		this.message = message;
+		this.params			= params;
+		this.messageList	= messageList;
+	}
+
+	public MessageCreateParams getParams()
+	{
+		return params;
+	}
+	public List<Message> getMessageList()
+	{
+		return messageList;
+	}
+	public Message getMessage()
+	{
+		int	lastIndex	= getMessageList().size() - 1;
+		return getMessageList().get(lastIndex);
 	}
 
 	// The model the call named, which is the one whose prices this answer is counted against.
 	public ClaudeModel getModel()
 	{
-		return model;
-	}
-	public Message getMessage()
-	{
-		return message;
+		String	modelId	= getParams().model().asString();
+		return ClaudeModel.of(modelId);
 	}
 
 	public String getId()
@@ -44,15 +60,28 @@ public class MessageParser
 		return getMessage().model().asString();
 	}
 
-	public Usage getUsage()
+	public List<Usage> getUsageList()
 	{
-		return getMessage().usage();
+		List<Usage>	usageList	= new ArrayList<>();
+
+		for (Message message : getMessageList())
+		{
+			usageList.add(message.usage());
+		}
+		return usageList;
 	}
 
-	// The whole call priced in input tokens, by the ratios of the model that was asked.
+	// Every round priced in input tokens, by the ratios of the model that was asked.
 	public double getEffectiveToken()
 	{
-		return getModel().getEffectiveToken(getUsage());
+		ClaudeModel	model			= getModel();
+		double		effectiveToken	= 0.0;
+
+		for (Usage usage : getUsageList())
+		{
+			effectiveToken += model.getEffectiveToken(usage);
+		}
+		return effectiveToken;
 	}
 
 	public List<String> getTextList()

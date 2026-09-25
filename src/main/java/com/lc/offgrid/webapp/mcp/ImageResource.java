@@ -45,7 +45,7 @@ public class ImageResource extends AbstractOffgridMCP
 	 * One image, named by a file name off that list. Spring AI matches the read uri against the
 	 * template and hands the {fileName} it found to the parameter.
 	 */
-	@McpResource(uri = "offgrid://image/{fileName}", name = "image-list",
+	@McpResource(uri = "offgrid://image/{fileName}", name = "image",
 			description = "One image, by the file name the image list gives",
 			mimeType = "image/jpeg")
 	public String readImage(String fileName)

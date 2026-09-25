@@ -138,3 +138,9 @@ announced itself on every run by self-attaching a Byte Buddy agent to the live J
 JDK then warned about four times. The exclusion names the whole `org.mockito` group on both
 starters, since either path alone would bring it back.
 
+
+## 2026-09-24 — `application-host.yaml` waits for the FullHost deploy
+
+**Nothing new goes into `application-host.yaml` until the site is deployed to FullHost.** Its
+values — host name, ports, protocol — are only known once it runs there, so a setting added
+for the local profile gets its `-host` counterpart at deploy time, not before.

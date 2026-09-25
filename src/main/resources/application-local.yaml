@@ -26,5 +26,9 @@ folder:
 
 # The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.
 server:
+  port: 8080
+  publicProtocol: "http"
+  publicHostName: "localhost"
+  publicPort: 8080
   error:
     include-message: always
