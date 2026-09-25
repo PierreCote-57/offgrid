@@ -26,6 +26,8 @@ public class NextMaintenanceTool extends AbstractOffgridMCP
 			generateOutputSchema = true)
 	public Map<String, NextDue> getNextMaintenance()
 	{
+		logMcpCall("getNextMaintenance()");
+
 		Map<String, File> fileMap = getJsonManager().filterMap(FILTER);
 		Map<String, NextDue> dueMap = new TreeMap<>();
 		for (Map.Entry<String, File> entry : fileMap.entrySet())

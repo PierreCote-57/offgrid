@@ -41,9 +41,19 @@ public class ClaudeManager implements InitializingBean
 {
 	private static final BasicLogger LOGGER = BasicLogger.getLogger(ClaudeManager.class);
 
+	/**
+	 * One row per question put to Claude. The name is what routes it: log4j2-spring.xml gives
+	 * offgrid.claude its own appender and does not let it reach the others.
+	 */
+	private static final BasicLogger CLAUDE_LOGGER = BasicLogger.getLogger("offgrid.claude");
+
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
+	}
+	public static BasicLogger getClaudeLogger()
+	{
+		return CLAUDE_LOGGER;
 	}
 
 	@Value("${anthropic.claude.key}")
@@ -56,12 +66,15 @@ public class ClaudeManager implements InitializingBean
 	// What Spring AI built /mcp from: each definition beside the handler that runs it. Spring AI
 	// declares more than one list of each kind, and the server merges them, so these do the same.
 	// A provider resolves only when asked, so nothing here is built before the tool beans exist.
+	@Lazy
 	@Autowired
 	private ObjectProvider<List<SyncToolSpecification>> toolSpecificationProvider;
 
+	@Lazy
 	@Autowired
 	private ObjectProvider<List<SyncResourceSpecification>> resourceSpecificationProvider;
 
+	@Lazy
 	@Autowired
 	private ObjectProvider<List<SyncResourceTemplateSpecification>> resourceTemplateSpecificationProvider;
 
@@ -152,7 +165,9 @@ public class ClaudeManager implements InitializingBean
 		builder.addUserMessage(questionText);
 		MessageCreateParams params = builder.build();
 
+		long startTime = System.nanoTime();
 		ClaudeAnswer answer = send(params);
+		logClaudeCall("chat", answer, questionText, startTime);
 		getLogger().debug("chat(%s) answered %s on %s",
 				questionText, answer.getTextList(), answer.getModel());
 
@@ -185,6 +200,24 @@ public class ClaudeManager implements InitializingBean
 		}
 
 		return answer;
+	}
+
+	/**
+	 * The row one question leaves in the Claude log: who asked, the model that answered, why it
+	 * stopped, the effective tokens of every round, how long it took, and the question last —
+	 * the one column that can hold anything, with its tabs and line breaks made spaces.
+	 */
+	public static void logClaudeCall(String callerName, ClaudeAnswer answer, String questionText,
+			long startTime)
+	{
+		long	elapsedNs		= System.nanoTime() - startTime;
+		double	elapsedSecond	= elapsedNs / 1e9;
+		double	effectiveToken	= answer.getEffectiveToken();
+		String	questionLine	= questionText.replaceAll("[\\t\\r\\n]+", " ");
+
+		getClaudeLogger().info("%1$s\t%2$s\t%3$s\t%4$,.0f\t%5$.3f\t%6$s",
+				callerName, answer.getModelName(), answer.getStopReasonText(), effectiveToken,
+				elapsedSecond, questionLine);
 	}
 
 	private MessageCreateParams processTool(ClaudeAnswer answer)

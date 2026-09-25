@@ -56,7 +56,7 @@ public class ChecklistResource extends AbstractOffgridMCP
 			mimeType = "text/plain")
 	public String readChecklistList(String requestUri)
 	{
-		getLogger().debug("readChecklistList(%s)", requestUri);
+		logMcpCall("readChecklistList(%s)", requestUri);
 
 		List<String>	checklistNameList	= getChecklistNameList();
 		String			checklistNameText	= String.join("\n", checklistNameList);
@@ -73,7 +73,7 @@ public class ChecklistResource extends AbstractOffgridMCP
 			mimeType = "text/plain")
 	public String readChecklist(String checklistName)
 	{
-		getLogger().debug("readChecklist(%s)", checklistName);
+		logMcpCall("readChecklist(%s)", checklistName);
 
 		List<String>	checklistNameList	= getChecklistNameList();
 		String			checklistText		= checklistNameList.contains(checklistName)

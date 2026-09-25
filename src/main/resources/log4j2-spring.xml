@@ -40,6 +40,32 @@
 			</Policies>
 			<DefaultRolloverStrategy max="30"/>
 		</RollingFile>
+
+		<!-- One row per question put to Claude, tab separated. -->
+		<RollingFile name="Claude"
+				fileName="${spring:folder.local}/logs/ai/offgrid-claude.tsv"
+				filePattern="${spring:folder.local}/logs/ai/offgrid-claude-%d{yyyy-MM-dd}-%i.tsv.gz">
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
+
+		<!-- One row per call the MCP server answers, whoever made it, tab separated. -->
+		<RollingFile name="Mcp"
+				fileName="${spring:folder.local}/logs/ai/offgrid-mcp.tsv"
+				filePattern="${spring:folder.local}/logs/ai/offgrid-mcp-%d{yyyy-MM-dd}-%i.tsv.gz">
+			<PatternLayout
+					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
 	</Appenders>
 
 	<Loggers>
@@ -51,6 +77,14 @@
 		     console: this logger reaches its own appender and no other. -->
 		<Logger name="offgrid.visit" level="info" additivity="false">
 			<AppenderRef ref="Visits" />
+		</Logger>
+
+		<!-- Same shape as offgrid.visit: each reaches its own appender and no other. -->
+		<Logger name="offgrid.claude" level="info" additivity="false">
+			<AppenderRef ref="Claude" />
+		</Logger>
+		<Logger name="offgrid.mcp" level="info" additivity="false">
+			<AppenderRef ref="Mcp" />
 		</Logger>
 
 		<Root level="info">

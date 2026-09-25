@@ -66,7 +66,7 @@ public class SkyTool extends AbstractOffgridMCP
 		double		longitude	= OffgridUtil.parseLongitude(lng, timeZone);
 		LocalDate	localDate	= OffgridUtil.parseDate(date, timeZone);
 
-		getLogger().debug("getDarkTonight(%s, %s, %s, %s)", localDate, latitude, longitude, timeZone);
+		logMcpCall("getDarkTonight(%s, %s, %s, %s)", localDate, latitude, longitude, timeZone);
 
 		SkyBodyAnalyser	analyser	= makeAnalyser(localDate, null, timeZone, latitude, longitude);
 		SkyBodyDay		sunDay		= analyser.getSkyBodyDay(HorizonsBody.SUN, timeZone);
@@ -111,7 +111,7 @@ public class SkyTool extends AbstractOffgridMCP
 		LocalDate	localDate	= OffgridUtil.parseDate(date, timeZone);
 		LocalTime	localTime	= OffgridUtil.parseTime(time);
 
-		getLogger().debug("getSkyBodyList(%s, %s, %s, %s, %s)",
+		logMcpCall("getSkyBodyList(%s, %s, %s, %s, %s)",
 				localDate, localTime, latitude, longitude, timeZone);
 
 		SkyBodyAnalyser					analyser	= makeAnalyser(localDate, localTime, timeZone, latitude, longitude);

@@ -23,6 +23,8 @@ public class WorstRoadTool extends AbstractOffgridMCP
 			@McpToolParam(description = "The destination, named as the site writes it",
 					required = true) String destinationName)
 	{
+		logMcpCall("getWorstRoad(%s)", destinationName);
+
 		try
 		{
 			File file = getJsonManager().getFile(destinationName);

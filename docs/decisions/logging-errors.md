@@ -141,3 +141,26 @@ resolves nothing — `/image/{imageName}`, `/document/{documentName}`,
 `/shared/browser/data/{id}` are all path variables — came from a hand-edited URL and is INFO.
 A file this repo owns that is wrong — a blog entry with no date, a dataset row whose `file`
 pointer will not read — is WARN, because it is a defect someone here has to go and fix.
+
+## 2026-09-25 — Two AI logs: one row per question, one per MCP call
+
+**Two files in `logs/ai/`, each shaped like the visit log**: its own logger and appender,
+`additivity="false"`, tab separated, the time in front. They are two files rather than one
+with a kind column because the two rows share no columns — one file would need empty fields
+or a parser per kind.
+
+**`offgrid-claude.tsv`, logger `offgrid.claude`: one row per question, written by the caller
+of `send`** (`chat` today, through `ClaudeManager.logClaudeCall`), not once per round — the
+tools a question ran are the MCP log's rows. Columns: who asked, the model that answered, the
+stop reason, the effective tokens of every round as a whole number with thousands separators,
+the seconds the whole call took to three decimals, then the question. The two numbers tell
+themselves apart by their shape — a whole count, a time with a decimal point — so neither
+carries a label; the separators follow the machine's locale. The question is last because it is the one column that can hold anything; its tabs and
+line breaks become spaces. The stop reason stays although it is nearly always `end_turn`: the
+other values are the rows where the visitor got no answer.
+
+**`offgrid-mcp.tsv`, logger `offgrid.mcp`: one row per call, written by the tool or resource
+itself** through `AbstractOffgridMCP.logMcpCall`, as `methodName(parameters)`. Who asked is not
+recorded: a call from the chat and one from an outside client over `/mcp` leave the same row,
+because the class answering is the one place both pass through. Rejected: logging in
+`callUseBlock`, which sees only the chat's calls.

@@ -1,6 +1,5 @@
 package com.lc.offgrid.webapp.mcp;
 
-import com.lc.basics.tools.logging.BasicLogger;
 import org.springframework.ai.mcp.annotation.McpResource;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageResource extends AbstractOffgridMCP
 {
-	private static final BasicLogger LOGGER = BasicLogger.getLogger(ImageResource.class);
-
 	/**
 	 * A one pixel JPEG, standing in for a photo until the image folder is read. It is base64
 	 * because the resource declares an image mimeType, which makes what it returns a blob.
@@ -35,7 +32,7 @@ public class ImageResource extends AbstractOffgridMCP
 			mimeType = "text/plain")
 	public String readImageList(String requestUri)
 	{
-		LOGGER.info("Reading image list from " + requestUri);
+		logMcpCall("readImageList(%s)", requestUri);
 
 		String imageNameList = "rathtrevor-beach.jpg\nmohun-lake.jpg\namor-lake.jpg";
 		return imageNameList;
@@ -50,7 +47,7 @@ public class ImageResource extends AbstractOffgridMCP
 			mimeType = "image/jpeg")
 	public String readImage(String fileName)
 	{
-		LOGGER.info("Reading image " + fileName);
+		logMcpCall("readImage(%s)", fileName);
 
 		String base64Image = SAMPLE_JPEG;
 		return base64Image;
