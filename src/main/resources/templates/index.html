@@ -4,7 +4,11 @@
 
 <main>
 
-		<div style="width:60%;float:left;margin:0 1.5rem 1rem 0;">
+		<div style="position:relative;width:60%;float:left;margin:0 1.5rem 1rem 0;">
+			<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;text-shadow:0 0 4px #000;pointer-events:none;">
+				Offgrid, but still connected<br />
+				Ils sont fous ses Canadiens
+			</div>
 			<div th:replace="~{fragments/block/photo :: photo('IMG_0627')}" ></div>
 		</div>
 
@@ -12,8 +16,26 @@
 		It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 	</p>
 
-	<h1 style="clear:left;">Recent blogs</h1>
-	<div th:replace="~{fragments/block/blog-fragment :: blogList}"></div>
+	<div style="clear:left;display:flex;gap:24px;align-items:flex-start;justify-content:space-between;">
+		<div style="flex:0 0 300px;min-width:0;">
+			<h1>Featured destination</h1>
+			<!--The link fragment emits the opening <a> only, so each </a> below is its partner. -->
+			<span th:replace="~{fragments/block/link :: link(${featured.key})}"></span>
+				<img style="width:100%;display:block;" th:alt="${featured.value.name}" alt=""
+					 th:src="@{/image/{imageName}(imageName=${featured.value.featuredImage}, size='medium')}" src="">
+			</a>
+			<p class="og-blog-line">
+				<span th:replace="~{fragments/block/link :: link(${featured.key})}"></span>
+					[[${featured.value.name}]]
+				</a>
+			</p>
+			<p class="og-blog-excerpt" th:text="${featured.value.excerpt}">The destination's own words.</p>
+		</div>
+		<div style="flex:0 0 600px;">
+			<h1>Recent blogs</h1>
+			<div th:replace="~{fragments/block/blog-fragment :: blogList}"></div>
+		</div>
+	</div>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

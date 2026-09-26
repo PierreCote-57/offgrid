@@ -39,12 +39,16 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @Scope("prototype")
 public class OffgridWebProcessor extends BaseWebProcessor
 {
 	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
+
+	/** A destination whose featured image is this one has no photo yet, so it is never featured. */
+	private static final String UNDER_CONSTRUCTION_IMAGE = "under-construction";
 
 	/**
 	 * Two lines of text on the site's paper, in the site's colours. The box is 3:2, the
@@ -109,7 +113,35 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		pageList = pageList.subList(0, 3);
 		model.addAttribute("blogList", pageList);
 
+		List<Map.Entry<String, DestinationPage>> destinationList = makeFeaturedList();
+		int featuredIndex = ThreadLocalRandom.current().nextInt(destinationList.size());
+		Map.Entry<String, DestinationPage> featured = destinationList.get(featuredIndex);
+		model.addAttribute("featured", featured);
+
 		return answer;
+	}
+
+	/**
+	 * Every destination that can be featured: the key is its page url, the value the page.
+	 * The url is rebuilt from where the json sits, data/destination/{type}/{name}/{name}.json.
+	 */
+	private List<Map.Entry<String, DestinationPage>> makeFeaturedList()
+	{
+		List<Map.Entry<String, DestinationPage>> destinationList = new ArrayList<>();
+		Map<String, File> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/destination/", null));
+		for (Map.Entry<String, File> fileEntry : filteredMap.entrySet())
+		{
+			String name = fileEntry.getKey();
+			DestinationPage destinationPage = readPageJson(name, DestinationPage.class);
+			if (!UNDER_CONSTRUCTION_IMAGE.equals(destinationPage.getFeaturedImage()))
+			{
+				File typeFolder = fileEntry.getValue().getParentFile().getParentFile();
+				String url = String.format("/destination/%s/%s", typeFolder.getName(), name);
+				Map.Entry<String, DestinationPage> listEntry = new AbstractMap.SimpleEntry<>(url, destinationPage);
+				destinationList.add(listEntry);
+			}
+		}
+		return destinationList;
 	}
 
 	public String processBrowser(Model model, String path, Class<? extends PageData> clazz, String datasetName)
