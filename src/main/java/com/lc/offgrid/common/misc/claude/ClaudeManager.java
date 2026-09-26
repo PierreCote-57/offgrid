@@ -8,12 +8,11 @@ import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.StopReason;
 import com.anthropic.models.messages.ToolResultBlockParam;
-import com.anthropic.models.messages.ToolUnion;
 import com.anthropic.models.messages.ToolUseBlock;
-import com.anthropic.models.messages.ToolUseBlockParam;
 import com.anthropic.services.blocking.MessageService;
+import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.logging.BasicLogger;
-import com.lc.basics.tools.units.TimeUnits;
+import com.lc.offgrid.common.misc.OffgridUtil;
 import com.lc.offgrid.common.pojo.claude.ChatMessage;
 import com.lc.offgrid.common.pojo.claude.ChatRequest;
 import io.modelcontextprotocol.server.McpServerFeatures.*;
@@ -21,12 +20,14 @@ import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,11 @@ public class ClaudeManager implements InitializingBean
 	 */
 	private static final BasicLogger CLAUDE_LOGGER = BasicLogger.getLogger("offgrid.claude");
 
+	// How many of the transcript's latest lines Claude reads, the question included. Odd, so the
+	// window opens on a visitor's line, which is what the first message has to be.
+	private static final int MESSAGE_COUNT_MAX_CHAT = 5;
+
+
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
@@ -65,7 +71,6 @@ public class ClaudeManager implements InitializingBean
 
 	// What Spring AI built /mcp from: each definition beside the handler that runs it. Spring AI
 	// declares more than one list of each kind, and the server merges them, so these do the same.
-	// A provider resolves only when asked, so nothing here is built before the tool beans exist.
 	@Lazy
 	@Autowired
 	private ObjectProvider<List<SyncToolSpecification>> toolSpecificationProvider;
@@ -157,31 +162,80 @@ public class ClaudeManager implements InitializingBean
 	{
 		List<ChatMessage> messageList = chatRequest.getMessageList();
 		int lastIndex = messageList.size() - 1;
-		ChatMessage lastMessage = messageList.get(lastIndex);
-		String questionText = lastMessage.getText();
+		int firstIndex = Math.max(0, messageList.size() - MESSAGE_COUNT_MAX_CHAT);
 
 		ClaudeConfig config = ClaudeConfig.WITH_MCP;
 		MessageCreateParams.Builder builder = config.makeBuilder(getMcpSyncServer(), "site");
-		builder.addUserMessage(questionText);
+		// Context is added late to facilitate caching
+		// Question comes last and alone so users of ClaudeAnswer have access to it
+		addMessageList(builder, messageList, firstIndex, lastIndex);
+		builder.addUserMessage(makeContextText(chatRequest));
+		builder.addUserMessage(messageList.get(lastIndex).getText());
+
 		MessageCreateParams params = builder.build();
 
 		long startTime = System.nanoTime();
 		ClaudeAnswer answer = send(params);
-		logClaudeCall("chat", answer, questionText, startTime);
+		logClaudeCall("chat", answer, startTime);
 		getLogger().debug("chat(%s) answered %s on %s",
-				questionText, answer.getTextList(), answer.getModel());
+				answer.getQuestionText(), answer.getTextList(), answer.getModel());
 
 		return answer;
 	}
 
-	private static final int MAX_CALL_COUNT = 3;
-	public ClaudeAnswer send(MessageCreateParams params)
+	// Each line from iMin up to, not including, iMax, as the turn its role says it is.
+	public static void addMessageList(MessageCreateParams.Builder builder,
+			List<ChatMessage> messageList, int iMin, int iMax)
+	{
+		for (int i = iMin; i < iMax; i++)
+		{
+			ChatMessage message = messageList.get(i);
+			if (ChatMessage.Role.USER == message.getRole())
+			{
+				builder.addUserMessage(message.getText());
+			}
+			else
+			{
+				builder.addAssistantMessage(message.getText());
+			}
+		}
+	}
+
+	/**
+	 * What Claude cannot know about the visitor, in front of the question: their local date and
+	 * time, and where they are when the browser was allowed to say. It rides in the user turn, not
+	 * the system prompt, which stays the same on every call and so can be cached. A zone the
+	 * browser did not state, or one that does not parse, falls back to the server's own, named.
+	 */
+	private static String makeContextText(ChatRequest chatRequest)
+	{
+		ZoneId zone = OffgridUtil.parseTimeZone(chatRequest.getTimeZone());
+		ZonedDateTime now = ZonedDateTime.now(zone);
+		String nowText = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		List<String> lineList = new ArrayList<>();
+		lineList.add(String.format("Visitor's local time: %s, %s", nowText, zone.getId()));
+
+		Double latitude = chatRequest.getLatitudeDeg();
+		Double longitude = chatRequest.getLongitudeDeg();
+		if (null != latitude && null != longitude)
+		{
+			// Double's own text, not %f: a locale with a decimal comma would make the pair ambiguous.
+			lineList.add(String.format("Visitor's location: %s, %s", latitude, longitude));
+		}
+		String contextText = String.join("\n", lineList);
+		return contextText;
+	}
+
+	private static final int MAX_TOOL_USE_CALL_COUNT = 3;
+	public ClaudeAnswer send(MessageCreateParams paramsIn)
 	{
 		MessageService messageService = getClaudeClient().messages();
 		int callCount = 0;
 		ClaudeAnswer answer = null;
 		List<Message> messageList = new ArrayList<>();
-		while (callCount < MAX_CALL_COUNT)
+		MessageCreateParams params = paramsIn;
+		while (callCount < MAX_TOOL_USE_CALL_COUNT)
 		{
 			callCount++;
 			Message message = messageService.create(params);
@@ -198,6 +252,7 @@ public class ClaudeManager implements InitializingBean
 				break;
 			}
 		}
+		answer = new ClaudeAnswer(paramsIn, answer.getMessageList());
 
 		return answer;
 	}
@@ -207,23 +262,23 @@ public class ClaudeManager implements InitializingBean
 	 * stopped, the effective tokens of every round, how long it took, and the question last —
 	 * the one column that can hold anything, with its tabs and line breaks made spaces.
 	 */
-	public static void logClaudeCall(String callerName, ClaudeAnswer answer, String questionText,
-			long startTime)
+	public static void logClaudeCall(String callerName, ClaudeAnswer answer, long startTime)
 	{
 		long	elapsedNs		= System.nanoTime() - startTime;
 		double	elapsedSecond	= elapsedNs / 1e9;
 		double	effectiveToken	= answer.getEffectiveToken();
-		String	questionLine	= questionText.replaceAll("[\\t\\r\\n]+", " ");
+		String	questionLine	= answer.getQuestionText().replaceAll("[\\t\\r\\n]+", " ");
 
 		getClaudeLogger().info("%1$s\t%2$s\t%3$s\t%4$,.0f\t%5$.3f\t%6$s",
-				callerName, answer.getModelName(), answer.getStopReasonText(), effectiveToken,
+				callerName, answer.getModelName(),
+				answer.getStopReasonText(), effectiveToken,
 				elapsedSecond, questionLine);
 	}
 
 	private MessageCreateParams processTool(ClaudeAnswer answer)
 	{
 		// We are answering the last message
-		Message message = answer.getMessage();
+		Message message = answer.getLastMessage();
 
 		// Creating the new MessageCreateParams
 		MessageCreateParams.Builder builder = answer.getParams().toBuilder();
@@ -397,6 +452,13 @@ public class ClaudeManager implements InitializingBean
 			{
 				textList.add(textContent.text());
 			}
+		}
+		// A tool with an output schema answers in structuredContent alone, with no text content.
+		Object	structuredContent	= toolResult.structuredContent();
+		if (null != structuredContent)
+		{
+			String	structuredText	= BaseFileHandler.getGson().toJson(structuredContent);
+			textList.add(structuredText);
 		}
 		String	resultText	= String.join("\n", textList);
 		return resultText;

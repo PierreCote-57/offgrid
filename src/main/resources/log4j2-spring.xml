@@ -43,8 +43,8 @@
 
 		<!-- One row per question put to Claude, tab separated. -->
 		<RollingFile name="Claude"
-				fileName="${spring:folder.local}/logs/ai/offgrid-claude.tsv"
-				filePattern="${spring:folder.local}/logs/ai/offgrid-claude-%d{yyyy-MM-dd}-%i.tsv.gz">
+				fileName="${spring:folder.local}/logs/claude/offgrid-claude.tsv"
+				filePattern="${spring:folder.local}/logs/claude/offgrid-claude-%d{yyyy-MM-dd}-%i.tsv.gz">
 			<PatternLayout
 					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
 			<Policies>
@@ -56,8 +56,8 @@
 
 		<!-- One row per call the MCP server answers, whoever made it, tab separated. -->
 		<RollingFile name="Mcp"
-				fileName="${spring:folder.local}/logs/ai/offgrid-mcp.tsv"
-				filePattern="${spring:folder.local}/logs/ai/offgrid-mcp-%d{yyyy-MM-dd}-%i.tsv.gz">
+				fileName="${spring:folder.local}/logs/mcp/offgrid-mcp.tsv"
+				filePattern="${spring:folder.local}/logs/mcp/offgrid-mcp-%d{yyyy-MM-dd}-%i.tsv.gz">
 			<PatternLayout
 					pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}&#9;%msg%n"/>
 			<Policies>

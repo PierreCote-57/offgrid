@@ -9,7 +9,7 @@ import com.lc.offgrid.common.misc.sky.SkyBodyDay;
 import com.lc.offgrid.webapp.pojo.sky.SkyBodyListMcpAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyBodyMcpAnswer;
 import com.lc.offgrid.webapp.pojo.sky.SkyDarknessMcpAnswer;
-import com.lc.offgrid.webapp.spring.site.OffgridUtil;
+import com.lc.offgrid.common.misc.OffgridUtil;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;

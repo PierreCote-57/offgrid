@@ -102,9 +102,7 @@ public enum ClaudeModel
 	}
 
 	/**
-	 * One call's whole cost expressed in input tokens: every count in the usage, each weighed by
-	 * what it costs next to one input token. Dollars are that multiplied by getCostPerMillionToken()
-	 * and divided by a million.
+	 * One call's whole cost converted to input tokens
 	 */
 	public double getEffectiveToken(Usage usage)
 	{
@@ -120,5 +118,13 @@ public enum ClaudeModel
 				+ cacheWriteToken;
 
 		return effectiveToken;
+	}
+
+	// One call's whole cost in dollars.
+	public double getCost(Usage usage)
+	{
+		double	effectiveToken	= getEffectiveToken(usage);
+		double	cost			= effectiveToken * getCostPerMillionToken() / 1_000_000;
+		return cost;
 	}
 }

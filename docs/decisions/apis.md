@@ -145,7 +145,7 @@ Rejected: `Double`, which is the natural REST shape and would refuse a malformed
 400. Spring's conversion runs before the handler, so that 400 never reaches `processRequest`
 and the body is Spring's error rather than ours.
 
-**`OffgridUtil` holds what both processors need**, in `webapp/spring/site`: the defaults, the
+**`OffgridUtil` holds what both processors need**, in `common/misc`: the defaults, the
 limits, and the parse methods, all public static. It exists because the same reader and the
 same constants were about to live in both processors, and a rule like "latitudes only below
 85°" would then have been two edits. Its parse methods follow one pattern — one `try`, `catch
@@ -309,3 +309,39 @@ covers both wires. `date` is the only name that is new, because the parameter it
 **`SkyTool` uses none of the three file managers on `AbstractOffgridMCP`.** `HorizonsEphemeris`
 reads `folder.local` itself through `OffgridUtil.getDataRootFolder()`. It extends the base for
 the logger alone, which is the first sign the base may be two things.
+
+## 2026-09-26 — The chat asks Claude, with the MCP server's tools, in process
+
+**Client-side tools, not the MCP connector.** The connector is beta and has Anthropic's servers
+call `/mcp` over HTTP, so it needs a public URL. Instead the request carries plain `Tool`
+definitions and `ClaudeManager.send` runs each `tool_use` itself, looping until Claude stops.
+
+**The definitions and the handlers both come from what Spring AI built `/mcp` from.**
+`ClaudeUtil.addTools` translates the server's tools, resources and resource templates into
+Anthropic tools, one each; a new `@McpTool` or `@McpResource` reaches the chat with no code.
+Resources become tools because the Messages API has no resources, and one tool per resource
+rather than a generic list/read pair because Claude only calls what it knows exists. A template's
+`{variables}` become its required parameters. `callUseBlock` finds the name in the three spec
+lists and runs the tool's `callHandler` or the resource's `readHandler`, so the chat reads the
+same answer an outside client does. A tool declared with `generateOutputSchema = true` answers
+in `structuredContent` alone, which is sent to Claude as JSON.
+
+**The spec lists are `@Lazy` `ObjectProvider`s.** Spring AI declares more than one list of each
+kind (`toolSpecs` and `syncTools`), so a plain `List` injection is ambiguous; the provider merges
+them as the server does. Without `@Lazy` the server was built before the tool beans existed and
+published no tools at all.
+
+**`ClaudeConfig` is one constant per kind of call**: the model, the token ceiling, and whether
+tools are attached. The system prompt is a parameter of `makeBuilder`, a file under
+`resources/claude/`, because two calls can share a setup and differ in what they ask.
+
+**One question is one `ClaudeAnswer`: the request as asked and every round's `Message`.** The
+cost is the sum of the rounds. `MAX_CALL_COUNT` is 3 because the longest chain of lookups is
+two deep (a list, then one item) and parallel calls count as one round; reaching it is a fault,
+and the visitor reads `OVER_LIMIT_TEXT`, as for `max_tokens`: the limit is the site owner's.
+
+**The chat sends the last `MESSAGE_COUNT_MAX_CHAT` lines of the transcript**, an odd number so
+the window opens on the visitor's line. The visitor's local time and position go in their own
+user message before the question, never in the system prompt, so everything before them is the
+same on every call and can be cached. The question is the last message, alone, which is where
+`ClaudeAnswer.getQuestionText` reads it.

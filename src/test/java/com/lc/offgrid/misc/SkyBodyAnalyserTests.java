@@ -8,7 +8,7 @@ import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMoment;
 import com.lc.offgrid.common.misc.astronomy.planet.HorizonsMomentName;
 import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
 import com.lc.offgrid.common.misc.sky.SkyBodyDay;
-import com.lc.offgrid.webapp.spring.site.OffgridUtil;
+import com.lc.offgrid.common.misc.OffgridUtil;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

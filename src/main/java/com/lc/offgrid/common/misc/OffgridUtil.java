@@ -1,4 +1,4 @@
-package com.lc.offgrid.webapp.spring.site;
+package com.lc.offgrid.common.misc;
 
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.offgrid.common.misc.external.ZoneTabLocator;

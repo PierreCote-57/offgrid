@@ -1,7 +1,7 @@
 package com.lc.offgrid.common.misc.astronomy.planet;
 
 import com.lc.offgrid.common.misc.astronomy.constellation.Constellation;
-import com.lc.offgrid.webapp.spring.site.OffgridUtil;
+import com.lc.offgrid.common.misc.OffgridUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,10 +11,8 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;

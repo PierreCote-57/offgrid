@@ -1,6 +1,7 @@
 package com.lc.offgrid.webapp.spring.site;
 
 import com.lc.basics.tools.logging.BasicLogger;
+import com.lc.offgrid.common.misc.OffgridUtil;
 import com.lc.offgrid.common.misc.claude.ClaudeManager;
 import com.lc.offgrid.common.misc.claude.ClaudeAnswer;
 import com.lc.offgrid.common.misc.sky.SkyBodyAnalyser;
@@ -27,10 +28,6 @@ public class OffgridRestProcessor
 {
 	private static final BasicLogger LOGGER		= BasicLogger.getLogger(OffgridRestProcessor.class);
 
-	// Claude may answer in several text blocks. They are consecutive parts of one answer, so the
-	// reply carries all of them joined rather than the first one and a silent loss.
-	private static final String	ANSWER_BLOCK_SEPARATOR	= "\n\n";
-
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
@@ -55,8 +52,7 @@ public class OffgridRestProcessor
 		ChatRestAnswer		chatAnswer		= new ChatRestAnswer();
 
 		chatAnswer.setBlockCount(answerTextList.size());
-		chatAnswer.setText(answerTextList.isEmpty() ? null
-				: String.join(ANSWER_BLOCK_SEPARATOR, answerTextList));
+		chatAnswer.setText(claudeAnswer.getUserText());
 		chatAnswer.setStopReason(claudeAnswer.getStopReasonText());
 		chatAnswer.setRefusalText(claudeAnswer.getRefusalText());
 		chatAnswer.setModelName(claudeAnswer.getModelName());

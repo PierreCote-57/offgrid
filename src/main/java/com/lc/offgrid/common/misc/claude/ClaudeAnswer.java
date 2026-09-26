@@ -3,6 +3,7 @@ package com.lc.offgrid.common.misc.claude;
 import com.anthropic.models.messages.ContentBlock;
 import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.MessageParam;
 import com.anthropic.models.messages.RefusalStopDetails;
 import com.anthropic.models.messages.StopReason;
 import com.anthropic.models.messages.TextBlock;
@@ -35,7 +36,7 @@ public class ClaudeAnswer
 	{
 		return messageList;
 	}
-	public Message getMessage()
+	public Message getLastMessage()
 	{
 		int	lastIndex	= getMessageList().size() - 1;
 		return getMessageList().get(lastIndex);
@@ -48,16 +49,27 @@ public class ClaudeAnswer
 		return ClaudeModel.of(modelId);
 	}
 
+	// The last message of the question, which the caller sends as the visitor's own words. Empty
+	// when that message is blocks rather than a plain string.
+	public String getQuestionText()
+	{
+		List<MessageParam>	messageParamList	= getParams().messages();
+		int					lastIndex			= messageParamList.size() - 1;
+		MessageParam		lastMessageParam	= messageParamList.get(lastIndex);
+		String				questionText		= lastMessageParam.content().string().orElse("");
+		return questionText;
+	}
+
 	public String getId()
 	{
-		return getMessage().id();
+		return getLastMessage().id();
 	}
 
 	// The model that answered, which is not always the one asked for: a refusal fallback answers
 	// on a different model.
 	public String getModelName()
 	{
-		return getMessage().model().asString();
+		return getLastMessage().model().asString();
 	}
 
 	public List<Usage> getUsageList()
@@ -88,7 +100,7 @@ public class ClaudeAnswer
 	{
 		List<String>	answerTextList	= new ArrayList<>();
 
-		for (ContentBlock contentBlock : getMessage().content())
+		for (ContentBlock contentBlock : getLastMessage().content())
 		{
 			Optional<TextBlock> textBlock	= contentBlock.text();
 
@@ -97,9 +109,43 @@ public class ClaudeAnswer
 		return answerTextList;
 	}
 
+	// Claude may answer in several text blocks. They are consecutive parts of one answer, so all
+	// of them are joined rather than the first one kept and the rest silently lost.
+	public static final String TEXT_BLOCK_SEPARATOR = "\n\n";
+
+	// Why an answer stopped short, in the visitor's words: the limit is the site owner's.
+	public static final String OVER_LIMIT_TEXT = "That question takes more work than this site "
+			+ "allows for one answer. Try asking something simpler.";
+
+	/**
+	 * What the visitor is shown: the text when Claude finished, and otherwise a sentence saying
+	 * why there is no answer, or that the one there is was cut short.
+	 */
+	public String getUserText()
+	{
+		String		text		= String.join(TEXT_BLOCK_SEPARATOR, getTextList());
+		StopReason	reason		= getStopReason();
+		String		userText	= text;
+
+		if (StopReason.REFUSAL.equals(reason))
+		{
+			String	refusalText	= getRefusalText();
+			userText = null == refusalText ? "I can't answer that." : refusalText;
+		}
+		else if (StopReason.MAX_TOKENS.equals(reason))
+		{
+			userText = String.format("%s%s%s", text, TEXT_BLOCK_SEPARATOR, OVER_LIMIT_TEXT);
+		}
+		else if (StopReason.TOOL_USE.equals(reason))
+		{
+			userText = OVER_LIMIT_TEXT;
+		}
+		return userText;
+	}
+
 	public StopReason getStopReason()
 	{
-		StopReason reason = getMessage().stopReason().orElse(null);
+		StopReason reason = getLastMessage().stopReason().orElse(null);
 		return reason;
 	}
 	public boolean isEndTurn()
@@ -109,7 +155,7 @@ public class ClaudeAnswer
 
 	public RefusalStopDetails getStopDetails()
 	{
-		RefusalStopDetails stopDetails = getMessage().stopDetails().orElse(null);
+		RefusalStopDetails stopDetails = getLastMessage().stopDetails().orElse(null);
 		return stopDetails;
 	}
 
