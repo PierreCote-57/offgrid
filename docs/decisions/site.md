@@ -739,3 +739,12 @@ a post on `pageData` — which is the only thing that ever differed between the 
 **A fragment calling another in its own file names the file**, `~{fragments/block/blog-fragment
 :: dateline(…)}`. An explicit path resolves the same wherever the calling fragment has been
 inserted into a page.
+
+## 2026-09-26 — A link handed outside the page is a whole URL
+
+**`server.publicProtocol`, `server.publicHostName` and `server.publicPort` state where a visitor
+reaches the site**, beside `server.port` in the profile yaml. An MCP answer, such as the link
+`ChecklistResource` returns, is read outside any page, so a path alone is not a link. The public
+port is its own value because it is the visitor's, and equals `server.port` only when nothing
+sits in front of the app. The request's own host was rejected: an MCP call may arrive with no
+request on the thread, and behind a proxy it names the proxy's side.
