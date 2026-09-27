@@ -130,7 +130,8 @@ public abstract class BaseWebProcessor
 	public String getSiteVersionText()
 	{
 		String buildTimeText = WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, getSiteBuildTime().toEpochSecond() * 1000);
-		String siteVersionText = String.format("%s%s (%s)", getSiteVersion(), getSiteQualifier(), buildTimeText);
+		String siteVersionText = String.format("%1$s (%4$s built on %2$s)",
+				getSiteVersion(), buildTimeText, getSiteQualifier(), getActiveProfile());
 		return siteVersionText;
 	}
 
