@@ -9,12 +9,6 @@ gap, and that is correct, because an id has to still resolve when it is cited la
 next id from the header above and increment it. This numbering is independent of the one in
 `~/Claude/todo.md`.
 
-#79 Show the active Spring profile (`dev`, `test`, later `prod`) in the version section at the
-bottom of the page.
-
-#78 Delete `FileTools`: its only job was `getLastModified()`, and nothing calls it now that the
-build time comes from the pom.
-
 #77 Give Claude access to FullHost. Two settings in the Claude cloud environment (title-bar
 environment menu → Edit): allow `app.ca-west.oncoregrid.ca` under Network access, and add a
 FullHost API access token (created in the FullHost dashboard) as a secret. Claude then drives the
@@ -27,10 +21,6 @@ Maven project per target — `main` → test, a `prod` branch (or release tag) �
 prod` needs a `fullhost-offgrid-prod` entry in `~/.ssh/config`. #74 applies to both.
 `application-prod.yaml` sets `spring.jackson.serialization.indent-output` to `false`; test keeps
 `true`.
-
-#75 On FullHost, set the Spring Boot node variable `SPRING_PROFILES_ACTIVE=test` (was `host`), and
-rename the `~/.ssh/config` entry `fullhost-offgrid` to `fullhost-offgrid-test`. The current
-`offgrid` environment becomes test.
 
 #74 Decide how `/mcp` is protected on FullHost. Locally a client reaches it over loopback and
 nothing else can; on FullHost it is on the open internet, and a tool answers anyone who posts to
