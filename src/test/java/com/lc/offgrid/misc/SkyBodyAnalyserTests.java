@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * years that have been fetched.
  */
 @SpringBootTest(classes = OffgridTestApplication.class)
-@ActiveProfiles("local")
+@ActiveProfiles("dev")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SkyBodyAnalyserTests extends AbstractTests
 {

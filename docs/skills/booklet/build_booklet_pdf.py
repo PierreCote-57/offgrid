@@ -67,7 +67,7 @@ def _yaml_value(file_name, section, key):
     return match.group(1).strip()
 
 
-FOLDER_LOCAL = _yaml_value("application-local.yaml", "folder", "local")
+FOLDER_LOCAL = _yaml_value("application-dev.yaml", "folder", "local")
 
 # Booklet images (cover art) are the site's own originals, addressed by bare
 # filename and located by search -- the year folders don't matter.

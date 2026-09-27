@@ -6,7 +6,9 @@ BaseWebProcessor:
   siteName: "Going offgrid"
   welcomeMessage: "Going offgrid"
   administratorEmail: "Pierre@LogicielCote.COM"
-  siteVersion: "0.1.0"
+  siteVersion: "@revision@"
+  siteQualifier: "@changelist@"
+  siteBuildTime: "@build.time@"
 
 # The MCP server. protocol has to be stated even though STREAMABLE is the properties class's
 # own default: the condition that installs the transport reads the environment, and an absent

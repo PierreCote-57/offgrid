@@ -20,7 +20,7 @@ spring:
     import: "optional:file:${folder.local}/config/secrets.properties"
 
 BaseWebProcessor:
-  siteName: "β-Going offgrid"
+  siteName: "Going offgrid"
 
 folder:
   local: "/Users/pierrecote/Working/offgrid"

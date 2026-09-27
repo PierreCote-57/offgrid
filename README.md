@@ -34,7 +34,7 @@ The command-line run is `OffgridApplicationCLI`, the other main in `com.lc.offgr
 | `src/main/resources/data` | The site's content, as JSON |
 | `src/main/resources/external` | Files as their supplier published them, and the older shapes they replaced |
 | `src/main/resources/application.properties` | Spring settings that hold whatever the profile |
-| `src/main/resources/application.yaml` | Site settings, with `application-local.yaml` and `application-host.yaml` per profile |
+| `src/main/resources/application.yaml` | Site settings, with `application-dev.yaml` and `application-test.yaml` per profile |
 | `src/main/resources/log4j2-spring.xml` | Where the logs are written |
 | `folder.local` | Outside the repo, named per profile: `images/`, `documents/` and `logs/` |
 

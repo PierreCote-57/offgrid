@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.logicielcote</groupId>
 	<artifactId>offgrid</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}${changelist}</version>
 	<name>offgrid</name>
 	<description/>
 	<url/>
@@ -29,6 +29,12 @@
 	<properties>
 		<java.version>21</java.version>
 		<start-class>com.lc.offgrid.OffgridApplicationWeb</start-class>
+		<revision>0.1.0</revision>
+		<changelist>-SNAPSHOT</changelist>
+		<!-- maven.build.timestamp cannot be filtered into a resource directly. The timestamp is UTC. -->
+		<build.time>${maven.build.timestamp}</build.time>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>
 		<dependency>

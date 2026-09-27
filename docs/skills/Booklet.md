@@ -15,7 +15,7 @@ python3 docs/skills/booklet/build_booklet_pdf.py <checklist|howto> [output.pdf]
 ```
 
 Run it from the repo root, one kind per run. `folder.local` is read from
-`application-local.yaml`. The script needs `reportlab` and `beautifulsoup4`.
+`application-dev.yaml`. The script needs `reportlab` and `beautifulsoup4`.
 
 ## What goes in
 

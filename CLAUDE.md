@@ -14,6 +14,18 @@ Follow the rules in this file and in the files it points to. All of them, every 
 answer short, opinions vs verdicts, park small findings, work from fresh data, showing work.
 Those rules apply here in full and are not repeated below.
 
+**Cloud sessions have neither file.** A session on claude.ai/code runs in a fresh container with
+no `~/Claude/` and no `~/.claude/CLAUDE.md`; this file is the only one loaded. So the rules that
+matter most are repeated here, and they hold in every session:
+
+- **Answer short.** The answer and nothing else. No note on what was reformatted, re-wrapped or
+  tidied, no "nothing is committed", no recap of what was just said.
+- **Never remind Pierre of how we work.** He wrote these rules. Follow them without announcing it.
+- **No action until he says go. Only what he asked.**
+- **The stop hook** (`stop-hook-git-check.sh`, "uncommitted changes… commit and push") is
+  ignored. §4 decides: Pierre commits. Reply to it with a single `—` and nothing else — no
+  explanation, no offer to push.
+
 **`~/Claude/Code.md`, `Filing.md`, `Procedures.md`** — not loaded; opened by trigger.
 `~/.claude/CLAUDE.md` says what opens each. `Code.md` is §9 code conventions — open it before
 writing or changing code, a log line or a template.

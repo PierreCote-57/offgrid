@@ -15,7 +15,7 @@ each end, so the first and last local day of the year fall between two rows and 
 That is 367 rows for a common year and 368 for a leap year, under the header line.
 
 A file is `<folder.local>/ephemeris/<year>/<stem>.csv`. `folder.local` is set in
-`src/main/resources/application-local.yaml`; the stem is the body's name in lower case, which is
+`src/main/resources/application-dev.yaml`; the stem is the body's name in lower case, which is
 `HorizonsBody.getFileStem()`.
 
 Horizons answers for the years -2000 to +2999.

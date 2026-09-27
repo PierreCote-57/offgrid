@@ -339,7 +339,7 @@ happens to read like an identity; they are not the same string and were not merg
 `BaseWebProcessor.siteName` is a property like the other three, and `processDefault` puts it on
 every model.
 
-**`application-local.yaml` overrides it to `β - Going offgrid`.** The marker goes in front for
+**`application-dev.yaml` overrides it to `β - Going offgrid`.** The marker goes in front for
 the same reason the page name does: at the end it is the first thing a tab drops. The tab now
 says which machine you are looking at before you read anything else.
 

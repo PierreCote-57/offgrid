@@ -15,7 +15,7 @@ public class OffgridApplicationCLI
 	{
 		SpringApplicationBuilder		builder		= new SpringApplicationBuilder(OffgridApplicationCLI.class);
 		builder.web(WebApplicationType.NONE);
-		builder.profiles("local");
+		builder.profiles("dev");
 
 		ConfigurableApplicationContext	context		= builder.run(args);
 		OffgridContainer command		= context.getBean(OffgridContainer.class);

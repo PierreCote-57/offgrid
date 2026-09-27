@@ -17,7 +17,7 @@ public class OffgridApplicationPing
 	{
 		SpringApplicationBuilder		builder		= new SpringApplicationBuilder(OffgridApplicationPing.class);
 		builder.web(WebApplicationType.NONE);
-		builder.profiles("local");
+		builder.profiles("dev");
 
 		ConfigurableApplicationContext	context		= builder.run(args);
 		PingContainer					command		= context.getBean(PingContainer.class);

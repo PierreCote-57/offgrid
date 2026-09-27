@@ -11,17 +11,21 @@ import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.time.BasicTimer;
 import com.lc.basics.tools.time.WallClock;
-import com.lc.offgrid.common.misc.files.FileTools;
 import com.lc.offgrid.webapp.spring.tools.BaseWebController.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseWebProcessor
 {
 	private static final BasicLogger LOGGER					= BasicLogger.getLogger(BaseWebProcessor.class);
+	// The pom's maven.build.timestamp.format
+	private static final DateTimeFormatter BUILD_TIME_FORMATTER	= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Value("${BaseWebProcessor.siteName}")
 	private String				m_siteName;
@@ -34,6 +38,13 @@ public abstract class BaseWebProcessor
 
 	@Value("${BaseWebProcessor.siteVersion}")
 	private String				m_siteVersion;
+
+	@Value("${BaseWebProcessor.siteQualifier}")
+	private String				m_siteQualifier;
+
+	// UTC
+	@Value("${BaseWebProcessor.siteBuildTime}")
+	private String				m_siteBuildTime;
 
 	private Model				m_model;
 	private BasicTimer			m_timer		= new BasicTimer("WebPage");
@@ -64,6 +75,15 @@ public abstract class BaseWebProcessor
 		return m_timer;
 	}
 
+	public String getSiteVersion()
+	{
+		LocalDateTime buildTimeUTC = LocalDateTime.parse(m_siteBuildTime, BUILD_TIME_FORMATTER);
+		long buildTimeMS = buildTimeUTC.toInstant(ZoneOffset.UTC).toEpochMilli();
+		String buildTimeText = WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, buildTimeMS);
+		String siteVersion = String.format("%s%s (%s)", m_siteVersion, m_siteQualifier, buildTimeText);
+		return siteVersion;
+	}
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void processDefault(Model model, String pageName)
 	{
@@ -73,8 +93,7 @@ public abstract class BaseWebProcessor
 
 		model.addAttribute("SiteName", m_siteName);
 		model.addAttribute("WelcomeMessage", m_welcomeMessage);
-		model.addAttribute("SiteVersion", String.format("%s (%s)", m_siteVersion,
-				WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, FileTools.getLastModified())));
+		model.addAttribute("SiteVersion", getSiteVersion());
 		model.addAttribute("AdministratorEmail", m_administratorEmail);
 		model.addAttribute("PageName", pageName);
 

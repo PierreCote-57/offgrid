@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * the one the profile states, and afterPropertiesSet has already run on each bean.
  */
 @SpringBootTest(classes = OffgridTestApplication.class)
-@ActiveProfiles("local")
+@ActiveProfiles("dev")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MCPServerWithSpringTests extends AbstractTests
 {
