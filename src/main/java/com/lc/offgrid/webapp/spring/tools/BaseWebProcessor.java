@@ -12,11 +12,15 @@ import com.lc.basics.tools.logging.BasicLogger;
 import com.lc.basics.tools.time.BasicTimer;
 import com.lc.basics.tools.time.WallClock;
 import com.lc.offgrid.webapp.spring.tools.BaseWebController.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,30 +32,33 @@ public abstract class BaseWebProcessor
 	private static final DateTimeFormatter BUILD_TIME_FORMATTER	= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Value("${BaseWebProcessor.siteName}")
-	private String				m_siteName;
+	private String				siteName;
 
 	@Value("${BaseWebProcessor.welcomeMessage}")
-	private String				m_welcomeMessage;
+	private String				welcomeMessage;
 
 	@Value("${BaseWebProcessor.administratorEmail}")
-	private String				m_administratorEmail;
+	private String				administratorEmail;
 
 	@Value("${BaseWebProcessor.siteVersion}")
-	private String				m_siteVersion;
+	private String				siteVersion;
 
 	@Value("${BaseWebProcessor.siteQualifier}")
-	private String				m_siteQualifier;
+	private String				siteQualifier;
+
+	@Autowired
+	private Environment environment;
 
 	// UTC
 	@Value("${BaseWebProcessor.siteBuildTime}")
-	private String				m_siteBuildTime;
+	private String				siteBuildTime;
 
-	private Model				m_model;
-	private BasicTimer			m_timer		= new BasicTimer("WebPage");
+	private Model				model;
+	private BasicTimer			timer		= new BasicTimer("WebPage");
 
-	private final List<String>		m_userMessageList			= new LinkedList<>();
-	private final List<String>		m_warningMessageList		= new LinkedList<>();
-	private final List<String>		m_errorMessageList			= new LinkedList<>();
+	private final List<String>		userMessageList			= new LinkedList<>();
+	private final List<String>		warningMessageList		= new LinkedList<>();
+	private final List<String>		errorMessageList			= new LinkedList<>();
 
 	public BaseWebProcessor()
 	{
@@ -72,29 +79,72 @@ public abstract class BaseWebProcessor
 	}
 	public BasicTimer getTimer()
 	{
-		return m_timer;
+		return timer;
 	}
 
+	public String getSiteName()
+	{
+		return siteName;
+	}
+	public String getWelcomeMessage()
+	{
+		return welcomeMessage;
+	}
+	public String getAdministratorEmail()
+	{
+		return administratorEmail;
+	}
 	public String getSiteVersion()
 	{
-		LocalDateTime buildTimeUTC = LocalDateTime.parse(m_siteBuildTime, BUILD_TIME_FORMATTER);
-		long buildTimeMS = buildTimeUTC.toInstant(ZoneOffset.UTC).toEpochMilli();
-		String buildTimeText = WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, buildTimeMS);
-		String siteVersion = String.format("%s%s (%s)", m_siteVersion, m_siteQualifier, buildTimeText);
 		return siteVersion;
+	}
+	public String getSiteQualifier()
+	{
+		return siteQualifier;
+	}
+	public ZonedDateTime getSiteBuildTime()
+	{
+		LocalDateTime buildTimeUTC = LocalDateTime.parse(siteBuildTime, BUILD_TIME_FORMATTER);
+		ZonedDateTime zonedDateTimeUTC = buildTimeUTC.atZone(ZoneId.of("UTC"));
+		ZonedDateTime buildTimeLocal = zonedDateTimeUTC.withZoneSameInstant(ZoneOffset.systemDefault());
+		return buildTimeLocal;
+	}
+	public Environment getEnvironment()
+	{
+		return environment;
+	}
+	public Model getModel()
+	{
+		return model;
+	}
+	public void setModel(Model model)
+	{
+		this.model = model;
+	}
+
+	public String getActiveProfile()
+	{
+		return getEnvironment().getActiveProfiles()[0];
+	}
+
+	public String getSiteVersionText()
+	{
+		String buildTimeText = WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, getSiteBuildTime().toEpochSecond() * 1000);
+		String siteVersionText = String.format("%s%s (%s)", getSiteVersion(), getSiteQualifier(), buildTimeText);
+		return siteVersionText;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void processDefault(Model model, String pageName)
 	{
-		m_model = model;
+		setModel(model);
 
 		model.addAttribute("Timer", getTimer());
 
-		model.addAttribute("SiteName", m_siteName);
-		model.addAttribute("WelcomeMessage", m_welcomeMessage);
-		model.addAttribute("SiteVersion", getSiteVersion());
-		model.addAttribute("AdministratorEmail", m_administratorEmail);
+		model.addAttribute("SiteName", getSiteName());
+		model.addAttribute("WelcomeMessage", getWelcomeMessage());
+		model.addAttribute("SiteVersion", getSiteVersionText());
+		model.addAttribute("AdministratorEmail", getAdministratorEmail());
 		model.addAttribute("PageName", pageName);
 
 		model.addAttribute("AwesomeUrl", "https://kit.fontawesome.com/23ac3050e4.js");
@@ -136,15 +186,15 @@ public abstract class BaseWebProcessor
 
 	public List<String> getUserMessageList()
 	{
-		return m_userMessageList;
+		return userMessageList;
 	}
 	public List<String> getWarningMessageList()
 	{
-		return m_warningMessageList;
+		return warningMessageList;
 	}
 	public List<String> getErrorMessageList()
 	{
-		return m_errorMessageList;
+		return errorMessageList;
 	}
 
 	public void addInfoMessage(String format, Object ... args)
@@ -171,8 +221,8 @@ public abstract class BaseWebProcessor
 	}
 	public void addLine1(String text, String title)
 	{
-		m_model.addAttribute("Line1", text);
-		m_model.addAttribute("Title1", title);
+		getModel().addAttribute("Line1", text);
+		getModel().addAttribute("Title1", title);
 	}
 	public void addLine2(String text)
 	{
@@ -180,8 +230,8 @@ public abstract class BaseWebProcessor
 	}
 	public void addLine2(String text, String title)
 	{
-		m_model.addAttribute("Line2", text);
-		m_model.addAttribute("Title2", title);
+		getModel().addAttribute("Line2", text);
+		getModel().addAttribute("Title2", title);
 	}
 
 }

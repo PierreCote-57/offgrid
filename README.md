@@ -2,6 +2,11 @@
 
 A Spring Boot application serving the offgrid site.
 
+## Profiles
+- dev: for local development
+- test: for testing
+- prod: for production
+
 ## Requirements
 
 - JDK 21 (Amazon Corretto 21)
