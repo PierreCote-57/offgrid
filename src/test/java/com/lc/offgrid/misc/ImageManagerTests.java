@@ -8,6 +8,7 @@ import com.lc.offgrid.common.misc.imaging.ImageMetadata;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ImageManagerTests extends AbstractTests
 		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
-		Map<String, File> nameMap	= manager.getNameMap();
+		Map<String, Resource> nameMap	= manager.getNameMap();
 		assertNotNull(nameMap);
 		assertFalse(nameMap.isEmpty());
 	}
@@ -95,11 +96,11 @@ public class ImageManagerTests extends AbstractTests
 		ImageFileManager manager = new ImageFileManager();
 		manager.afterPropertiesSet();
 
-		Map<String, File> nameMap	= manager.getNameMap();
-		for (Map.Entry<String, File> entry : nameMap.entrySet())
+		Map<String, Resource> nameMap	= manager.getNameMap();
+		for (Map.Entry<String, Resource> entry : nameMap.entrySet())
 		{
 			String name = entry.getKey();
-			File file = entry.getValue();
+			Resource resource = entry.getValue();
 			if (!name.startsWith("IMG_")
 				|| 8 != name.length())
 			{

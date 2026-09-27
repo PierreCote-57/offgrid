@@ -1,10 +1,11 @@
 package com.lc.offgrid.webapp.mcp;
 
+import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import org.springframework.ai.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,12 +89,12 @@ public class ChecklistResource extends AbstractOffgridMCP
 	{
 		List<String>	checklistNameList	= new ArrayList<>();
 
-		for (Map.Entry<String, File> fileEntry : getJsonManager().getNameMap().entrySet())
+		for (Map.Entry<String, Resource> resourceEntry : getJsonManager().getNameMap().entrySet())
 		{
-			String	filePath	= fileEntry.getValue().getAbsolutePath();
-			if (filePath.contains(CHECKLIST_FOLDER))
+			String	path	= AbstractFileManager.getPath(resourceEntry.getValue());
+			if (path.contains(CHECKLIST_FOLDER))
 			{
-				checklistNameList.add(fileEntry.getKey());
+				checklistNameList.add(resourceEntry.getKey());
 			}
 		}
 		return checklistNameList;

@@ -3,6 +3,7 @@ package com.lc.offgrid.webapp.spring.site;
 import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.file.SimpleFilterString;
+import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.offgrid.common.misc.QueryUtil;
 import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.LocalFileManager.*;
@@ -128,15 +129,17 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private List<Map.Entry<String, DestinationPage>> makeFeaturedList()
 	{
 		List<Map.Entry<String, DestinationPage>> destinationList = new ArrayList<>();
-		Map<String, File> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/destination/", null));
-		for (Map.Entry<String, File> fileEntry : filteredMap.entrySet())
+		Map<String, Resource> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/destination/", null));
+		for (Map.Entry<String, Resource> resourceEntry : filteredMap.entrySet())
 		{
-			String name = fileEntry.getKey();
+			String name = resourceEntry.getKey();
 			DestinationPage destinationPage = readPageJson(name, DestinationPage.class);
 			if (!UNDER_CONSTRUCTION_IMAGE.equals(destinationPage.getFeaturedImage()))
 			{
-				File typeFolder = fileEntry.getValue().getParentFile().getParentFile();
-				String url = String.format("/destination/%s/%s", typeFolder.getName(), name);
+				String path = AbstractFileManager.getPath(resourceEntry.getValue());
+				String[] partList = path.split("/");
+				String typeFolder = partList[partList.length - 3];
+				String url = String.format("/destination/%s/%s", typeFolder, name);
 				Map.Entry<String, DestinationPage> listEntry = new AbstractMap.SimpleEntry<>(url, destinationPage);
 				destinationList.add(listEntry);
 			}
@@ -169,7 +172,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private List<Map.Entry<String, BlogPage>> makeBlogList()
 	{
 		List<Map.Entry<String, BlogPage>> pageList= new ArrayList<>();
-		Map<String, File> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/blog/", null));
+		Map<String, Resource> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/blog/", null));
 		for (String name : filteredMap.keySet())
 		{
 			BlogPage blogPage = readPageJson(name, BlogPage.class);
@@ -244,8 +247,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		try
 		{
 			AbstractFileManager manager = getDocumentManager();
-			File documentFile = manager.getFile(documentName);
-			FileSystemResource documentResource = new FileSystemResource(documentFile);
+			Resource documentResource = manager.getResource(documentName);
+			File documentFile = documentResource.getFile();
 			MediaType mediaType = readMediaType(documentFile);
 
 			ResponseEntity<Resource> answer = makeResponseOk(mediaType, documentResource);
@@ -300,12 +303,22 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 	private <T extends PageData> T readPageJson(String path, Class<T> clazz)
 	{
-		File jsonFile = getJsonManager().getFile(path);
-		if (null == jsonFile)
+		Resource jsonResource = getJsonManager().getResource(path);
+		if (null == jsonResource)
 		{
 			throw makeNotFound("Unable to locate page: %s", path);
 		}
-		T pageData = BaseFileHandler.readFile(jsonFile.getAbsolutePath(), clazz);
+		T pageData;
+		try
+		{
+			pageData = BasicFileReader.readJsonFile(jsonResource.getURL(), clazz);
+		}
+		catch (IOException e)
+		{
+			String message = String.format("readPageJson(%s, %s)", path, clazz.getSimpleName());
+			getLogger().error(message, e);
+			throw new BasicRuntimeException(message, e);
+		}
 
 		// Hydrate map as needed
 		if (pageData instanceof DestinationPage destinationPage)
@@ -342,8 +355,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 			{
 				try
 				{
-					File file = getJsonManager().getFile(fileText);
-					Map<String, Object> realPage = BasicFileReader.readJsonFile(file, Map.class);
+					Resource resource = getJsonManager().getResource(fileText);
+					Map<String, Object> realPage = BasicFileReader.readJsonFile(resource.getURL(), Map.class);
 					realPage.putAll(page);
 					pageList.set(i, realPage);
 				}

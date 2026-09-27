@@ -2,9 +2,8 @@ package com.lc.offgrid.common.misc.files;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 @Component
 public class FileTools implements InitializingBean
@@ -34,7 +33,7 @@ public class FileTools implements InitializingBean
 	{
 		lastModifiedTime = 0;
 		// Process everything in the war
-		processPath(new ResourceFileManager("/"));
+		processPath(new ResourceFileManager("", "*"));
 
 		// Process everything in the data folder
 		processPath(imageManager);
@@ -45,9 +44,9 @@ public class FileTools implements InitializingBean
 	private void processPath(AbstractFileManager manager) throws Exception
 	{
 		manager.afterPropertiesSet();
-		for (File file : manager.getNameMap().values())
+		for (Resource resource : manager.getNameMap().values())
 		{
-			long fileLastModified = file.lastModified();
+			long fileLastModified = resource.lastModified();
 			lastModifiedTime = Math.max(lastModifiedTime, fileLastModified);
 		}
 	}

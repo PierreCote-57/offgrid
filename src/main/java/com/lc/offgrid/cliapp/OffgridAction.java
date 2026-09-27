@@ -9,6 +9,7 @@ import com.lc.offgrid.common.misc.imaging.ImageCompressor;
 import com.lc.offgrid.common.misc.imaging.ImageMetadata;
 import com.lc.offgrid.common.misc.imaging.ImageMetadataExtractor;
 import com.lc.offgrid.common.misc.imaging.ImageSize;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.util.Map;
@@ -113,14 +114,14 @@ public enum OffgridAction implements AbstractAction<OffgridContainer>
 
 	private static void processAllImages(OffgridContainer container, Function<File, Boolean> fn)
 	{
-		Map<String, File> map = container.getImageFileManager().getNameMap();
+		Map<String, Resource> map = container.getImageFileManager().getNameMap();
 		int count = 0;
 		int countProcessed = 0;
 		int countMax = map.size();
-		for (Map.Entry<String, File> entry : map.entrySet())
+		for (Map.Entry<String, Resource> entry : map.entrySet())
 		{
 			count++;
-			File file = entry.getValue();
+			Resource resource = entry.getValue();
 			if (1 == count || 0 == (count % 25))
 			{
 				AbstractContainer.timeStamp("Processing image %3d of %3d: %s",
@@ -128,6 +129,7 @@ public enum OffgridAction implements AbstractAction<OffgridContainer>
 			}
 			try
 			{
+				File file = resource.getFile();
 				if (!file.getAbsolutePath().contains("native"))
 				{
 					continue;
@@ -142,7 +144,7 @@ public enum OffgridAction implements AbstractAction<OffgridContainer>
 			catch (Exception e)
 			{
 				AbstractContainer.timeStamp("Failed to open image file: %s\nWith %s",
-						file.getAbsolutePath(), e.getMessage());
+						resource.getDescription(), e.getMessage());
 			}
 			if (count > 1_000_000)
 			{

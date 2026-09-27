@@ -3,9 +3,11 @@ package com.lc.offgrid.common.misc.files;
 import com.lc.offgrid.common.misc.imaging.ImageMetadata;
 import com.lc.offgrid.common.misc.imaging.ImageMetadataExtractor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 
 // Local come from the local data folder
 public class LocalFileManager extends AbstractFileManager
@@ -47,10 +49,18 @@ public class LocalFileManager extends AbstractFileManager
 		 */
 		public ImageMetadata getImageMetadata(String name)
 		{
-			File file = getFile(name);
-			ImageMetadata imageMetadata = null == file
-					? null
-					: ImageMetadataExtractor.getImageMetadata(file);
+			ImageMetadata imageMetadata = null;
+			try
+			{
+				File file = getFile(name);
+				imageMetadata = null == file
+						? null
+						: ImageMetadataExtractor.getImageMetadata(file);
+			}
+			catch (IOException e)
+			{
+				imageMetadata = null;
+			}
 			return imageMetadata;
 		}
 	}
@@ -77,6 +87,11 @@ public class LocalFileManager extends AbstractFileManager
 		return rootPath;
 	}
 
+	public boolean isValid(File file)
+	{
+		return true;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception
 	{
@@ -84,6 +99,29 @@ public class LocalFileManager extends AbstractFileManager
 			? data_root_folder
 			: data_root_folder + folderName;
 
-		super.afterPropertiesSet();
+		initNameMap(new File(getRootFolder()));
+	}
+
+	private void initNameMap(File file)
+	{
+		if (file.isFile())
+		{
+			if (isValid(file))
+			{
+				FileSystemResource resource = new FileSystemResource(file);
+				addResource(resource);
+			}
+		}
+		else // isDirectory
+		{
+			File[] children = file.listFiles();
+			if (null != children)
+			{
+				for (File child : children)
+				{
+					initNameMap(child);
+				}
+			}
+		}
 	}
 }

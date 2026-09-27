@@ -5,8 +5,8 @@ import com.lc.offgrid.common.misc.files.AbstractFileManager;
 import com.lc.offgrid.common.misc.files.ResourceFileManager;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.core.io.Resource;
 
-import java.io.File;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,10 +25,11 @@ public class FileManagerTests extends AbstractTests
 	@MethodSource("ResourceFileData")
 	public void testImageFiles(String ext) throws Exception
 	{
-		AbstractFileManager fileMmanager = new ResourceFileManager(ext);
+		String filePattern = String.format("*.%s", ext);
+		AbstractFileManager fileMmanager = new ResourceFileManager("/data", filePattern);
 		fileMmanager.afterPropertiesSet();
 
-		Map<String, File> map = fileMmanager.getNameMap();
+		Map<String, Resource> map = fileMmanager.getNameMap();
 		assertNotNull(map);
 		assertFalse(map.isEmpty());
 	}

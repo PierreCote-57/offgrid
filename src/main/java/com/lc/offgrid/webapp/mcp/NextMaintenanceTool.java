@@ -6,9 +6,9 @@ import com.lc.offgrid.common.pojo.page.MaintenancePage;
 import com.lc.offgrid.common.pojo.part.MaintenanceEntry;
 import com.lc.offgrid.common.pojo.part.MaintenanceEntry.NextDue;
 import org.springframework.ai.mcp.annotation.McpTool;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,21 +28,21 @@ public class NextMaintenanceTool extends AbstractOffgridMCP
 	{
 		logMcpCall("getNextMaintenance()");
 
-		Map<String, File> fileMap = getJsonManager().filterMap(FILTER);
+		Map<String, Resource> resourceMap = getJsonManager().filterMap(FILTER);
 		Map<String, NextDue> dueMap = new TreeMap<>();
-		for (Map.Entry<String, File> entry : fileMap.entrySet())
+		for (Map.Entry<String, Resource> entry : resourceMap.entrySet())
 		{
 			String name =  entry.getKey();
-			File file = entry.getValue();
+			Resource resource = entry.getValue();
 			try
 			{
-				MaintenancePage page = BasicFileReader.readJsonFile(file, MaintenancePage.class);
+				MaintenancePage page = BasicFileReader.readJsonFile(resource.getURL(), MaintenancePage.class);
 				NextDue nextDue = page.getNextMaintenance();
 				dueMap.put(page.getName(), nextDue);
 			}
 			catch (IOException e)
 			{
-				getLogger().warn("Unable to read maintenance file %s", file.getAbsolutePath());
+				getLogger().warn("Unable to read maintenance file %s", resource.getDescription());
 				continue;
 			}
 		}

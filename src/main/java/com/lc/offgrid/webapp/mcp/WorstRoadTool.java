@@ -5,10 +5,8 @@ import com.lc.offgrid.common.pojo.page.DestinationPage;
 import com.lc.offgrid.common.pojo.part.Access;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.ai.mcp.annotation.McpToolParam;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * What the road in to one destination is like at its worst.
@@ -27,8 +25,8 @@ public class WorstRoadTool extends AbstractOffgridMCP
 
 		try
 		{
-			File file = getJsonManager().getFile(destinationName);
-			DestinationPage page = BasicFileReader.readJsonFile(file, DestinationPage.class);
+			Resource resource = getJsonManager().getResource(destinationName);
+			DestinationPage page = BasicFileReader.readJsonFile(resource.getURL(), DestinationPage.class);
 			Access access = page.getAccess();
 			Access.Leg leg = null == access ? null : access.getRoadLimitingLeg();
 			leg = null == leg ? new Access.Leg(Access.RoadType.UNKNOWN, null) : leg;

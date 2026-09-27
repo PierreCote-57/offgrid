@@ -1,40 +1,50 @@
 package com.lc.offgrid.common.misc.files;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.net.URL;
-
-// Resources are in the war, from resources folder
+// Resources are on the classpath: a folder when run from the IDE, entries in the jar when deployed
 public class ResourceFileManager extends AbstractFileManager
 {
 	private String folderName;
+	private String filePattern;
 
 	@Component
 	public static class JsonResourceFileManager extends ResourceFileManager
 	{
 		public JsonResourceFileManager()
 		{
-			super("/data");
-		}
-
-		@Override
-		public boolean isValid(File file)
-		{
-			return file.getName().endsWith(".json");
+			super("/data", "*.json");
 		}
 	}
 
-	public ResourceFileManager(String folderName)
+	public ResourceFileManager(String folderName, String filePattern)
 	{
 		this.folderName = folderName;
+		this.filePattern = filePattern;
 	}
 
 	@Override
 	public String getRootFolder()
 	{
-		URL url = getClass().getResource(folderName);
-		String filePath = url.getFile();
-		return filePath;
+		return folderName;
+	}
+
+	public String getFilePattern()
+	{
+		return filePattern;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception
+	{
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		String locationPattern = String.format("classpath:%s/**/%s", getRootFolder(), getFilePattern());
+		Resource[] resourceList = resolver.getResources(locationPattern);
+		for (Resource resource : resourceList)
+		{
+			addResource(resource);
+		}
 	}
 }

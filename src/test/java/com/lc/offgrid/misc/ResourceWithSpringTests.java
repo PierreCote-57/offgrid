@@ -13,9 +13,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +76,7 @@ public class ResourceWithSpringTests extends AbstractTests
 		String rootFolder = fileManager.getRootFolder();
 		assertNotNull(rootFolder);
 
-		Map<String, File> nameMap = fileManager.getNameMap();
+		Map<String, Resource> nameMap = fileManager.getNameMap();
 		assertNotNull(nameMap);
 		assertFalse(nameMap.isEmpty(), String.format("No file found under %s", rootFolder));
 	}
@@ -111,7 +113,7 @@ public class ResourceWithSpringTests extends AbstractTests
 	public void testImageResize(String name,
 			ImageSize size,
 			double quality,
-			TriFunction<ImageSize, File, Double, Object> function)
+			TriFunction<ImageSize, File, Double, Object> function) throws IOException
 	{
 		int count = 10;
 		List<File> list = makeFileList(getImageFileManager(), count, "2021");
@@ -129,14 +131,15 @@ public class ResourceWithSpringTests extends AbstractTests
 		reportPerformance(message, ns, count, true);
 
 	}
-	private List<File> makeFileList(AbstractFileManager manager, int count, String contains)
+	private List<File> makeFileList(AbstractFileManager manager, int count, String contains) throws IOException
 	{
-		Map<String, File> map = manager.getNameMap();
-		List<File> fileList = new ArrayList<>(map.values());
+		Map<String, Resource> map = manager.getNameMap();
+		List<Resource> resourceList = new ArrayList<>(map.values());
 		List<File> list = new ArrayList<>(count);
 		while (list.size() < count)
 		{
-			File file = fileList.get(getRandom().nextInt(fileList.size()));
+			Resource resource = resourceList.get(getRandom().nextInt(resourceList.size()));
+			File file = resource.getFile();
 			if (null == contains || file.getAbsolutePath().contains(contains))
 			{
 				list.add(file);

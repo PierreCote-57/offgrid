@@ -3,82 +3,84 @@ package com.lc.offgrid.common.misc.files;
 import com.lc.basics.tools.file.ClassFinder;
 import com.lc.basics.tools.file.SimpleFilterString;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class AbstractFileManager implements InitializingBean
 {
-	private final Map<String, File> nameMap = new TreeMap<>();
-
-	public boolean isValid(File file)
-	{
-		return true;
-	}
+	private final Map<String, Resource> nameMap = new TreeMap<>();
 
 	abstract public String getRootFolder();
 
-	public Map<String, File> getNameMap()
+	public Map<String, Resource> getNameMap()
 	{
 		return nameMap;
 	}
 
-	public Map<String, File> filterMap(SimpleFilterString filter)
+	public Map<String, Resource> filterMap(SimpleFilterString filter)
 	{
-		Map<String, File> map = new TreeMap<>();
-		for (Map.Entry<String, File> entry : getNameMap().entrySet())
+		Map<String, Resource> map = new TreeMap<>();
+		for (Map.Entry<String, Resource> entry : getNameMap().entrySet())
 		{
 			String name = entry.getKey();
-			File file = entry.getValue();
-			if (filter.accept(file.getAbsolutePath()))
+			Resource resource = entry.getValue();
+			String path = getPath(resource);
+			if (filter.accept(path))
 			{
-				map.put(name, file);
+				map.put(name, resource);
 			}
 		}
 		return map;
 	}
 
-	public File getFile(String name)
+	public Resource getResource(String name)
 	{
 		name = name.contains("/")
 				? name.substring(name.lastIndexOf("/")+1)
 				: name;
 		name = name.toLowerCase();
-		return nameMap.get(name);
+		return getNameMap().get(name);
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception
+	// Null when not found. Throws for a resource that is not on disk, such as a jar entry.
+	public File getFile(String name) throws IOException
 	{
-		initNameMap(new File(getRootFolder()));
+		Resource resource = getResource(name);
+		File file = null == resource
+				? null
+				: resource.getFile();
+		return file;
 	}
 
-	private void initNameMap(File file)
+	// The name is the filename, lowercased, without its extension. A file with no extension is skipped.
+	protected void addResource(Resource resource)
 	{
-		if (file.isFile())
+		String filename = resource.getFilename();
+		if (null != filename && filename.contains("."))
 		{
-			if (isValid(file))
-			{
-				String filename = file.getName();
-				if (filename.contains("."))
-				{
-					String name = filename.substring(0, filename.lastIndexOf('.'));
-					name = name.toLowerCase();
-					nameMap.put(name, file);
-				}
-			}
+			String name = filename.substring(0, filename.lastIndexOf('.'));
+			name = name.toLowerCase();
+			getNameMap().put(name, resource);
 		}
-		else // isDirectory
+	}
+
+	// A path to match against: the absolute path on disk, or the jar path ending in the entry.
+	public static String getPath(Resource resource)
+	{
+		try
 		{
-			File[] children = file.listFiles();
-			if (null != children)
-			{
-				for (File child : children)
-				{
-					initNameMap(child);
-				}
-			}
+			String path = resource.getURL().getPath();
+			return path;
+		}
+		catch (IOException e)
+		{
+			String message = String.format("getPath(%s)", resource.getDescription());
+			throw new UncheckedIOException(message, e);
 		}
 	}
 }
