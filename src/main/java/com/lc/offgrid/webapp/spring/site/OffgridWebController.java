@@ -59,7 +59,7 @@ public class OffgridWebController extends BaseWebController
 	@GetMapping("/")
 	public String home(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		String path = String.format("/index");
+		String path = String.format("index");
 		return processRequest(request, response, model, () -> getProcessor().processHome(model, path, PageData.class));
 	}
 
@@ -67,7 +67,7 @@ public class OffgridWebController extends BaseWebController
 	public String destination(HttpServletRequest request, HttpServletResponse response, Model model,
 			@PathVariable String type, @PathVariable String name)
 	{
-		String path = String.format("/destination/%1$s/%2$s", type, name);
+		String path = String.format("destination/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}
@@ -76,14 +76,14 @@ public class OffgridWebController extends BaseWebController
 	public String checklist(HttpServletRequest request, HttpServletResponse response, Model model,
 			@PathVariable String name)
 	{
-		String path = String.format("/hardware/%1$s", name);
+		String path = String.format("hardware/%1$s", name);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 	@GetMapping("/hardware/{type}/{name}")
 	public String hardwareType(HttpServletRequest request, HttpServletResponse response, Model model,
 			@PathVariable String type, @PathVariable String name)
 	{
-		String path = String.format("/hardware/%1$s/%2$s", type, name);
+		String path = String.format("hardware/%1$s/%2$s", type, name);
 		Class<? extends PageData> clazz = getPageDataClass(type);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, clazz));
 	}
@@ -91,21 +91,21 @@ public class OffgridWebController extends BaseWebController
 	@GetMapping("/blog")
 	public String blog(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		String path = String.format("/blog");
+		String path = String.format("blog");
 		return processRequest(request, response, model, () -> getProcessor().processBlog(model, path, PageData.class));
 	}
 
 	@GetMapping("/blog/{name}")
 	public String blog(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		String path = String.format("/blog/%1$s", name);
+		String path = String.format("blog/%1$s", name);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, BlogPage.class));
 	}
 
 	@GetMapping("/info/{name}")
 	public String info(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable String name)
 	{
-		String path = String.format("/info/%1$s", name);
+		String path = String.format("info/%1$s", name);
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 
@@ -113,7 +113,7 @@ public class OffgridWebController extends BaseWebController
 	public String browser(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam String dataset)
 	{
-		String path = String.format("/shared/%1$s", "browser");
+		String path = String.format("shared/%1$s", "browser");
 		return processRequest(request, response, model, () -> getProcessor().processBrowser(model, path, PageData.class, dataset));
 	}
 
@@ -151,7 +151,7 @@ public class OffgridWebController extends BaseWebController
 	@GetMapping(value = {"/pi"}, produces = "text/html")
 	public String pi(HttpServletRequest request, HttpServletResponse response, Model model)
 	{
-		String path = String.format("/info/%s", "pi");
+		String path = String.format("info/%s", "pi");
 		return processRequest(request, response, model, () -> getProcessor().processPage(model, path, PageData.class));
 	}
 }

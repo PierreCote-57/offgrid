@@ -13,6 +13,8 @@ BaseWebProcessor:
 # property means no transport and a 404 on /mcp. The endpoint stays the default /mcp.
 # instructions is what a client reads before it decides which tool to call.
 spring:
+  application:
+    name: offgrid
   ai:
     mcp:
       server:
@@ -22,3 +24,6 @@ spring:
         instructions: "Going offgrid knows the campgrounds, rec sites and lakes of Vancouver
           Island, how rough the road in to each one is, and what the van and the Bronco are
           due for."
+
+server:
+  shutdown: immediate

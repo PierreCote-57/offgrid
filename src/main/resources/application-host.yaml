@@ -10,6 +10,8 @@ spring:
       cache:
         cachecontrol:
           no-store: false
+  thymeleaf:
+    cache: false
   jackson:
     serialization:
       indent-output: true
