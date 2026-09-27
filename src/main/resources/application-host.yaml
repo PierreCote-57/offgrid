@@ -1,5 +1,5 @@
 #
-# Server running in AWS
+# Server running on FullHost
 #
 
 # Static resources are edited while the app is running, so the browser must never keep a
@@ -10,16 +10,25 @@ spring:
       cache:
         cachecontrol:
           no-store: false
+  jackson:
+    serialization:
+      indent-output: true
+# To read secrets (e.g. Claude API key)
+  config:
+    import: "optional:file:${folder.local}/config/secrets.properties"
 
 BaseWebProcessor:
   siteName: "Going offgrid"
 
 folder:
-  local: "/Users/pierrecote/Pictures/offgrid"
-  data: "/Users/pierrecote/src/github/offgrid"
+  local: "/home/jelastic/offgrid"
 
+server:
+  port: 8080
+  publicProtocol: "https"
+  publicHostName: "offgrid.ca-west.oncoregrid.ca"
+  publicPort: 443
 # The reason on a thrown ResponseStatusException reaches error.html only when the request
 # carries message=true, so a visitor never reads one and a diagnosis still can.
-server:
   error:
     include-message: on-param

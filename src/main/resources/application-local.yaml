@@ -2,7 +2,6 @@
 # Local environment = everything on the local machine
 #
 
-
 # Static resources are edited while the app is running, so the browser must never keep a
 # copy: an edited stylesheet has to be the one that renders on the next request.
 spring:
@@ -24,11 +23,11 @@ BaseWebProcessor:
 folder:
   local: "/Users/pierrecote/Working/offgrid"
 
-# The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.
 server:
   port: 8080
   publicProtocol: "http"
   publicHostName: "localhost"
   publicPort: 8080
+# The reason on a thrown ResponseStatusException reaches error.html. Boot drops it otherwise.
   error:
     include-message: always
