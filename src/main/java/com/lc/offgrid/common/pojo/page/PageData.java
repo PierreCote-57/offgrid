@@ -1,5 +1,6 @@
 package com.lc.offgrid.common.pojo.page;
 
+import com.google.gson.annotations.SerializedName;
 import com.lc.offgrid.common.pojo.part.GalleryItem;
 import com.lc.offgrid.common.pojo.part.NoteItem;
 import com.lc.offgrid.common.pojo.part.Tags;
@@ -12,7 +13,20 @@ import java.util.TreeMap;
  */
 public class PageData
 {
+	/**
+	 * How far along a page is. EXTERNAL is a dataset row with no page of its own; no page file
+	 * writes it. In lifecycle order.
+	 */
+	public enum PageState
+	{
+		@SerializedName("external")		EXTERNAL,
+		@SerializedName("boilerplate")	BOILERPLATE,
+		@SerializedName("draft")		DRAFT,
+		@SerializedName("production")	PRODUCTION
+	}
+
 	private String											name;
+	private PageState										pageState;
 	private String											featuredImage;
 	private String											excerpt;
 	private Tags											tags;
@@ -23,6 +37,11 @@ public class PageData
 	public String getName()
 	{
 		return name;
+	}
+
+	public PageState getPageState()
+	{
+		return pageState;
 	}
 
 	public String getFeaturedImage()
