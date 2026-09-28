@@ -400,6 +400,8 @@ def _photo_img(photo_id, galleries):
 
 # The width the page gives a photo's box, as the percentage in its style attribute.
 STYLE_WIDTH_RE = re.compile(r"(?:^|;)\s*width\s*:\s*(\d+(?:\.\d+)?)%")
+# The side a photo's box floats to, from its style attribute.
+STYLE_FLOAT_RE = re.compile(r"(?:^|;)\s*float\s*:\s*(left|right)")
 
 
 def _clean_inline(section, soup, galleries):
@@ -419,32 +421,94 @@ def _clean_inline(section, soup, galleries):
             warning = soup.new_tag("div", attrs={"data-block-type": "warning", "data-text": argument})
             el.replace_with(warning)
         elif fragment == "gallery-photo":
-            width_match = STYLE_WIDTH_RE.search(el.get("style") or "")
+            style = el.get("style") or ""
+            width_match = STYLE_WIDTH_RE.search(style)
             width_percent = width_match.group(1) if width_match else "100"
             photo = soup.new_tag("div", attrs={"data-block-type": "photo",
                                                "data-img": _photo_img(argument, galleries) or argument,
                                                "data-width": width_percent})
+            float_match = STYLE_FLOAT_RE.search(style)
+            if float_match:
+                photo["data-float"] = float_match.group(1)
             el.replace_with(photo)
         else:
             el.decompose()
 
 
-def render_photo(img, width_percent):
-    """A photo at <width_percent> of the text width, left-aligned, from the
-    medium copy of <img>; a 'Missing picture' line when there is none. A tall
-    photo is scaled down to PHOTO_MAX_HEIGHT."""
+def get_photo_image(img, width_percent):
+    """A photo at <width_percent> of the text width from the medium copy of
+    <img>; a 'Missing picture' line when there is none. A tall photo is scaled
+    down to PHOTO_MAX_HEIGHT."""
     path = _find_image_stem(img + "-medium", MEDIUM_BASE)
     if not path:
-        return [Paragraph("Missing picture: " + xml_escape(img), warn)]
+        return Paragraph("Missing picture: " + xml_escape(img), warn)
     image_width, image_height = ImageReader(path).getSize()
     width = TEXT_WIDTH * width_percent / 100.0
     height = width * image_height / float(image_width)
     if height > PHOTO_MAX_HEIGHT:
         width = width * PHOTO_MAX_HEIGHT / height
         height = PHOTO_MAX_HEIGHT
-    photo = Image(path, width=width, height=height)
+    return Image(path, width=width, height=height)
+
+
+def render_photo(img, width_percent):
+    """A photo, left-aligned, on a line of its own."""
+    photo = get_photo_image(img, width_percent)
     photo.hAlign = "LEFT"
     return [photo, Spacer(0, 6)]
+
+
+def render_photo_row(photo_list):
+    """Floated photo blocks on one line: the left-floated ones from the left
+    edge, the right-floated ones against the right edge, each in a column its
+    width, the gap between them an empty column."""
+    left_list = [el for el in photo_list if el.get("data-float") == "left"]
+    right_list = [el for el in photo_list if el.get("data-float") == "right"]
+    cell_list = []
+    width_list = []
+    for el in left_list + [None] + right_list:
+        if el is None:
+            cell_list.append("")
+            width_list.append(0)
+            continue
+        width_percent = float(el.get("data-width"))
+        cell_list.append(get_photo_image(el.get("data-img"), width_percent))
+        width_list.append(TEXT_WIDTH * width_percent / 100.0)
+    gap_index = len(left_list)
+    width_list[gap_index] = max(0, TEXT_WIDTH - sum(width_list))
+    row = Table([cell_list], colWidths=width_list)
+    row.hAlign = "LEFT"
+    row.setStyle(TableStyle([
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("ALIGN", (gap_index + 1, 0), (-1, -1), "RIGHT"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    return [row, Spacer(0, 6)]
+
+
+def _is_floated_photo(el):
+    return el.name == "div" and el.get("data-block-type") == "photo" and el.has_attr("data-float")
+
+
+def render_elements(element_list):
+    """Render sibling elements in order. A run of adjacent floated photos
+    becomes one row; any other element, a clear div included, ends the run."""
+    out = []
+    photo_list = []
+    for el in element_list:
+        if _is_floated_photo(el):
+            photo_list.append(el)
+            continue
+        if photo_list:
+            out.extend(render_photo_row(photo_list))
+            photo_list = []
+        out.extend(render_element(el))
+    if photo_list:
+        out.extend(render_photo_row(photo_list))
+    return out
 
 
 def render_element(el):
@@ -464,9 +528,8 @@ def render_element(el):
         summary = el.find("summary")
         if summary:
             out.append(Paragraph(_text(summary), group))
-        for child in el.children:
-            if getattr(child, "name", None) and child.name != "summary":
-                out.extend(render_element(child))
+        child_list = [child for child in el.find_all(True, recursive=False) if child.name != "summary"]
+        out.extend(render_elements(child_list))
         return out
     if name == "div" and el.get("data-block-type") == "warning":
         txt = el.get("data-text", "")
@@ -475,10 +538,7 @@ def render_element(el):
         return render_photo(el.get("data-img"), float(el.get("data-width")))
     if name == "div" and el.find(True, recursive=False):
         # A grouping div: its children are the content.
-        out = []
-        for child in el.find_all(True, recursive=False):
-            out.extend(render_element(child))
-        return out
+        return render_elements(el.find_all(True, recursive=False))
     # Anything else: render whatever text it carries, else nothing.
     txt = _text(el)
     return [Paragraph(txt, intro)] if txt else []
@@ -508,15 +568,10 @@ def build_page(path, data_dir):
         heading_el = section.find(id=heading_id) if heading_id else None
         subtitle = _text(heading_el) if heading_el else ""
 
-        flowables = []
-        for child in section.children:
-            name = getattr(child, "name", None)
-            if not name:
-                continue
-            # The section's own heading becomes the subtitle, not body content.
-            if heading_id and child.get("id") == heading_id:
-                continue
-            flowables.extend(render_element(child))
+        # The section's own heading becomes the subtitle, not body content.
+        child_list = [child for child in section.find_all(True, recursive=False)
+                      if not (heading_id and child.get("id") == heading_id)]
+        flowables = render_elements(child_list)
         entries.append((title, subtitle, flowables))
 
     return entries

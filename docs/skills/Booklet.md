@@ -24,7 +24,7 @@ Every `*.html` under `templates/hardware/<kind>/`, sorted by the `name` in its J
 web: `og-checklist` gets a box, `og-numcheck` a box and a number, a plain `<ol>` a number, a
 `<ul>` a bullet. Of the fragment calls inside a section, `photo-ref` becomes its caption,
 `warning` becomes a callout and `gallery-photo` becomes its photo at the width its box's style
-gives; the rest are dropped.
+gives, adjacent floated photos sharing one row; the rest are dropped.
 
 The builder is [build_booklet_pdf.py](booklet/build_booklet_pdf.py); what it does beyond this is
 in its code.

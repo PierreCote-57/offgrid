@@ -6,13 +6,17 @@
 	<h1 th:text="${PageName}">How to: Water connections</h1>
 
 	<section data-howto-section="howto">
+		<div class="og-photo" style="width:50%;float:left;margin:0 0 16px 0;"
+			 th:insert="~{fragments/block/gallery-photo :: photo('howto/van-side-view')}"></div>
+		<div class="og-photo" style="width:45%;float:right;margin:0 0 16px 0;"
+			 th:insert="~{fragments/block/gallery-photo :: photo('howto/water-hookup')}"></div>
+		<div style="clear:both;"></div>
+
 		<details open>
 			<summary><h2 class="og-heading">
 				Looking at the blue hose connection on
 				<span th:replace="~{fragments/block/photo-ref :: ref('howto/van-side-view')}"></span>:
 			</h2></summary>
-			<div class="og-photo" style="width:50%;float:none;margin:0 0 16px 0;"
-				 th:insert="~{fragments/block/gallery-photo :: photo('howto/van-side-view')}"></div>
 			<ol>
 				<li>Hooks up to the coiled blue hose with special connector</li>
 				<li>
@@ -31,8 +35,6 @@
 				<span th:replace="~{fragments/block/photo-ref :: ref('howto/water-hookup')}"></span>,
 				we see:
 			</h2></summary>
-			<div class="og-photo" style="width:50%;float:none;margin:0 0 16px 0;"
-				 th:insert="~{fragments/block/gallery-photo :: photo('howto/water-hookup')}"></div>
 			<ol>
 				<li>
 					Fresh water connection
@@ -47,6 +49,8 @@
 					<ol>
 						<li>Incoming</li>
 						<li>To black water tank's clean spray</li>
+						<li>Use ONLY with black tank flush valve opened</li>
+						<li>May cause overflow inside van</li>
 					</ol>
 				</li>
 				<li>
@@ -55,6 +59,7 @@
 						<li>Incoming</li>
 						<li>Potable water</li>
 						<li>Fills fresh water tank</li>
+						<li>Stops when tank if full</li>
 					</ol>
 				</li>
 			</ol>
