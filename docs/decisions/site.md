@@ -748,3 +748,17 @@ reaches the site**, beside `server.port` in the profile yaml. An MCP answer, suc
 port is its own value because it is the visitor's, and equals `server.port` only when nothing
 sits in front of the app. The request's own host was rejected: an MCP call may arrive with no
 request on the thread, and behind a proxy it names the proxy's side.
+
+## 2026-09-28 — A page's state decides whether this environment shows it
+
+Every page file states a `pageState`: boilerplate while its `featuredImage` is still
+`under-construction`, draft once it has a real image, production when it is ready for the public.
+A dataset row with no `file` pointer is external. `PageData.PageStateFilter` holds the states a
+profile shows, from `PageStateFilter.pageStateList` in its yaml; test leaves boilerplate out.
+
+**The filter is visibility, and whatever lists pages follows it** — the browser's dataset rows
+and the home page's featured list alike. The featured list's old check on the placeholder image
+went with it: in dev a boilerplate page is featured, because dev shows everything.
+
+**Not filtered:** a page opened by its own URL, the booklets, and the MCP tools. Hiding a page
+from the lists is the goal; guarding it is not.

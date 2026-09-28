@@ -1,0 +1,3 @@
+- [Narrow go, still disagree](narrow-go-does-not-silence-disagreement.md) — I built the parse in the wrong place to respect "ONLY", and said so after.
+- [Fixed means validate](fixed-means-validate.md) — he reports his edit; I re-read and confirm, never `—`.
+- [Judge logic against his design](judge-logic-against-his-design.md) — I called the featured list wrong by the old check's intent; he was changing it.

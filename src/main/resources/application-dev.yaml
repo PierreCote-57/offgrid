@@ -22,6 +22,9 @@ spring:
 BaseWebProcessor:
   siteName: "Going offgrid"
 
+PageStateFilter:
+  pageStateList: "external,boilerplate,draft,production"
+
 folder:
   local: "/Users/pierrecote/Working/offgrid"
 

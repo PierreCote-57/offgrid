@@ -22,6 +22,9 @@ spring:
 BaseWebProcessor:
   siteName: "Going offgrid"
 
+PageStateFilter:
+  pageStateList: "external,draft,production"
+
 folder:
   local: "/home/jelastic/offgrid"
 

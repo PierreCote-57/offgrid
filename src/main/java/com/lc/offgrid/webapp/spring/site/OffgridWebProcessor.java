@@ -13,6 +13,8 @@ import com.lc.offgrid.common.misc.imaging.ImageSize;
 import com.lc.offgrid.common.pojo.page.BlogPage;
 import com.lc.offgrid.common.pojo.page.DestinationPage;
 import com.lc.offgrid.common.pojo.page.PageData;
+import com.lc.offgrid.common.pojo.page.PageData.PageState;
+import com.lc.offgrid.common.pojo.page.PageData.PageStateFilter;
 import com.lc.offgrid.common.pojo.part.Dataset;
 import com.lc.offgrid.common.pojo.part.GoogleMap;
 import com.lc.offgrid.common.pojo.part.Point;
@@ -48,9 +50,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 {
 	private static final MediaType SVG_MEDIA_TYPE = MediaType.valueOf("image/svg+xml");
 
-	/** A destination whose featured image is this one has no photo yet, so it is never featured. */
-	private static final String UNDER_CONSTRUCTION_IMAGE = "under-construction";
-
 	/**
 	 * Two lines of text on the site's paper, in the site's colours. The box is 3:2, the
 	 * shape every thumbnail rule in site.css already reserves. Both lines state a
@@ -74,6 +73,9 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	@Autowired
 	private DocumentFileManager documentManager;
 
+	@Autowired
+	private PageStateFilter pageStateFilter;
+
 	public ImageFileManager getImageManager()
 	{
 		return imageManager;
@@ -87,6 +89,11 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	public AbstractFileManager getDocumentManager()
 	{
 		return documentManager;
+	}
+
+	public PageStateFilter getPageStateFilter()
+	{
+		return pageStateFilter;
 	}
 
 	public String processPage(Model model, String path, Class<? extends PageData> clazz)
@@ -134,7 +141,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		{
 			String name = resourceEntry.getKey();
 			DestinationPage destinationPage = readPageJson(name, DestinationPage.class);
-			if (!UNDER_CONSTRUCTION_IMAGE.equals(destinationPage.getFeaturedImage()))
+			if (getPageStateFilter().isAllowed(destinationPage))
 			{
 				String path = AbstractFileManager.getPath(resourceEntry.getValue());
 				String[] partList = path.split("/");
@@ -295,6 +302,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> pageList = BaseFileHandler.readFile(fileName, List.class);
 		hydratePageList(pageList);
+		filterPageList(pageList);
 		String jsonTo = getGson().toJson(pageList);
 
 		ResponseEntity<String> answer = makeResponseOk(MediaType.APPLICATION_JSON, jsonTo);
@@ -367,6 +375,18 @@ public class OffgridWebProcessor extends BaseWebProcessor
 				}
 			}
 		}
+	}
+
+	// Drops the rows whose page state this environment does not show. A row with no file
+	// pointer has no pageState, and the filter judges it EXTERNAL.
+	private void filterPageList(List<Map<String, Object>> pageList)
+	{
+		pageList.removeIf(page ->
+		{
+			PageState pageState = PageState.of((String) page.get("pageState"));
+			boolean allowed = getPageStateFilter().isAllowed(pageState);
+			return !allowed;
+		});
 	}
 
 	/**
