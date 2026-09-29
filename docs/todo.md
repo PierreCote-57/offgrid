@@ -16,11 +16,6 @@ TypeToken<T> typeToken)`, with matching `BasicFileReader.readJsonFile` overloads
 reads `List<PageData>` without a cast or `@SuppressWarnings`. Gson 2.13.2 has
 `fromJson(Reader, TypeToken<T>)`.
 
-#77 Give Claude access to FullHost. Two settings in the Claude cloud environment (title-bar
-environment menu → Edit): allow `app.ca-west.oncoregrid.ca` under Network access, and add a
-FullHost API access token (created in the FullHost dashboard) as a secret. Claude then drives the
-FullHost API — stop/start, nodes, variables, builds — asking before each action.
-
 #76 Add a `prod` deployment beside `test` (#75). Its own environment and its own Spring profile
 `prod`, served on the real domain name (still to be chosen). Move the Maven build node into a
 small environment of its own so either app environment can be stopped without blocking builds; one
