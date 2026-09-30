@@ -9,16 +9,13 @@ package com.lc.basics.tools.file;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lc.basics.tools.logging.BasicLogger;
-import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.basics.tools.time.WallClock;
 import com.lc.basics.tools.time.WallClock.FormatDate;
 import com.lc.basics.tools.time.WallClock.FormatTime;
-import com.lc.offgrid.webapp.spring.tools.BaseWebProcessor;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -67,31 +64,6 @@ public class BaseFileHandler
 	public static BasicLogger getLogger()
 	{
 		return LOGGER;
-	}
-
-	public static <T> T readFile(String path, Class<T> clazz)
-	{
-		try
-		{
-			T obj = BasicFileReader.readJsonFile(path, clazz);
-			return obj;
-		}
-		catch (Exception e)
-		{
-			// Fall through, try something else
-		}
-
-		URL url = BaseWebProcessor.class.getClassLoader().getResource(path);
-		try
-		{
-			T obj = BasicFileReader.readJsonFile(url, clazz);
-			return obj;
-		}
-		catch (Exception e)
-		{
-			getLogger().error("Error reading file: " + path, e);
-			throw new BasicRuntimeException("Error reading file: " + path, e);
-		}
 	}
 
 	public String getFilename()

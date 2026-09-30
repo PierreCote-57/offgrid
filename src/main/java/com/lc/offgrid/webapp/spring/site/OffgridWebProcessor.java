@@ -1,6 +1,5 @@
 package com.lc.offgrid.webapp.spring.site;
 
-import com.lc.basics.tools.file.BaseFileHandler;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.file.SimpleFilterString;
 import com.lc.basics.tools.misc.BasicRuntimeException;
@@ -300,7 +299,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 
 		String fileName = String.format("data/shared/browser/%s", dataset.getFile());
 		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> pageList = BaseFileHandler.readFile(fileName, List.class);
+		List<Map<String, Object>> pageList = BasicFileReader.readJsonFileFromResource(fileName, List.class);
 		hydratePageList(pageList);
 		filterPageList(pageList);
 		String jsonTo = getGson().toJson(pageList);
@@ -396,7 +395,7 @@ public class OffgridWebProcessor extends BaseWebProcessor
 	private Dataset findDataset(String id)
 	{
 		String fileName = "static/shared/browser/datasets.json";
-		Dataset[] datasetList = BaseFileHandler.readFile(fileName, Dataset[].class);
+		Dataset[] datasetList = BasicFileReader.readJsonFileFromResource(fileName, Dataset[].class);
 
 		for (Dataset dataset : datasetList)
 		{

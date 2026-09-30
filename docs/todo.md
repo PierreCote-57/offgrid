@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 82**
+**next id: 83**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -9,12 +9,9 @@ gap, and that is correct, because an id has to still resolve when it is cited la
 next id from the header above and increment it. This numbering is independent of the one in
 `~/Claude/todo.md`.
 
-#81 Move the read method from `BaseFileHandler` to `BasicFileReader`.
-
-#80 Add a `TypeToken` overload to `BaseFileHandler.readFile` — `<T> T readFile(String path,
-TypeToken<T> typeToken)`, with matching `BasicFileReader.readJsonFile` overloads — so a caller
-reads `List<PageData>` without a cast or `@SuppressWarnings`. Gson 2.13.2 has
-`fromJson(Reader, TypeToken<T>)`.
+#82 Use the `TypeToken` overloads of `BasicFileReader` in offgrid. `OffgridWebProcessor` reads
+raw `List.class` in `processBrowserData` and raw `Map.class` in `hydratePageList`, each under
+`@SuppressWarnings("unchecked")`; read them with a `TypeToken` and drop the suppressions.
 
 #76 Add a `prod` deployment beside `test` (#75). Its own environment and its own Spring profile
 `prod`, served on the real domain name (still to be chosen). Move the Maven build node into a

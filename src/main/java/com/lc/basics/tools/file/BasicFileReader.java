@@ -6,6 +6,7 @@
 
 package com.lc.basics.tools.file;
 
+import com.google.gson.reflect.TypeToken;
 import com.lc.basics.tools.misc.BasicException;
 import com.lc.basics.tools.misc.BasicRuntimeException;
 import com.lc.basics.tools.units.TimeUnits;
@@ -338,6 +339,36 @@ public class BasicFileReader extends BaseFileHandler implements Closeable
 		return properties;
 	}
 
+	public static <T> T readJsonFileFromResource(String path, Class<T> clazz)
+	{
+		URL url = BasicFileReader.class.getClassLoader().getResource(path);
+		try
+		{
+			T obj = readJsonFile(url, clazz);
+			return obj;
+		}
+		catch (Exception e)
+		{
+			getLogger().error("Error reading file: " + path, e);
+			throw new BasicRuntimeException("Error reading file: " + path, e);
+		}
+	}
+
+	public static <T> T readJsonFileFromResource(String path, TypeToken<T> typeToken)
+	{
+		URL url = BasicFileReader.class.getClassLoader().getResource(path);
+		try
+		{
+			T obj = readJsonFile(url, typeToken);
+			return obj;
+		}
+		catch (Exception e)
+		{
+			getLogger().error("Error reading file: " + path, e);
+			throw new BasicRuntimeException("Error reading file: " + path, e);
+		}
+	}
+
 	public static <T> T readJsonFile(URL url, Class<T> clazz) throws IOException
 	{
 		InputStream inputStream		= null;
@@ -346,6 +377,21 @@ public class BasicFileReader extends BaseFileHandler implements Closeable
 		{
 			inputStream		= url.openStream();
 			return readJsonFile(inputStream, clazz);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+
+	public static <T> T readJsonFile(URL url, TypeToken<T> typeToken) throws IOException
+	{
+		InputStream inputStream		= null;
+
+		try
+		{
+			inputStream		= url.openStream();
+			return readJsonFile(inputStream, typeToken);
 		}
 		finally
 		{
@@ -367,6 +413,20 @@ public class BasicFileReader extends BaseFileHandler implements Closeable
 		}
 	}
 
+	public static <T> T readJsonFile(File file, TypeToken<T> typeToken) throws IOException
+	{
+		InputStream inputStream		= null;
+		try
+		{
+			inputStream = new FileInputStream(file);
+			return readJsonFile(inputStream, typeToken);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+
 	public static <T> T readJsonFile(String filename, Class<T> clazz) throws IOException
 	{
 		InputStream inputStream		= null;
@@ -380,10 +440,33 @@ public class BasicFileReader extends BaseFileHandler implements Closeable
 			closeSafe(inputStream);
 		}
 	}
+
+	public static <T> T readJsonFile(String filename, TypeToken<T> typeToken) throws IOException
+	{
+		InputStream inputStream		= null;
+		try
+		{
+			inputStream = new FileInputStream(filename);
+			return readJsonFile(inputStream, typeToken);
+		}
+		finally
+		{
+			closeSafe(inputStream);
+		}
+	}
+
 	public static <T> T readJsonFile(InputStream inputStream, Class<T> clazz) throws IOException
 	{
 		String	text		= readTextFile(inputStream);
 		T		object		= getGson().fromJson(text, clazz);
+
+		return object;
+	}
+
+	public static <T> T readJsonFile(InputStream inputStream, TypeToken<T> typeToken) throws IOException
+	{
+		String	text		= readTextFile(inputStream);
+		T		object		= getGson().fromJson(text, typeToken);
 
 		return object;
 	}

@@ -675,3 +675,15 @@ time is shown in belongs to whoever shows it.
 rather than by position, and nothing sorts. A crossing that does not happen on the day is a null
 value: a `get` cannot tell an absent key from a null one, so the put is not guarded. That also
 takes the name off the moment itself, where it was a second copy of the key.
+
+## 2026-09-29 — The JSON read is `BasicFileReader.readJsonFileFromResource`
+
+The filesystem-then-classpath read left `BaseFileHandler` for `BasicFileReader`, beside the
+`readJsonFile` overloads it calls: reading a format is that class's job. **It reads the classpath
+only.** Every caller passes a path under `src/main/resources`, and nothing at those relative
+paths exists in the working directory or in `folder.local`, so the filesystem attempt always
+failed first; dropping it changed no read.
+
+**Each `Class<T>` read has a `TypeToken<T>` twin**, the resource read and all four `readJsonFile`
+overloads, so a generic type such as `List<Map<String, Object>>` reads without a raw class and an
+unchecked suppression.

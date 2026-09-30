@@ -1,6 +1,6 @@
 package com.lc.offgrid.common.misc.external;
 
-import com.lc.basics.tools.file.BaseFileHandler;
+import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.offgrid.common.pojo.external.bc.offramp.OfframpFile;
 import com.lc.offgrid.common.pojo.external.bc.reststop.RestStopFile;
 import com.lc.offgrid.common.pojo.external.overpass.amenities.AmenityFile;
@@ -44,15 +44,15 @@ public class ExternalManager implements InitializingBean
 	public void afterPropertiesSet() throws Exception
 	{
 		String restStopPath = ExternalUpdater.getRestStopPath();
-		restStopFile = BaseFileHandler.readFile(restStopPath, RestStopFile.class);
+		restStopFile = BasicFileReader.readJsonFileFromResource(restStopPath, RestStopFile.class);
 
 		String exitPath = ExternalUpdater.getExitPath();
-		exitFile = BaseFileHandler.readFile(exitPath, ExitFile.class);
+		exitFile = BasicFileReader.readJsonFileFromResource(exitPath, ExitFile.class);
 
 		String offrampPath = ExternalUpdater.getOfframpPath();
-		offrampFile = BaseFileHandler.readFile(offrampPath, OfframpFile.class);
+		offrampFile = BasicFileReader.readJsonFileFromResource(offrampPath, OfframpFile.class);
 
 		String amenityPath = ExternalUpdater.getAmenityPath();
-		amenityFile = BaseFileHandler.readFile(amenityPath, AmenityFile.class);
+		amenityFile = BasicFileReader.readJsonFileFromResource(amenityPath, AmenityFile.class);
 	}
 }
