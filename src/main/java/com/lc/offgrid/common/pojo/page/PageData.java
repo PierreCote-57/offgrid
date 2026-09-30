@@ -62,11 +62,18 @@ public class PageData
 	@Component
 	public static class PageStateFilter implements InitializingBean
 	{
+		public static final PageStateFilter WITH_CONTENT =
+				new PageStateFilter();
+		static
+		{
+			WITH_CONTENT.allowedSet = EnumSet.of(PageState.DRAFT, PageState.PRODUCTION);
+		}
+
 		// Every state until a profile's yaml says otherwise, so a missing key filters nothing.
 		@Value("${PageStateFilter.pageStateList:external,boilerplate,draft,production}")
 		private List<String>	pageStateList;
 
-		private EnumSet<PageState>	allowedSet;
+		private EnumSet<PageState>	allowedSet = EnumSet.noneOf(PageState.class);
 
 		public List<String> getPageStateList()
 		{
@@ -95,6 +102,7 @@ public class PageData
 				}
 			}
 			allowedSet = parsedSet;
+			WITH_CONTENT.allowedSet.retainAll(allowedSet);
 		}
 
 		// A null state is judged as EXTERNAL.
@@ -114,6 +122,12 @@ public class PageData
 			PageState pageState = pageData.getPageState();
 			boolean allowed = isAllowed(pageState);
 			return allowed;
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("%s", getAllowedSet());
 		}
 	}
 

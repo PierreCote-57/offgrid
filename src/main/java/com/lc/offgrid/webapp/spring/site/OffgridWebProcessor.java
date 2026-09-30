@@ -120,37 +120,35 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		pageList = pageList.subList(0, 3);
 		model.addAttribute("blogList", pageList);
 
-		List<Map.Entry<String, DestinationPage>> destinationList = makeFeaturedList();
-		int featuredIndex = ThreadLocalRandom.current().nextInt(destinationList.size());
-		Map.Entry<String, DestinationPage> featured = destinationList.get(featuredIndex);
+		Map.Entry<String, DestinationPage> featured = findFeaturedDestination();
 		model.addAttribute("featured", featured);
 
 		return answer;
 	}
 
-	/**
-	 * Every destination that can be featured: the key is its page url, the value the page.
-	 * The url is rebuilt from where the json sits, data/destination/{type}/{name}/{name}.json.
-	 */
-	private List<Map.Entry<String, DestinationPage>> makeFeaturedList()
+	private Map.Entry<String, DestinationPage> findFeaturedDestination()
 	{
-		List<Map.Entry<String, DestinationPage>> destinationList = new ArrayList<>();
 		Map<String, Resource> filteredMap = getJsonManager().filterMap(new SimpleFilterString(null, "/destination/", null));
-		for (Map.Entry<String, Resource> resourceEntry : filteredMap.entrySet())
+		List<Map.Entry<String, Resource>> destinationList = filteredMap.entrySet().stream().toList();
+		destinationList = new ArrayList<>(destinationList);
+		PageStateFilter filter = PageStateFilter.WITH_CONTENT;
+		while (!destinationList.isEmpty())
 		{
+			int index = ThreadLocalRandom.current().nextInt(destinationList.size());
+			Map.Entry<String, Resource> resourceEntry = destinationList.get(index);
 			String name = resourceEntry.getKey();
 			DestinationPage destinationPage = readPageJson(name, DestinationPage.class);
-			if (getPageStateFilter().isAllowed(destinationPage))
+			if (filter.isAllowed(destinationPage))
 			{
 				String path = AbstractFileManager.getPath(resourceEntry.getValue());
 				String[] partList = path.split("/");
 				String typeFolder = partList[partList.length - 3];
 				String url = String.format("/destination/%s/%s", typeFolder, name);
-				Map.Entry<String, DestinationPage> listEntry = new AbstractMap.SimpleEntry<>(url, destinationPage);
-				destinationList.add(listEntry);
+				return new AbstractMap.SimpleEntry<>(url, destinationPage);
 			}
+			destinationList.remove(index);
 		}
-		return destinationList;
+		throw new IllegalStateException("No featured destination of type " + filter + " found");
 	}
 
 	public String processBrowser(Model model, String path, Class<? extends PageData> clazz, String datasetName)

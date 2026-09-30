@@ -24,4 +24,6 @@ Decide how `/mcp` is protected, on test and prod both. Locally a client reaches 
 and nothing else can; on FullHost it is on the open internet, and a tool answers anyone who posts
 to it. The question outlives the implementation — it has to be answered for whatever serves
 `/mcp`, not for the server that was removed.
+Waits on production pages: the home page throws until at least one destination is marked
+`production`.
 
