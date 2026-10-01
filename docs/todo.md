@@ -1,6 +1,6 @@
 # Todo
 
-**next id: 83**
+**next id: 84**
 
 Parked work. Side issues found mid-task land here rather than derailing the task.
 
@@ -8,6 +8,9 @@ Ids are permanent and never reused. The list is never renumbered — a deleted e
 gap, and that is correct, because an id has to still resolve when it is cited later. Take the
 next id from the header above and increment it. This numbering is independent of the one in
 `~/Claude/todo.md`.
+
+#83 Update the jar name in `README.md` (lines 19 and 23): the pom's `finalName` now names it
+`offgrid-<version>-<yyyyMMdd-HHmmss>.jar`, and the version there was already stale (`0.0.1`).
 
 #82 Use the `TypeToken` overloads of `BasicFileReader` in offgrid. `OffgridWebProcessor` reads
 raw `List.class` in `processBrowserData` and raw `Map.class` in `hydratePageList`, each under

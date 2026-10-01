@@ -29,7 +29,7 @@ public abstract class BaseWebProcessor
 {
 	private static final BasicLogger LOGGER					= BasicLogger.getLogger(BaseWebProcessor.class);
 	// The pom's maven.build.timestamp.format
-	private static final DateTimeFormatter BUILD_TIME_FORMATTER	= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static final DateTimeFormatter BUILD_TIME_FORMATTER	= DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 
 	@Value("${BaseWebProcessor.siteName}")
 	private String				siteName;

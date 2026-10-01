@@ -33,7 +33,7 @@
 		<changelist>-SNAPSHOT</changelist>
 		<!-- maven.build.timestamp cannot be filtered into a resource directly. The timestamp is UTC. -->
 		<build.time>${maven.build.timestamp}</build.time>
-		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+		<maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
 		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>
@@ -125,6 +125,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
