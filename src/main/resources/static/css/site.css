@@ -725,6 +725,12 @@ details > summary:focus:not(:focus-visible) {
 	margin: 0;
 }
 
+/* The photo a photo-ref link jumped to. An outline, so the grid does not move. */
+.og-gallery-item:target {
+	outline: 5px solid var(--brand);
+	outline-offset: 4px;
+}
+
 /* Every thumbnail gets the same bounding rectangle and is sized to fit inside it — contain,
    never crop — so a portrait and a landscape shot sit on the same grid lines. */
 .og-gallery-item img {
