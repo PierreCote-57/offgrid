@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/site/header}"></div>
+
+<main>
+	<h1 th:text="${PageName}">Checklist: Sewer preparation</h1>
+
+	<!-- Getting ready -->
+	<section data-howto-section="howto">
+		<details open>
+			<summary><h2 class="og-heading">Getting ready - Have on hand</h2></summary>
+			<ol class="og-numcheck">
+				<li>The sewer hose &amp; fittings</li>
+				<li>A fresh-water hose</li>
+				<li>A black-water hose</li>
+				<li>Disposable gloves</li>
+				<li>Hand sanitizer</li>
+			</ol>
+		</details>
+	</section>
+	<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
+
+	<br/>
+	<div th:replace="~{fragments/block/back-to-gallery :: back()}"></div>
+</main>
+
+<div th:replace="~{fragments/site/footer}"></div>
+</html>

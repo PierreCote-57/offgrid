@@ -19,7 +19,8 @@ Run it from the repo root, one kind per run. `folder.local` is read from
 
 ## What goes in
 
-Every `*.html` under `templates/hardware/<kind>/`, sorted by the `name` in its JSON. Only the
+The pages the browser dataset `data/shared/browser/van-<kind>.json` lists, in its order, whatever
+their `pageState`. Only the
 `<section data-howto-section="howto">` is read. How a list renders follows its class, as on the
 web: `og-checklist` gets a box, `og-numcheck` a box and a number, a plain `<ol>` a number, a
 `<ul>` a bullet. Of the fragment calls inside a section, `photo-ref` becomes its caption,

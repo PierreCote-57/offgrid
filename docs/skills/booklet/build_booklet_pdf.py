@@ -2,8 +2,8 @@
 """Build a half-letter (5.5 x 8.5 in) booklet: cover + one page per source page.
 
 All content (title, intro, group headings, steps) is read live from the page
-template in src/main/resources/templates/hardware/<kind>/*.html -- nothing is
-duplicated here. Only the <section data-howto-section="howto"> block of each
+templates the browser dataset data/shared/browser/van-<kind>.json lists, in its
+order -- nothing is duplicated here. Only the <section data-howto-section="howto"> block of each
 page is used, its gallery-photo images included. A page with no such section is a title-only
 page (producing the block is the page author's job).
 
@@ -21,7 +21,6 @@ Requires: reportlab, beautifulsoup4
 """
 
 import copy
-import glob
 import json
 import os
 import re
@@ -84,7 +83,7 @@ MEDIUM_BASE = os.path.join(FOLDER_LOCAL, "images", "medium")
 # ---------------------------------------------------------------------------
 BOOKLETS = {
     "checklist": {
-        "source_dir": _p("templates", "hardware", "checklist"),
+        "page_list": _p("data", "shared", "browser", "van-checklist.json"),
         "data_dir": _p("data", "hardware", "checklist"),
         "cover_title": "Checklists",
         "cover_subtitle": "Quick checklists, refer to howto for more details",
@@ -92,7 +91,7 @@ BOOKLETS = {
         "default_output": os.path.join(FOLDER_LOCAL, "document", "checklist.pdf"),
     },
     "howto": {
-        "source_dir": _p("templates", "hardware", "howto"),
+        "page_list": _p("data", "shared", "browser", "van-howto.json"),
         "data_dir": _p("data", "hardware", "howto"),
         "cover_title": "How To",
         "cover_subtitle": "Step-by-step instructions",
@@ -674,14 +673,21 @@ def instruction_page(story, title, subtitle, flowables):
 
 
 def build(cfg, path):
-    files = glob.glob(os.path.join(cfg["source_dir"], "*.html"))
+    # The browser dataset decides which pages go in and in what order. A row with no
+    # file pointer is an external link, not a page.
+    with open(cfg["page_list"], encoding="utf-8") as f:
+        row_list = json.load(f)
     pages = []
-    for p in files:
-        pages.extend(build_page(p, cfg["data_dir"]))
+    for row in row_list:
+        page_file = row.get("file")
+        if not page_file:
+            continue
+        template_path = _p("templates", page_file.lstrip("/") + ".html")
+        if not os.path.isfile(template_path):
+            sys.exit("No template for %s in %s" % (page_file, cfg["page_list"]))
+        pages.extend(build_page(template_path, cfg["data_dir"]))
     if not pages:
-        sys.exit("No pages found in " + cfg["source_dir"])
-    # Stable sort by title keeps multiple sections from one page in document order.
-    pages.sort(key=lambda e: e[0].lower())
+        sys.exit("No pages found in " + cfg["page_list"])
 
     doc = BookletDoc(
         path, pagesize=HALF_LETTER,
