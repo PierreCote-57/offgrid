@@ -43,9 +43,6 @@ public abstract class BaseWebProcessor
 	@Value("${BaseWebProcessor.siteVersion}")
 	private String				siteVersion;
 
-	@Value("${BaseWebProcessor.siteQualifier}")
-	private String				siteQualifier;
-
 	@Autowired
 	private Environment environment;
 
@@ -98,10 +95,6 @@ public abstract class BaseWebProcessor
 	{
 		return siteVersion;
 	}
-	public String getSiteQualifier()
-	{
-		return siteQualifier;
-	}
 	public ZonedDateTime getSiteBuildTime()
 	{
 		LocalDateTime buildTimeUTC = LocalDateTime.parse(siteBuildTime, BUILD_TIME_FORMATTER);
@@ -137,7 +130,7 @@ public abstract class BaseWebProcessor
 	{
 		String buildTimeText = getSiteBuildTimeText();
 		String siteVersionText = String.format("%1$s (%2$s)",
-				getSiteVersion(), buildTimeText, getSiteQualifier(), getActiveProfile());
+				getSiteVersion(), buildTimeText, getActiveProfile());
 		return siteVersionText;
 	}
 
@@ -152,7 +145,6 @@ public abstract class BaseWebProcessor
 		model.addAttribute("WelcomeMessage", getWelcomeMessage());
 		model.addAttribute("SiteVersion", getSiteVersionText());
 		model.addAttribute("BuildVersion", getSiteVersion());
-		model.addAttribute("BuildQualifier", getSiteQualifier());
 		model.addAttribute("BuildTime", getSiteBuildTimeText());
 		model.addAttribute("BuildProfile", getActiveProfile());
 		model.addAttribute("AdministratorEmail", getAdministratorEmail());
