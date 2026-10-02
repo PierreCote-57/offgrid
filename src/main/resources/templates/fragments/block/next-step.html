@@ -1,0 +1,3 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="nextStep(url, label)" class="og-next-step">
+	<span th:replace="~{fragments/block/link :: link(${url})}"></span>[[${'→ ' + label}]]</a>
+</div>

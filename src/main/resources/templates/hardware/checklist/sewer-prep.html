@@ -10,14 +10,21 @@
 		<details open>
 			<summary><h2 class="og-heading">Getting ready - Have on hand</h2></summary>
 			<ol class="og-numcheck">
-				<li>The sewer hose &amp; fittings</li>
-				<li>A fresh-water hose</li>
-				<li>A black-water hose</li>
+				<li>The sewer hose(s)</li>
+				<li>Pressure regulator</li>
+				<li>Fresh-water hose</li>
+				<li>Black-water hose</li>
+				<li>Blue coiled hose</li>
 				<li>Disposable gloves</li>
 				<li>Hand sanitizer</li>
 			</ol>
 		</details>
 	</section>
+
+	<div class="og-next-step-label">Next step</div>
+	<div th:replace="~{fragments/block/next-step :: nextStep('/hardware/checklist/sewer-station', 'At the station')}"></div>
+	<div th:replace="~{fragments/block/next-step :: nextStep('/hardware/checklist/sewer-campground', 'At the campsite')}"></div>
+
 	<div th:replace="~{fragments/block/photo-gallery :: gallery('howto')}"></div>
 
 	<br/>

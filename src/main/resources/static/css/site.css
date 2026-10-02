@@ -575,6 +575,21 @@ li {
 	font-weight: 600;
 }
 
+/* The checklist that follows this one. */
+.og-next-step-label {
+	color: var(--brand-deep);
+	font-weight: 600;
+}
+
+.og-next-step {
+	margin: 8px 0 0 24px;
+}
+
+.og-next-step a {
+	color: var(--brand);
+	font-weight: 600;
+}
+
 /* The maintenance record: one row per visit to a shop. The narrow columns are centred; the
    work done is the only one that runs long enough to want its left edge. */
 .og-maintenance {
