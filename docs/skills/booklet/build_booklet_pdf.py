@@ -186,12 +186,19 @@ toc_entry = ParagraphStyle(
 
 class BookletDoc(SimpleDocTemplate):
     """SimpleDocTemplate that feeds page titles into the Table of Contents."""
+    def beforeDocument(self):
+        # multiBuild runs twice; the keys must come out the same on both passes.
+        self._toc_count = 0
+
     def afterFlowable(self, flowable):
         if isinstance(flowable, Paragraph) and flowable.style.name == "PageTitle":
             # Sections from one page share a main title, so the ToC uses the
             # combined "title — subtitle" stashed on the paragraph.
             text = getattr(flowable, "_toc_text", None) or flowable.getPlainText()
-            self.notify("TOCEntry", (0, text, self.page))
+            self._toc_count += 1
+            key = "toc%d" % self._toc_count
+            self.canv.bookmarkPage(key)
+            self.notify("TOCEntry", (0, text, self.page, key))
 
 
 class NumberedCanvas(canvas.Canvas):
@@ -200,15 +207,24 @@ class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._saved_page_states = []
+        self._page_bookmark_list = []
+
+    # A bookmark binds to the page the PDF document is on, which does not move
+    # until save() emits the pages, so it is held with its page until then.
+    def bookmarkPage(self, key, **kwargs):
+        self._page_bookmark_list = self._page_bookmark_list + [(key, kwargs)]
 
     def showPage(self):
         self._saved_page_states.append(dict(self.__dict__))
+        self._page_bookmark_list = []
         self._startPage()
 
     def save(self):
         total = len(self._saved_page_states)
         for n, state in enumerate(self._saved_page_states, start=1):
             self.__dict__.update(state)
+            for key, kwargs in self._page_bookmark_list:
+                super().bookmarkPage(key, **kwargs)
             self._draw_footer(n, total)
             super().showPage()
         super().save()
