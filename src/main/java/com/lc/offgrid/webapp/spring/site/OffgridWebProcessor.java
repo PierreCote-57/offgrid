@@ -1,5 +1,6 @@
 package com.lc.offgrid.webapp.spring.site;
 
+import com.google.gson.reflect.TypeToken;
 import com.lc.basics.tools.file.BasicFileReader;
 import com.lc.basics.tools.file.SimpleFilterString;
 import com.lc.basics.tools.misc.BasicRuntimeException;
@@ -296,8 +297,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		}
 
 		String fileName = String.format("data/shared/browser/%s", dataset.getFile());
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> pageList = BasicFileReader.readJsonFileFromResource(fileName, List.class);
+		TypeToken<List<Map<String, Object>>> token = new TypeToken<>() {};
+		List<Map<String, Object>> pageList = BasicFileReader.readJsonFileFromResource(fileName, token);
 		hydratePageList(pageList);
 		filterPageList(pageList);
 		String jsonTo = getGson().toJson(pageList);
@@ -349,7 +350,6 @@ public class OffgridWebProcessor extends BaseWebProcessor
 		return pageData;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void hydratePageList(List<Map<String, Object>> pageList)
 	{
 		for (int i  = 0; i < pageList.size(); i++)
@@ -361,7 +361,8 @@ public class OffgridWebProcessor extends BaseWebProcessor
 				try
 				{
 					Resource resource = getJsonManager().getResource(fileText);
-					Map<String, Object> realPage = BasicFileReader.readJsonFile(resource.getURL(), Map.class);
+					TypeToken<Map<String, Object>> token = new TypeToken<>() {};
+					Map<String, Object> realPage = BasicFileReader.readJsonFile(resource.getURL(), token);
 					realPage.putAll(page);
 					pageList.set(i, realPage);
 				}

@@ -7,6 +7,9 @@ The stack, the pom and the path from this source tree to a working site on FullH
 
 ## 2026-08-24 — Repo
 
+**Superseded 2026-10-02** — the repo is public, so FullHost can download release jars without
+signing in. See *Built on GitHub, deployed from a release* below.
+
 `offgrid`, private, under `PierreCote-57`. Private costs nothing on a personal account;
 public would only buy unlimited Actions minutes and Pages, neither of which is in use.
 
@@ -32,6 +35,9 @@ room ahead.
 
 ## 2026-08-24 — Maven, not Gradle
 
+**Extended 2026-10-02** — GitHub Actions now runs the Maven build, and FullHost's build node is
+gone. Maven stays: the workflows call `./mvnw`.
+
 The project was generated with Gradle first and migrated. FullHost's build node runs
 Maven, and building from GitHub was judged worth the switch: a deploy then needs nothing
 from Pierre's machine — push from anywhere, including a phone, and the site updates. Same
@@ -55,6 +61,9 @@ server-rendered pages, Alpine for client-side behavior, plus static content.
 Package `com.lc.offgrid`, artifact `offgrid`.
 
 ## 2026-08-25 — Content lives in the repo
+
+**Extended 2026-10-02** — "FullHost builds" is now "GitHub builds a release and FullHost deploys
+it"; the rest holds.
 
 JSON and HTML content ship in the repo and reach the server the way the code does: push,
 FullHost builds, site updates. No mounted volume, no Mountain Duck licence, and the
@@ -144,3 +153,25 @@ starters, since either path alone would bring it back.
 **Nothing new goes into `application-host.yaml` until the site is deployed to FullHost.** Its
 values — host name, ports, protocol — are only known once it runs there, so a setting added
 for the local profile gets its `-host` counterpart at deploy time, not before.
+
+## 2026-10-02 — Built on GitHub, deployed from a release
+
+**GitHub Actions builds the jar and publishes it as a release; FullHost deploys it by URL.** The
+two workflows are the master: `build-release.yml` (build + pre-release) and `release.yml`
+(promote a pre-release, move the pom to the next version). FullHost's `DeployArchive` takes the
+release's download URL.
+
+Why not FullHost's own build node: deploying a chosen build there needs the archive's download
+URL, and Deployment Manager lists its archives only through a dashboard script (`GetArchives`,
+run by `development.Scripting.Eval`) that an API token cannot be granted. A GitHub release has a
+URL anyone can read off it. The build node was then unused, about CA$1.40 a month, and was
+removed.
+
+The repo went public for this: FullHost downloads without signing in. The only secret in its
+history, the Google Maps key, is one every visitor's browser already receives.
+
+**Jar and release share one name.** `finalName` is `og-<version>-<yyyyMMdd-HHmmss>` (UTC), which
+is also the pre-release's tag and title; a release is `og-<version>`. `og-` keeps the name short
+enough for GitHub's release lists. The `-SNAPSHOT` changelist was dropped: GitHub's Pre-release
+flag carries that distinction, and a release is renamed, not rebuilt, so a qualifier baked into
+the jar would have said SNAPSHOT on a release.

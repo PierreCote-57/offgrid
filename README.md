@@ -16,11 +16,11 @@ A Spring Boot application serving the offgrid site.
 
     ./mvnw package
 
-Produces `target/offgrid-0.0.1-SNAPSHOT.jar`, a self-contained fat jar.
+Produces `target/og-<version>-<yyyyMMdd-HHmmss>.jar`, a self-contained fat jar.
 
 ## Run
 
-    java -jar target/offgrid-0.0.1-SNAPSHOT.jar
+    java -jar target/og-<version>-<yyyyMMdd-HHmmss>.jar
 
 Serves on http://localhost:8080.
 
@@ -47,5 +47,5 @@ The command-line run is `OffgridApplicationCLI`, the other main in `com.lc.offgr
 
 Spring Boot 4.1.1, Java 21, Thymeleaf, Maven (wrapper pinned in `.mvn/wrapper`).
 
-Built by FullHost from this repo — Maven is what their build node runs, so the build must
-stay Maven-driven.
+Built by the GitHub workflows in `.github/workflows/`, which publish the jar as a release;
+FullHost deploys it from there. See `docs/decisions/build.md`.

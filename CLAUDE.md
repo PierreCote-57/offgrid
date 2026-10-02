@@ -70,9 +70,10 @@ glance, not before.
 ## 3. Build rules
 
 - **Build only through `./mvnw`.** No system Maven, no system Gradle. The wrapper pins the
-  version for everyone, including the build node.
-- **The build stays Maven-driven.** FullHost builds this repo from GitHub with Maven; a
-  Gradle build would not run there.
+  version for everyone, including the GitHub workflows.
+- **The build stays Maven-driven.** The workflows in `.github/workflows/` build with
+  `./mvnw`, and FullHost deploys their release jar — see
+  [build.md](docs/decisions/build.md).
 - **JDK 21 (Amazon Corretto).** FullHost's published Java stack tops out at 21 LTS.
 - **Pierre builds and tests, not Claude.** Make the change and stop. No `mvnw`, no
   starting the app, no curling it to check. He has it running in IntelliJ and a second
