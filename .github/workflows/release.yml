@@ -1,0 +1,56 @@
+# Promotes a pre-release to the release of its version, then moves the pom to the next version.
+# Run by hand: Actions → Offgrid Release → Run workflow, or
+#   gh workflow run release.yml -f preRelease=og-0.1.0-20261002-2009 -f nextVersion=0.2.0
+name: Offgrid Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      preRelease:
+        description: "Pre-release to promote, e.g. og-0.1.0-20261002-2009"
+        required: true
+      nextVersion:
+        description: "Version the pom moves to, e.g. 0.2.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      # og-0.1.0-20261002-2009 → tag and title og-0.1.0, jar offgrid-0.1.0.jar, marked latest.
+      - name: Promote
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRE_RELEASE: ${{ inputs.preRelease }}
+        run: |
+          version=$(echo "$PRE_RELEASE" | sed -nE 's/^og-([0-9]+\.[0-9]+\.[0-9]+)-[0-9]{8}-[0-9]{4}$/\1/p')
+          if [ -z "$version" ]; then
+            echo "Not a pre-release name: $PRE_RELEASE" >&2
+            exit 1
+          fi
+          releaseName="og-$version"
+          gh release edit "$PRE_RELEASE" --tag "$releaseName" --title "$releaseName" --prerelease=false --latest
+          assetId=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$releaseName" --jq '.assets[0].id')
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$assetId" -f name="offgrid-$version.jar"
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$PRE_RELEASE"
+
+      - name: Next version
+        env:
+          NEXT_VERSION: ${{ inputs.nextVersion }}
+        run: |
+          if ! echo "$NEXT_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Not a version: $NEXT_VERSION" >&2
+            exit 1
+          fi
+          sed -i -E "s:<revision>[^<]*</revision>:<revision>$NEXT_VERSION</revision>:" pom.xml
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git commit -am "Version $NEXT_VERSION"
+          git push

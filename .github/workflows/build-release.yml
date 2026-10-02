@@ -1,6 +1,6 @@
-# Builds the jar and publishes it as a GitHub release, so FullHost can deploy it by URL.
-# Run by hand: Actions → Build release → Run workflow, or gh workflow run build-release.yml
-name: Build release
+# Builds the jar and publishes it as a GitHub pre-release, so FullHost can deploy it by URL.
+# Run by hand: Actions → Offgrid Build+pre-Release → Run workflow, or gh workflow run build-release.yml
+name: Offgrid Build+pre-Release
 
 on:
   workflow_dispatch:
@@ -12,9 +12,9 @@ jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: corretto
           java-version: "21"
@@ -23,11 +23,14 @@ jobs:
       - name: Build
         run: ./mvnw -B package
 
-      # The pom's finalName makes the jar name unique per build; it doubles as the release tag.
-      - name: Release
+      # Release name og-<version>-<yyyyMMdd-HHmm> (UTC), short enough for GitHub's lists. It is both
+      # the tag and the title; the jar keeps the pom's full finalName.
+      - name: Pre-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           jarPath=$(ls target/*.jar)
-          releaseName=$(basename "$jarPath" .jar)
-          gh release create "$releaseName" "$jarPath" --target "$GITHUB_SHA" --title "$releaseName" --notes "Built from $GITHUB_SHA"
+          version=$(sed -n 's:.*<revision>\(.*\)</revision>.*:\1:p' pom.xml)
+          buildMinute=$(basename "$jarPath" | sed -E 's/.*-([0-9]{8})-([0-9]{4})[0-9]{2}\.jar$/\1-\2/')
+          releaseName="og-$version-$buildMinute"
+          gh release create "$releaseName" "$jarPath" --target "$GITHUB_SHA" --title "$releaseName" --prerelease --notes "Built from $GITHUB_SHA"
