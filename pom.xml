@@ -29,7 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<start-class>com.lc.offgrid.OffgridApplicationWeb</start-class>
-		<revision>0.1.0</revision>
+		<revision>0.2.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<!-- maven.build.timestamp cannot be filtered into a resource directly. The timestamp is UTC. -->
 		<build.time>${maven.build.timestamp}</build.time>
