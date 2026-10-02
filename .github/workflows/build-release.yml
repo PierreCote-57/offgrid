@@ -1,0 +1,33 @@
+# Builds the jar and publishes it as a GitHub release, so FullHost can deploy it by URL.
+# Run by hand: Actions → Build release → Run workflow, or gh workflow run build-release.yml
+name: Build release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: "21"
+          cache: maven
+
+      - name: Build
+        run: ./mvnw -B package
+
+      # The pom's finalName makes the jar name unique per build; it doubles as the release tag.
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          jarPath=$(ls target/*.jar)
+          releaseName=$(basename "$jarPath" .jar)
+          gh release create "$releaseName" "$jarPath" --target "$GITHUB_SHA" --title "$releaseName" --notes "Built from $GITHUB_SHA"
