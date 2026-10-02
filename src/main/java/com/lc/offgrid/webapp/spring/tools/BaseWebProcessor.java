@@ -127,10 +127,16 @@ public abstract class BaseWebProcessor
 		return getEnvironment().getActiveProfiles()[0];
 	}
 
-	public String getSiteVersionText()
+	public String getSiteBuildTimeText()
 	{
 		String buildTimeText = WallClock.formatTime(WallClock.FormatDate.INTLD, WallClock.FormatTime.HMS, getSiteBuildTime().toEpochSecond() * 1000);
-		String siteVersionText = String.format("%1$s (%4$s built on %2$s)",
+		return buildTimeText;
+	}
+
+	public String getSiteVersionText()
+	{
+		String buildTimeText = getSiteBuildTimeText();
+		String siteVersionText = String.format("%1$s (%2$s)",
 				getSiteVersion(), buildTimeText, getSiteQualifier(), getActiveProfile());
 		return siteVersionText;
 	}
@@ -145,6 +151,10 @@ public abstract class BaseWebProcessor
 		model.addAttribute("SiteName", getSiteName());
 		model.addAttribute("WelcomeMessage", getWelcomeMessage());
 		model.addAttribute("SiteVersion", getSiteVersionText());
+		model.addAttribute("BuildVersion", getSiteVersion());
+		model.addAttribute("BuildQualifier", getSiteQualifier());
+		model.addAttribute("BuildTime", getSiteBuildTimeText());
+		model.addAttribute("BuildProfile", getActiveProfile());
 		model.addAttribute("AdministratorEmail", getAdministratorEmail());
 		model.addAttribute("PageName", pageName);
 

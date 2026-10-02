@@ -1,13 +1,13 @@
 # Promotes a pre-release to the release of its version, then moves the pom to the next version.
 # Run by hand: Actions → Offgrid Release → Run workflow, or
-#   gh workflow run release.yml -f preRelease=og-0.1.0-20261002-2009 -f nextVersion=0.2.0
+#   gh workflow run release.yml -f preRelease=og-0.1.0-20261002-200953 -f nextVersion=0.2.0
 name: Offgrid Release
 
 on:
   workflow_dispatch:
     inputs:
       preRelease:
-        description: "Pre-release to promote, e.g. og-0.1.0-20261002-2009"
+        description: "Pre-release to promote, e.g. og-0.1.0-20261002-200953"
         required: true
       nextVersion:
         description: "Version the pom moves to, e.g. 0.2.0"
@@ -24,13 +24,13 @@ jobs:
         with:
           ref: main
 
-      # og-0.1.0-20261002-2009 → tag and title og-0.1.0, jar offgrid-0.1.0.jar, marked latest.
+      # og-0.1.0-20261002-200953 → tag, title and jar og-0.1.0, marked latest.
       - name: Promote
         env:
           GH_TOKEN: ${{ github.token }}
           PRE_RELEASE: ${{ inputs.preRelease }}
         run: |
-          version=$(echo "$PRE_RELEASE" | sed -nE 's/^og-([0-9]+\.[0-9]+\.[0-9]+)-[0-9]{8}-[0-9]{4}$/\1/p')
+          version=$(echo "$PRE_RELEASE" | sed -nE 's/^og-([0-9]+\.[0-9]+\.[0-9]+)-[0-9]{8}-[0-9]{6}$/\1/p')
           if [ -z "$version" ]; then
             echo "Not a pre-release name: $PRE_RELEASE" >&2
             exit 1
@@ -38,7 +38,7 @@ jobs:
           releaseName="og-$version"
           gh release edit "$PRE_RELEASE" --tag "$releaseName" --title "$releaseName" --prerelease=false --latest
           assetId=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$releaseName" --jq '.assets[0].id')
-          gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$assetId" -f name="offgrid-$version.jar"
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$assetId" -f name="$releaseName.jar"
           gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$PRE_RELEASE"
 
       - name: Next version

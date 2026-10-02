@@ -4,6 +4,24 @@
 
 <main>
 	<h1 th:text="${PageName}">About</h1>
+
+	<details>
+		<summary><h2 class="og-heading">Build</h2></summary>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 120px; text-align: left">Detail</th>
+					<th style="width: 220px; text-align: left">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Version</td><td th:text="${BuildVersion}">0.2.0</td></tr>
+				<tr><td>Qualifier</td><td th:text="${BuildQualifier}">-SNAPSHOT</td></tr>
+				<tr><td>Built</td><td th:text="${BuildTime}">2026-10-02 14:16:37</td></tr>
+				<tr><td>Profile</td><td th:text="${BuildProfile}">test</td></tr>
+			</tbody>
+		</table>
+	</details>
 </main>
 
 <div th:replace="~{fragments/site/footer}"></div>

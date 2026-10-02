@@ -23,14 +23,11 @@ jobs:
       - name: Build
         run: ./mvnw -B package
 
-      # Release name og-<version>-<yyyyMMdd-HHmm> (UTC), short enough for GitHub's lists. It is both
-      # the tag and the title; the jar keeps the pom's full finalName.
+      # The pom's finalName, og-<version>-<yyyyMMdd-HHmmss> (UTC), names the jar, the tag and the title.
       - name: Pre-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           jarPath=$(ls target/*.jar)
-          version=$(sed -n 's:.*<revision>\(.*\)</revision>.*:\1:p' pom.xml)
-          buildMinute=$(basename "$jarPath" | sed -E 's/.*-([0-9]{8})-([0-9]{4})[0-9]{2}\.jar$/\1-\2/')
-          releaseName="og-$version-$buildMinute"
+          releaseName=$(basename "$jarPath" .jar)
           gh release create "$releaseName" "$jarPath" --target "$GITHUB_SHA" --title "$releaseName" --prerelease --notes "Built from $GITHUB_SHA"
